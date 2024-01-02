@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nav_stemi/counter/counter.dart';
-import 'package:nav_stemi/l10n/l10n.dart';
+import 'package:nav_stemi/src/features/home.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -14,9 +13,7 @@ class App extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: const CounterPage(),
+      home: const Home(),
     );
   }
 }
