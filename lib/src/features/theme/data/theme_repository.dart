@@ -46,8 +46,9 @@ class ThemeRepository {
       colorScheme: colorScheme,
       useMaterial3: true,
       appBarTheme: AppBarTheme(
-        backgroundColor: colorScheme.primary,
-        foregroundColor: colorScheme.onPrimary,
+        titleTextStyle: textTheme.displaySmall?.apply(
+          color: colorScheme.onBackground,
+        ),
       ),
       dropdownMenuTheme: DropdownMenuThemeData(
         textStyle: textTheme.bodyMedium,
@@ -63,6 +64,32 @@ class ThemeRepository {
         labelPadding: const EdgeInsets.symmetric(horizontal: 4),
         labelStyle:
             textTheme.bodySmall!.apply(color: colorScheme.onPrimaryContainer),
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: ButtonStyle(
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+            const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          ),
+          shape: MaterialStateProperty.all<OutlinedBorder>(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          ),
+          textStyle: MaterialStateProperty.all<TextStyle>(
+            textTheme.titleMedium!,
+          ),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: ButtonStyle(
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+            const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          ),
+          shape: MaterialStateProperty.all<OutlinedBorder>(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          ),
+          textStyle: MaterialStateProperty.all<TextStyle>(
+            textTheme.titleMedium!,
+          ),
+        ),
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         shape: CircleBorder(),
@@ -82,16 +109,16 @@ TextTheme _buildTextTheme() {
   return TextTheme(
     displayLarge: _style(96, FontWeight.normal),
     displayMedium: _style(60, FontWeight.bold),
-    displaySmall: _style(48, FontWeight.normal),
+    displaySmall: _style(44, FontWeight.w600),
     headlineMedium: _style(36, FontWeight.bold),
     headlineSmall: _style(22, FontWeight.w500),
-    titleLarge: _style(18, FontWeight.w500),
-    bodyLarge: _style(18, FontWeight.normal),
-    bodyMedium: _style(16, FontWeight.normal),
-    titleMedium: _style(12, FontWeight.normal),
-    titleSmall: _style(12, FontWeight.w300),
-    labelLarge: _style(18, FontWeight.normal),
+    titleLarge: _style(36, FontWeight.w500),
+    titleMedium: _style(24, FontWeight.w500).apply(fontStyle: FontStyle.italic),
+    titleSmall: _style(16, FontWeight.w300),
+    bodyLarge: _style(20, FontWeight.normal),
+    bodyMedium: _style(18, FontWeight.normal),
     bodySmall: _style(12, FontWeight.normal),
+    labelLarge: _style(18, FontWeight.normal),
     labelSmall: _style(12, FontWeight.normal),
   );
 }
@@ -110,3 +137,14 @@ Stream<AppTheme> appThemeChanges(AppThemeChangesRef ref) {
   final themeRepository = ref.watch(themeRepositoryProvider);
   return themeRepository.appThemeChanges;
 }
+
+// spec: https://api.flutter.dev/flutter/material/MaterialStateProperty-class.html
+const Set<MaterialState> interactiveStates = <MaterialState>{
+  MaterialState.pressed,
+  MaterialState.hovered,
+  MaterialState.focused,
+};
+
+const Set<MaterialState> activeStates = <MaterialState>{
+  MaterialState.selected,
+};

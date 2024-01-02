@@ -15,7 +15,9 @@ part 'app_routing.g.dart';
 /// ```
 enum AppRoute {
   home,
-  add_data,
+  addData,
+  goTo,
+  navigate,
 }
 
 /// returns the GoRouter instance that defines all the routes in the app
@@ -33,9 +35,16 @@ GoRouter goRouter(GoRouterRef ref) {
         routes: [
           GoRoute(
             path: 'add_data',
-            name: AppRoute.add_data.name,
+            name: AppRoute.addData.name,
             pageBuilder: (context, state) => DialogPage(
               builder: (_) => const AddDataDialog(),
+            ),
+          ),
+          GoRoute(
+            path: 'go_to',
+            name: AppRoute.goTo.name,
+            pageBuilder: (context, state) => DialogPage(
+              builder: (_) => const GoToDialog(),
             ),
           ),
         ],

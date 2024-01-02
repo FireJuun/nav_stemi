@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 class Home extends StatelessWidget {
@@ -9,10 +10,7 @@ class Home extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'nav - STEMI'.hardcoded,
-          style: textTheme.displayMedium,
-        ),
+        title: Text('nav - STEMI'.hardcoded),
       ),
       body: Center(
         child: Column(
@@ -22,20 +20,22 @@ class Home extends StatelessWidget {
               children: [
                 Text(
                   'Click `Go` to begin'.hardcoded,
-                  style: textTheme.bodyLarge,
+                  style: textTheme.titleMedium,
                 ),
+                gapH24,
                 Text(
-                  'Click `Add Data` to pre-enter info'.hardcoded,
-                  style: textTheme.bodyLarge,
+                  'Click `Add Data`\nto pre-enter info'.hardcoded,
+                  style: textTheme.titleMedium,
                 ),
               ],
             ),
             Text.rich(
               TextSpan(
+                style: textTheme.bodyLarge,
                 children: [
                   TextSpan(
                     text: 'FYI',
-                    style: textTheme.bodyMedium?.apply(
+                    style: textTheme.bodyLarge?.apply(
                       decoration: TextDecoration.underline,
                     ),
                   ),
@@ -46,8 +46,24 @@ class Home extends StatelessWidget {
             ),
             Column(
               children: [
-                ElevatedButton(onPressed: () {}, child: const Text('+ GO')),
-                OutlinedButton(onPressed: () {}, child: const Text('Add Data')),
+                FilledButton(
+                  onPressed: () => context.goNamed(AppRoute.goTo.name),
+                  child: Text(
+                    '+ GO'.hardcoded,
+                    style: textTheme.titleLarge!
+                        .apply(color: Theme.of(context).colorScheme.onPrimary),
+                  ),
+                ),
+                gapH16,
+                OutlinedButton(
+                  onPressed: () => context.goNamed(AppRoute.addData.name),
+                  child: Text(
+                    'Add Data'.hardcoded,
+                    style: textTheme.titleLarge!.apply(
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
+                  ),
+                ),
               ],
             ),
           ],
