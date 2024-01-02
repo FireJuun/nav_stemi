@@ -113,7 +113,7 @@ TextTheme _buildTextTheme() {
     headlineMedium: _style(36, FontWeight.bold),
     headlineSmall: _style(22, FontWeight.w500),
     titleLarge: _style(36, FontWeight.w500),
-    titleMedium: _style(24, FontWeight.w500).apply(fontStyle: FontStyle.italic),
+    titleMedium: _style(22, FontWeight.w500),
     titleSmall: _style(16, FontWeight.w300),
     bodyLarge: _style(20, FontWeight.normal),
     bodyMedium: _style(18, FontWeight.normal),

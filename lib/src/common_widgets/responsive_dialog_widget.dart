@@ -12,6 +12,8 @@ class ResponsiveDialogWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      backgroundColor:
+          const Color(0xFFFFEBE7), // TODO(FireJuun): extract into theme
       child: LayoutBuilder(
         builder: (context, constraints) {
           final isPortrait =
@@ -48,22 +50,27 @@ class ResponsiveDialogHeader extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: textTheme.titleLarge?.apply(fontWeightDelta: 2),
-            ),
-            gapW32,
-          ],
+        Container(
+          color: const Color(0xFFB8B8D1), // TODO(FireJuun): extract into theme
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                style: textTheme.titleLarge?.apply(fontWeightDelta: 2),
+              ),
+              gapW32,
+            ],
+          ),
         ),
-        const Divider(),
+        gapH12,
+        // const Divider(),
       ],
     );
   }
@@ -76,7 +83,9 @@ class ResponsiveDialogFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Divider(),
+        const Divider(
+          thickness: 2,
+        ),
         OutlinedButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('Cancel'),
