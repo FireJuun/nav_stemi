@@ -28,15 +28,18 @@ class AppBootstrapLocal extends AppBootstrap {
   Future<ProviderContainer> createLocalProviderContainer({
     bool addDelay = false,
   }) async {
-    // final prefs = await SharedPreferences.getInstance();
-    // final sharedPreferencesRepository = SharedPreferencesRepository(prefs);
+    final prefs = await SharedPreferences.getInstance();
+    final sharedPreferencesRepository = SharedPreferencesRepository(prefs);
 
-    // final lastTheme = sharedPreferencesRepository.getAppTheme();
-    // final themeRepository = ThemeRepository(lastTheme);
+    final lastTheme = sharedPreferencesRepository.getAppTheme();
+    final themeRepository = ThemeRepository(lastTheme);
 
     return ProviderContainer(
       overrides: [
         // repositories
+        sharedPreferencesRepositoryProvider
+            .overrideWithValue(sharedPreferencesRepository),
+        themeRepositoryProvider.overrideWithValue(themeRepository),
       ],
       observers: [
         AsyncErrorLogger(),
