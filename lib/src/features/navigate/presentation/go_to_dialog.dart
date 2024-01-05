@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 class GoToDialog extends StatelessWidget {
@@ -48,7 +49,7 @@ class _PlaceholderButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: OutlinedButton(
-        onPressed: () {},
+        onPressed: () => context.goNamed(AppRoute.nav.name),
         child: Text(label, textAlign: TextAlign.center),
       ),
     );

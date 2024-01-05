@@ -49,8 +49,7 @@ class Home extends StatelessWidget {
             Column(
               children: [
                 FilledButton(
-                  onPressed: () {},
-                  // onPressed: () => context.goNamed(AppRoute.goTo.name),
+                  onPressed: () => context.goNamed(AppRoute.goTo.name),
                   child: Text(
                     '+ GO'.hardcoded,
                     style: textTheme.titleLarge!
@@ -59,8 +58,7 @@ class Home extends StatelessWidget {
                 ),
                 gapH16,
                 OutlinedButton(
-                  onPressed: () {},
-                  // onPressed: () => context.goNamed(AppRoute.addData.name),
+                  onPressed: () => context.goNamed(AppRoute.homeAddData.name),
                   child: Text(
                     'Add Data'.hardcoded,
                     style: textTheme.titleLarge!.apply(

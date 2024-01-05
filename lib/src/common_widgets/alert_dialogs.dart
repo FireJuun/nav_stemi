@@ -19,7 +19,7 @@ Future<bool?> showAlertDialog({
   String defaultActionText = 'OK',
 }) async {
   if (kIsWeb || !Platform.isIOS) {
-    return showDialog(
+    return showDialog<bool?>(
       context: context,
       barrierDismissible: cancelActionText != null,
       builder: (context) => AlertDialog(
@@ -29,12 +29,12 @@ Future<bool?> showAlertDialog({
           if (cancelActionText != null)
             TextButton(
               child: Text(cancelActionText),
-              onPressed: () => Navigator.of(context).pop(false),
+              onPressed: () => Navigator.pop(context, false),
             ),
           TextButton(
             key: kDialogDefaultKey,
             child: Text(defaultActionText),
-            onPressed: () => Navigator.of(context).pop(true),
+            onPressed: () => Navigator.pop(context, true),
           ),
         ],
       ),

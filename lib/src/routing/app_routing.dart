@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:nav_stemi/src/features/add_data/presentation/add_data_dialog.dart';
@@ -15,9 +16,10 @@ part 'app_routing.g.dart';
 /// ```
 enum AppRoute {
   home,
-  addData,
+  homeAddData,
   goTo,
-  navigate,
+  nav,
+  navAddData,
 }
 
 /// returns the GoRouter instance that defines all the routes in the app
@@ -34,18 +36,32 @@ GoRouter goRouter(GoRouterRef ref) {
         builder: (context, state) => const Home(),
         routes: [
           GoRoute(
-            path: 'add_data',
-            name: AppRoute.addData.name,
+            path: 'add',
+            name: AppRoute.homeAddData.name,
             pageBuilder: (context, state) => DialogPage(
               builder: (_) => const AddDataDialog(),
             ),
           ),
           GoRoute(
-            path: 'go_to',
+            path: 'go',
             name: AppRoute.goTo.name,
             pageBuilder: (context, state) => DialogPage(
               builder: (_) => const GoToDialog(),
             ),
+          ),
+          GoRoute(
+            path: 'nav',
+            name: AppRoute.nav.name,
+            builder: (context, state) => const NavScreen(),
+            routes: [
+              GoRoute(
+                path: 'add',
+                name: AppRoute.navAddData.name,
+                pageBuilder: (context, state) => DialogPage(
+                  builder: (_) => const AddDataDialog(),
+                ),
+              ),
+            ],
           ),
         ],
       ),
