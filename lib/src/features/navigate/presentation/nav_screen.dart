@@ -30,6 +30,9 @@ class NavScreen extends HookWidget {
           title: const Text('nav'),
           // automaticallyImplyLeading: false,
         ),
+        body: const Center(
+          child: MapSample(),
+        ),
         bottomNavigationBar: Container(
           color: Theme.of(context).colorScheme.tertiaryContainer,
           padding: const EdgeInsets.all(8),
