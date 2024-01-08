@@ -10,7 +10,14 @@ class Home extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(
+        // leading: IconButton(
+        //   icon: const Icon(Icons.menu_rounded),
+        //   onPressed: () {},
+        // ),
         title: Text('nav - STEMI'.hardcoded),
+      ),
+      drawer: const Drawer(
+        child: Center(child: Text('text')),
       ),
       body: Center(
         child: Column(

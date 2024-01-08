@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 class NavScreen extends HookWidget {
@@ -9,6 +8,8 @@ class NavScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final canPop = useState(false);
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return PopScope(
       canPop: canPop.value,
@@ -26,47 +27,88 @@ class NavScreen extends HookWidget {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('nav'),
-          // automaticallyImplyLeading: false,
-        ),
-        body: const Center(
-          child: MapSample(),
-        ),
-        bottomNavigationBar: Container(
-          color: Theme.of(context).colorScheme.tertiaryContainer,
-          padding: const EdgeInsets.all(8),
-          child: SafeArea(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
               children: [
-                FilledButton(
-                  onPressed: () {
-                    Navigator.of(context).maybePop();
-                  },
-                  child: const Text(
-                    'Cancel\nNav',
-                    textAlign: TextAlign.center,
+                Expanded(
+                  child: SafeArea(
+                    child: Container(
+                      height: 100,
+                      color: Colors.red[400],
+                      child: Center(
+                        child: Text(
+                          '+ STEMI',
+                          textAlign: TextAlign.center,
+                          style: textTheme.titleLarge!
+                              .apply(color: colorScheme.onPrimary),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-                FilledButton(
-                  onPressed: () {},
-                  child: const Text(
-                    'Contact\nPCI/ED',
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                FilledButton(
-                  onPressed: () => context.goNamed(AppRoute.navAddData.name),
-                  child: const Text(
-                    'Add\nData',
-                    textAlign: TextAlign.center,
+                Expanded(
+                  child: SafeArea(
+                    child: Container(
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        border: Border.all(
+                          color: const Color(0xFF4F4F4F),
+                          width: 12,
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Total Time\n8:34',
+                          textAlign: TextAlign.center,
+                          style: textTheme.titleLarge!.apply(
+                            color: colorScheme.onPrimary,
+                            heightDelta: -.4,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
+            Flexible(
+              child: Column(
+                children: [
+                  gapH8,
+                  const Text('Time to closest'),
+                  gapH12,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      FilledButton(
+                        onPressed: () {},
+                        child: const Text('PCI Center\n24 min'),
+                      ),
+                      OutlinedButton(
+                        onPressed: () {},
+                        child: const Text('ED\n17 min'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const Flexible(
+              flex: 4,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 24,
+                ),
+                child: MapSample(),
+              ),
+            ),
+          ],
         ),
+        bottomNavigationBar: const NavBottomLinks(),
       ),
     );
   }
