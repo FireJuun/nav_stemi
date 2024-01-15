@@ -11,8 +11,13 @@ class MapSample extends StatefulWidget {
 }
 
 class MapSampleState extends State<MapSample> {
+  /// This controller gets disposed automatically, no need to call dispose()
+  /// https://github.com/flutter/flutter/issues/74345#issuecomment-812926354
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
+
+  Marker? _origin;
+  Marker? _destination;
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
@@ -29,17 +34,85 @@ class MapSampleState extends State<MapSample> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text('MAP!'),
+        actions: [
+          if (_origin != null)
+            TextButton(
+              onPressed: () async {
+                final controller = await _controller.future;
+                await controller.animateCamera(
+                  CameraUpdate.newCameraPosition(
+                    CameraPosition(
+                      target: _origin!.position,
+                      zoom: 14.5,
+                    ),
+                  ),
+                );
+              },
+              child: const Text('ORIGIN'),
+            ),
+          if (_destination != null)
+            TextButton(
+              onPressed: () async {
+                final controller = await _controller.future;
+                await controller.animateCamera(
+                  CameraUpdate.newCameraPosition(
+                    CameraPosition(
+                      target: _destination!.position,
+                      zoom: 14.5,
+                    ),
+                  ),
+                );
+              },
+              child: const Text('DEST'),
+            ),
+        ],
+      ),
       body: GoogleMap(
-        mapType: MapType.hybrid,
         initialCameraPosition: _kGooglePlex,
         onMapCreated: _controller.complete,
+        markers: {
+          if (_origin != null) _origin!,
+          if (_destination != null) _destination!,
+        },
+        onLongPress: _addMarker,
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: const Text('To the lake!'),
-        icon: const Icon(Icons.directions_boat),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: _goToTheLake,
+      //   child: const Icon(Icons.directions_boat),
+      // ),
     );
+  }
+
+  void _addMarker(LatLng pos) {
+    if (_origin == null || (_origin != null && _destination != null)) {
+      // Origin not set, or both are set
+      // Set origin
+      setState(() {
+        _origin = Marker(
+          markerId: const MarkerId('origin'),
+          infoWindow: const InfoWindow(title: 'Origin'),
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+          position: pos,
+        );
+        // Reset destination
+        _destination = null;
+      });
+    } else {
+      // Origin already set
+      // Set destination
+      setState(() {
+        _destination = Marker(
+          markerId: const MarkerId('destination'),
+          infoWindow: const InfoWindow(title: 'Destination'),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+          position: pos,
+        );
+      });
+    }
   }
 
   Future<void> _goToTheLake() async {

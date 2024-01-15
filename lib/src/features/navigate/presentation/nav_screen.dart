@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:nav_stemi/nav_stemi.dart';
+import 'package:nav_stemi/src/features/navigate/presentation/map_screen.dart';
 
 class NavScreen extends HookWidget {
   const NavScreen({super.key});
@@ -103,7 +104,7 @@ class NavScreen extends HookWidget {
                   horizontal: 16,
                   vertical: 24,
                 ),
-                child: MapSample(),
+                child: MapScreen(),
               ),
             ),
           ],
