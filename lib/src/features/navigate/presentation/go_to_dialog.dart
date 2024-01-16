@@ -26,31 +26,26 @@ class _PlaceholderData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        _PlaceholderButton('Blue Ridge Valdese\n17 min'),
-        _PlaceholderButton('Frye Regional Med Center\n24 min'),
-        _PlaceholderButton('Iredell Memorial (PCI)\n32 min'),
-        _PlaceholderButton('Wake Forest Baptist (PCI)\n48 min'),
-        _PlaceholderButton('Ashe Memorial Hospital\n120 min'),
-        _PlaceholderButton('Watauga Medical Center\n148 min'),
-      ],
+    const locations = Locations.values;
+    return ListView.builder(
+      itemCount: locations.length,
+      itemBuilder: (context, index) => _PlaceholderButton(locations[index]),
     );
   }
 }
 
 class _PlaceholderButton extends StatelessWidget {
-  const _PlaceholderButton(this.label);
+  const _PlaceholderButton(this.location);
 
-  final String label;
+  final Locations location;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
       child: OutlinedButton(
         onPressed: () => context.goNamed(AppRoute.nav.name),
-        child: Text(label, textAlign: TextAlign.center),
+        child: Text(location.shortName, textAlign: TextAlign.center),
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nav_stemi/env.dart';
+import 'package:nav_stemi/nav_stemi.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -12,8 +13,7 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   late GoogleMapController mapController;
-  final double _originLatitude = 6.5212402;
-  final double _originLongitude = 3.3679965;
+
   final double _destLatitude = 6.849660;
   final double _destLongitude = 3.648190;
   // double _originLatitude = 26.48424, _originLongitude = 50.04551;
@@ -30,7 +30,7 @@ class _MapScreenState extends State<MapScreen> {
 
     /// origin marker
     _addMarker(
-      LatLng(_originLatitude, _originLongitude),
+      locationRandolphEms,
       'origin',
       BitmapDescriptor.defaultMarker,
     );
