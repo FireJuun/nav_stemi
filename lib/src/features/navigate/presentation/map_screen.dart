@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:nav_stemi/env.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 class MapScreen extends StatefulWidget {
@@ -16,6 +15,7 @@ class _MapScreenState extends State<MapScreen> {
 
   final LatLng origin = locationRandolphEms;
   final LatLng destination = Locations.atriumWakeHighPoint.loc;
+  final blankMarker = const Marker(markerId: MarkerId('blank'));
 
   Map<MarkerId, Marker> markers = {};
   Map<PolylineId, Polyline> polylines = {};
@@ -45,19 +45,42 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: GoogleMap(
-          initialCameraPosition: CameraPosition(
-            target: origin,
-            zoom: 15,
+    return Column(
+      children: [
+        NearestEdSelector(
+          onTapNearestPciCenter: () => mapController.animateCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                target: markers[const MarkerId('origin')]?.position ??
+                    blankMarker.position,
+                zoom: 12,
+              ),
+            ),
           ),
-          myLocationEnabled: true,
-          onMapCreated: _onMapCreated,
-          markers: Set<Marker>.of(markers.values),
-          polylines: Set<Polyline>.of(polylines.values),
+          onTapNearestEd: () => mapController.animateCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                target: markers[const MarkerId('destination')]?.position ??
+                    blankMarker.position,
+                zoom: 12,
+              ),
+            ),
+          ),
         ),
-      ),
+        gapH24,
+        Expanded(
+          child: GoogleMap(
+            initialCameraPosition: CameraPosition(
+              target: origin,
+              zoom: 15,
+            ),
+            myLocationEnabled: true,
+            onMapCreated: _onMapCreated,
+            markers: Set<Marker>.of(markers.values),
+            polylines: Set<Polyline>.of(polylines.values),
+          ),
+        ),
+      ],
     );
   }
 
@@ -76,6 +99,7 @@ class _MapScreenState extends State<MapScreen> {
     const id = PolylineId('poly');
     final polyline = Polyline(
       polylineId: id,
+      width: 4,
       color: Colors.red,
       points: polylineCoordinates,
     );

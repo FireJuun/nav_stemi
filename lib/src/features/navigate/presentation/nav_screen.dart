@@ -75,28 +75,6 @@ class NavScreen extends HookWidget {
                 ),
               ],
             ),
-            Flexible(
-              child: Column(
-                children: [
-                  gapH8,
-                  const Text('Time to closest'),
-                  gapH12,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      FilledButton(
-                        onPressed: () {},
-                        child: const Text('PCI Center\n24 min'),
-                      ),
-                      OutlinedButton(
-                        onPressed: () {},
-                        child: const Text('ED\n17 min'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
             const Flexible(
               flex: 4,
               child: Padding(
