@@ -1,29 +1,25 @@
-import 'package:equatable/equatable.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:uuid/uuid.dart';
 
-class Polyline extends Equatable {
-  const Polyline({this.points});
-
-  final String? points;
-
-  factory Polyline.fromJson(Map<String, Object?> json) => Polyline(
-        points: json['points'] as String?,
+extension PolylineX on Polyline {
+  static Polyline fromJson(Map<String, Object?> json) => Polyline(
+        polylineId: json['polylineId']! as PolylineId? ??
+            PolylineId(const Uuid().toString()),
+        points: json['points'] as List<LatLng>? ?? [],
       );
 
-  Map<String, Object?> toJson() => {
-        'points': points,
-      };
+  // TODO(FireJuun): don't think this is necessary
+  // static Map<String, Object?> toJson() => {
+  //       'points': points,
+  //     };
 
-  Polyline copyWith({
-    String? points,
-  }) {
-    return Polyline(
-      points: points ?? this.points,
-    );
-  }
-
-  @override
-  bool get stringify => true;
-
-  @override
-  List<Object?> get props => [points];
+  // static Polyline copyWith({
+  //   PolylineId? polylineId,
+  //   List<LatLng>? points,
+  // }) {
+  //   return Polyline(
+  //     polylineId: polylineId ?? this.polylineId,
+  //     points: points ?? this.points,
+  //   );
+  // }
 }

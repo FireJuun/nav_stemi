@@ -14,10 +14,9 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   late GoogleMapController mapController;
 
-  final double _destLatitude = 6.849660;
-  final double _destLongitude = 3.648190;
-  // double _originLatitude = 26.48424, _originLongitude = 50.04551;
-  // double _destLatitude = 26.46423, _destLongitude = 50.06358;
+  final LatLng origin = locationRandolphEms;
+  final LatLng destination = Locations.atriumWakeHighPoint.loc;
+
   Map<MarkerId, Marker> markers = {};
   Map<PolylineId, Polyline> polylines = {};
   List<LatLng> polylineCoordinates = [];
@@ -30,14 +29,14 @@ class _MapScreenState extends State<MapScreen> {
 
     /// origin marker
     _addMarker(
-      locationRandolphEms,
+      origin,
       'origin',
       BitmapDescriptor.defaultMarker,
     );
 
     /// destination marker
     _addMarker(
-      LatLng(_destLatitude, _destLongitude),
+      destination,
       'destination',
       BitmapDescriptor.defaultMarkerWithHue(90),
     );
@@ -50,7 +49,7 @@ class _MapScreenState extends State<MapScreen> {
       child: Scaffold(
         body: GoogleMap(
           initialCameraPosition: CameraPosition(
-            target: LatLng(_originLatitude, _originLongitude),
+            target: origin,
             zoom: 15,
           ),
           myLocationEnabled: true,
@@ -87,9 +86,9 @@ class _MapScreenState extends State<MapScreen> {
   Future<void> _getPolyline() async {
     final result = await polylinePoints.getRouteBetweenCoordinates(
       googleAPiKey,
-      PointLatLng(_originLatitude, _originLongitude),
-      PointLatLng(_destLatitude, _destLongitude),
-      wayPoints: [PolylineWayPoint(location: 'Sabo, Yaba Lagos Nigeria')],
+      PointLatLng(origin.latitude, origin.longitude),
+      PointLatLng(destination.latitude, destination.longitude),
+      wayPoints: [],
     );
     if (result.points.isNotEmpty) {
       for (final point in result.points) {

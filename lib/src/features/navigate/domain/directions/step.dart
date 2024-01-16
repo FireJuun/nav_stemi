@@ -1,8 +1,10 @@
 import 'package:equatable/equatable.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:nav_stemi/src/features/navigate/domain/directions/distance.dart';
 import 'package:nav_stemi/src/features/navigate/domain/directions/duration.dart';
 import 'package:nav_stemi/src/features/navigate/domain/directions/end_location.dart';
+import 'package:nav_stemi/src/features/navigate/domain/directions/polyline.dart';
 import 'package:nav_stemi/src/features/navigate/domain/directions/start_location.dart';
 
 class Step extends Equatable {
@@ -31,7 +33,7 @@ class Step extends Equatable {
         htmlInstructions: json['html_instructions'] as String?,
         polyline: json['polyline'] == null
             ? null
-            : Polyline.fromJson(json['polyline']! as Map<String, Object?>),
+            : PolylineX.fromJson(json['polyline']! as Map<String, Object?>),
         startLocation: json['start_location'] == null
             ? null
             : StartLocation.fromJson(
