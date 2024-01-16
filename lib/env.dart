@@ -23,6 +23,11 @@ abstract class Env {
   @EnviedField(varName: 'DISTANCE_MATRIX_API', obfuscate: true)
   static final String distanceMatrixApi = _Env.distanceMatrixApi;
 
+  /// Combination of Directions + Distance Matrix APIs
+  /// Designed to only request the info that you need, saving costs
+  @EnviedField(varName: 'ROUTES_API', obfuscate: true)
+  static final String routesApi = _Env.routesApi;
+
   /// Determine which Maps API key to show based on platform
   static String mapsApi() {
     if (Platform.isAndroid) {
