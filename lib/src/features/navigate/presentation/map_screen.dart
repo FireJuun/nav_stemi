@@ -3,6 +3,8 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
+const _util = GoogleMapsToRoutesUtil();
+
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
 
@@ -13,8 +15,8 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   late GoogleMapController mapController;
 
-  final LatLng origin = locationRandolphEms;
-  final LatLng destination = Locations.atriumWakeHighPoint.loc;
+  final origin = _util.routesToMaps(locationRandolphEms);
+  final destination = _util.routesToMaps(Locations.atriumWakeHighPoint.loc);
   final blankMarker = const Marker(markerId: MarkerId('blank'));
 
   Map<MarkerId, Marker> markers = {};
@@ -74,6 +76,7 @@ class _MapScreenState extends State<MapScreen> {
               target: origin,
               zoom: 15,
             ),
+            trafficEnabled: true,
             myLocationEnabled: true,
             onMapCreated: _onMapCreated,
             markers: Set<Marker>.of(markers.values),

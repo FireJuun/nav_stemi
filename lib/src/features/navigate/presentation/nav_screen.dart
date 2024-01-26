@@ -80,7 +80,7 @@ class NavScreen extends HookWidget {
               child: Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: 16,
-                  vertical: 24,
+                  vertical: 8,
                 ),
                 child: MapScreen(),
               ),

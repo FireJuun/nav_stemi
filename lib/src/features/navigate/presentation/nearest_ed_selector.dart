@@ -15,9 +15,8 @@ class NearestEdSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Text('Time to closest', style: Theme.of(context).textTheme.titleMedium),
         gapH8,
-        const Text('Time to closest'),
-        gapH12,
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
