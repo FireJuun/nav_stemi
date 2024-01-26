@@ -44,12 +44,12 @@ class NavScreen extends HookWidget {
                       ),
                       Text(
                         'Exit'.hardcoded,
-                        style: textTheme.bodyLarge
+                        style: textTheme.titleMedium
                             ?.apply(color: colorScheme.onBackground),
                       ),
                     ],
                   ),
-                  onPressed: () {},
+                  onPressed: () => Navigator.of(context).maybePop(),
                 ),
               ),
               Flexible(

@@ -28,13 +28,13 @@ class Home extends StatelessWidget {
                 Text(
                   'Click `Go` to begin'.hardcoded,
                   style:
-                      textTheme.titleMedium!.apply(fontStyle: FontStyle.italic),
+                      textTheme.titleLarge!.apply(fontStyle: FontStyle.italic),
                 ),
                 gapH24,
                 Text(
                   'Click `Add Data`\nto pre-enter info'.hardcoded,
                   style:
-                      textTheme.titleMedium!.apply(fontStyle: FontStyle.italic),
+                      textTheme.titleLarge!.apply(fontStyle: FontStyle.italic),
                 ),
               ],
             ),
@@ -59,7 +59,7 @@ class Home extends StatelessWidget {
                   onPressed: () => context.goNamed(AppRoute.goTo.name),
                   child: Text(
                     '+ GO'.hardcoded,
-                    style: textTheme.titleLarge!
+                    style: textTheme.headlineMedium!
                         .apply(color: Theme.of(context).colorScheme.onPrimary),
                   ),
                 ),
@@ -68,7 +68,7 @@ class Home extends StatelessWidget {
                   onPressed: () => context.goNamed(AppRoute.homeAddData.name),
                   child: Text(
                     'Add Data'.hardcoded,
-                    style: textTheme.titleLarge!.apply(
+                    style: textTheme.headlineMedium!.apply(
                       color: Theme.of(context).colorScheme.onBackground,
                     ),
                   ),

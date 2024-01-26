@@ -15,11 +15,30 @@ class NearestEdSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text('Time to closest', style: Theme.of(context).textTheme.titleMedium),
-        gapH8,
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            Text(
+              'Destination:',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            Expanded(
+              child: Text(
+                'Scotland Memorial',
+                textAlign: TextAlign.end,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+          ],
+        ),
+        gapH4,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Nearest:',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
             FilledButton(
               onPressed: onTapNearestPciCenter,
               child: const Text('PCI Center\n24 min'),
