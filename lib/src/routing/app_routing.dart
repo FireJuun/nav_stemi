@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nav_stemi/nav_stemi.dart';
-import 'package:nav_stemi/src/features/add_data/presentation/add_data_dialog.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_routing.g.dart';
@@ -76,7 +75,7 @@ GoRouter goRouter(GoRouterRef ref) {
                 path: '/nav',
                 name: AppRoute.nav.name,
                 pageBuilder: (context, state) =>
-                    const NoTransitionPage(child: NavScreen()),
+                    _fadeTransition(context, state, const NavScreen()),
               ),
             ],
           ),
@@ -87,7 +86,7 @@ GoRouter goRouter(GoRouterRef ref) {
                 path: '/add',
                 name: AppRoute.navAddData.name,
                 pageBuilder: (context, state) =>
-                    const NoTransitionPage(child: AddDataScreen()),
+                    _fadeTransition(context, state, const AddDataScreen()),
               ),
             ],
           ),
@@ -95,5 +94,31 @@ GoRouter goRouter(GoRouterRef ref) {
       ),
     ],
     errorBuilder: (context, state) => const NotFoundScreen(),
+  );
+}
+
+// spec: https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/transition_animations.dart
+Page<dynamic> _fadeTransition(
+  BuildContext context,
+  GoRouterState state,
+  Widget child,
+) {
+  return CustomTransitionPage<void>(
+    key: state.pageKey,
+    child: child,
+    transitionDuration: const Duration(milliseconds: 200),
+    transitionsBuilder: (
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child,
+    ) {
+      // Change the opacity of the screen using a Curve based on the animation's
+      // value
+      return FadeTransition(
+        opacity: CurveTween(curve: Curves.easeInOut).animate(animation),
+        child: child,
+      );
+    },
   );
 }

@@ -24,7 +24,8 @@ class Step extends Equatable {
             : Distance.fromJson(json['distance']! as Map<String, Object?>),
         duration: json['duration'] == null
             ? null
-            : Duration.fromJson(json['duration']! as Map<String, Object?>),
+            : DirectionDuration.fromJson(
+                json['duration']! as Map<String, Object?>),
         endLocation: json['end_location'] == null
             ? null
             : EndLocation.fromJson(
@@ -43,7 +44,7 @@ class Step extends Equatable {
       );
 
   final Distance? distance;
-  final Duration? duration;
+  final DirectionDuration? duration;
   final EndLocation? endLocation;
   final String? htmlInstructions;
   final Polyline? polyline;
@@ -62,7 +63,7 @@ class Step extends Equatable {
 
   Step copyWith({
     Distance? distance,
-    Duration? duration,
+    DirectionDuration? duration,
     EndLocation? endLocation,
     String? htmlInstructions,
     Polyline? polyline,

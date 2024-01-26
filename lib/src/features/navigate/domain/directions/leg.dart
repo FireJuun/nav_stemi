@@ -20,7 +20,7 @@ class Leg extends Equatable {
   });
 
   final Distance? distance;
-  final Duration? duration;
+  final DirectionDuration? duration;
   final String? endAddress;
   final EndLocation? endLocation;
   final String? startAddress;
@@ -35,7 +35,8 @@ class Leg extends Equatable {
             : Distance.fromJson(json['distance']! as Map<String, Object?>),
         duration: json['duration'] == null
             ? null
-            : Duration.fromJson(json['duration']! as Map<String, Object?>),
+            : DirectionDuration.fromJson(
+                json['duration']! as Map<String, Object?>),
         endAddress: json['end_address'] as String?,
         endLocation: json['end_location'] == null
             ? null
@@ -67,7 +68,7 @@ class Leg extends Equatable {
 
   Leg copyWith({
     Distance? distance,
-    Duration? duration,
+    DirectionDuration? duration,
     String? endAddress,
     EndLocation? endLocation,
     String? startAddress,

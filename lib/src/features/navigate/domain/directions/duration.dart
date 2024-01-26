@@ -1,12 +1,13 @@
 import 'package:equatable/equatable.dart';
 
-class Duration extends Equatable {
-  const Duration({this.text, this.value});
+class DirectionDuration extends Equatable {
+  const DirectionDuration({this.text, this.value});
 
   final String? text;
   final int? value;
 
-  factory Duration.fromJson(Map<String, Object?> json) => Duration(
+  factory DirectionDuration.fromJson(Map<String, Object?> json) =>
+      DirectionDuration(
         text: json['text'] as String?,
         value: json['value'] as int?,
       );
@@ -16,11 +17,11 @@ class Duration extends Equatable {
         'value': value,
       };
 
-  Duration copyWith({
+  DirectionDuration copyWith({
     String? text,
     int? value,
   }) {
-    return Duration(
+    return DirectionDuration(
       text: text ?? this.text,
       value: value ?? this.value,
     );
