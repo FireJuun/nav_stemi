@@ -15,8 +15,9 @@ class Home extends StatelessWidget {
         //   onPressed: () {},
         // ),
         title: Text('nav - STEMI'.hardcoded),
+        centerTitle: true,
       ),
-      drawer: const Drawer(
+      endDrawer: const Drawer(
         child: Center(child: Text('text')),
       ),
       body: Center(
