@@ -1,3 +1,4 @@
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -35,8 +36,10 @@ class ThemeRepository {
   /// Custom theme settings, imported throughout the app
   ///
   ThemeData _themeData(Brightness brightness) {
-    final colorScheme = ColorScheme.fromSeed(
-      seedColor: _appTheme.value.seedColor,
+    final colorScheme = SeedColorScheme.fromSeeds(
+      primaryKey: _appTheme.value.seedColor,
+      secondaryKey: _appTheme.value.secondarySeedColor,
+      tertiaryKey: _appTheme.value.tertiarySeedColor,
       brightness: brightness,
     );
 
@@ -46,6 +49,7 @@ class ThemeRepository {
       colorScheme: colorScheme,
       useMaterial3: true,
       appBarTheme: AppBarTheme(
+        iconTheme: IconThemeData(size: 40, color: colorScheme.onBackground),
         titleTextStyle: textTheme.displaySmall?.apply(
           color: colorScheme.onBackground,
         ),

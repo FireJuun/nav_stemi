@@ -8,7 +8,7 @@ class NavBottomLinks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).colorScheme.tertiaryContainer,
+      color: Theme.of(context).colorScheme.primaryContainer,
       padding: const EdgeInsets.all(8),
       child: SafeArea(
         child: Row(

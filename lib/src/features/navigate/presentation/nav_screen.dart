@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:nav_stemi/nav_stemi.dart';
-import 'package:nav_stemi/src/features/navigate/presentation/map_screen.dart';
 
 class NavScreen extends HookWidget {
   const NavScreen({super.key});
@@ -28,66 +27,73 @@ class NavScreen extends HookWidget {
         }
       },
       child: Scaffold(
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: SafeArea(
-                    child: Container(
-                      height: 100,
-                      color: Colors.red[400],
-                      child: Center(
-                        child: Text(
-                          '+ STEMI',
-                          textAlign: TextAlign.center,
-                          style: textTheme.titleLarge!
-                              .apply(color: colorScheme.onPrimary),
-                        ),
+        appBar: AppBar(
+          toolbarHeight: 80,
+          automaticallyImplyLeading: false,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Flexible(
+                child: TextButton(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.close,
+                        color: colorScheme.onBackground,
                       ),
-                    ),
+                      Text(
+                        'Exit'.hardcoded,
+                        style: textTheme.bodyLarge
+                            ?.apply(color: colorScheme.onBackground),
+                      ),
+                    ],
                   ),
+                  onPressed: () {},
                 ),
-                Expanded(
-                  child: SafeArea(
-                    child: Container(
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        border: Border.all(
-                          color: const Color(0xFF4F4F4F),
-                          width: 12,
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Total Time\n8:34',
-                          textAlign: TextAlign.center,
-                          style: textTheme.titleLarge!.apply(
-                            color: colorScheme.onPrimary,
-                            heightDelta: -.4,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const Flexible(
-              flex: 4,
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                child: MapScreen(),
               ),
-            ),
-          ],
+              Flexible(
+                flex: 2,
+                child: Container(
+                  height: 78,
+                  width: double.maxFinite,
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: colorScheme.tertiaryContainer,
+                    border: Border.all(
+                      color: colorScheme.onTertiaryContainer,
+                      width: 4,
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        'Total Time'.hardcoded,
+                        style: textTheme.headlineSmall
+                            ?.apply(color: colorScheme.onTertiaryContainer),
+                      ),
+                      Text(
+                        '8:34'.hardcoded,
+                        style: textTheme.headlineSmall
+                            ?.apply(color: colorScheme.onTertiaryContainer),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-        bottomNavigationBar: const NavBottomLinks(),
+        endDrawer: const Drawer(),
+        body: const Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 8,
+          ),
+          child: MapScreen(),
+        ),
+        bottomNavigationBar: const BottomNavBar(),
       ),
     );
   }
