@@ -12,10 +12,16 @@ class AddDataScreen extends StatelessWidget {
         vertical: 8,
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           DestinationInfo(),
-          Text('Add Data here'),
+          gapH12,
+          EtaWidget(),
+          gapH4,
+          Divider(thickness: 2),
+          gapH4,
+          Expanded(
+            child: DataEntryWidget(),
+          ),
         ],
       ),
     );

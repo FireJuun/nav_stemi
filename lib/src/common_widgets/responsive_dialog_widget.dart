@@ -83,9 +83,7 @@ class ResponsiveDialogFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Divider(
-          thickness: 2,
-        ),
+        const Divider(thickness: 2),
         OutlinedButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('Cancel'),
