@@ -15,22 +15,7 @@ class NearestEdSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Destination:',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            Expanded(
-              child: Text(
-                'Scotland Memorial',
-                textAlign: TextAlign.end,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ),
-          ],
-        ),
+        const DestinationInfo(),
         gapH4,
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

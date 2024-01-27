@@ -39,9 +39,8 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
           Flexible(
             flex: 2,
             child: Container(
-              height: _toolbarHeight,
-              width: double.maxFinite,
-              padding: const EdgeInsets.all(4),
+              height: _toolbarHeight - 8,
+              padding: const EdgeInsets.symmetric(vertical: 4),
               decoration: BoxDecoration(
                 color: colorScheme.tertiaryContainer,
                 border: Border.all(
@@ -49,17 +48,21 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                   width: 4,
                 ),
               ),
-              child: Column(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(
-                    'Total Time'.hardcoded,
-                    style: textTheme.headlineSmall
-                        ?.apply(color: colorScheme.onTertiaryContainer),
+                    'Total\nTime'.hardcoded,
+                    textAlign: TextAlign.center,
+                    style: textTheme.headlineSmall?.apply(
+                      color: colorScheme.onTertiaryContainer,
+                      heightDelta: -.33,
+                    ),
                   ),
                   Text(
                     '8:34'.hardcoded,
-                    style: textTheme.headlineSmall
+                    textAlign: TextAlign.end,
+                    style: textTheme.headlineMedium
                         ?.apply(color: colorScheme.onTertiaryContainer),
                   ),
                 ],

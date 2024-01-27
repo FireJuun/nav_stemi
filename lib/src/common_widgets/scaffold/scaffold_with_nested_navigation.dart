@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nav_stemi/nav_stemi.dart';
@@ -24,6 +25,8 @@ class ScaffoldWithNestedNavigation extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final canPop = useState(false);
+    final colorScheme = Theme.of(context).colorScheme;
+    final isNavPage = navigationShell.currentIndex == 0;
 
     return PopScope(
       canPop: canPop.value,
@@ -37,13 +40,19 @@ class ScaffoldWithNestedNavigation extends HookWidget {
             false;
         canPop.value = shouldPop;
         if (shouldPop && context.mounted) {
-          Navigator.pop(context, shouldPop);
+          context.goNamed(AppRoute.home.name);
         }
       },
       child: Scaffold(
         appBar: const AppBarWidget(),
         endDrawer: const Drawer(),
-        body: navigationShell,
+        body: AnimatedContainer(
+          duration: 300.ms,
+          color: isNavPage
+              ? colorScheme.primaryContainer
+              : colorScheme.secondaryContainer,
+          child: navigationShell,
+        ),
         bottomNavigationBar: BottomNavBar(
           selectedIndex: navigationShell.currentIndex,
           onDestinationSelected: _onTap,
