@@ -16,9 +16,7 @@ class AddDataScreen extends StatelessWidget {
           DestinationInfo(),
           gapH12,
           EtaWidget(),
-          gapH4,
-          Divider(thickness: 2),
-          gapH4,
+          gapH8,
           Expanded(
             child: DataEntryWidget(),
           ),

@@ -26,11 +26,17 @@ class NearestEdSelector extends StatelessWidget {
             ),
             FilledButton(
               onPressed: onTapNearestPciCenter,
-              child: const Text('PCI Center\n24 min'),
+              child: const Text(
+                'PCI Center\n24 min',
+                textAlign: TextAlign.center,
+              ),
             ),
             OutlinedButton(
               onPressed: onTapNearestEd,
-              child: const Text('ED\n17 min'),
+              child: const Text(
+                'ED\n17 min',
+                textAlign: TextAlign.center,
+              ),
             ),
           ],
         ),

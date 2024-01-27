@@ -14,9 +14,17 @@ class DataEntryHeader extends StatelessWidget {
     return SliverPinnedHeader(
       child: ColoredBox(
         color: colorScheme.secondaryContainer,
-        child: Text(
-          label,
-          style: textTheme.titleMedium,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: textTheme.titleMedium,
+            ),
+            Divider(
+              color: colorScheme.primary,
+            ),
+          ],
         ),
       ),
     );

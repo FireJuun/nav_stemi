@@ -6,25 +6,91 @@ class PatientInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     return SliverMainAxisGroup(
       slivers: [
         DataEntryHeader('Patient Info'.hardcoded),
         SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
           sliver: SliverList.list(
-            children: const [
-              Text('text'),
-              Text('text'),
-              Text('text'),
-              Text('text'),
-              Text('text'),
-              Text('text'),
-              Text('text'),
-              Text('text'),
-              Text('text'),
-              Text('text'),
-              Text('text'),
-              Text('text'),
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        label: Text('Last Name'),
+                      ),
+                      onTapOutside: (PointerDownEvent event) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
+                    ),
+                  ),
+                  gapW16,
+                  Expanded(
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        label: Text('First Name'),
+                      ),
+                      onTapOutside: (PointerDownEvent event) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              gapH24,
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        label: Text('Date of Birth'),
+                      ),
+                      onTapOutside: (PointerDownEvent event) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      'Age: 42',
+                      style: textTheme.bodyLarge,
+                      textAlign: TextAlign.end,
+                    ),
+                  ),
+                ],
+              ),
+              gapH24,
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        label: Text('Gender'),
+                      ),
+                      onTapOutside: (PointerDownEvent event) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      'Male',
+                      style: textTheme.bodyLarge,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: () {},
+                      child: const Text('Import'),
+                    ),
+                  ),
+                ],
+              ),
+              gapH24,
             ],
           ),
         ),
