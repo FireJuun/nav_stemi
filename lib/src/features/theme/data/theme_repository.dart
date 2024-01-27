@@ -37,6 +37,7 @@ class ThemeRepository {
   ///
   ThemeData _themeData(Brightness brightness) {
     final colorScheme = SeedColorScheme.fromSeeds(
+      tones: FlexTones.vividSurfaces(brightness),
       primaryKey: _appTheme.value.seedColor,
       secondaryKey: _appTheme.value.secondarySeedColor,
       tertiaryKey: _appTheme.value.tertiarySeedColor,
@@ -94,6 +95,13 @@ class ThemeRepository {
             textTheme.titleMedium!,
           ),
         ),
+      ),
+      inputDecorationTheme: const InputDecorationTheme(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+        ),
+        filled: true,
+        contentPadding: EdgeInsets.all(8),
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         shape: CircleBorder(),
