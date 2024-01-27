@@ -1,3 +1,4 @@
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
@@ -42,7 +43,8 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
               height: _toolbarHeight - 8,
               padding: const EdgeInsets.symmetric(vertical: 4),
               decoration: BoxDecoration(
-                color: colorScheme.tertiaryContainer,
+                // TODO(FireJuun): Extract this custom color to an extension
+                color: colorScheme.tertiary.lighten().withAlpha(110),
                 border: Border.all(
                   color: colorScheme.onTertiaryContainer,
                   width: 4,
