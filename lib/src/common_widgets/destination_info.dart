@@ -14,10 +14,16 @@ class DestinationInfo extends StatelessWidget {
         ),
         Expanded(
           child: Text(
-            'Scotland Memorial',
-            textAlign: TextAlign.end,
+            'Scotland Memorial ED',
+            textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.titleMedium,
           ),
+        ),
+        IconButton(
+          onPressed: () {
+            // TODO(FireJuun): Dialog showing contact info about this ED
+          },
+          icon: const Icon(Icons.info_outline),
         ),
       ],
     );

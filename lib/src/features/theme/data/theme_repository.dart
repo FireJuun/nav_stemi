@@ -124,7 +124,7 @@ TextTheme _buildTextTheme() {
     displaySmall: _style(40, FontWeight.w600),
     headlineMedium: _style(32, FontWeight.w400),
     headlineSmall: _style(22, FontWeight.w500),
-    titleLarge: _style(28, FontWeight.w500),
+    titleLarge: _style(26, FontWeight.w500),
     titleMedium: _style(22, FontWeight.w500),
     titleSmall: _style(16, FontWeight.w300),
     bodyLarge: _style(20, FontWeight.normal),

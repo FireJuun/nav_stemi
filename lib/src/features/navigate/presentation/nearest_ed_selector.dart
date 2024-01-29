@@ -20,9 +20,19 @@ class NearestEdSelector extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'Nearest:',
-              style: Theme.of(context).textTheme.titleLarge,
+            Column(
+              children: [
+                Text(
+                  'Nearest:',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                IconButton(
+                  onPressed: () {
+                    // TODO(FireJuun): Dialog showing other EDs
+                  },
+                  icon: const Icon(Icons.more_horiz),
+                ),
+              ],
             ),
             FilledButton(
               onPressed: onTapNearestPciCenter,

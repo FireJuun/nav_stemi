@@ -19,7 +19,7 @@ class DataEntryHeader extends StatelessWidget {
           children: [
             Text(
               label,
-              style: textTheme.titleMedium,
+              style: textTheme.titleMedium?.apply(color: colorScheme.primary),
             ),
             Divider(
               color: colorScheme.primary,
