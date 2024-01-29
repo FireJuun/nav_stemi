@@ -66,18 +66,41 @@ class _AddDataScreenState extends State<AddDataScreen> {
                 child: AnimatedSwitcher(
                   duration: 300.ms,
                   child: shouldShowChecklist()
-                      ? FilledButton(
+                      ? FilledButton.icon(
                           onPressed: () =>
                               setState(() => _showChecklist = false),
-                          child: Text('Checklist'.hardcoded),
+                          icon: const Icon(Icons.checklist),
+                          label: Text('Checklist'.hardcoded),
                         )
-                      : OutlinedButton(
+                      : OutlinedButton.icon(
                           onPressed: () =>
                               setState(() => _showChecklist = true),
-                          child: Text('Checklist'.hardcoded),
+                          icon: const Icon(Icons.checklist),
+                          label: Text('Checklist'.hardcoded),
                         ),
                 ),
               ),
+              Positioned.directional(
+                textDirection: Directionality.of(context),
+                start: 4,
+                bottom: 4,
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    // TODO(FireJuun): handle sync behaviors
+
+                    /// Should this also show its own secondary buttons?
+                    /// An example might be to sync to the cloud,
+                    /// to the EMS agency's app, or others that are nearby
+                    /// should we also include the ability to go back?
+                  },
+                  label: const Text('Sync'),
+                  icon: const Icon(Icons.sync),
+                ),
+              )
+                  .animate(
+                    target: shouldShowChecklist() ? 0 : 1,
+                  )
+                  .fadeIn(duration: 200.ms),
             ],
           ),
         );

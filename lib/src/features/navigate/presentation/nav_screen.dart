@@ -12,12 +12,14 @@ class NavScreen extends StatefulWidget {
 
 class _NavScreenState extends State<NavScreen> {
   bool _showSteps = false;
+  bool _showNextTurn = true;
 
   @override
   Widget build(BuildContext context) {
     return KeyboardVisibilityBuilder(
       builder: (context, isKeyboardVisible) {
         final colorScheme = Theme.of(context).colorScheme;
+
         bool shouldShowSteps() => _showSteps && !isKeyboardVisible;
         return Padding(
           padding: const EdgeInsets.symmetric(
@@ -29,11 +31,43 @@ class _NavScreenState extends State<NavScreen> {
               Column(
                 children: [
                   NearestEdSelector(
-                    onTapNearestPciCenter: () {},
-                    onTapNearestEd: () {},
+                    onTapNearestPciCenter: () {
+                      // TODO(FireJuun): handle tap for nearest pci
+                    },
+                    onTapNearestEd: () {
+                      // TODO(FireJuun): handle tap for nearest ed
+                    },
                   ),
                   gapH4,
-                  const Expanded(child: FakeMap()),
+                  Expanded(
+                    child: Stack(
+                      fit: StackFit.expand,
+                      alignment: AlignmentDirectional.center,
+                      children: [
+                        const FakeMap(),
+                        AnimatedSwitcher(
+                          duration: 300.ms,
+                          child: _showNextTurn
+                              ? Align(
+                                  alignment: Alignment.topCenter,
+                                  child: TurnDirections(
+                                    onTap: () =>
+                                        setState(() => _showNextTurn = false),
+                                  ),
+                                )
+                              : Align(
+                                  alignment: AlignmentDirectional.topStart,
+                                  child: FilledButton.tonalIcon(
+                                    icon: const Icon(Icons.expand_more),
+                                    label: Text('Next Step'.hardcoded),
+                                    onPressed: () =>
+                                        setState(() => _showNextTurn = true),
+                                  ),
+                                ),
+                        ),
+                      ],
+                    ),
+                  ),
                   AnimatedContainer(
                     duration: 300.ms,
                     height: _showSteps ? 0 : 60,
@@ -51,9 +85,65 @@ class _NavScreenState extends State<NavScreen> {
                           ? Border.all(color: colorScheme.onSurface)
                           : null,
                     ),
-                    child: const Center(child: Text('Directions')),
+                    child: Center(child: Text('All Steps'.hardcoded)),
                   ),
                 ],
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.only(bottom: 4),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.alt_route),
+                        tooltip: 'Other Routes'.hardcoded,
+                        onPressed: () {
+                          // TODO(FireJuun): Query Other Routes Dialog
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.moving),
+                        tooltip: 'Show Entire Route'.hardcoded,
+                        onPressed: () {
+                          // TODO(FireJuun): Zoom map to full route
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.my_location),
+                        tooltip: 'My Location'.hardcoded,
+                        onPressed: () {
+                          // TODO(FireJuun): Zoom map to current location
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Positioned.directional(
+                textDirection: Directionality.of(context),
+                end: 4,
+                bottom: 4,
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.zoom_out),
+                      tooltip: 'Zoom Out'.hardcoded,
+                      onPressed: () {
+                        // TODO(FireJuun): Zoom map out
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.zoom_in),
+                      tooltip: 'Zoom In'.hardcoded,
+                      onPressed: () {
+                        // TODO(FireJuun): Zoom map in
+                      },
+                    ),
+                  ],
+                ),
               ),
               Positioned.directional(
                 textDirection: Directionality.of(context),
@@ -64,14 +154,48 @@ class _NavScreenState extends State<NavScreen> {
                   child: shouldShowSteps()
                       ? FilledButton(
                           onPressed: () => setState(() => _showSteps = false),
-                          child: Text('Steps'.hardcoded),
+                          child: Text('All Steps'.hardcoded),
                         )
                       : OutlinedButton(
                           onPressed: () => setState(() => _showSteps = true),
-                          child: Text('Steps'.hardcoded),
+                          child: Text('All Steps'.hardcoded),
                         ),
                 ),
               ),
+              Align(
+                alignment: const Alignment(-1, .25),
+                child: IconButton(
+                  onPressed: () {
+                    // TODO(FireJuun): handle directions toggle (+ redraw)
+                  },
+                  tooltip: 'Narrate Directions'.hardcoded,
+                  icon: const Icon(Icons.voice_over_off),
+                ),
+              )
+                  .animate(
+                    target: shouldShowSteps() ? 1 : 0,
+                    delay: 400.ms,
+                  )
+                  .fadeIn(
+                    duration: 200.ms,
+                  ),
+              Align(
+                alignment: const Alignment(1, .25),
+                child: IconButton(
+                  onPressed: () {
+                    // TODO(FireJuun): handle north up toggle (+ redraw)
+                  },
+                  tooltip: 'North Points Up'.hardcoded,
+                  icon: const Icon(Icons.explore),
+                ),
+              )
+                  .animate(
+                    target: shouldShowSteps() ? 1 : 0,
+                    delay: 400.ms,
+                  )
+                  .fadeIn(
+                    duration: 200.ms,
+                  ),
             ],
           ),
         );

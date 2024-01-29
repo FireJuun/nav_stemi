@@ -4,3 +4,4 @@ export 'map_sample.dart';
 export 'map_screen.dart';
 export 'nav_screen.dart';
 export 'nearest_ed_selector.dart';
+export 'turn_directions.dart';
