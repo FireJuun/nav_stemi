@@ -25,6 +25,7 @@ dependencies:
   google_routes_flutter: ^1.0.0+1
   hooks_riverpod: ^2.4.9
   intl: ^0.18.0
+  random_name_generator: ^1.2.0
   riverpod_annotation: ^2.3.3
   rxdart: ^0.27.7
   shared_preferences: ^2.2.2

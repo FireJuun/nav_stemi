@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 class DataEntryHeader extends StatelessWidget {
-  const DataEntryHeader(this.label, {super.key});
+  const DataEntryHeader(this.label, {this.trailing, super.key});
 
   final String label;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +16,17 @@ class DataEntryHeader extends StatelessWidget {
       child: ColoredBox(
         color: colorScheme.secondaryContainer,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              label,
-              style: textTheme.titleMedium?.apply(color: colorScheme.primary),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  label,
+                  style:
+                      textTheme.titleMedium?.apply(color: colorScheme.primary),
+                ),
+                trailing ?? const SizedBox.shrink(),
+              ],
             ),
             Divider(
               color: colorScheme.primary,
