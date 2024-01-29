@@ -3,6 +3,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
+enum BottomModalState { checklist, sync, none }
+
 class AddDataScreen extends StatefulWidget {
   const AddDataScreen({super.key});
 
@@ -11,14 +13,21 @@ class AddDataScreen extends StatefulWidget {
 }
 
 class _AddDataScreenState extends State<AddDataScreen> {
-  bool _showChecklist = false;
+  BottomModalState _bottomModalState = BottomModalState.none;
 
   @override
   Widget build(BuildContext context) {
     return KeyboardVisibilityBuilder(
       builder: (context, isKeyboardVisible) {
         final colorScheme = Theme.of(context).colorScheme;
-        bool shouldShowChecklist() => _showChecklist && !isKeyboardVisible;
+
+        bool showBottomModal() =>
+            _bottomModalState != BottomModalState.none && !isKeyboardVisible;
+
+        bool isChecklistActive() =>
+            _bottomModalState == BottomModalState.checklist;
+
+        bool isSyncActive() => _bottomModalState == BottomModalState.sync;
 
         return Padding(
           padding: const EdgeInsets.symmetric(
@@ -38,24 +47,31 @@ class _AddDataScreenState extends State<AddDataScreen> {
                   ),
                   AnimatedContainer(
                     duration: 300.ms,
-                    height: shouldShowChecklist() ? 0 : 60,
+                    height: showBottomModal() ? 0 : 60,
                     child: const SizedBox.shrink(),
                   ),
                   AnimatedContainer(
                     duration: 300.ms,
-                    height: shouldShowChecklist()
+                    height: showBottomModal()
                         ? MediaQuery.of(context).size.height * 0.25
                         : 0,
                     // TODO(FireJuun): checklist goes here
                     decoration: BoxDecoration(
                       color: colorScheme.primaryContainer,
-                      border: shouldShowChecklist()
+                      border: showBottomModal()
                           ? Border.all(
                               color: colorScheme.onPrimaryContainer,
                             )
                           : null,
                     ),
-                    child: const Center(child: Text('Checklist')),
+                    child: switch (_bottomModalState) {
+                      BottomModalState.checklist =>
+                        Center(child: Text('Checklist'.hardcoded)),
+                      BottomModalState.sync =>
+                        Center(child: Text('Sync'.hardcoded)),
+                      BottomModalState.none =>
+                        const Center(child: SizedBox.shrink()),
+                    },
                   ),
                 ],
               ),
@@ -65,42 +81,57 @@ class _AddDataScreenState extends State<AddDataScreen> {
                 bottom: 4,
                 child: AnimatedSwitcher(
                   duration: 300.ms,
-                  child: shouldShowChecklist()
+                  child: _bottomModalState == BottomModalState.checklist
                       ? FilledButton.icon(
-                          onPressed: () =>
-                              setState(() => _showChecklist = false),
+                          onPressed: () => setState(
+                            () => _bottomModalState = BottomModalState.none,
+                          ),
                           icon: const Icon(Icons.checklist),
                           label: Text('Checklist'.hardcoded),
                         )
                       : OutlinedButton.icon(
-                          onPressed: () =>
-                              setState(() => _showChecklist = true),
+                          onPressed: isSyncActive()
+                              ? null
+                              : () => setState(
+                                    () => _bottomModalState =
+                                        BottomModalState.checklist,
+                                  ),
                           icon: const Icon(Icons.checklist),
                           label: Text('Checklist'.hardcoded),
                         ),
                 ),
-              ),
+              )
+                  .animate(
+                    target: isSyncActive() ? 1 : 0,
+                  )
+                  .fadeOut(duration: 200.ms),
               Positioned.directional(
                 textDirection: Directionality.of(context),
                 start: 4,
                 bottom: 4,
-                child: OutlinedButton.icon(
-                  onPressed: () {
-                    // TODO(FireJuun): handle sync behaviors
-
-                    /// Should this also show its own secondary buttons?
-                    /// An example might be to sync to the cloud,
-                    /// to the EMS agency's app, or others that are nearby
-                    /// should we also include the ability to go back?
-                  },
-                  label: const Text('Sync'),
-                  icon: const Icon(Icons.sync),
-                ),
+                child: _bottomModalState == BottomModalState.sync
+                    ? FilledButton.icon(
+                        onPressed: () => setState(
+                          () => _bottomModalState = BottomModalState.none,
+                        ),
+                        icon: const Icon(Icons.sync),
+                        label: Text('Sync'.hardcoded),
+                      )
+                    : OutlinedButton.icon(
+                        onPressed: isChecklistActive()
+                            ? null
+                            : () => setState(
+                                  () =>
+                                      _bottomModalState = BottomModalState.sync,
+                                ),
+                        icon: const Icon(Icons.sync),
+                        label: Text('Sync'.hardcoded),
+                      ),
               )
                   .animate(
-                    target: shouldShowChecklist() ? 0 : 1,
+                    target: isChecklistActive() ? 1 : 0,
                   )
-                  .fadeIn(duration: 200.ms),
+                  .fadeOut(duration: 200.ms),
             ],
           ),
         );
