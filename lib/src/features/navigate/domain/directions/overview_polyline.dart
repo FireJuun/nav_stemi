@@ -3,13 +3,13 @@ import 'package:equatable/equatable.dart';
 class OverviewPolyline extends Equatable {
   const OverviewPolyline({this.points});
 
-  final String? points;
-
   factory OverviewPolyline.fromJson(Map<String, Object?> json) {
     return OverviewPolyline(
       points: json['points'] as String?,
     );
   }
+
+  final String? points;
 
   Map<String, Object?> toJson() => {
         'points': points,

@@ -3,13 +3,13 @@ import 'package:equatable/equatable.dart';
 class Southwest extends Equatable {
   const Southwest({this.lat, this.lng});
 
-  final double? lat;
-  final double? lng;
-
   factory Southwest.fromJson(Map<String, Object?> json) => Southwest(
         lat: (json['lat'] as num?)?.toDouble(),
         lng: (json['lng'] as num?)?.toDouble(),
       );
+
+  final double? lat;
+  final double? lng;
 
   Map<String, Object?> toJson() => {
         'lat': lat,

@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 
-import 'bounds.dart';
-import 'leg.dart';
-import 'overview_polyline.dart';
+import 'package:nav_stemi/src/features/navigate/domain/directions/bounds.dart';
+import 'package:nav_stemi/src/features/navigate/domain/directions/leg.dart';
+import 'package:nav_stemi/src/features/navigate/domain/directions/overview_polyline.dart';
 
 class Route extends Equatable {
   const Route({
@@ -15,14 +15,6 @@ class Route extends Equatable {
     this.waypointOrder,
   });
 
-  final Bounds? bounds;
-  final String? copyrights;
-  final List<Leg>? legs;
-  final OverviewPolyline? overviewPolyline;
-  final String? summary;
-  final List<dynamic>? warnings;
-  final List<int>? waypointOrder;
-
   factory Route.fromJson(Map<String, Object?> json) => Route(
         bounds: json['bounds'] == null
             ? null
@@ -34,11 +26,20 @@ class Route extends Equatable {
         overviewPolyline: json['overview_polyline'] == null
             ? null
             : OverviewPolyline.fromJson(
-                json['overview_polyline']! as Map<String, Object?>),
+                json['overview_polyline']! as Map<String, Object?>,
+              ),
         summary: json['summary'] as String?,
         warnings: json['warnings'] as List<dynamic>?,
         waypointOrder: json['waypoint_order'] as List<int>?,
       );
+
+  final Bounds? bounds;
+  final String? copyrights;
+  final List<Leg>? legs;
+  final OverviewPolyline? overviewPolyline;
+  final String? summary;
+  final List<dynamic>? warnings;
+  final List<int>? waypointOrder;
 
   Map<String, Object?> toJson() => {
         'bounds': bounds?.toJson(),

@@ -25,7 +25,8 @@ class Step extends Equatable {
         duration: json['duration'] == null
             ? null
             : DirectionDuration.fromJson(
-                json['duration']! as Map<String, Object?>),
+                json['duration']! as Map<String, Object?>,
+              ),
         endLocation: json['end_location'] == null
             ? null
             : EndLocation.fromJson(

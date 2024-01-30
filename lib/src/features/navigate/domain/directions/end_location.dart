@@ -3,13 +3,13 @@ import 'package:equatable/equatable.dart';
 class EndLocation extends Equatable {
   const EndLocation({this.lat, this.lng});
 
-  final double? lat;
-  final double? lng;
-
   factory EndLocation.fromJson(Map<String, Object?> json) => EndLocation(
         lat: (json['lat'] as num?)?.toDouble(),
         lng: (json['lng'] as num?)?.toDouble(),
       );
+
+  final double? lat;
+  final double? lng;
 
   Map<String, Object?> toJson() => {
         'lat': lat,

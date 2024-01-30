@@ -1,13 +1,10 @@
 import 'package:equatable/equatable.dart';
 
-import 'northeast.dart';
-import 'southwest.dart';
+import 'package:nav_stemi/src/features/navigate/domain/directions/northeast.dart';
+import 'package:nav_stemi/src/features/navigate/domain/directions/southwest.dart';
 
 class Bounds extends Equatable {
   const Bounds({this.northeast, this.southwest});
-
-  final Northeast? northeast;
-  final Southwest? southwest;
 
   factory Bounds.fromJson(Map<String, Object?> json) => Bounds(
         northeast: json['northeast'] == null
@@ -17,6 +14,9 @@ class Bounds extends Equatable {
             ? null
             : Southwest.fromJson(json['southwest']! as Map<String, Object?>),
       );
+
+  final Northeast? northeast;
+  final Southwest? southwest;
 
   Map<String, Object?> toJson() => {
         'northeast': northeast?.toJson(),

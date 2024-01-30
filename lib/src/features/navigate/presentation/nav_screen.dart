@@ -3,6 +3,9 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
+// TODO(FireJuun): use this enum to determine active state of Nearsest: options in the nav screen
+enum NearestOption { pciCenter, ed, other }
+
 class NavScreen extends StatefulWidget {
   const NavScreen({super.key});
 
@@ -36,6 +39,7 @@ class _NavScreenState extends State<NavScreen> {
                     },
                     onTapNearestEd: () {
                       // TODO(FireJuun): handle tap for nearest ed
+                      debugPrint('nearest ED');
                     },
                   ),
                   gapH4,

@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 
-import 'distance.dart';
-import 'duration.dart';
-import 'end_location.dart';
-import 'start_location.dart';
-import 'step.dart';
+import 'package:nav_stemi/src/features/navigate/domain/directions/distance.dart';
+import 'package:nav_stemi/src/features/navigate/domain/directions/duration.dart';
+import 'package:nav_stemi/src/features/navigate/domain/directions/end_location.dart';
+import 'package:nav_stemi/src/features/navigate/domain/directions/start_location.dart';
+import 'package:nav_stemi/src/features/navigate/domain/directions/step.dart';
 
 class Leg extends Equatable {
   const Leg({
@@ -19,6 +19,34 @@ class Leg extends Equatable {
     this.viaWaypoint,
   });
 
+  factory Leg.fromJson(Map<String, Object?> json) => Leg(
+        distance: json['distance'] == null
+            ? null
+            : Distance.fromJson(json['distance']! as Map<String, Object?>),
+        duration: json['duration'] == null
+            ? null
+            : DirectionDuration.fromJson(
+                json['duration']! as Map<String, Object?>,
+              ),
+        endAddress: json['end_address'] as String?,
+        endLocation: json['end_location'] == null
+            ? null
+            : EndLocation.fromJson(
+                json['end_location']! as Map<String, Object?>,
+              ),
+        startAddress: json['start_address'] as String?,
+        startLocation: json['start_location'] == null
+            ? null
+            : StartLocation.fromJson(
+                json['start_location']! as Map<String, Object?>,
+              ),
+        steps: (json['steps'] as List<dynamic>?)
+            ?.map((e) => Step.fromJson(e as Map<String, Object?>))
+            .toList(),
+        trafficSpeedEntry: json['traffic_speed_entry'] as List<dynamic>?,
+        viaWaypoint: json['via_waypoint'] as List<dynamic>?,
+      );
+
   final Distance? distance;
   final DirectionDuration? duration;
   final String? endAddress;
@@ -28,31 +56,6 @@ class Leg extends Equatable {
   final List<Step>? steps;
   final List<dynamic>? trafficSpeedEntry;
   final List<dynamic>? viaWaypoint;
-
-  factory Leg.fromJson(Map<String, Object?> json) => Leg(
-        distance: json['distance'] == null
-            ? null
-            : Distance.fromJson(json['distance']! as Map<String, Object?>),
-        duration: json['duration'] == null
-            ? null
-            : DirectionDuration.fromJson(
-                json['duration']! as Map<String, Object?>),
-        endAddress: json['end_address'] as String?,
-        endLocation: json['end_location'] == null
-            ? null
-            : EndLocation.fromJson(
-                json['end_location']! as Map<String, Object?>),
-        startAddress: json['start_address'] as String?,
-        startLocation: json['start_location'] == null
-            ? null
-            : StartLocation.fromJson(
-                json['start_location']! as Map<String, Object?>),
-        steps: (json['steps'] as List<dynamic>?)
-            ?.map((e) => Step.fromJson(e as Map<String, Object?>))
-            .toList(),
-        trafficSpeedEntry: json['traffic_speed_entry'] as List<dynamic>?,
-        viaWaypoint: json['via_waypoint'] as List<dynamic>?,
-      );
 
   Map<String, Object?> toJson() => {
         'distance': distance?.toJson(),

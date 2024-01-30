@@ -3,14 +3,14 @@ import 'package:equatable/equatable.dart';
 class DirectionDuration extends Equatable {
   const DirectionDuration({this.text, this.value});
 
-  final String? text;
-  final int? value;
-
   factory DirectionDuration.fromJson(Map<String, Object?> json) =>
       DirectionDuration(
         text: json['text'] as String?,
         value: json['value'] as int?,
       );
+
+  final String? text;
+  final int? value;
 
   Map<String, Object?> toJson() => {
         'text': text,

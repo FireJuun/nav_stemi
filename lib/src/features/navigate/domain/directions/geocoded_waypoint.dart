@@ -3,10 +3,6 @@ import 'package:equatable/equatable.dart';
 class GeocodedWaypoint extends Equatable {
   const GeocodedWaypoint({this.geocoderStatus, this.placeId, this.types});
 
-  final String? geocoderStatus;
-  final String? placeId;
-  final List<String>? types;
-
   factory GeocodedWaypoint.fromJson(Map<String, Object?> json) {
     return GeocodedWaypoint(
       geocoderStatus: json['geocoder_status'] as String?,
@@ -14,6 +10,10 @@ class GeocodedWaypoint extends Equatable {
       types: json['types'] as List<String>?,
     );
   }
+
+  final String? geocoderStatus;
+  final String? placeId;
+  final List<String>? types;
 
   Map<String, Object?> toJson() => {
         'geocoder_status': geocoderStatus,

@@ -3,13 +3,13 @@ import 'package:equatable/equatable.dart';
 class Distance extends Equatable {
   const Distance({this.text, this.value});
 
-  final String? text;
-  final int? value;
-
   factory Distance.fromJson(Map<String, Object?> json) => Distance(
         text: json['text'] as String?,
         value: json['value'] as int?,
       );
+
+  final String? text;
+  final int? value;
 
   Map<String, Object?> toJson() => {
         'text': text,
