@@ -47,43 +47,16 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        NearestEdSelector(
-          onTapNearestPciCenter: () => mapController.animateCamera(
-            CameraUpdate.newCameraPosition(
-              CameraPosition(
-                target: markers[const MarkerId('origin')]?.position ??
-                    blankMarker.position,
-                zoom: 12,
-              ),
-            ),
-          ),
-          onTapNearestEd: () => mapController.animateCamera(
-            CameraUpdate.newCameraPosition(
-              CameraPosition(
-                target: markers[const MarkerId('destination')]?.position ??
-                    blankMarker.position,
-                zoom: 12,
-              ),
-            ),
-          ),
-        ),
-        gapH24,
-        Expanded(
-          child: GoogleMap(
-            initialCameraPosition: CameraPosition(
-              target: origin,
-              zoom: 15,
-            ),
-            trafficEnabled: true,
-            myLocationEnabled: true,
-            onMapCreated: _onMapCreated,
-            markers: Set<Marker>.of(markers.values),
-            polylines: Set<Polyline>.of(polylines.values),
-          ),
-        ),
-      ],
+    return GoogleMap(
+      initialCameraPosition: CameraPosition(
+        target: origin,
+        zoom: 15,
+      ),
+      trafficEnabled: true,
+      myLocationButtonEnabled: false,
+      onMapCreated: _onMapCreated,
+      markers: Set<Marker>.of(markers.values),
+      polylines: Set<Polyline>.of(polylines.values),
     );
   }
 
