@@ -39,7 +39,7 @@ class TurnDirections extends StatelessWidget {
               gapW8,
               Expanded(
                 child: Text(
-                  'Left onto Random Street',
+                  'Left onto US 220'.hardcoded,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: textTheme.bodyLarge?.apply(
@@ -49,7 +49,7 @@ class TurnDirections extends StatelessWidget {
               ),
               gapW8,
               Text(
-                '500 ft',
+                '500 ft'.hardcoded,
                 style: textTheme.bodyMedium?.apply(
                   color: colorScheme.onSecondary,
                   fontStyle: FontStyle.italic,
