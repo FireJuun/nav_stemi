@@ -5,9 +5,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
-// TODO(FireJuun): use this enum to determine active state of Nearsest: options in the nav screen
-enum NearestOption { pciCenter, ed, other }
-
 class NavScreen extends StatefulWidget {
   const NavScreen({super.key});
 

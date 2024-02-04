@@ -3,7 +3,7 @@ import 'package:nav_stemi/nav_stemi.dart';
 
 class RemoteRoutesRepository {
   Future<void> getData() async {
-    final result = await computeRoute(
+    final routes = await computeRoute(
       origin: const Waypoint(location: Location(latLng: locationRandolphEms)),
       destination:
           const Waypoint(location: Location(latLng: locationRandolphEms)),
