@@ -130,97 +130,82 @@ class _NavScreenState extends State<NavScreen> {
                         ),
                       ),
                       gapH8,
-                      // if (state.isLoading)
-                      //   const Padding(
-                      //     padding: EdgeInsets.all(Sizes.p8),
-                      //     child: LinearProgressIndicator(),
-                      //   )
-                      // else
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          AnimatedSwitcher(
-                            duration: 300.ms,
-
-                            /// required due to this bug: https://github.com/flutter/flutter/issues/121336#issuecomment-1482620874
-                            transitionBuilder: (child, animation) =>
-                                FadeTransition(
-                              opacity: animation,
-                              child: child,
+                      if (state.isLoading)
+                        const Padding(
+                          padding: EdgeInsets.all(Sizes.p8),
+                          child: LinearProgressIndicator(),
+                        )
+                      else
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            PrimaryToggleButton(
+                              text: 'All Steps'.hardcoded,
+                              onPressed: () =>
+                                  setState(() => _showSteps = !_showSteps),
+                              isActive: shouldShowSteps(),
                             ),
-                            child: shouldShowSteps()
-                                ? FilledButton(
-                                    onPressed: () =>
-                                        setState(() => _showSteps = false),
-                                    child: Text('All Steps'.hardcoded),
-                                  )
-                                : OutlinedButton(
-                                    onPressed: () =>
-                                        setState(() => _showSteps = true),
-                                    child: Text('All Steps'.hardcoded),
-                                  ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.alt_route),
-                                tooltip: 'Other Routes'.hardcoded,
-                                onPressed: () {
-                                  // TODO(FireJuun): Query Other Routes Dialog
-                                },
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.moving),
-                                tooltip: 'Show Entire Route'.hardcoded,
-                                onPressed: () {
-                                  // TODO(FireJuun): Zoom map to full route
-                                },
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.my_location),
-                                tooltip: 'My Location'.hardcoded,
-                                onPressed: () {
-                                  // TODO(FireJuun): Zoom map to user location
-                                },
-                                // onPressed: () {
-                                //   mapController.animateCamera(
-                                //     CameraUpdate.newCameraPosition(
-                                //       const CameraPosition(
-                                //         target: origin,
-                                //         zoom: 14,
-                                //       ),
-                                //     ),
-                                //   );
-                                // },
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.zoom_out),
-                                tooltip: 'Zoom Out'.hardcoded,
-                                onPressed: () => ref
-                                    .read(
-                                      navScreenControllerProvider.notifier,
-                                    )
-                                    .zoomOut(),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.zoom_in),
-                                tooltip: 'Zoom In'.hardcoded,
-                                onPressed: () => ref
-                                    .read(
-                                      navScreenControllerProvider.notifier,
-                                    )
-                                    .zoomIn(),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.alt_route),
+                                  tooltip: 'Other Routes'.hardcoded,
+                                  onPressed: () {
+                                    // TODO(FireJuun): Query Other Routes Dialog
+                                  },
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.moving),
+                                  tooltip: 'Show Entire Route'.hardcoded,
+                                  onPressed: () {
+                                    // TODO(FireJuun): Zoom map to full route
+                                  },
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.my_location),
+                                  tooltip: 'My Location'.hardcoded,
+                                  onPressed: () {
+                                    // TODO(FireJuun): Zoom map to user location
+                                  },
+                                  // onPressed: () {
+                                  //   mapController.animateCamera(
+                                  //     CameraUpdate.newCameraPosition(
+                                  //       const CameraPosition(
+                                  //         target: origin,
+                                  //         zoom: 14,
+                                  //       ),
+                                  //     ),
+                                  //   );
+                                  // },
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.zoom_out),
+                                  tooltip: 'Zoom Out'.hardcoded,
+                                  onPressed: () => ref
+                                      .read(
+                                        navScreenControllerProvider.notifier,
+                                      )
+                                      .zoomOut(),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.zoom_in),
+                                  tooltip: 'Zoom In'.hardcoded,
+                                  onPressed: () => ref
+                                      .read(
+                                        navScreenControllerProvider.notifier,
+                                      )
+                                      .zoomIn(),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                     ],
                   ),
                   Align(

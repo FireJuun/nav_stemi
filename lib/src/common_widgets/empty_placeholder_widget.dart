@@ -23,7 +23,7 @@ class EmptyPlaceholderWidget extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             gapH32,
-            PrimaryButton(
+            PrimaryLoadingButton(
               onPressed: () {
                 // TODO(FireJuun): re-implement
                 // context.goNamed(AppRoute.home.name);
