@@ -1,7 +1,7 @@
 import 'package:google_routes_flutter/google_routes_flutter.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
-class RouteRepository {
+class RemoteRoutesRepository {
   Future<void> getData() async {
     final result = await computeRoute(
       origin: const Waypoint(location: Location(latLng: locationRandolphEms)),

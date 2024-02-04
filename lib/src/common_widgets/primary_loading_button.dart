@@ -14,9 +14,11 @@ class PrimaryLoadingButton extends StatelessWidget {
     this.isLoading = false,
     this.onPressed,
   });
+
   final String text;
   final bool isLoading;
   final VoidCallback? onPressed;
+
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(

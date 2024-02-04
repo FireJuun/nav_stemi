@@ -220,7 +220,6 @@ class _NavScreenState extends State<NavScreen> {
                   )
                       .animate(
                         target: shouldShowSteps() ? 1 : 0,
-                        delay: 400.ms,
                       )
                       .fadeIn(
                         duration: 200.ms,
@@ -237,7 +236,6 @@ class _NavScreenState extends State<NavScreen> {
                   )
                       .animate(
                         target: shouldShowSteps() ? 1 : 0,
-                        delay: 400.ms,
                       )
                       .fadeIn(
                         duration: 200.ms,
