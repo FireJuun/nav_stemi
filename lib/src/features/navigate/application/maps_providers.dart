@@ -10,17 +10,17 @@ Stream<MapsInfo?> mapsInfo(MapsInfoRef ref) {
 }
 
 @riverpod
-LatLng origin(OriginRef ref) {
+LatLng? origin(OriginRef ref) {
   final mapsInfoStream = ref.watch(mapsInfoProvider).value;
 
-  return mapsInfoStream?.origin ?? const LatLng(0, 0);
+  return mapsInfoStream?.origin;
 }
 
 @riverpod
-LatLng destination(DestinationRef ref) {
+LatLng? destination(DestinationRef ref) {
   final mapsInfoStream = ref.watch(mapsInfoProvider).value;
 
-  return mapsInfoStream?.destination ?? const LatLng(0, 0);
+  return mapsInfoStream?.destination;
 }
 
 @riverpod

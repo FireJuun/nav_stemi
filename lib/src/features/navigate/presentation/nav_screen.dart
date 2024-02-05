@@ -65,7 +65,8 @@ class _NavScreenState extends State<NavScreen> {
                           children: [
                             GoogleMap(
                               initialCameraPosition: CameraPosition(
-                                target: ref.watch(originProvider),
+                                target: ref.watch(originProvider) ??
+                                    const LatLng(0, 0),
                                 zoom: 14,
                               ),
                               trafficEnabled: true,
@@ -172,19 +173,11 @@ class _NavScreenState extends State<NavScreen> {
                                 IconButton(
                                   icon: const Icon(Icons.my_location),
                                   tooltip: 'My Location'.hardcoded,
-                                  onPressed: () {
-                                    // TODO(FireJuun): Zoom map to user location
-                                  },
-                                  // onPressed: () {
-                                  //   mapController.animateCamera(
-                                  //     CameraUpdate.newCameraPosition(
-                                  //       const CameraPosition(
-                                  //         target: origin,
-                                  //         zoom: 14,
-                                  //       ),
-                                  //     ),
-                                  //   );
-                                  // },
+                                  onPressed: () => ref
+                                      .watch(
+                                        navScreenControllerProvider.notifier,
+                                      )
+                                      .showCurrentLocation(),
                                 ),
                               ],
                             ),

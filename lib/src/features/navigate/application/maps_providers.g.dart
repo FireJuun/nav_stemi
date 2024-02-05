@@ -20,11 +20,11 @@ final mapsInfoProvider = AutoDisposeStreamProvider<MapsInfo?>.internal(
 );
 
 typedef MapsInfoRef = AutoDisposeStreamProviderRef<MapsInfo?>;
-String _$originHash() => r'd91996646de6f717782ec4ea4b3f825d205ea41f';
+String _$originHash() => r'e6d8ace09d0b893ca61f86c14f8fd7ef818789c5';
 
 /// See also [origin].
 @ProviderFor(origin)
-final originProvider = AutoDisposeProvider<LatLng>.internal(
+final originProvider = AutoDisposeProvider<LatLng?>.internal(
   origin,
   name: r'originProvider',
   debugGetCreateSourceHash:
@@ -33,12 +33,12 @@ final originProvider = AutoDisposeProvider<LatLng>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef OriginRef = AutoDisposeProviderRef<LatLng>;
-String _$destinationHash() => r'b663e5b2c3e4e23fe50b98b0b5224d66478224f5';
+typedef OriginRef = AutoDisposeProviderRef<LatLng?>;
+String _$destinationHash() => r'0c67b2656af4602c70e787b57a095d1e96c92c66';
 
 /// See also [destination].
 @ProviderFor(destination)
-final destinationProvider = AutoDisposeProvider<LatLng>.internal(
+final destinationProvider = AutoDisposeProvider<LatLng?>.internal(
   destination,
   name: r'destinationProvider',
   debugGetCreateSourceHash:
@@ -47,8 +47,8 @@ final destinationProvider = AutoDisposeProvider<LatLng>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef DestinationRef = AutoDisposeProviderRef<LatLng>;
-String _$markersHash() => r'95fc81e5fd42ed996f0f00caf7d107c100f4224e';
+typedef DestinationRef = AutoDisposeProviderRef<LatLng?>;
+String _$markersHash() => r'6b5ab3cc4e275e6b734e99e4fe4a784d4b438362';
 
 /// See also [markers].
 @ProviderFor(markers)
@@ -62,7 +62,7 @@ final markersProvider = AutoDisposeProvider<Set<Marker>>.internal(
 );
 
 typedef MarkersRef = AutoDisposeProviderRef<Set<Marker>>;
-String _$polylinesHash() => r'437aef866602dd22e96ef70907d6bdef2dc23b7d';
+String _$polylinesHash() => r'fc6b1dfab91d87c4074fb9e38e1a64bef4840c3c';
 
 /// See also [polylines].
 @ProviderFor(polylines)

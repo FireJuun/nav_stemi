@@ -26,7 +26,6 @@ class _PlaceholderData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const locations = Locations.values;
     return ListView.builder(
       itemCount: locations.length,
       itemBuilder: (context, index) => _PlaceholderButton(locations[index]),
@@ -37,7 +36,7 @@ class _PlaceholderData extends StatelessWidget {
 class _PlaceholderButton extends StatelessWidget {
   const _PlaceholderButton(this.location);
 
-  final Locations location;
+  final EdInfo location;
 
   @override
   Widget build(BuildContext context) {
