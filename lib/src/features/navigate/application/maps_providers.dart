@@ -5,35 +5,34 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'maps_providers.g.dart';
 
 @riverpod
-LatLng origin(OriginRef ref) {
-  final origin =
-      ref.watch(remoteMapsRepositoryProvider.select((e) => e.origin));
+Stream<MapsInfo?> mapsInfo(MapsInfoRef ref) {
+  return ref.watch(localMapsRepositoryProvider).watchMapsInfo();
+}
 
-  // TODO(FireJuun): better handle null values
-  return origin ?? const LatLng(0, 0);
+@riverpod
+LatLng origin(OriginRef ref) {
+  final mapsInfoStream = ref.watch(mapsInfoProvider).value;
+
+  return mapsInfoStream?.origin ?? const LatLng(0, 0);
 }
 
 @riverpod
 LatLng destination(DestinationRef ref) {
-  final destination =
-      ref.watch(remoteMapsRepositoryProvider.select((e) => e.destination));
+  final mapsInfoStream = ref.watch(mapsInfoProvider).value;
 
-  // TODO(FireJuun): better handle null values
-  return destination ?? const LatLng(0, 0);
+  return mapsInfoStream?.destination ?? const LatLng(0, 0);
 }
 
 @riverpod
 Set<Marker> markers(MarkersRef ref) {
-  final markers =
-      ref.watch(remoteMapsRepositoryProvider.select((e) => e.markers));
+  final mapsInfoStream = ref.watch(mapsInfoProvider).value;
 
-  return markers.values.toSet();
+  return mapsInfoStream?.markers.values.toSet() ?? <Marker>{};
 }
 
 @riverpod
 Set<Polyline> polylines(PolylinesRef ref) {
-  final polylines =
-      ref.watch(remoteMapsRepositoryProvider.select((e) => e.polylines));
+  final mapsInfoStream = ref.watch(mapsInfoProvider).value;
 
-  return polylines.values.toSet();
+  return mapsInfoStream?.polylines.values.toSet() ?? <Polyline>{};
 }

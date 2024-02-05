@@ -6,7 +6,21 @@ part of 'maps_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$originHash() => r'8824ac2e23d533b8bbb12d99a7f83a94f6d4f569';
+String _$mapsInfoHash() => r'360e70e20239377b665fdcdc1e40ba20b80bcfb1';
+
+/// See also [mapsInfo].
+@ProviderFor(mapsInfo)
+final mapsInfoProvider = AutoDisposeStreamProvider<MapsInfo?>.internal(
+  mapsInfo,
+  name: r'mapsInfoProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$mapsInfoHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef MapsInfoRef = AutoDisposeStreamProviderRef<MapsInfo?>;
+String _$originHash() => r'd91996646de6f717782ec4ea4b3f825d205ea41f';
 
 /// See also [origin].
 @ProviderFor(origin)
@@ -20,7 +34,7 @@ final originProvider = AutoDisposeProvider<LatLng>.internal(
 );
 
 typedef OriginRef = AutoDisposeProviderRef<LatLng>;
-String _$destinationHash() => r'7b8a3773037d8df5f28adfada9149003c5dd28fa';
+String _$destinationHash() => r'b663e5b2c3e4e23fe50b98b0b5224d66478224f5';
 
 /// See also [destination].
 @ProviderFor(destination)
@@ -34,7 +48,7 @@ final destinationProvider = AutoDisposeProvider<LatLng>.internal(
 );
 
 typedef DestinationRef = AutoDisposeProviderRef<LatLng>;
-String _$markersHash() => r'de885be020e5ad0540edf84533272af2e99a82ad';
+String _$markersHash() => r'95fc81e5fd42ed996f0f00caf7d107c100f4224e';
 
 /// See also [markers].
 @ProviderFor(markers)
@@ -48,7 +62,7 @@ final markersProvider = AutoDisposeProvider<Set<Marker>>.internal(
 );
 
 typedef MarkersRef = AutoDisposeProviderRef<Set<Marker>>;
-String _$polylinesHash() => r'2711e1627ee0ffe7b97088bb68a184f8f70839a8';
+String _$polylinesHash() => r'437aef866602dd22e96ef70907d6bdef2dc23b7d';
 
 /// See also [polylines].
 @ProviderFor(polylines)

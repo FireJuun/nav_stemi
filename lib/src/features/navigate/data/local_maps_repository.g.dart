@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'remote_maps_repository.dart';
+part of 'local_maps_repository.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$remoteMapsRepositoryHash() =>
-    r'7b28ebd850174e36887b95d0222b388c65c47869';
+String _$localMapsRepositoryHash() =>
+    r'9e2e17c38197cd3c9debaa4f51d9b780dd8473a0';
 
-/// See also [remoteMapsRepository].
-@ProviderFor(remoteMapsRepository)
-final remoteMapsRepositoryProvider = Provider<RemoteMapsRepository>.internal(
-  remoteMapsRepository,
-  name: r'remoteMapsRepositoryProvider',
+/// See also [localMapsRepository].
+@ProviderFor(localMapsRepository)
+final localMapsRepositoryProvider = Provider<LocalMapsRepository>.internal(
+  localMapsRepository,
+  name: r'localMapsRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$remoteMapsRepositoryHash,
+      : _$localMapsRepositoryHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef RemoteMapsRepositoryRef = ProviderRef<RemoteMapsRepository>;
+typedef LocalMapsRepositoryRef = ProviderRef<LocalMapsRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
