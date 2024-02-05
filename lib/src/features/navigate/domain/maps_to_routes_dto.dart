@@ -4,8 +4,10 @@ import 'package:google_routes_flutter/google_routes_flutter.dart' as routes;
 /// Helper function to swap between the Google Maps Flutter package and
 /// the Google Routes Flutter package, which both have LatLng() defined.
 ///
-class GoogleMapsToRoutesUtil {
-  const GoogleMapsToRoutesUtil();
+/// DTO: Data Transfer Object
+///
+class MapsToRoutesDTO {
+  const MapsToRoutesDTO();
 
   maps.LatLng routesToMaps(routes.LatLng latLng) {
     assert(latLng.latitude != null, 'Error: latitude must not be null');

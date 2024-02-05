@@ -43,19 +43,19 @@ class _NavScreenState extends State<NavScreen> {
                       NearestEdSelector(
                         onTapNearestPciCenter: () async {
                           // TODO(FireJuun): handle tap for nearest pci
-                          final result =
-                              await ActiveRouteRepository().getRoute();
-                          debugPrint('route result:\n${result.toJson()}');
+                          // final result =
+                          //     await ActiveRouteRepository().getRoute();
+                          // debugPrint('route result:\n${result.toJson()}');
                         },
                         onTapNearestEd: () async {
                           // TODO(FireJuun): handle tap for nearest ed
-                          final results =
-                              await ActiveRouteRepository().getRouteMatrix();
-                          for (var i = 0; i < results.length; i++) {
-                            final item = results[i].toJson();
-                            debugPrint('route matrix result $i:\n$item');
-                          }
-                          debugPrint('all items found');
+                          // final results =
+                          //     await ActiveRouteRepository().getRouteMatrix();
+                          // for (var i = 0; i < results.length; i++) {
+                          //   final item = results[i].toJson();
+                          //   debugPrint('route matrix result $i:\n$item');
+                          // }
+                          // debugPrint('all items found');
                         },
                       ),
                       gapH4,
@@ -96,7 +96,16 @@ class _NavScreenState extends State<NavScreen> {
                                     )
                                   : Align(
                                       alignment: AlignmentDirectional.topStart,
-                                      child: FilledButton.tonalIcon(
+                                      child: OutlinedButton.icon(
+                                        style: Theme.of(context)
+                                            .outlinedButtonTheme
+                                            .style
+                                            ?.copyWith(
+                                              backgroundColor:
+                                                  MaterialStatePropertyAll(
+                                                colorScheme.background,
+                                              ),
+                                            ),
                                         icon: const Icon(Icons.expand_more),
                                         label: Text('Next Step'.hardcoded),
                                         onPressed: () => setState(

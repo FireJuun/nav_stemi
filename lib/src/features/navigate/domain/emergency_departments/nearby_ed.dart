@@ -13,8 +13,8 @@ class NearbyEd extends Equatable {
   factory NearbyEd.fromMap(Map<String, dynamic> map) {
     return NearbyEd(
       distanceBetween: map['distanceBetween'] as double,
-      routeDistance: map['routeDistance'] as int,
-      routeDuration: map['routeDuration'] as String,
+      routeDistance: map['routeDistance'] as int?,
+      routeDuration: map['routeDuration'] as String?,
       edInfo: EdInfo.fromMap(map['edInfo'] as Map<String, dynamic>),
     );
   }
@@ -23,8 +23,8 @@ class NearbyEd extends Equatable {
       NearbyEd.fromMap(json.decode(source) as Map<String, dynamic>);
 
   final double distanceBetween;
-  final int routeDistance;
-  final String routeDuration;
+  final int? routeDistance;
+  final String? routeDuration;
   final EdInfo edInfo;
 
   NearbyEd copyWith({
@@ -56,6 +56,6 @@ class NearbyEd extends Equatable {
   bool get stringify => true;
 
   @override
-  List<Object> get props =>
+  List<Object?> get props =>
       [distanceBetween, routeDistance, routeDuration, edInfo];
 }

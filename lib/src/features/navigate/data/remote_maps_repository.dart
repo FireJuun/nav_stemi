@@ -4,21 +4,14 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'remote_maps_repository.g.dart';
 
-// TODO(FireJuun): extract into DTO
-const _util = GoogleMapsToRoutesUtil();
-
 class RemoteMapsRepository {
-  final origin = _util.routesToMaps(locationRandolphEms);
-  final destination = _util.routesToMaps(Locations.atriumWakeHighPoint.loc);
-
+  LatLng? origin;
+  LatLng? destination;
   Map<MarkerId, Marker> markers = {};
   Map<PolylineId, Polyline> polylines = {};
 
-  void _addMarker(LatLng position, String id, BitmapDescriptor descriptor) {
-    final markerId = MarkerId(id);
-    final marker =
-        Marker(markerId: markerId, icon: descriptor, position: position);
-    markers[markerId] = marker;
+  void setOrigin(LatLng origin) {
+    this.origin = origin;
   }
 }
 

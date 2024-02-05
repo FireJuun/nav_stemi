@@ -6,28 +6,28 @@ typedef ActiveStepId = Polyline;
 
 /// Determines which point of interest is nearest to the
 /// user's current location.
-enum ActiveOption { pciCenter, ed, other, none }
+enum RouteOption { pciCenter, ed, other, none }
 
 class ActiveRoute extends Equatable {
   const ActiveRoute({
     required this.activeRouteId,
     required this.activeStepId,
-    this.nearestOption = ActiveOption.none,
+    this.routeOption = RouteOption.none,
   });
 
   final ActiveRouteId activeRouteId;
   final ActiveStepId activeStepId;
-  final ActiveOption nearestOption;
+  final RouteOption routeOption;
 
   ActiveRoute copyWith({
     ActiveRouteId? activeRouteId,
     ActiveStepId? activeStepId,
-    ActiveOption? nearestOption,
+    RouteOption? routeOption,
   }) {
     return ActiveRoute(
       activeRouteId: activeRouteId ?? this.activeRouteId,
       activeStepId: activeStepId ?? this.activeStepId,
-      nearestOption: nearestOption ?? this.nearestOption,
+      routeOption: routeOption ?? this.routeOption,
     );
   }
 
@@ -35,5 +35,5 @@ class ActiveRoute extends Equatable {
   bool get stringify => true;
 
   @override
-  List<Object> get props => [activeRouteId, activeStepId, nearestOption];
+  List<Object> get props => [activeRouteId, activeStepId, routeOption];
 }

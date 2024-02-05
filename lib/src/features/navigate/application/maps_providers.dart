@@ -6,12 +6,20 @@ part 'maps_providers.g.dart';
 
 @riverpod
 LatLng origin(OriginRef ref) {
-  return ref.watch(remoteMapsRepositoryProvider.select((e) => e.origin));
+  final origin =
+      ref.watch(remoteMapsRepositoryProvider.select((e) => e.origin));
+
+  // TODO(FireJuun): better handle null values
+  return origin ?? const LatLng(0, 0);
 }
 
 @riverpod
 LatLng destination(DestinationRef ref) {
-  return ref.watch(remoteMapsRepositoryProvider.select((e) => e.destination));
+  final destination =
+      ref.watch(remoteMapsRepositoryProvider.select((e) => e.destination));
+
+  // TODO(FireJuun): better handle null values
+  return destination ?? const LatLng(0, 0);
 }
 
 @riverpod
