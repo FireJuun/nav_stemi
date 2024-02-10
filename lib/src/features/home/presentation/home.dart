@@ -66,7 +66,7 @@ class Home extends StatelessWidget {
                 ),
                 gapH16,
                 OutlinedButton(
-                  onPressed: () => context.goNamed(AppRoute.homeAddData.name),
+                  onPressed: () => context.goNamed(AppRoute.navAddData.name),
                   child: Text(
                     'Add Data'.hardcoded,
                     style: textTheme.headlineMedium!.apply(

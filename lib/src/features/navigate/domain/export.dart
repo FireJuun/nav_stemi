@@ -3,3 +3,4 @@ export 'available_routes.dart';
 export 'emergency_departments/export.dart';
 export 'maps_info.dart';
 export 'maps_to_routes_dto.dart';
+export 'route_duration_to_seconds_dto.dart';

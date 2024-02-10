@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'geolocator_repository.g.dart';
@@ -31,6 +32,17 @@ class GeolocatorRepository {
 
     return Geolocator.getLastKnownPosition();
   }
+
+  double getDistanceBetween(
+    Position currentLocation,
+    LatLng destination,
+  ) =>
+      Geolocator.distanceBetween(
+        currentLocation.latitude,
+        currentLocation.longitude,
+        destination.latitude,
+        destination.longitude,
+      );
 
   /// Check location permissions and services.
   /// If the user has not granted location permission, the app will request it.

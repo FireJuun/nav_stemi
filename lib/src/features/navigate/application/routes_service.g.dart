@@ -1,26 +1,24 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'app_routing.dart';
+part of 'routes_service.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$goRouterHash() => r'9ed2287e486269e765368d4e8808f33d911c12b1';
+String _$routeServiceHash() => r'97e24e08b5548a23b68d826e57a41c4db8c18c0d';
 
-/// returns the GoRouter instance that defines all the routes in the app
-///
-/// Copied from [goRouter].
-@ProviderFor(goRouter)
-final goRouterProvider = Provider<GoRouter>.internal(
-  goRouter,
-  name: r'goRouterProvider',
+/// See also [routeService].
+@ProviderFor(routeService)
+final routeServiceProvider = Provider<RouteService>.internal(
+  routeService,
+  name: r'routeServiceProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$goRouterHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$routeServiceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef GoRouterRef = ProviderRef<GoRouter>;
+typedef RouteServiceRef = ProviderRef<RouteService>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -1,27 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'nav_screen_controller.dart';
+part of 'remote_routes_repository.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$navScreenControllerHash() =>
-    r'8191c2756612d4b4bc6c633094d362419525dfa7';
+String _$remoteRoutesRepositoryHash() =>
+    r'45fcb31a0034e5b841a1bfd5172e4e9a443023ed';
 
-/// See also [NavScreenController].
-@ProviderFor(NavScreenController)
-final navScreenControllerProvider =
-    AutoDisposeAsyncNotifierProvider<NavScreenController, void>.internal(
-  NavScreenController.new,
-  name: r'navScreenControllerProvider',
+/// See also [remoteRoutesRepository].
+@ProviderFor(remoteRoutesRepository)
+final remoteRoutesRepositoryProvider =
+    Provider<RemoteRoutesRepository>.internal(
+  remoteRoutesRepository,
+  name: r'remoteRoutesRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$navScreenControllerHash,
+      : _$remoteRoutesRepositoryHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$NavScreenController = AutoDisposeAsyncNotifier<void>;
+typedef RemoteRoutesRepositoryRef = ProviderRef<RemoteRoutesRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

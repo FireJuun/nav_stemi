@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 class NearestEdSelector extends StatelessWidget {
@@ -27,9 +28,7 @@ class NearestEdSelector extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 IconButton(
-                  onPressed: () {
-                    // TODO(FireJuun): Dialog showing other EDs
-                  },
+                  onPressed: () => context.goNamed(AppRoute.navGoTo.name),
                   icon: const Icon(Icons.more_horiz),
                 ),
               ],

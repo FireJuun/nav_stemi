@@ -3,6 +3,9 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart' as maps;
 import 'package:google_routes_flutter/google_routes_flutter.dart';
 import 'package:nav_stemi/nav_stemi.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'remote_routes_repository.g.dart';
 
 class RemoteRoutesRepository {
   final _mapsToRoutesDTO = const MapsToRoutesDTO();
@@ -60,7 +63,8 @@ class RemoteRoutesRepository {
     );
 
     for (var i = 0; i < routeMatrixes.length; i++) {
-      final routeEntry = routeMatrixes[i];
+      final routeEntry =
+          routeMatrixes.firstWhere((e) => e.destinationIndex == i);
       assert(i == routeEntry.destinationIndex, 'Index mismatch');
       final destination = edListAndDistances.entries.elementAt(i);
       final edInfo = destination.key;
@@ -108,4 +112,9 @@ class RemoteRoutesRepository {
       routes: routes.routes,
     );
   }
+}
+
+@Riverpod(keepAlive: true)
+RemoteRoutesRepository remoteRoutesRepository(RemoteRoutesRepositoryRef ref) {
+  return RemoteRoutesRepository();
 }

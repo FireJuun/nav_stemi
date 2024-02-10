@@ -18,6 +18,7 @@ enum AppRoute {
   homeAddData,
   goTo,
   nav,
+  navGoTo,
   navAddData,
 }
 
@@ -76,6 +77,15 @@ GoRouter goRouter(GoRouterRef ref) {
                 name: AppRoute.nav.name,
                 pageBuilder: (context, state) =>
                     _fadeTransition(context, state, const NavScreen()),
+                routes: [
+                  GoRoute(
+                    path: 'go',
+                    name: AppRoute.navGoTo.name,
+                    pageBuilder: (context, state) => DialogPage(
+                      builder: (_) => const GoToDialog(),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

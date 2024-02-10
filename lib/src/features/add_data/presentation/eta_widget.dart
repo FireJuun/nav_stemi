@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nav_stemi/nav_stemi.dart';
 
 class EtaWidget extends StatelessWidget {
   const EtaWidget({super.key});
@@ -12,14 +13,14 @@ class EtaWidget extends StatelessWidget {
         Expanded(
           flex: 2,
           child: Text(
-            'ETA:',
+            'ETA:'.hardcoded,
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
         Expanded(
           flex: 3,
           child: Text(
-            '24 min',
+            '24 min'.hardcoded,
             textAlign: TextAlign.end,
             style: Theme.of(context).textTheme.titleMedium,
           ),
@@ -27,7 +28,7 @@ class EtaWidget extends StatelessWidget {
         Expanded(
           flex: 2,
           child: Text(
-            '7:13 pm',
+            '7:13 pm'.hardcoded,
             textAlign: TextAlign.end,
             style: Theme.of(context).textTheme.titleSmall?.apply(
                   // fontWeightDelta: 2,

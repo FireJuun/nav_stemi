@@ -8,8 +8,8 @@ class DataEntryWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return const CustomScrollView(
       slivers: [
-        PatientInfo(),
         TimeMetrics(),
+        PatientInfo(),
         CareTeam(),
       ],
     );

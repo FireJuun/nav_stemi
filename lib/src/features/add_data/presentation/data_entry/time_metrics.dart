@@ -14,11 +14,6 @@ class TimeMetrics extends StatelessWidget {
           sliver: SliverList.list(
             children: const [
               TimeMetric(
-                label: 'Arrival on Scene',
-                timeOccurred: '3:04 pm',
-                timeAgoInMins: '32 min ago',
-              ),
-              TimeMetric(
                 label: 'Patient Contact',
                 timeOccurred: '3:07 pm',
                 timeAgoInMins: '20 min ago',
@@ -27,6 +22,12 @@ class TimeMetrics extends StatelessWidget {
                 label: 'First ECG',
                 timeOccurred: '3:15 pm',
                 timeAgoInMins: '12 min ago',
+              ),
+              // TODO(FireJuun): should this be ED notification?
+              TimeMetric(
+                label: 'STEMI Activation',
+                timeOccurred: '3:17 pm',
+                timeAgoInMins: '10 min ago',
               ),
             ],
           ),

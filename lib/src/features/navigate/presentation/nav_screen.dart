@@ -64,9 +64,8 @@ class _NavScreenState extends State<NavScreen> {
                           alignment: AlignmentDirectional.center,
                           children: [
                             GoogleMap(
-                              initialCameraPosition: CameraPosition(
-                                target: ref.watch(originProvider) ??
-                                    const LatLng(0, 0),
+                              initialCameraPosition: const CameraPosition(
+                                target: locationRandolphEms,
                                 zoom: 14,
                               ),
                               trafficEnabled: true,

@@ -16,6 +16,8 @@ class NavScreenController extends _$NavScreenController {
     // nothing to do
   }
 
+  /// These methods are called from the UI
+  /// They are not reliant on any state, so they can be called directly
   void onMapCreated(GoogleMapController controller) =>
       _controller.complete(controller);
 
@@ -39,4 +41,9 @@ class NavScreenController extends _$NavScreenController {
               .animateCamera(CameraUpdate.newLatLng(currentLocation));
         }),
       );
+
+  /// These methods are called from the UI
+  /// They are reliant on state, so they are called via ref
+  /// If any errors occur, they are caught, logged, and displayed to the user
+  // TODO(FireJuun): run guarded, navigation route calls
 }
