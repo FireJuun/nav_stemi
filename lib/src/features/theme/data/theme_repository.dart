@@ -57,6 +57,13 @@ class ThemeRepository {
       ),
       cardTheme: CardTheme(
         color: colorScheme.primaryContainer,
+        // elevation: 2,
+      ),
+      chipTheme: ChipThemeData(
+        padding: EdgeInsets.zero,
+        labelPadding: const EdgeInsets.symmetric(horizontal: 4),
+        labelStyle:
+            textTheme.bodySmall!.apply(color: colorScheme.onPrimaryContainer),
       ),
       dropdownMenuTheme: DropdownMenuThemeData(
         textStyle: textTheme.bodyMedium,
@@ -66,12 +73,6 @@ class ThemeRepository {
             EdgeInsets.symmetric(horizontal: 8),
           ),
         ),
-      ),
-      chipTheme: ChipThemeData(
-        padding: EdgeInsets.zero,
-        labelPadding: const EdgeInsets.symmetric(horizontal: 4),
-        labelStyle:
-            textTheme.bodySmall!.apply(color: colorScheme.onPrimaryContainer),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: ButtonStyle(
@@ -85,6 +86,11 @@ class ThemeRepository {
             textTheme.titleMedium!,
           ),
         ),
+      ),
+      listTileTheme: ListTileThemeData(
+        titleTextStyle: textTheme.bodyMedium,
+        textColor: colorScheme.onBackground,
+        // selectedColor: colorScheme.error,
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: ButtonStyle(
@@ -136,9 +142,9 @@ TextTheme _buildTextTheme() {
     titleSmall: _style(16, FontWeight.w300),
     bodyLarge: _style(20, FontWeight.normal),
     bodyMedium: _style(18, FontWeight.normal),
-    bodySmall: _style(12, FontWeight.normal),
+    bodySmall: _style(16, FontWeight.normal),
     labelLarge: _style(18, FontWeight.normal),
-    labelSmall: _style(12, FontWeight.normal),
+    labelSmall: _style(14, FontWeight.normal),
   );
 }
 

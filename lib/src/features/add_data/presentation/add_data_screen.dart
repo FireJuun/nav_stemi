@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
@@ -22,47 +23,54 @@ class _AddDataScreenState extends State<AddDataScreen> {
         horizontal: 16,
         vertical: 8,
       ),
-      child: Stack(
-        children: [
-          const AddDataScrollview(),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: AnimatedContainer(
-              duration: 300.ms,
-              height:
-                  isSyncVisible ? MediaQuery.of(context).size.height * 0.25 : 0,
-              decoration: BoxDecoration(
-                color: colorScheme.primaryContainer,
-                border: isSyncVisible
-                    ? Border.all(
-                        color: colorScheme.onPrimaryContainer,
-                      )
-                    : null,
-              ),
-              child: const Sync(),
-            ),
-          ),
-          Positioned.directional(
-            textDirection: Directionality.of(context),
-            end: 4,
-            bottom: 4,
-            child: isSyncVisible
-                ? FilledButton.icon(
-                    onPressed: () => setState(
-                      () => isSyncVisible = false,
+      child: KeyboardVisibilityBuilder(
+        builder: (context, isKeyboardVisible) {
+          return Stack(
+            children: [
+              const AddDataScrollview(),
+              if (!isKeyboardVisible)
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: AnimatedContainer(
+                    duration: 300.ms,
+                    height: isSyncVisible
+                        ? MediaQuery.of(context).size.height * 0.25
+                        : 0,
+                    decoration: BoxDecoration(
+                      color: colorScheme.primaryContainer,
+                      border: isSyncVisible
+                          ? Border.all(
+                              color: colorScheme.onPrimaryContainer,
+                            )
+                          : null,
                     ),
-                    icon: const Icon(Icons.sync),
-                    label: Text('Sync'.hardcoded),
-                  )
-                : OutlinedButton.icon(
-                    onPressed: () => setState(
-                      () => isSyncVisible = true,
-                    ),
-                    icon: const Icon(Icons.sync),
-                    label: Text('Sync'.hardcoded),
+                    child: const Sync(),
                   ),
-          ),
-        ],
+                ),
+              if (!isKeyboardVisible)
+                Positioned.directional(
+                  textDirection: Directionality.of(context),
+                  end: 4,
+                  bottom: 4,
+                  child: isSyncVisible
+                      ? FilledButton.icon(
+                          onPressed: () => setState(
+                            () => isSyncVisible = false,
+                          ),
+                          icon: const Icon(Icons.sync),
+                          label: Text('Sync'.hardcoded),
+                        )
+                      : OutlinedButton.icon(
+                          onPressed: () => setState(
+                            () => isSyncVisible = true,
+                          ),
+                          icon: const Icon(Icons.sync),
+                          label: Text('Sync'.hardcoded),
+                        ),
+                ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -83,6 +91,7 @@ class AddDataScrollview extends StatelessWidget {
           slivers: [
             const SliverPinnedHeader(child: DestinationInfo()),
             const SliverPinnedHeader(child: EtaWidget()),
+            const SliverToBoxAdapter(child: gapH8),
             // gapH8,
             SliverToBoxAdapter(
               child: SizedBox(
@@ -90,6 +99,7 @@ class AddDataScrollview extends StatelessWidget {
                 child: const Checklist(),
               ),
             ),
+            const SliverToBoxAdapter(child: gapH8),
             const SliverFillRemaining(
               child: AddDataTabs(),
             ),
