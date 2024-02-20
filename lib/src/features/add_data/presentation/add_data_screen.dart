@@ -60,7 +60,19 @@ class _AddDataScreenState extends State<AddDataScreen> {
                           icon: const Icon(Icons.sync),
                           label: Text('Sync'.hardcoded),
                         )
-                      : OutlinedButton.icon(
+                      : FilledButton.tonalIcon(
+                          style: Theme.of(context)
+                              .filledButtonTheme
+                              .style
+                              ?.copyWith(
+                                shape:
+                                    MaterialStateProperty.all<OutlinedBorder>(
+                                  RoundedRectangleBorder(
+                                    side: const BorderSide(),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                              ),
                           onPressed: () => setState(
                             () => isSyncVisible = true,
                           ),

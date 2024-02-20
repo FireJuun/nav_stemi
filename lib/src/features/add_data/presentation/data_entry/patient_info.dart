@@ -91,6 +91,15 @@ class PatientInfo extends StatelessWidget {
                 ],
               ),
               gapH24,
+              TextField(
+                decoration: const InputDecoration(
+                  label: Text('Cardiologist'),
+                ),
+                onTapOutside: (PointerDownEvent event) {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
+              ),
+              gapH48,
             ],
           ),
         ),
