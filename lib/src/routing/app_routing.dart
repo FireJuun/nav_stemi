@@ -96,7 +96,7 @@ GoRouter goRouter(GoRouterRef ref) {
                 path: '/add',
                 name: AppRoute.navAddData.name,
                 pageBuilder: (context, state) =>
-                    _fadeTransition(context, state, const AddDataScreen()),
+                    _fadeTransition(context, state, const AddDataTabsScreen()),
               ),
             ],
           ),

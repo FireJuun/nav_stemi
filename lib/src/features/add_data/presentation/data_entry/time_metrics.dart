@@ -8,7 +8,7 @@ class TimeMetrics extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverMainAxisGroup(
       slivers: [
-        DataEntryHeader('Time Metrics'.hardcoded),
+        // DataEntryHeader('Time Metrics'.hardcoded),
         SliverPadding(
           padding: const EdgeInsetsDirectional.only(bottom: 24),
           sliver: SliverList.list(

@@ -113,6 +113,10 @@ class ThemeRepository {
         trackVisibility: MaterialStateProperty.all(true),
         thickness: MaterialStateProperty.all(8),
       ),
+      tabBarTheme: TabBarTheme(
+        labelStyle: textTheme.titleMedium,
+        unselectedLabelStyle: textTheme.titleMedium,
+      ),
     );
   }
 }

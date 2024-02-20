@@ -100,7 +100,7 @@ class _CareTeamState extends State<CareTeam> {
     return SliverMainAxisGroup(
       slivers: [
         DataEntryHeader(
-          'Care Team'.hardcoded,
+          ' '.hardcoded,
           trailing: Row(
             children: [
               IconButton(

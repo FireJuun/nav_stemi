@@ -10,7 +10,7 @@ class PatientInfo extends StatelessWidget {
 
     return SliverMainAxisGroup(
       slivers: [
-        DataEntryHeader('Patient Info'.hardcoded),
+        // DataEntryHeader('Patient Info'.hardcoded),
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
           sliver: SliverList.list(
