@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
-class DataEntryTabs extends StatelessWidget {
-  const DataEntryTabs({super.key});
+class AddDataTabs extends StatelessWidget {
+  const AddDataTabs({super.key});
 
   @override
   Widget build(BuildContext context) {

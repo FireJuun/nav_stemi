@@ -55,6 +55,9 @@ class ThemeRepository {
           color: colorScheme.onBackground,
         ),
       ),
+      cardTheme: CardTheme(
+        color: colorScheme.primaryContainer,
+      ),
       dropdownMenuTheme: DropdownMenuThemeData(
         textStyle: textTheme.bodyMedium,
         menuStyle: const MenuStyle(

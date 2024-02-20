@@ -6,8 +6,13 @@ class Checklist extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Checklist...'.hardcoded),
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Card(
+        child: Center(
+          child: Text('Checklist...'.hardcoded),
+        ),
+      ),
     );
   }
 }

@@ -15,7 +15,6 @@ part 'app_routing.g.dart';
 /// ```
 enum AppRoute {
   home,
-  homeAddData,
   goTo,
   nav,
   navGoTo,
@@ -42,13 +41,6 @@ GoRouter goRouter(GoRouterRef ref) {
         name: AppRoute.home.name,
         builder: (context, state) => const Home(),
         routes: [
-          GoRoute(
-            path: 'data',
-            name: AppRoute.homeAddData.name,
-            pageBuilder: (context, state) => DialogPage(
-              builder: (_) => const AddDataDialog(),
-            ),
-          ),
           GoRoute(
             path: 'go',
             name: AppRoute.goTo.name,
@@ -96,7 +88,7 @@ GoRouter goRouter(GoRouterRef ref) {
                 path: '/add',
                 name: AppRoute.navAddData.name,
                 pageBuilder: (context, state) =>
-                    _fadeTransition(context, state, const AddDataTabsScreen()),
+                    _fadeTransition(context, state, const AddDataScreen()),
               ),
             ],
           ),
