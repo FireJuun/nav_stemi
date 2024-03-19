@@ -45,7 +45,7 @@ class ScaffoldWithNestedNavigation extends HookWidget {
       },
       child: Scaffold(
         appBar: const AppBarWidget(),
-        endDrawer: const Drawer(),
+        endDrawer: const RightNavDrawer(),
         body: AnimatedContainer(
           duration: 300.ms,
           color: isNavPage
