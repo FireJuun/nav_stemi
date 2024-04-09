@@ -37,6 +37,18 @@ class CountUpTimerRepository {
     _stopwatch.reset();
   }
 
+  void setTimerInSeconds(int seconds) {
+    _stopwatch
+      ..reset()
+      ..start();
+    _timerStreamController.add(seconds);
+  }
+
+  void setTimerFromDateTime(DateTime dateTime) {
+    final seconds = DateTime.now().difference(dateTime).inSeconds;
+    setTimerInSeconds(seconds);
+  }
+
   void dispose() {
     _timer.cancel();
     _timerStreamController.close();
@@ -45,7 +57,9 @@ class CountUpTimerRepository {
 
 @riverpod
 CountUpTimerRepository countUpTimerRepository(CountUpTimerRepositoryRef ref) {
-  return CountUpTimerRepository();
+  final repository = CountUpTimerRepository();
+  ref.onDispose(repository.dispose);
+  return repository;
 }
 
 @riverpod
