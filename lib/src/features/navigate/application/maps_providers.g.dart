@@ -76,5 +76,35 @@ final polylinesProvider = AutoDisposeProvider<Set<Polyline>>.internal(
 );
 
 typedef PolylinesRef = AutoDisposeProviderRef<Set<Polyline>>;
+String _$initialLocationHash() => r'b4bbe88e1d95c9387ef17f540801f048771fbce5';
+
+/// See also [initialLocation].
+@ProviderFor(initialLocation)
+final initialLocationProvider = AutoDisposeFutureProvider<LatLng>.internal(
+  initialLocation,
+  name: r'initialLocationProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$initialLocationHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef InitialLocationRef = AutoDisposeFutureProviderRef<LatLng>;
+String _$currentLocationHash() => r'933fccdd78e3bcd2013c3113e94aa78f91ddad4d';
+
+/// See also [currentLocation].
+@ProviderFor(currentLocation)
+final currentLocationProvider = AutoDisposeStreamProvider<LatLng?>.internal(
+  currentLocation,
+  name: r'currentLocationProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$currentLocationHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef CurrentLocationRef = AutoDisposeStreamProviderRef<LatLng?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

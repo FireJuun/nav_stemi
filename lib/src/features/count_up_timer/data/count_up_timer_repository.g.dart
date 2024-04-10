@@ -7,7 +7,7 @@ part of 'count_up_timer_repository.dart';
 // **************************************************************************
 
 String _$countUpTimerRepositoryHash() =>
-    r'53e66cf1282516f32d3232db3f38c8cab0190db8';
+    r'4ef62b98206a11b98e8d3d9e69d0d9e5f7d6be08';
 
 /// See also [countUpTimerRepository].
 @ProviderFor(countUpTimerRepository)

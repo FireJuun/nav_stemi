@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 class NavScreen extends StatefulWidget {
@@ -63,19 +62,7 @@ class _NavScreenState extends State<NavScreen> {
                         child: Stack(
                           alignment: AlignmentDirectional.center,
                           children: [
-                            GoogleMap(
-                              initialCameraPosition: const CameraPosition(
-                                target: locationRandolphEms,
-                                zoom: 14,
-                              ),
-                              trafficEnabled: true,
-                              myLocationButtonEnabled: false,
-                              onMapCreated: (controller) => ref
-                                  .read(navScreenControllerProvider.notifier)
-                                  .onMapCreated(controller),
-                              markers: ref.watch(markersProvider),
-                              polylines: ref.watch(polylinesProvider),
-                            ),
+                            const NavScreenMap(),
                             AnimatedSwitcher(
                               duration: 300.ms,
 
@@ -169,15 +156,15 @@ class _NavScreenState extends State<NavScreen> {
                                     // TODO(FireJuun): Zoom map to full route
                                   },
                                 ),
-                                IconButton(
-                                  icon: const Icon(Icons.my_location),
-                                  tooltip: 'My Location'.hardcoded,
-                                  onPressed: () => ref
-                                      .watch(
-                                        navScreenControllerProvider.notifier,
-                                      )
-                                      .showCurrentLocation(),
-                                ),
+                                // IconButton(
+                                //   icon: const Icon(Icons.my_location),
+                                //   tooltip: 'My Location'.hardcoded,
+                                //   onPressed: () => ref
+                                //       .read(
+                                //         navScreenControllerProvider.notifier,
+                                //       )
+                                //       .showCurrentLocation(),
+                                // ),
                               ],
                             ),
                             Row(

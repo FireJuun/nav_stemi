@@ -13,6 +13,17 @@ part 'geolocator_repository.g.dart';
 /// source: https://pub.dev/packages/geolocator
 
 class GeolocatorRepository {
+  /// Stream of the current position of the device.
+  /// The stream will emit the last known position of the device
+  Stream<Position?> watchPosition() {
+    return Geolocator.getPositionStream(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 100,
+      ),
+    );
+  }
+
   /// Get the current position of the device.
   ///
   Future<Position> determinePosition() async {
