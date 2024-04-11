@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 class GoToDialog extends StatelessWidget {
@@ -27,69 +26,97 @@ class ListEDOptions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(
-      nearbyEdsProvider,
-      (_, state) => state.showAlertDialogOnError(context),
-    );
+    ref
+      ..listen(
+        nearbyEdsProvider,
+        (_, state) => state.showAlertDialogOnError(context),
+      )
+      ..listen(
+        goToDialogControllerProvider,
+        (_, state) => state.showAlertDialogOnError(context),
+      );
 
-    final nearbyEds = ref.watch(nearbyEdsProvider);
+    final nearbyEdsValue = ref.watch(nearbyEdsProvider);
 
     return AsyncValueWidget<NearbyEds>(
-      value: nearbyEds,
-      data: (nearbyEds) => ListView.builder(
-        itemCount: nearbyEds.items.length,
-        itemBuilder: (context, index) {
-          final nearbyEd = nearbyEds.items.values.toList()[index];
-          return _PlaceholderButton(nearbyEd);
-        },
-      ),
+      value: nearbyEdsValue,
+      data: _DialogOption.new,
     );
   }
 }
 
-class _PlaceholderButton extends StatelessWidget {
-  const _PlaceholderButton(this.nearbyEd);
+class _DialogOption extends ConsumerWidget {
+  const _DialogOption(this.nearbyEds, {super.key});
 
-  final NearbyEd nearbyEd;
+  final NearbyEds nearbyEds;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(goToDialogControllerProvider);
+
+    if (state is AsyncLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return ListView.builder(
+      itemCount: nearbyEds.items.length,
+      itemBuilder: (context, index) {
+        final edOption = nearbyEds.items.values.toList()[index];
+        return _PlaceholderButton(
+          edOption: edOption,
+          nearbyEds: nearbyEds,
+        );
+      },
+    );
+  }
+}
+
+class _PlaceholderButton extends ConsumerWidget {
+  const _PlaceholderButton({required this.edOption, required this.nearbyEds});
+
+  final NearbyEd edOption;
+  final NearbyEds nearbyEds;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
     final foregroundColor =
-        nearbyEd.edInfo.isPCI ? colorScheme.onPrimary : colorScheme.onSecondary;
+        edOption.edInfo.isPCI ? colorScheme.onPrimary : colorScheme.onSecondary;
     final backgroundColor =
-        nearbyEd.edInfo.isPCI ? colorScheme.primary : colorScheme.secondary;
+        edOption.edInfo.isPCI ? colorScheme.primary : colorScheme.secondary;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
       child: ListTile(
         tileColor: backgroundColor,
         textColor: foregroundColor,
-        onTap: () => context.goNamed(AppRoute.nav.name),
-        title: Text(nearbyEd.edInfo.shortName),
+        onTap: () => ref
+            .read(goToDialogControllerProvider.notifier)
+            .goToEd(activeEd: edOption, nearbyEds: nearbyEds),
+        title: Text(edOption.edInfo.shortName),
         leading: Column(
           children: [
             Icon(
-              nearbyEd.edInfo.isPCI
+              edOption.edInfo.isPCI
                   ? Icons.monitor_heart_outlined
                   : Icons.local_hospital,
               color: foregroundColor,
             ),
-            Text(nearbyEd.edInfo.isPCI ? 'PCI'.hardcoded : 'ED'.hardcoded),
+            Text(edOption.edInfo.isPCI ? 'PCI'.hardcoded : 'ED'.hardcoded),
           ],
         ),
         subtitle: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(child: Text('r: ${nearbyEd.routeDistance}')),
+            Expanded(child: Text('r: ${edOption.routeDistance}')),
             Expanded(
-              child: Text('dist: ${nearbyEd.distanceBetween.truncate()}'),
+              child: Text('dist: ${edOption.distanceBetween.truncate()}'),
             ),
           ],
         ),
         trailing: Text(
           RouteDurationToSecondsDto()
-              .routeDurationToFormattedString(nearbyEd.routeDuration),
+              .routeDurationToFormattedString(edOption.routeDuration),
         ),
       ),
     );

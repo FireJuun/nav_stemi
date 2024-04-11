@@ -20,7 +20,7 @@ final allEDsProvider = Provider<List<EdInfo>>.internal(
 );
 
 typedef AllEDsRef = ProviderRef<List<EdInfo>>;
-String _$nearbyEdsHash() => r'295f251355593a089dc4fb49d10a9c638cbac3a9';
+String _$nearbyEdsHash() => r'b3a8bfcf61319edf87fc36bfc152f92db30e382b';
 
 /// See also [nearbyEds].
 @ProviderFor(nearbyEds)

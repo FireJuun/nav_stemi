@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
-class NearestEdSelector extends StatelessWidget {
+class NearestEdSelector extends ConsumerWidget {
   const NearestEdSelector({
     super.key,
     this.onTapNearestPciCenter,
@@ -13,7 +14,7 @@ class NearestEdSelector extends StatelessWidget {
   final VoidCallback? onTapNearestEd;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         const DestinationInfo(),
@@ -28,7 +29,12 @@ class NearestEdSelector extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 IconButton(
-                  onPressed: () => context.goNamed(AppRoute.navGoTo.name),
+                  onPressed: () {
+                    ref
+                      ..invalidate(goToDialogControllerProvider)
+                      ..invalidate(nearbyEdsProvider);
+                    context.goNamed(AppRoute.navGoTo.name);
+                  },
                   icon: const Icon(Icons.more_horiz),
                 ),
               ],

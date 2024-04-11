@@ -9,7 +9,7 @@ environment:
 dependencies:
   dio: ^5.4.2+1
   duration: ^3.0.13
-  envied: ^0.5.3
+  envied: ^0.5.4
   equatable: ^2.0.5
   flex_color_scheme: ^7.3.1
   flutter:

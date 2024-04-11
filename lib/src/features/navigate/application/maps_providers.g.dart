@@ -91,7 +91,7 @@ final initialLocationProvider = AutoDisposeFutureProvider<LatLng>.internal(
 );
 
 typedef InitialLocationRef = AutoDisposeFutureProviderRef<LatLng>;
-String _$currentLocationHash() => r'933fccdd78e3bcd2013c3113e94aa78f91ddad4d';
+String _$currentLocationHash() => r'b017ff89734b7d32df42563c001ccbc18510af6e';
 
 /// See also [currentLocation].
 @ProviderFor(currentLocation)

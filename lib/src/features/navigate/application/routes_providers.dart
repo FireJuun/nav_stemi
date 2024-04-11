@@ -11,7 +11,7 @@ List<EdInfo> allEDs(AllEDsRef ref) {
 @riverpod
 Future<NearbyEds> nearbyEds(NearbyEdsRef ref) async {
   final nearbyEds =
-      await ref.read(routeServiceProvider).getNearbyEDsFromCurrentLocation();
+      await ref.watch(routeServiceProvider).getNearbyEDsFromCurrentLocation();
 
   return nearbyEds..sortedByRouteDuration;
 }
