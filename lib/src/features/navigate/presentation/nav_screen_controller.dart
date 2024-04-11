@@ -33,6 +33,20 @@ class NavScreenController extends _$NavScreenController {
         }),
       );
 
+  void showRoute() => unawaited(
+        _controller.future.then((controller) async {
+          // TODO(FireJuun): implement upper/lower bounds
+          // final route = await ref.read(getRouteProvider.future);
+
+          // await controller.animateCamera(
+          //   CameraUpdate.newLatLngBounds(
+          //     route.bounds,
+          //     50,
+          //   ),
+          // );
+        }),
+      );
+
   void showCurrentLocation() => unawaited(
         _controller.future.then((controller) async {
           final currentLocation =

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -85,7 +84,7 @@ class RouteService {
       const MarkerId('origin'): Marker(
         markerId: const MarkerId('origin'),
         position: origin,
-        infoWindow: const InfoWindow(title: 'Your Location'),
+        infoWindow: const InfoWindow(title: 'Start'),
       ),
       const MarkerId('destination'): Marker(
         markerId: const MarkerId('destination'),
@@ -113,7 +112,12 @@ class RouteService {
         final polyline = Polyline(
           polylineId: id,
           color: Colors.grey,
+          width: 8,
           points: points.map((e) => LatLng(e.latitude, e.longitude)).toList(),
+          onTap: () {
+            // TODO(FireJuun): Implement route selection mechanism
+            // ref.read(activeRouteProvider).state = route;
+          },
         );
 
         polylines[id] = polyline;
@@ -128,6 +132,19 @@ class RouteService {
     );
 
     ref.read(localMapsRepositoryProvider).setMapsInfo(mapsInfo);
+
+    ref
+        .read(availableRoutesRepositoryProvider)
+        .setAvailableRoutes(availableRoutes);
+
+    // TODO(FireJuun): Implement route selection mechanism and null safety
+    final firstRoute = routes.first;
+    final activeRoute = ActiveRoute(
+      activeRouteId: firstRoute.polyline!.encodedPolyline!,
+      activeStepId:
+          firstRoute.legs!.first.steps!.first.polyline!.encodedPolyline!,
+    );
+    ref.read(activeRouteRepositoryProvider).setActiveRoute(activeRoute);
   }
 }
 

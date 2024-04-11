@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:google_routes_flutter/google_routes_flutter.dart';
 
-typedef ActiveRouteId = Polyline;
-typedef ActiveStepId = Polyline;
+typedef EncodedPolyline = String;
+typedef ActiveRouteId = EncodedPolyline;
+typedef ActiveStepId = EncodedPolyline;
 
 /// Determines which point of interest is nearest to the
 /// user's current location.

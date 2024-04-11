@@ -71,9 +71,14 @@ final getLastKnownPositionProvider =
 
 typedef GetLastKnownPositionRef = AutoDisposeFutureProviderRef<Position?>;
 String _$getLastKnownOrCurrentPositionHash() =>
-    r'e4883cfef578279c0b34a9d96b77babeb39acbda';
+    r'83eed17d204262146489b74088f8ec238e808c6e';
 
-/// See also [getLastKnownOrCurrentPosition].
+/// Get the last known position of the device, if available.
+/// Otherwise, get the current position of the device, which
+/// forces the device to get the current location and may take
+/// longer to return a result.
+///
+/// Copied from [getLastKnownOrCurrentPosition].
 @ProviderFor(getLastKnownOrCurrentPosition)
 final getLastKnownOrCurrentPositionProvider =
     AutoDisposeFutureProvider<Position>.internal(
