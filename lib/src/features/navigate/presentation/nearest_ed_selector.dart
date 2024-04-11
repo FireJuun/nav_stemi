@@ -30,9 +30,10 @@ class NearestEdSelector extends ConsumerWidget {
                 ),
                 IconButton(
                   onPressed: () {
+                    // print('invalidate providers');
                     ref
-                      ..invalidate(goToDialogControllerProvider)
-                      ..invalidate(nearbyEdsProvider);
+                      ..invalidate(nearbyEdsProvider)
+                      ..invalidate(getCurrentPositionProvider);
                     context.goNamed(AppRoute.navGoTo.name);
                   },
                   icon: const Icon(Icons.more_horiz),

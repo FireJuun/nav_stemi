@@ -14,8 +14,6 @@ class RouteService {
 
   GeolocatorRepository get geolocatorRepository =>
       ref.read(geolocatorRepositoryProvider);
-  LocalMapsRepository get localMapsRepository =>
-      ref.read(localMapsRepositoryProvider);
   RemoteRoutesRepository get remoteRoutesRepository =>
       ref.read(remoteRoutesRepositoryProvider);
 
@@ -37,22 +35,29 @@ class RouteService {
   /// First check to see the current location of the user,
   /// then get the nearby emergency departments.
   Future<NearbyEds> getNearbyEDsFromCurrentLocation() async {
-    final currentLocation = await geolocatorRepository.determinePosition();
+    final position =
+        await ref.read(getLastKnownOrCurrentPositionProvider.future);
+
     final allEds = ref.read(allEDsProvider);
 
     final items = <EdInfo, double>{
       for (final ed in allEds)
         ed: geolocatorRepository.getDistanceBetween(
-          currentLocation,
+          position,
           ed.location,
         ),
     };
     final sortedItems = nearestTenSortedByDistance(items);
 
-    return remoteRoutesRepository.getDistanceInfoFromEdList(
-      origin: LatLng(currentLocation.latitude, currentLocation.longitude),
+    const dto = PositionToLatLngDTO();
+    final origin = dto.positionToLatLng(position);
+
+    final nearbyEds = await remoteRoutesRepository.getDistanceInfoFromEdList(
+      origin: origin,
       edListAndDistances: sortedItems,
     );
+
+    return nearbyEds..sortedByRouteDuration;
   }
 
   /// Get the available routes for a single emergency department.
@@ -62,8 +67,12 @@ class RouteService {
     required NearbyEd activeEd,
     required NearbyEds nearbyEds,
   }) async {
-    final currentLocation = await geolocatorRepository.determinePosition();
-    final origin = LatLng(currentLocation.latitude, currentLocation.longitude);
+    final position =
+        await ref.read(getLastKnownOrCurrentPositionProvider.future);
+
+    const dto = PositionToLatLngDTO();
+    final origin = dto.positionToLatLng(position);
+
     final destination = activeEd.edInfo.location;
 
     final availableRoutes =

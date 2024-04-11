@@ -20,11 +20,11 @@ final allEDsProvider = Provider<List<EdInfo>>.internal(
 );
 
 typedef AllEDsRef = ProviderRef<List<EdInfo>>;
-String _$nearbyEdsHash() => r'b3a8bfcf61319edf87fc36bfc152f92db30e382b';
+String _$nearbyEdsHash() => r'66ee0ef9f5a48ca31e694801eafc25d6f98130d5';
 
 /// See also [nearbyEds].
 @ProviderFor(nearbyEds)
-final nearbyEdsProvider = AutoDisposeFutureProvider<NearbyEds>.internal(
+final nearbyEdsProvider = FutureProvider<NearbyEds>.internal(
   nearbyEds,
   name: r'nearbyEdsProvider',
   debugGetCreateSourceHash:
@@ -33,6 +33,6 @@ final nearbyEdsProvider = AutoDisposeFutureProvider<NearbyEds>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef NearbyEdsRef = AutoDisposeFutureProviderRef<NearbyEds>;
+typedef NearbyEdsRef = FutureProviderRef<NearbyEds>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

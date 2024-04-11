@@ -35,12 +35,13 @@ class NavScreenController extends _$NavScreenController {
 
   void showCurrentLocation() => unawaited(
         _controller.future.then((controller) async {
-          final currentLocation = ref.read(currentLocationProvider).value;
+          final currentLocation =
+              await ref.read(getLastKnownOrCurrentPositionProvider.future);
 
-          if (currentLocation != null) {
-            await controller
-                .animateCamera(CameraUpdate.newLatLng(currentLocation));
-          }
+          final latLng =
+              const PositionToLatLngDTO().positionToLatLng(currentLocation);
+
+          await controller.animateCamera(CameraUpdate.newLatLng(latLng));
         }),
       );
 
