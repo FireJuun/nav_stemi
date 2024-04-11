@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 part 'routes_service.g.dart';
 
@@ -49,8 +51,7 @@ class RouteService {
     };
     final sortedItems = nearestTenSortedByDistance(items);
 
-    const dto = PositionToLatLngDTO();
-    final origin = dto.positionToLatLng(position);
+    final origin = position.toLatLng();
 
     final nearbyEds = await remoteRoutesRepository.getDistanceInfoFromEdList(
       origin: origin,
@@ -70,8 +71,7 @@ class RouteService {
     final position =
         await ref.read(getLastKnownOrCurrentPositionProvider.future);
 
-    const dto = PositionToLatLngDTO();
-    final origin = dto.positionToLatLng(position);
+    final origin = position.toLatLng();
 
     final destination = activeEd.edInfo.location;
 
@@ -100,13 +100,25 @@ class RouteService {
       throw Exception('No routes available');
     }
 
-    // TODO(FireJuun): better null safety / error handling
-    final polylines = {
-      for (final route in routes)
-        PolylineId(route.polyline!.encodedPolyline!): Polyline(
-          polylineId: PolylineId(route.polyline!.encodedPolyline!),
-        ),
-    };
+    const uuid = Uuid();
+    final polylinePoints = PolylinePoints();
+    final polylines = <PolylineId, Polyline>{};
+
+    for (final route in routes) {
+      final polylineString = route.polyline!.encodedPolyline;
+
+      if (polylineString != null) {
+        final id = PolylineId(uuid.v4());
+        final points = polylinePoints.decodePolyline(polylineString);
+        final polyline = Polyline(
+          polylineId: id,
+          color: Colors.grey,
+          points: points.map((e) => LatLng(e.latitude, e.longitude)).toList(),
+        );
+
+        polylines[id] = polyline;
+      }
+    }
 
     final mapsInfo = MapsInfo(
       origin: origin,

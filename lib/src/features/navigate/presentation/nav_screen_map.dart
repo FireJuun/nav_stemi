@@ -21,7 +21,7 @@ class NavScreenMap extends ConsumerWidget {
       value: lastKnownOrCurrentPositionValue,
       data: (initialPosition) => GoogleMap(
         initialCameraPosition: CameraPosition(
-          target: const PositionToLatLngDTO().positionToLatLng(initialPosition),
+          target: initialPosition.toLatLng(),
           zoom: 14,
         ),
         trafficEnabled: true,

@@ -38,10 +38,9 @@ class NavScreenController extends _$NavScreenController {
           final currentLocation =
               await ref.read(getLastKnownOrCurrentPositionProvider.future);
 
-          final latLng =
-              const PositionToLatLngDTO().positionToLatLng(currentLocation);
-
-          await controller.animateCamera(CameraUpdate.newLatLng(latLng));
+          await controller.animateCamera(
+            CameraUpdate.newLatLng(currentLocation.toLatLng()),
+          );
         }),
       );
 

@@ -81,15 +81,18 @@ class ResponsiveDialogFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Divider(thickness: 2),
-        OutlinedButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
-        ),
-        gapH8,
-      ],
+    return ColoredBox(
+      color: Theme.of(context).colorScheme.secondary,
+      child: Column(
+        children: [
+          const Divider(thickness: 2),
+          FilledButton.tonal(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          gapH8,
+        ],
+      ),
     );
   }
 }
