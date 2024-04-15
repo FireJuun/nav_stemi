@@ -71,21 +71,61 @@ class RouteService {
         await ref.read(getLastKnownOrCurrentPositionProvider.future);
 
     final origin = position.toLatLng();
-
     final destination = activeEd.edInfo.location;
 
+    /// Get available routes, and set the default as the active route.
+    final availableRoutes = await _setupAvailableRoutes(origin, destination);
+
+    /// Set map info, markers, and polylines for this route.
+    final markers = await _setupMarkers(
+      activeEd: activeEd,
+      nearbyEds: nearbyEds,
+      destination: destination,
+    );
+
+    final polylines = _setupPolylines(availableRoutes);
+
+    final mapsInfo = MapsInfo(
+      origin: origin,
+      destination: destination,
+      markers: markers,
+      polylines: polylines,
+    );
+
+    ref.read(localMapsRepositoryProvider).setMapsInfo(mapsInfo);
+
+    // TODO(FireJuun): Implement route selection mechanism and null safety
+    // final firstRoute = routes.first;
+    // final activeRoute = ActiveRoute(
+    //   activeRouteId: firstRoute.polyline!.encodedPolyline!,
+    //   activeStepId:
+    //       firstRoute.legs!.first.steps!.first.polyline!.encodedPolyline!,
+    // );
+    // ref.read(activeRouteRepositoryProvider).setActiveRoute(activeRoute);
+  }
+
+  Future<AvailableRoutes> _setupAvailableRoutes(
+    LatLng origin,
+    LatLng destination,
+  ) async {
     final availableRoutes =
         await remoteRoutesRepository.getAvailableRoutesForSingleED(
       origin: origin,
       destination: destination,
     );
+    ref
+        .read(availableRoutesRepositoryProvider)
+        .setAvailableRoutes(availableRoutes);
 
+    return availableRoutes;
+  }
+
+  Future<Map<MarkerId, Marker>> _setupMarkers({
+    required NearbyEd activeEd,
+    required NearbyEds nearbyEds,
+    required LatLng destination,
+  }) async {
     final markers = {
-      const MarkerId('origin'): Marker(
-        markerId: const MarkerId('origin'),
-        position: origin,
-        infoWindow: const InfoWindow(title: 'Start'),
-      ),
       const MarkerId('destination'): Marker(
         markerId: const MarkerId('destination'),
         position: destination,
@@ -93,6 +133,30 @@ class RouteService {
       ),
     };
 
+    final pciIcon =
+        BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue);
+    final edIcon =
+        BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan);
+
+    /// add each ED as a marker on the map
+    for (final ed in nearbyEds.items.values) {
+      if (ed.edInfo.location != activeEd.edInfo.location) {
+        markers[MarkerId(ed.edInfo.shortName)] = Marker(
+          markerId: MarkerId(ed.edInfo.shortName),
+          position: ed.edInfo.location,
+          icon: ed.edInfo.isPCI ? pciIcon : edIcon,
+          infoWindow: InfoWindow(title: ed.edInfo.shortName),
+        );
+      }
+    }
+
+    return markers;
+  }
+
+  Map<PolylineId, Polyline> _setupPolylines(
+    AvailableRoutes availableRoutes,
+  ) {
+    /// add each route as a polyline on the map
     final routes = availableRoutes.routes;
 
     if (routes == null || routes.isEmpty) {
@@ -124,27 +188,7 @@ class RouteService {
       }
     }
 
-    final mapsInfo = MapsInfo(
-      origin: origin,
-      destination: destination,
-      markers: markers,
-      polylines: polylines,
-    );
-
-    ref.read(localMapsRepositoryProvider).setMapsInfo(mapsInfo);
-
-    ref
-        .read(availableRoutesRepositoryProvider)
-        .setAvailableRoutes(availableRoutes);
-
-    // TODO(FireJuun): Implement route selection mechanism and null safety
-    final firstRoute = routes.first;
-    final activeRoute = ActiveRoute(
-      activeRouteId: firstRoute.polyline!.encodedPolyline!,
-      activeStepId:
-          firstRoute.legs!.first.steps!.first.polyline!.encodedPolyline!,
-    );
-    ref.read(activeRouteRepositoryProvider).setActiveRoute(activeRoute);
+    return polylines;
   }
 }
 

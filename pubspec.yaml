@@ -39,6 +39,7 @@ dev_dependencies:
   envied_generator: ^0.5.4
   flutter_test:
     sdk: flutter
+  mockito: ^5.4.4
   mocktail: ^1.0.3
   riverpod_generator: ^2.4.0
   very_good_analysis: ^5.1.0
