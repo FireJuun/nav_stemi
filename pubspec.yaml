@@ -7,6 +7,7 @@ environment:
   sdk: ">=3.1.0 <4.0.0"
 
 dependencies:
+  collection: ^1.18.0
   dio: ^5.4.2+1
   duration: ^3.0.13
   envied: ^0.5.4

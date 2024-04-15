@@ -86,6 +86,7 @@ class RemoteRoutesRepository {
   Future<AvailableRoutes> getAvailableRoutesForSingleED({
     required maps.LatLng origin,
     required maps.LatLng destination,
+    required EdInfo destinationInfo,
   }) async {
     final requestedTime = DateTime.now();
 
@@ -108,6 +109,7 @@ class RemoteRoutesRepository {
     return AvailableRoutes(
       origin: origin,
       destination: destination,
+      destinationInfo: destinationInfo,
       requestedDateTime: requestedTime,
       routes: routes.routes,
     );

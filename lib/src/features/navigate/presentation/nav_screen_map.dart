@@ -9,20 +9,6 @@ class NavScreenMap extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref
-      ..listen(
-        getLastKnownOrCurrentPositionProvider,
-        (_, state) => state.showAlertDialogOnError(context),
-      )
-      ..listen(
-        activeRouteProvider,
-        (_, state) => state.showAlertDialogOnError(context),
-      )
-      ..listen(
-        availableRoutesProvider,
-        (_, state) => state.showAlertDialogOnError(context),
-      );
-
     final lastKnownOrCurrentPositionValue =
         ref.watch(getLastKnownOrCurrentPositionProvider);
 

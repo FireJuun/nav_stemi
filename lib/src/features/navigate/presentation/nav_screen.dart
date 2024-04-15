@@ -4,6 +4,10 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
+// TODO(FireJuun): Readjust location of these values
+const _showNarration = false;
+const _showNorthUp = false;
+
 class NavScreen extends StatefulWidget {
   const NavScreen({super.key});
 
@@ -29,10 +33,25 @@ class _NavScreenState extends State<NavScreen> {
           ),
           child: Consumer(
             builder: (context, ref, child) {
-              ref.listen<AsyncValue<void>>(
-                navScreenControllerProvider,
-                (_, state) => state.showAlertDialogOnError(context),
-              );
+              /// Listen for errors across the various async providers used in
+              /// this screen and in related screens
+              ref
+                ..listen<AsyncValue<void>>(
+                  navScreenControllerProvider,
+                  (_, state) => state.showAlertDialogOnError(context),
+                )
+                ..listen(
+                  getLastKnownOrCurrentPositionProvider,
+                  (_, state) => state.showAlertDialogOnError(context),
+                )
+                ..listen(
+                  activeRouteProvider,
+                  (_, state) => state.showAlertDialogOnError(context),
+                )
+                ..listen(
+                  availableRoutesProvider,
+                  (_, state) => state.showAlertDialogOnError(context),
+                );
 
               final state = ref.watch(navScreenControllerProvider);
               return Stack(
@@ -115,8 +134,7 @@ class _NavScreenState extends State<NavScreen> {
                                       ? Border.all(color: colorScheme.onSurface)
                                       : null,
                                 ),
-                                child:
-                                    Center(child: Text('All Steps'.hardcoded)),
+                                child: const NavSteps(),
                               ),
                             ),
                           ],
@@ -195,38 +213,40 @@ class _NavScreenState extends State<NavScreen> {
                         ),
                     ],
                   ),
-                  Align(
-                    alignment: const Alignment(-1, .2),
-                    child: IconButton(
-                      onPressed: () {
-                        // TODO(FireJuun): handle directions toggle (+ redraw)
-                      },
-                      tooltip: 'Narrate Directions'.hardcoded,
-                      icon: const Icon(Icons.voice_over_off),
-                    ),
-                  )
-                      .animate(
-                        target: shouldShowSteps() ? 1 : 0,
-                      )
-                      .fadeIn(
-                        duration: 200.ms,
+                  if (_showNarration)
+                    Align(
+                      alignment: const Alignment(-1, .2),
+                      child: IconButton(
+                        onPressed: () {
+                          // TODO(FireJuun): handle directions toggle (+ redraw)
+                        },
+                        tooltip: 'Narrate Directions'.hardcoded,
+                        icon: const Icon(Icons.voice_over_off),
                       ),
-                  Align(
-                    alignment: const Alignment(1, .2),
-                    child: IconButton(
-                      onPressed: () {
-                        // TODO(FireJuun): handle north up toggle (+ redraw)
-                      },
-                      tooltip: 'North Points Up'.hardcoded,
-                      icon: const Icon(Icons.explore),
-                    ),
-                  )
-                      .animate(
-                        target: shouldShowSteps() ? 1 : 0,
-                      )
-                      .fadeIn(
-                        duration: 200.ms,
+                    )
+                        .animate(
+                          target: shouldShowSteps() ? 1 : 0,
+                        )
+                        .fadeIn(
+                          duration: 200.ms,
+                        ),
+                  if (_showNorthUp)
+                    Align(
+                      alignment: const Alignment(1, .2),
+                      child: IconButton(
+                        onPressed: () {
+                          // TODO(FireJuun): handle north up toggle (+ redraw)
+                        },
+                        tooltip: 'North Points Up'.hardcoded,
+                        icon: const Icon(Icons.explore),
                       ),
+                    )
+                        .animate(
+                          target: shouldShowSteps() ? 1 : 0,
+                        )
+                        .fadeIn(
+                          duration: 200.ms,
+                        ),
                 ],
               );
             },

@@ -74,7 +74,11 @@ class RouteService {
     final destination = activeEd.edInfo.location;
 
     /// Get available routes, and set the default as the active route.
-    final availableRoutes = await _setupAvailableRoutes(origin, destination);
+    final availableRoutes = await _setupAvailableRoutes(
+      origin,
+      destination,
+      activeEd.edInfo,
+    );
 
     /// Set map info, markers, and polylines for this route.
     final markers = await _setupMarkers(
@@ -98,11 +102,13 @@ class RouteService {
   Future<AvailableRoutes> _setupAvailableRoutes(
     LatLng origin,
     LatLng destination,
+    EdInfo destinationInfo,
   ) async {
     final availableRoutes =
         await remoteRoutesRepository.getAvailableRoutesForSingleED(
       origin: origin,
       destination: destination,
+      destinationInfo: destinationInfo,
     );
     ref
         .read(availableRoutesRepositoryProvider)
@@ -118,15 +124,13 @@ class RouteService {
     assert(routes != null, 'routes should not be null');
 
     final firstRoute = routes!.first;
-    final activeRouteId = firstRoute.polyline?.encodedPolyline;
     final activeStepId =
-        firstRoute.legs!.first.steps?.first.polyline?.encodedPolyline;
+        firstRoute.legs?.first.steps?.first.polyline?.encodedPolyline;
 
-    assert(activeRouteId != null, 'activeRouteId should not be null');
-    assert(activeStepId != null, 'activeStepId should not be null');
+    assert(activeStepId != null, 'Current route needs to have valid steps');
 
     final activeRoute = ActiveRoute(
-      activeRouteId: activeRouteId!,
+      route: firstRoute,
       activeStepId: activeStepId!,
     );
 
