@@ -93,15 +93,6 @@ class RouteService {
     );
 
     ref.read(localMapsRepositoryProvider).setMapsInfo(mapsInfo);
-
-    // TODO(FireJuun): Implement route selection mechanism and null safety
-    // final firstRoute = routes.first;
-    // final activeRoute = ActiveRoute(
-    //   activeRouteId: firstRoute.polyline!.encodedPolyline!,
-    //   activeStepId:
-    //       firstRoute.legs!.first.steps!.first.polyline!.encodedPolyline!,
-    // );
-    // ref.read(activeRouteRepositoryProvider).setActiveRoute(activeRoute);
   }
 
   Future<AvailableRoutes> _setupAvailableRoutes(
@@ -117,7 +108,29 @@ class RouteService {
         .read(availableRoutesRepositoryProvider)
         .setAvailableRoutes(availableRoutes);
 
+    await _setupActiveRoute(availableRoutes);
+
     return availableRoutes;
+  }
+
+  Future<void> _setupActiveRoute(AvailableRoutes availableRoutes) async {
+    final routes = availableRoutes.routes;
+    assert(routes != null, 'routes should not be null');
+
+    final firstRoute = routes!.first;
+    final activeRouteId = firstRoute.polyline?.encodedPolyline;
+    final activeStepId =
+        firstRoute.legs!.first.steps?.first.polyline?.encodedPolyline;
+
+    assert(activeRouteId != null, 'activeRouteId should not be null');
+    assert(activeStepId != null, 'activeStepId should not be null');
+
+    final activeRoute = ActiveRoute(
+      activeRouteId: activeRouteId!,
+      activeStepId: activeStepId!,
+    );
+
+    ref.read(activeRouteRepositoryProvider).setActiveRoute(activeRoute);
   }
 
   Future<Map<MarkerId, Marker>> _setupMarkers({

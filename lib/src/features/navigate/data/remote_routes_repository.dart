@@ -101,7 +101,7 @@ class RemoteRoutesRepository {
         ),
       ),
       xGoogFieldMask:
-          'routes.duration,routes.distanceMeters,routes.polyline.encodedPolyline',
+          'routes.duration,routes.distanceMeters,routes.polyline.encodedPolyline,routes.legs.*',
       apiKey: Env.routesApi,
     );
 

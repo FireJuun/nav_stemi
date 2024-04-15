@@ -11,6 +11,8 @@ class NavScreenController extends _$NavScreenController {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
+  final _latLngBounds = LatLngBoundsDTO();
+
   @override
   FutureOr<void> build() {
     // nothing to do
@@ -33,17 +35,24 @@ class NavScreenController extends _$NavScreenController {
         }),
       );
 
-  void showRoute() => unawaited(
+  void showActiveRoute() => unawaited(
         _controller.future.then((controller) async {
-          // TODO(FireJuun): implement upper/lower bounds
-          // final route = await ref.read(getRouteProvider.future);
+          final currentLocation =
+              await ref.read(getLastKnownOrCurrentPositionProvider.future);
 
-          // await controller.animateCamera(
-          //   CameraUpdate.newLatLngBounds(
-          //     route.bounds,
-          //     50,
-          //   ),
-          // );
+          final destination = ref.read(destinationProvider);
+
+          if (destination != null) {
+            await controller.animateCamera(
+              CameraUpdate.newLatLngBounds(
+                _latLngBounds.listToBounds([
+                  currentLocation.toLatLng(),
+                  destination,
+                ]),
+                72,
+              ),
+            );
+          }
         }),
       );
 

@@ -30,7 +30,7 @@ class ActiveRouteRepository {
 
 @Riverpod(keepAlive: true)
 ActiveRouteRepository activeRouteRepository(ActiveRouteRepositoryRef ref) {
-  return ref.watch(activeRouteRepositoryProvider);
+  return ActiveRouteRepository();
 }
 
 @riverpod

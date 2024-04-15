@@ -152,9 +152,11 @@ class _NavScreenState extends State<NavScreen> {
                                 IconButton(
                                   icon: const Icon(Icons.moving),
                                   tooltip: 'Show Entire Route'.hardcoded,
-                                  onPressed: () {
-                                    // TODO(FireJuun): Zoom map to full route
-                                  },
+                                  onPressed: () => ref
+                                      .read(
+                                        navScreenControllerProvider.notifier,
+                                      )
+                                      .showActiveRoute(),
                                 ),
                                 // IconButton(
                                 //   icon: const Icon(Icons.my_location),
