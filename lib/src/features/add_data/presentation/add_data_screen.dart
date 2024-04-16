@@ -101,7 +101,7 @@ class AddDataScrollview extends StatelessWidget {
         final checklistHeight = constraints.maxHeight * 0.3;
         return CustomScrollView(
           slivers: [
-            const SliverPinnedHeader(child: DestinationInfo()),
+            const DestinationInfoSliver(),
             const SliverPinnedHeader(child: EtaWidget()),
             const SliverToBoxAdapter(child: gapH8),
             // gapH8,

@@ -7,7 +7,7 @@ part of 'active_route_repository.dart';
 // **************************************************************************
 
 String _$activeRouteRepositoryHash() =>
-    r'981db11abe721486fb2b115af5cbf3c7a1150fae';
+    r'612943ad19ec2ba6211a2d3724fa8fe787d9ae1a';
 
 /// See also [activeRouteRepository].
 @ProviderFor(activeRouteRepository)
@@ -22,7 +22,7 @@ final activeRouteRepositoryProvider = Provider<ActiveRouteRepository>.internal(
 );
 
 typedef ActiveRouteRepositoryRef = ProviderRef<ActiveRouteRepository>;
-String _$activeRouteHash() => r'ac4f1fb7a867d707381103088b3b7d20d42f332c';
+String _$activeRouteHash() => r'f5bd683a6ea3bea09c7215423edcf2d4692f285b';
 
 /// See also [activeRoute].
 @ProviderFor(activeRoute)

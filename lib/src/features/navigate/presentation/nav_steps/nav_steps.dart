@@ -18,8 +18,24 @@ class NavSteps extends ConsumerWidget {
         final routeSteps = activeRoute.route.routeSteps();
         return ListView.builder(
           itemCount: routeSteps.length,
-          itemBuilder: (context, index) =>
-              NavStep(routeLegStep: routeSteps[index]),
+          itemBuilder: (context, index) => NavStep(
+            routeLegStep: routeSteps[index],
+            onTap: () {
+              const mapsToRoutesDTO = MapsToRoutesDTO();
+              final routeLegStep = routeSteps[index];
+              final startLocation = routeLegStep.startLocation?.latLng;
+              final endLocation = routeLegStep.endLocation?.latLng;
+
+              if (startLocation != null && endLocation != null) {
+                ref
+                    .read(navScreenControllerProvider.notifier)
+                    .zoomToSelectedNavigationStep([
+                  mapsToRoutesDTO.routesToMaps(startLocation),
+                  mapsToRoutesDTO.routesToMaps(endLocation),
+                ]);
+              }
+            },
+          ),
         );
       },
     );

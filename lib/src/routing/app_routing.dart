@@ -18,6 +18,7 @@ enum AppRoute {
   goTo,
   nav,
   navGoTo,
+  navInfo,
   navAddData,
 }
 
@@ -76,6 +77,23 @@ GoRouter goRouter(GoRouterRef ref) {
                     pageBuilder: (context, state) => DialogPage(
                       builder: (_) => const GoToDialog(),
                     ),
+                  ),
+                  GoRoute(
+                    path: 'info',
+                    name: AppRoute.navInfo.name,
+                    pageBuilder: (context, state) {
+                      final edInfo = state.extra;
+                      assert(edInfo != null, 'ED info not provided');
+                      assert(
+                        edInfo is EdInfo,
+                        'ED info provided, but as the wrong type',
+                      );
+
+                      return DialogPage(
+                        builder: (_) =>
+                            DestinationInfoDialog(edInfo! as EdInfo),
+                      );
+                    },
                   ),
                 ],
               ),

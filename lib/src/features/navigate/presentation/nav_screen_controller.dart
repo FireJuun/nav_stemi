@@ -35,7 +35,7 @@ class NavScreenController extends _$NavScreenController {
         }),
       );
 
-  void showActiveRoute() => unawaited(
+  void zoomToActiveRoute() => unawaited(
         _controller.future.then((controller) async {
           final currentLocation =
               await ref.read(getLastKnownOrCurrentPositionProvider.future);
@@ -53,6 +53,17 @@ class NavScreenController extends _$NavScreenController {
               ),
             );
           }
+        }),
+      );
+
+  void zoomToSelectedNavigationStep(List<LatLng> stepLocations) => unawaited(
+        _controller.future.then((controller) async {
+          await controller.animateCamera(
+            CameraUpdate.newLatLngBounds(
+              _latLngBounds.listToBounds(stepLocations),
+              72,
+            ),
+          );
         }),
       );
 

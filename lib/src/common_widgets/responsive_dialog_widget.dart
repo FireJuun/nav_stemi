@@ -4,9 +4,14 @@ import 'package:nav_stemi/nav_stemi.dart';
 /// original source: https://github.com/MayJuun/wvems_protocols/blob/main/lib/src/features/preferences/presentation/shared/responsive_dialog_widget.dart
 
 class ResponsiveDialogWidget extends StatelessWidget {
-  const ResponsiveDialogWidget({required this.child, super.key});
+  const ResponsiveDialogWidget({
+    required this.child,
+    this.denseHeight = false,
+    super.key,
+  });
 
   final Widget child;
+  final bool denseHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +29,9 @@ class ResponsiveDialogWidget extends StatelessWidget {
             constraints: BoxConstraints(
               maxHeight: (isAboveBreakpoint || !isPortrait)
                   ? double.infinity
-                  : MediaQuery.of(context).size.height - 256,
+                  : denseHeight
+                      ? 500
+                      : MediaQuery.of(context).size.height - 256,
               maxWidth: isAboveBreakpoint ? 600 : double.infinity,
             ),
             child: Container(
@@ -77,7 +84,9 @@ class ResponsiveDialogHeader extends StatelessWidget {
 }
 
 class ResponsiveDialogFooter extends StatelessWidget {
-  const ResponsiveDialogFooter({super.key});
+  const ResponsiveDialogFooter({this.label, super.key});
+
+  final String? label;
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +97,7 @@ class ResponsiveDialogFooter extends StatelessWidget {
           const Divider(thickness: 2),
           FilledButton.tonal(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(label ?? 'Cancel'.hardcoded),
           ),
           gapH8,
         ],

@@ -10,8 +10,7 @@ const locations = <EdInfo>[
     shortName: 'Atrium | Stanly ED',
     location: LatLng(35.399265303297575, -80.18203397003248),
     address: '301 Yadkin St, Albemarle, NC 28001',
-    website:
-        'https://atriumhealth.org/locations/detail/atrium-health-stanly?utm_source=GMB&utm_medium=Organic&utm_campaign=GCR',
+    website: 'https://atriumhealth.org/locations/detail/atrium-health-stanly',
     telephone: '+19803234000',
   ),
   EdInfo(

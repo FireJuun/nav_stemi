@@ -147,6 +147,9 @@ class RouteService {
         markerId: const MarkerId('destination'),
         position: destination,
         infoWindow: InfoWindow(title: activeEd.edInfo.shortName),
+        onTap: () => ref
+            .read(goRouterProvider)
+            .goNamed(AppRoute.navInfo.name, extra: activeEd.edInfo),
       ),
     };
 
@@ -163,6 +166,9 @@ class RouteService {
           position: ed.edInfo.location,
           icon: ed.edInfo.isPCI ? pciIcon : edIcon,
           infoWindow: InfoWindow(title: ed.edInfo.shortName),
+          onTap: () => ref
+              .read(goRouterProvider)
+              .goNamed(AppRoute.navInfo.name, extra: ed.edInfo),
         );
       }
     }
