@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:nav_stemi/nav_stemi.dart';
-import 'package:sliver_tools/sliver_tools.dart';
 
 // TODO(FireJuun): find a better place for this button
 const _shouldShowSync = false;
@@ -105,7 +104,7 @@ class AddDataScrollview extends StatelessWidget {
         return CustomScrollView(
           slivers: [
             const DestinationInfoSliver(),
-            const SliverPinnedHeader(child: EtaWidget()),
+            const EtaWidgetSliver(),
             const SliverToBoxAdapter(child: gapH8),
             // gapH8,
             SliverToBoxAdapter(

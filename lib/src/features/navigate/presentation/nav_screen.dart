@@ -56,6 +56,7 @@ class _NavScreenState extends State<NavScreen> {
               final availableRoutesValue = ref.watch(availableRoutesProvider);
 
               return AsyncValueWidget<AvailableRoutes?>(
+                value: availableRoutesValue,
                 data: (availableRoutes) {
                   final activeRouteValue = ref.watch(activeRouteProvider);
 
@@ -272,7 +273,6 @@ class _NavScreenState extends State<NavScreen> {
                     },
                   );
                 },
-                value: availableRoutesValue,
               );
             },
           ),

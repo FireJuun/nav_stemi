@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
+const _routeDurationDto = RouteDurationDto();
+
 class NearestEdSelector extends ConsumerWidget {
   const NearestEdSelector({
     required this.availableRoutes,
@@ -55,6 +57,9 @@ class NearestEdButtons extends ConsumerWidget {
           throw NextClosestRouteNotAvailableException();
         }
 
+        final durationMin = _routeDurationDto
+            .routeDurationToMinsString(nextClosestRoute.routeDuration);
+
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -68,7 +73,7 @@ class NearestEdButtons extends ConsumerWidget {
                 onPressed: () => ref
                     .read(goToDialogControllerProvider.notifier)
                     .goToEd(activeEd: nextClosestRoute, nearbyEds: nearbyEds),
-                child: Text('ED ${nextClosestRoute.routeDuration}'),
+                child: Text('ED $durationMin'),
               ),
             ]
 
@@ -78,7 +83,7 @@ class NearestEdButtons extends ConsumerWidget {
                 onPressed: () => ref
                     .read(goToDialogControllerProvider.notifier)
                     .goToEd(activeEd: nextClosestRoute, nearbyEds: nearbyEds),
-                child: Text('PCI ${nextClosestRoute.routeDuration}'),
+                child: Text('PCI $durationMin'),
               ),
               FilledButton(
                 onPressed: () {},
