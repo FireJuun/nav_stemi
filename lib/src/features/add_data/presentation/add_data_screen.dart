@@ -4,6 +4,9 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
+// TODO(FireJuun): find a better place for this button
+const _shouldShowSync = false;
+
 class AddDataScreen extends StatefulWidget {
   const AddDataScreen({super.key});
 
@@ -47,7 +50,7 @@ class _AddDataScreenState extends State<AddDataScreen> {
                     child: const Sync(),
                   ),
                 ),
-              if (!isKeyboardVisible)
+              if (!isKeyboardVisible && _shouldShowSync)
                 Positioned.directional(
                   textDirection: Directionality.of(context),
                   end: 4,

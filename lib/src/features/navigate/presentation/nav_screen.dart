@@ -63,27 +63,18 @@ class _NavScreenState extends State<NavScreen> {
                     value: activeRouteValue,
                     data: (activeRoute) {
                       final state = ref.watch(navScreenControllerProvider);
+
+                      if (activeRoute == null || availableRoutes == null) {
+                        throw RouteInformationNotAvailableException();
+                      }
+
                       return Stack(
                         children: [
                           Column(
                             children: [
                               NearestEdSelector(
-                                onTapNearestPciCenter: () async {
-                                  // TODO(FireJuun): handle tap for nearest pci
-                                  // final result =
-                                  //     await ActiveRouteRepository().getRoute();
-                                  // debugPrint('route result:\n${result.toJson()}');
-                                },
-                                onTapNearestEd: () async {
-                                  // TODO(FireJuun): handle tap for nearest ed
-                                  // final results =
-                                  //     await ActiveRouteRepository().getRouteMatrix();
-                                  // for (var i = 0; i < results.length; i++) {
-                                  //   final item = results[i].toJson();
-                                  //   debugPrint('route matrix result $i:\n$item');
-                                  // }
-                                  // debugPrint('all items found');
-                                },
+                                availableRoutes: availableRoutes,
+                                activeRoute: activeRoute,
                               ),
                               gapH4,
                               Expanded(
@@ -104,7 +95,7 @@ class _NavScreenState extends State<NavScreen> {
                                           ? Align(
                                               alignment: Alignment.topCenter,
                                               child: NextStep(
-                                                routeLegStep: activeRoute!.route
+                                                routeLegStep: activeRoute.route
                                                     .routeStepById(
                                                   activeRoute.activeStepId,
                                                 )!,
