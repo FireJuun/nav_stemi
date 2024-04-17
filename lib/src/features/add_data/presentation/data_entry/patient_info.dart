@@ -8,6 +8,8 @@ class PatientInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
+    // final state = ref.
+
     return SliverMainAxisGroup(
       slivers: [
         // DataEntryHeader('Patient Info'.hardcoded),
@@ -84,8 +86,13 @@ class PatientInfo extends StatelessWidget {
                   ),
                   Expanded(
                     child: FilledButton(
-                      onPressed: () {},
-                      child: const Text('Import'),
+                      onPressed: () {
+                        showDialog<bool>(
+                          context: context,
+                          builder: (context) => const ScanQrLicenseDialog(),
+                        );
+                      },
+                      child: Text('Scan'.hardcoded),
                     ),
                   ),
                 ],

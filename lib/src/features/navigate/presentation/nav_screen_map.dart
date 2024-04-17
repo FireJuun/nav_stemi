@@ -21,6 +21,11 @@ class NavScreenMap extends ConsumerWidget {
         ),
         trafficEnabled: true,
         myLocationEnabled: true,
+
+        /// These controls vary in location between Android / iOS
+        /// They are manually enabled for app consistency
+        myLocationButtonEnabled: false,
+        zoomControlsEnabled: false,
         onMapCreated: (controller) => ref
             .read(navScreenControllerProvider.notifier)
             .onMapCreated(controller),

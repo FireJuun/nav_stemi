@@ -177,13 +177,13 @@ class _NavScreenState extends State<NavScreen> {
                                           MainAxisAlignment.center,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        IconButton(
-                                          icon: const Icon(Icons.alt_route),
-                                          tooltip: 'Other Routes'.hardcoded,
-                                          onPressed: () {
-                                            // TODO(FireJuun): Query Other Routes Dialog
-                                          },
-                                        ),
+                                        // IconButton(
+                                        //   icon: const Icon(Icons.alt_route),
+                                        //   tooltip: 'Other Routes'.hardcoded,
+                                        //   onPressed: () {
+                                        //     // `TODO`(FireJuun): Query Other Routes Dialog
+                                        //   },
+                                        // ),
                                         IconButton(
                                           icon: const Icon(Icons.moving),
                                           tooltip:
@@ -195,21 +195,22 @@ class _NavScreenState extends State<NavScreen> {
                                               )
                                               .zoomToActiveRoute(),
                                         ),
-                                        // IconButton(
-                                        //   icon: const Icon(Icons.my_location),
-                                        //   tooltip: 'My Location'.hardcoded,
-                                        //   onPressed: () => ref
-                                        //       .read(
-                                        //         navScreenControllerProvider.notifier,
-                                        //       )
-                                        //       .showCurrentLocation(),
-                                        // ),
                                       ],
                                     ),
                                     Row(
                                       children: [
                                         IconButton(
-                                          icon: const Icon(Icons.zoom_out),
+                                          icon: const Icon(Icons.my_location),
+                                          tooltip: 'My Location'.hardcoded,
+                                          onPressed: () => ref
+                                              .read(
+                                                navScreenControllerProvider
+                                                    .notifier,
+                                              )
+                                              .showCurrentLocation(),
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.remove),
                                           tooltip: 'Zoom Out'.hardcoded,
                                           onPressed: () => ref
                                               .read(
@@ -219,7 +220,7 @@ class _NavScreenState extends State<NavScreen> {
                                               .zoomOut(),
                                         ),
                                         IconButton(
-                                          icon: const Icon(Icons.zoom_in),
+                                          icon: const Icon(Icons.add),
                                           tooltip: 'Zoom In'.hardcoded,
                                           onPressed: () => ref
                                               .read(
