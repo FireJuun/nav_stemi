@@ -28,7 +28,6 @@ class DataEntryHeader extends StatelessWidget {
                 trailing ?? const SizedBox.shrink(),
               ],
             ),
-            // Divider(color: colorScheme.primary),
           ],
         ),
       ),
