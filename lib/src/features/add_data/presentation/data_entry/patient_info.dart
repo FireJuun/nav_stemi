@@ -1,116 +1,204 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
-class PatientInfo extends StatelessWidget {
+const _goBackInYears = 60;
+const _goBackDuration = Duration(days: _goBackInYears * 365);
+final _dateFormatConverter = DateFormat('MM-dd-yyyy');
+
+class PatientInfo extends ConsumerStatefulWidget {
   const PatientInfo({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+  ConsumerState<ConsumerStatefulWidget> createState() => _PatientInfoState();
+}
 
-    // final state = ref.
+class _PatientInfoState extends ConsumerState<PatientInfo> {
+  final TextEditingController _lastNameTextController = TextEditingController();
+  final TextEditingController _firstNameTextController =
+      TextEditingController();
+  final TextEditingController _middleNameTextController =
+      TextEditingController();
+  final TextEditingController _birthDateTextController =
+      TextEditingController();
+  final TextEditingController _genderTextController = TextEditingController();
+  final TextEditingController _cardiologistTextController =
+      TextEditingController();
+
+  DateTime? birthDate;
+
+  @override
+  void dispose() {
+    _lastNameTextController.dispose();
+    _firstNameTextController.dispose();
+    _middleNameTextController.dispose();
+    _birthDateTextController.dispose();
+    _genderTextController.dispose();
+    _cardiologistTextController.dispose();
+    super.dispose();
+  }
+
+  // TODO(FireJuun): extract logic into pt info controller
+  String _ageFromBirthDate(DateTime birthDate) {
+    final age = DateTime.now().difference(birthDate).inDays ~/ 365;
+    return '$age y';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ref.listen<AsyncValue<void>>(
+      patientInfoControllerProvider,
+      (_, state) => state.showAlertDialogOnError(context),
+    );
+
+    final state = ref.watch(patientInfoControllerProvider);
+
+    if (state is AsyncLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
     return SliverMainAxisGroup(
       slivers: [
-        // DataEntryHeader('Patient Info'.hardcoded),
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
           sliver: SliverList.list(
             children: [
+              Center(
+                child: FilledButton(
+                  onPressed: () {
+                    showDialog<bool>(
+                      context: context,
+                      builder: (context) => const ScanQrLicenseDialog(),
+                    );
+                  },
+                  child: Text("Scan Driver's License".hardcoded),
+                ),
+              ),
+              gapH16,
+              const Divider(thickness: 4),
+              gapH16,
               Row(
                 children: [
                   Expanded(
-                    child: TextField(
-                      decoration: const InputDecoration(
-                        label: Text('Last Name'),
-                      ),
-                      onTapOutside: (PointerDownEvent event) {
-                        FocusManager.instance.primaryFocus?.unfocus();
-                      },
+                    child: PatientInfoTextField(
+                      label: 'First Name'.hardcoded,
+                      controller: _firstNameTextController,
                     ),
                   ),
                   gapW16,
                   Expanded(
-                    child: TextField(
-                      decoration: const InputDecoration(
-                        label: Text('First Name'),
-                      ),
-                      onTapOutside: (PointerDownEvent event) {
-                        FocusManager.instance.primaryFocus?.unfocus();
-                      },
+                    child: PatientInfoTextField(
+                      label: 'Middle Name'.hardcoded,
+                      controller: _middleNameTextController,
                     ),
                   ),
                 ],
               ),
-              gapH24,
+              gapH16,
               Row(
                 children: [
                   Expanded(
-                    child: TextField(
-                      decoration: const InputDecoration(
-                        label: Text('Date of Birth'),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: PatientInfoTextField(
+                        label: 'Last Name'.hardcoded,
+                        controller: _lastNameTextController,
                       ),
-                      onTapOutside: (PointerDownEvent event) {
-                        FocusManager.instance.primaryFocus?.unfocus();
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      'Age: 42',
-                      style: textTheme.bodyLarge,
-                      textAlign: TextAlign.end,
                     ),
                   ),
                 ],
               ),
-              gapH24,
+              gapH32,
+              if (birthDate != null)
+                Text('Age: ${_ageFromBirthDate(birthDate!)}'),
+              gapH32,
               Row(
                 children: [
                   Expanded(
-                    child: TextField(
-                      decoration: const InputDecoration(
-                        label: Text('Gender'),
+                    child: PatientInfoTextField(
+                      label: 'Date of Birth'.hardcoded,
+                      controller: _birthDateTextController,
+                      prefixIcon: IconButton(
+                        icon: const Icon(Icons.date_range),
+                        onPressed: () async {
+                          final now = DateTime.now();
+
+                          final selectedDate = await showDatePicker(
+                            context: context,
+                            firstDate: DateTime(1900),
+                            initialDate: now.subtract(_goBackDuration),
+                            initialDatePickerMode: DatePickerMode.year,
+                            lastDate: now,
+                          );
+
+                          if (selectedDate != null) {
+                            _birthDateTextController.text =
+                                _dateFormatConverter.format(selectedDate);
+                          } else {
+                            _birthDateTextController.text = '';
+                          }
+
+                          setState(() {
+                            birthDate = selectedDate;
+                          });
+                        },
                       ),
-                      onTapOutside: (PointerDownEvent event) {
-                        FocusManager.instance.primaryFocus?.unfocus();
-                      },
                     ),
                   ),
+                  gapW32,
                   Expanded(
-                    child: Text(
-                      'Male',
-                      style: textTheme.bodyLarge,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Expanded(
-                    child: FilledButton(
-                      onPressed: () {
-                        showDialog<bool>(
-                          context: context,
-                          builder: (context) => const ScanQrLicenseDialog(),
-                        );
-                      },
-                      child: Text('Scan'.hardcoded),
+                    child: PatientInfoTextField(
+                      label: 'Gender'.hardcoded,
+                      controller: _genderTextController,
+                      prefixIcon: IconButton(
+                        icon: const Icon(Icons.list),
+                        onPressed: () {
+                          // TODO(FireJuun): Open picker window to select gender
+                        },
+                      ),
                     ),
                   ),
                 ],
               ),
-              gapH24,
-              TextField(
-                decoration: const InputDecoration(
-                  label: Text('Cardiologist'),
-                ),
-                onTapOutside: (PointerDownEvent event) {
-                  FocusManager.instance.primaryFocus?.unfocus();
-                },
+              gapH32,
+              const Divider(thickness: 4),
+              gapH16,
+              PatientInfoTextField(
+                label: "Patient's Cardiologist".hardcoded,
+                controller: _cardiologistTextController,
               ),
-              gapH48,
             ],
           ),
         ),
       ],
+    );
+  }
+}
+
+class PatientInfoTextField extends StatelessWidget {
+  const PatientInfoTextField({
+    required this.label,
+    required this.controller,
+    this.prefixIcon,
+    super.key,
+  });
+
+  final String label;
+  final TextEditingController controller;
+  final Widget? prefixIcon;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        prefixIcon: prefixIcon,
+        label: Text(label, textAlign: TextAlign.center),
+      ),
+      onTapOutside: (PointerDownEvent event) {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
     );
   }
 }
