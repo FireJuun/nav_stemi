@@ -105,7 +105,7 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
               gapH32,
               if (birthDate != null)
                 Text(
-                  'Age: ${_birthDateToStringDTO.ageFromBirthDate(birthDate!)}',
+                  'Age: ${birthDate?.ageFromBirthDate()}',
                 ),
               gapH32,
               Row(
@@ -177,12 +177,14 @@ class PatientInfoTextField extends StatelessWidget {
     required this.label,
     required this.controller,
     this.prefixIcon,
+    this.readOnly = false,
     super.key,
   });
 
   final String label;
   final TextEditingController controller;
   final Widget? prefixIcon;
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -190,8 +192,10 @@ class PatientInfoTextField extends StatelessWidget {
       controller: controller,
       decoration: InputDecoration(
         prefixIcon: prefixIcon,
+        filled: !readOnly,
         label: Text(label, textAlign: TextAlign.center),
       ),
+      readOnly: readOnly,
       onTapOutside: (PointerDownEvent event) {
         FocusManager.instance.primaryFocus?.unfocus();
       },

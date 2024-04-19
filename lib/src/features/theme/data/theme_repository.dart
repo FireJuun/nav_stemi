@@ -109,7 +109,7 @@ class ThemeRepository {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12)),
         ),
-        filled: true,
+        // filled: true,
         contentPadding: EdgeInsets.all(8),
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(

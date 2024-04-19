@@ -1,5 +1,6 @@
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:nav_stemi/nav_stemi.dart';
+import 'package:recase/recase.dart';
 
 const _birthDateToStringDTO = BirthDateToStringDTO();
 
@@ -14,10 +15,12 @@ class DriversLicenseToPatientInfoDTO {
         : _birthDateToStringDTO.convertDriversLicenseBack(birthDateString);
 
     return PatientInfoModel(
-      lastName: driverLicense.lastName,
-      firstName: driverLicense.firstName,
-      middleName: driverLicense.middleName,
+      lastName: driverLicense.lastName?.titleCase,
+      firstName: driverLicense.firstName?.titleCase,
+      middleName: driverLicense.middleName?.titleCase,
       birthDate: birthDate,
+      // TODO(FireJuun): implement data conversion for gender info
+      gender: driverLicense.gender,
     );
   }
 
@@ -32,6 +35,13 @@ class DriversLicenseToPatientInfoDTO {
       firstName: patientInfo.firstName,
       middleName: patientInfo.middleName,
       birthDate: licenseBirthDateString,
+      // TODO(FireJuun): implement data conversion for gender info
+      // gender: patientInfo.gender,
     );
   }
+}
+
+extension DriverLicenseX on DriverLicense {
+  PatientInfoModel toPatientInfo() =>
+      const DriversLicenseToPatientInfoDTO().convert(this);
 }

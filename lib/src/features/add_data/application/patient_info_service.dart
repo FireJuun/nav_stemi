@@ -1,6 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:nav_stemi/nav_stemi.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'patient_info_service.g.dart';
+
+const _birthDateToStringDTO = BirthDateToStringDTO();
 
 class PatientInfoService {
   const PatientInfoService(this.ref);
@@ -14,22 +19,30 @@ class PatientInfoService {
     patientInfoRepository.setPatientInfo(patientInfo);
   }
 
-  void setPatientInfoFromScannedLicense(DriverLicense driverLicense) {
+  Future<void> setPatientInfoFromScannedLicense(
+    DriverLicense driverLicense,
+  ) async {
     final oldInfo =
         patientInfoRepository.getPatientInfo() ?? const PatientInfoModel();
 
-    final newInfo = oldInfo.copyWith(
-      lastName: driverLicense.lastName ?? oldInfo.lastName,
-      firstName: driverLicense.firstName ?? oldInfo.firstName,
-      middleName: driverLicense.middleName ?? oldInfo.middleName,
-      // TODO(FireJuun): implement birthdate data conversions
-      // birthDate: driverLicense.birthDate,
+    final newInfo = driverLicense.toPatientInfo();
+
+    final merged = oldInfo.copyWith(
+      lastName: newInfo.lastName ?? oldInfo.lastName,
+      firstName: newInfo.firstName ?? oldInfo.firstName,
+      middleName: newInfo.middleName ?? oldInfo.middleName,
+      birthDate: newInfo.birthDate ?? oldInfo.birthDate,
     );
 
-    patientInfoRepository.setPatientInfo(newInfo);
+    patientInfoRepository.setPatientInfo(merged);
   }
 
   void clearPatientInfo() {
     patientInfoRepository.clearPatientInfo();
   }
+}
+
+@riverpod
+PatientInfoService patientInfoService(PatientInfoServiceRef ref) {
+  return PatientInfoService(ref);
 }

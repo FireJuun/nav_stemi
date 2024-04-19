@@ -3,9 +3,9 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 class ScanQrWidget extends StatefulWidget {
-  const ScanQrWidget({required this.onItemScanned, super.key});
+  const ScanQrWidget({required this.onItemDetected, super.key});
 
-  final VoidCallback onItemScanned;
+  final void Function(BarcodeCapture) onItemDetected;
 
   @override
   State<ScanQrWidget> createState() => _ScanQrWidgetState();
@@ -66,19 +66,7 @@ class _ScanQrWidgetState extends State<ScanQrWidget> {
         Expanded(
           child: MobileScanner(
             controller: cameraController,
-            onDetect: (capture) {
-              final barcodes = capture.barcodes;
-              for (final barcode in barcodes) {
-                if (barcode.driverLicense != null) {
-                  debugPrint(
-                    'Driver License found! ${barcode.driverLicense}',
-                  );
-
-                  widget.onItemScanned();
-                }
-                debugPrint('Barcode found! ${barcode.rawValue}');
-              }
-            },
+            onDetect: widget.onItemDetected,
           ),
         ),
         // TODO(FireJuun): add remove
