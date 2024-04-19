@@ -77,27 +77,59 @@ class ResponsiveDialogHeader extends StatelessWidget {
           ),
         ),
         gapH12,
-        // const Divider(),
       ],
     );
   }
 }
 
 class ResponsiveDialogFooter extends StatelessWidget {
-  const ResponsiveDialogFooter({this.label, super.key});
+  const ResponsiveDialogFooter({
+    this.label,
+    this.includeAccept = false,
+    this.onAccept,
+    super.key,
+  });
 
   final String? label;
+  final bool includeAccept;
+  final VoidCallback? onAccept;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return ColoredBox(
-      color: Theme.of(context).colorScheme.secondary,
+      color: colorScheme.secondary,
       child: Column(
         children: [
           const Divider(thickness: 2),
-          FilledButton.tonal(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(label ?? 'Cancel'.hardcoded),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              FilledButton.tonal(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(label ?? 'Cancel'.hardcoded),
+              ),
+              if (includeAccept)
+                FilledButton(
+                  style: Theme.of(context).filledButtonTheme.style?.copyWith(
+                    backgroundColor: MaterialStateProperty.resolveWith(
+                      (states) {
+                        if (states.any(interactiveStates.contains)) {
+                          return colorScheme.secondary;
+                        }
+                        // disabled state = grey
+                        else if (states
+                            .any((state) => state == MaterialState.disabled)) {
+                          return colorScheme.outline;
+                        }
+                        return colorScheme.primary;
+                      },
+                    ),
+                  ),
+                  onPressed: onAccept,
+                  child: Text('Accept'.hardcoded),
+                ),
+            ],
           ),
           gapH8,
         ],
