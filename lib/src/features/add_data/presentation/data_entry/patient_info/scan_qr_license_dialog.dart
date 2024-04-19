@@ -5,7 +5,9 @@ import 'package:nav_stemi/nav_stemi.dart';
 enum ScanQrSubRoute { scan, confirm }
 
 class ScanQrLicenseDialog extends StatefulWidget {
-  const ScanQrLicenseDialog({super.key});
+  const ScanQrLicenseDialog({required this.onDataSubmitted, super.key});
+
+  final void Function(PatientInfoModel) onDataSubmitted;
 
   @override
   State<ScanQrLicenseDialog> createState() => _ScanQrLicenseDialogState();
@@ -54,6 +56,7 @@ class _ScanQrLicenseDialogState extends State<ScanQrLicenseDialog> {
           ),
           ScanQrAcceptData(
             scannedLicense: scannedLicense,
+            onDataSubmitted: widget.onDataSubmitted,
             onRescanLicense: () {
               pageController.animateToPage(
                 ScanQrSubRoute.scan.index,

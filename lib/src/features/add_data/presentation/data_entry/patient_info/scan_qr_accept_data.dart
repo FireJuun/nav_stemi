@@ -7,11 +7,13 @@ class ScanQrAcceptData extends StatelessWidget {
   const ScanQrAcceptData({
     required this.scannedLicense,
     required this.onRescanLicense,
+    required this.onDataSubmitted,
     super.key,
   });
 
   final DriverLicense? scannedLicense;
   final VoidCallback onRescanLicense;
+  final void Function(PatientInfoModel) onDataSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +52,7 @@ class ScanQrAcceptData extends StatelessWidget {
                 ref
                     .read(patientInfoControllerProvider.notifier)
                     .saveLicenseAsPatientInfo(scannedLicense!);
-                // TODO(FireJuun): save data in provider here
+                onDataSubmitted(scannedLicense!.toPatientInfo());
                 Navigator.of(context).pop();
               },
             );

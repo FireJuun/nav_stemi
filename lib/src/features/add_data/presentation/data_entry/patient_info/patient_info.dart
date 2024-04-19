@@ -7,23 +7,29 @@ const _goBackDuration = Duration(days: _goBackInYears * 365);
 const _birthDateToStringDTO = BirthDateToStringDTO();
 
 class PatientInfo extends ConsumerStatefulWidget {
-  const PatientInfo({super.key});
+  const PatientInfo({required this.patientInfoModel, super.key});
+
+  final PatientInfoModel patientInfoModel;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PatientInfoState();
 }
 
 class _PatientInfoState extends ConsumerState<PatientInfo> {
-  final TextEditingController _lastNameTextController = TextEditingController();
-  final TextEditingController _firstNameTextController =
-      TextEditingController();
-  final TextEditingController _middleNameTextController =
-      TextEditingController();
-  final TextEditingController _birthDateTextController =
-      TextEditingController();
-  final TextEditingController _genderTextController = TextEditingController();
-  final TextEditingController _cardiologistTextController =
-      TextEditingController();
+  late final TextEditingController _lastNameTextController =
+      TextEditingController(text: widget.patientInfoModel.lastName);
+  late final TextEditingController _firstNameTextController =
+      TextEditingController(text: widget.patientInfoModel.firstName);
+  late final TextEditingController _middleNameTextController =
+      TextEditingController(text: widget.patientInfoModel.middleName);
+  late final TextEditingController _birthDateTextController =
+      TextEditingController(
+    text: widget.patientInfoModel.birthDate?.toBirthDateString(),
+  );
+  late final TextEditingController _genderTextController =
+      TextEditingController(text: widget.patientInfoModel.gender);
+  late final TextEditingController _cardiologistTextController =
+      TextEditingController(text: widget.patientInfoModel.cardiologist);
 
   DateTime? birthDate;
 
@@ -62,7 +68,24 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
                   onPressed: () {
                     showDialog<bool>(
                       context: context,
-                      builder: (context) => const ScanQrLicenseDialog(),
+                      builder: (context) => ScanQrLicenseDialog(
+                        onDataSubmitted: (patientInfoModel) {
+                          setState(() {
+                            _lastNameTextController.text =
+                                patientInfoModel.lastName ?? '';
+                            _firstNameTextController.text =
+                                patientInfoModel.firstName ?? '';
+                            _middleNameTextController.text =
+                                patientInfoModel.middleName ?? '';
+                            _birthDateTextController.text = patientInfoModel
+                                    .birthDate
+                                    ?.toBirthDateString() ??
+                                '';
+                            _genderTextController.text =
+                                patientInfoModel.gender ?? '';
+                          });
+                        },
+                      ),
                     );
                   },
                   child: Text("Scan Driver's License".hardcoded),
