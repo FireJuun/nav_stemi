@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 const _goBackInYears = 60;
 const _goBackDuration = Duration(days: _goBackInYears * 365);
-final _dateFormatConverter = DateFormat('MM-dd-yyyy');
+const _birthDateToStringDTO = BirthDateToStringDTO();
 
 class PatientInfo extends ConsumerStatefulWidget {
   const PatientInfo({super.key});
@@ -37,12 +36,6 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
     _genderTextController.dispose();
     _cardiologistTextController.dispose();
     super.dispose();
-  }
-
-  // TODO(FireJuun): extract logic into pt info controller
-  String _ageFromBirthDate(DateTime birthDate) {
-    final age = DateTime.now().difference(birthDate).inDays ~/ 365;
-    return '$age y';
   }
 
   @override
@@ -111,7 +104,9 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
               ),
               gapH32,
               if (birthDate != null)
-                Text('Age: ${_ageFromBirthDate(birthDate!)}'),
+                Text(
+                  'Age: ${_birthDateToStringDTO.ageFromBirthDate(birthDate!)}',
+                ),
               gapH32,
               Row(
                 children: [
@@ -134,7 +129,8 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
 
                           if (selectedDate != null) {
                             _birthDateTextController.text =
-                                _dateFormatConverter.format(selectedDate);
+                                _birthDateToStringDTO
+                                    .convertDatePicker(selectedDate);
                           } else {
                             _birthDateTextController.text = '';
                           }
