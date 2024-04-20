@@ -33,7 +33,7 @@ class Checklist extends StatelessWidget {
                 sliver: SliverList.list(
                   children: [
                     ChecklistItem(label: 'EKG by 5 min'.hardcoded),
-                    ChecklistItem(label: 'Give aspirin 325'.hardcoded),
+                    ChecklistItem(label: 'Give Aspirin 325'.hardcoded),
                     ChecklistItem(label: 'Leave by 10 min'.hardcoded),
                   ],
                 ),
@@ -42,9 +42,9 @@ class Checklist extends StatelessWidget {
                 flex: 1,
                 sliver: SliverList.list(
                   children: [
-                    ChecklistItem(label: 'Patient Info'.hardcoded),
+                    ChecklistItem(label: 'Pt Info'.hardcoded),
                     ChecklistItem(label: 'Pt Cardiologist'.hardcoded),
-                    ChecklistItem(label: 'Notify cath lab'.hardcoded),
+                    ChecklistItem(label: 'Notify Cath Lab'.hardcoded),
                   ],
                 ),
               ),

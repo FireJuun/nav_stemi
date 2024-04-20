@@ -36,7 +36,7 @@ dependencies:
   shared_preferences: ^2.2.2
   sliver_tools: ^0.2.12
   time: ^2.1.4
-  timeago: ^3.6.1
+  timeago_flutter: ^3.6.0
   uuid: ^4.4.0
 
 dev_dependencies:
