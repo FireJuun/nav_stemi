@@ -42,8 +42,8 @@ class Checklist extends StatelessWidget {
                 flex: 1,
                 sliver: SliverList.list(
                   children: [
-                    ChecklistItem(label: 'Name (last, first)'.hardcoded),
-                    ChecklistItem(label: 'Cardiologist'.hardcoded),
+                    ChecklistItem(label: 'Patient Info'.hardcoded),
+                    ChecklistItem(label: 'Pt Cardiologist'.hardcoded),
                     ChecklistItem(label: 'Notify cath lab'.hardcoded),
                   ],
                 ),
