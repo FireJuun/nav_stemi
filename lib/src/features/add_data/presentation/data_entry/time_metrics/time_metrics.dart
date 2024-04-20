@@ -7,26 +7,27 @@ class TimeMetrics extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverMainAxisGroup(
       slivers: [
-        // DataEntryHeader('Time Metrics'.hardcoded),
         SliverPadding(
           padding: const EdgeInsetsDirectional.only(bottom: 24),
           sliver: SliverList.list(
             children: const [
               TimeMetric(
                 label: 'Patient Contact',
-                timeOccurred: '3:07 pm',
-                timeAgoInMins: '20 min ago',
+                timeOccurred: null,
+                // timeAgoInMins: '20 min ago',
               ),
               TimeMetric(
                 label: 'First ECG',
-                timeOccurred: '3:15 pm',
-                timeAgoInMins: '12 min ago',
+                timeOccurred: null,
+                // timeOccurred: '3:15 pm',
+                // timeAgoInMins: '12 min ago',
               ),
               // TODO(FireJuun): should this be ED notification?
               TimeMetric(
                 label: 'STEMI Activation',
-                timeOccurred: '3:17 pm',
-                timeAgoInMins: '10 min ago',
+                timeOccurred: null,
+                // timeOccurred: '3:17 pm',
+                // timeAgoInMins: '10 min ago',
               ),
             ],
           ),
@@ -40,28 +41,38 @@ class TimeMetric extends StatelessWidget {
   const TimeMetric({
     required this.label,
     required this.timeOccurred,
-    required this.timeAgoInMins,
     super.key,
   });
 
   final String label;
-  final String timeOccurred;
-  final String timeAgoInMins;
+  final DateTime? timeOccurred;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsetsDirectional.only(bottom: 4),
       child: ListTile(
-        title: Text(label),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              label,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyLarge
+                  ?.apply(fontWeightDelta: 1),
+            ),
+            IconButton(onPressed: () {}, icon: const Icon(Icons.schedule)),
+          ],
+        ),
         subtitle: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(timeAgoInMins),
+              const Text('20 m ago'),
               Text(
-                timeOccurred,
+                '4:15 pm',
                 style: Theme.of(context).textTheme.bodyMedium?.apply(
                       fontStyle: FontStyle.italic,
                       fontWeightDelta: -1,

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
-class DataEntryHeader extends StatelessWidget {
-  const DataEntryHeader(this.label, {this.trailing, super.key});
+// TODO(FireJuun): deprecate this widget
+class CareTeamHeader extends StatelessWidget {
+  const CareTeamHeader(this.label, {this.trailing, super.key});
 
   final String label;
   final Widget? trailing;
