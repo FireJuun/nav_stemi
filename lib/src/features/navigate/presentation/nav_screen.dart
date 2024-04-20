@@ -66,7 +66,10 @@ class _NavScreenState extends State<NavScreen> {
                       final state = ref.watch(navScreenControllerProvider);
 
                       if (activeRoute == null || availableRoutes == null) {
-                        throw RouteInformationNotAvailableException();
+                        return Material(
+                          color: Theme.of(context).colorScheme.background,
+                          child: const ListEDOptions(),
+                        );
                       }
 
                       return Stack(

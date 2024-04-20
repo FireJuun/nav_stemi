@@ -18,14 +18,9 @@ class DestinationInfo extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final availableRoutesValue = ref.watch(availableRoutesProvider);
-    return AsyncValueSliverWidget<AvailableRoutes?>(
+    return AsyncValueWidget<AvailableRoutes?>(
       value: availableRoutesValue,
       data: (availableRoutes) {
-        if (availableRoutes == null) {
-          return const Center(
-            child: Text('No Data Available'),
-          );
-        }
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -35,20 +30,21 @@ class DestinationInfo extends ConsumerWidget {
             ),
             Expanded(
               child: Text(
-                availableRoutes.destinationInfo.name,
+                availableRoutes?.destinationInfo.name ?? '--',
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ),
-            IconButton(
-              onPressed: () => ref.read(goRouterProvider).goNamed(
-                    AppRoute.navInfo.name,
-                    extra: availableRoutes.destinationInfo,
-                  ),
-              icon: const Icon(Icons.info_outline),
-            ),
+            if (availableRoutes != null)
+              IconButton(
+                onPressed: () => ref.read(goRouterProvider).goNamed(
+                      AppRoute.navInfo.name,
+                      extra: availableRoutes.destinationInfo,
+                    ),
+                icon: const Icon(Icons.info_outline),
+              ),
           ],
         );
       },

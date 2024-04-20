@@ -115,7 +115,7 @@ class _PlaceholderButton extends ConsumerWidget {
           ],
         ),
         trailing: Text(
-          RouteDurationDto()
+          const RouteDurationDto()
               .routeDurationToFormattedString(edOption.routeDuration),
         ),
       ),

@@ -29,19 +29,19 @@ class EtaWidget extends ConsumerWidget {
         return AsyncValueWidget<ActiveRoute?>(
           value: activeRouteValue,
           data: (activeRoute) {
-            if (activeRoute == null || availableRoutes == null) {
-              throw RouteInformationNotAvailableException();
-            }
+            // if (activeRoute == null || availableRoutes == null) {
+            //   throw RouteInformationNotAvailableException();
+            // }
 
             // TODO(FireJuun): Adjust ETA after multiple navigation steps (or refresh time on occasion)
 
             final routeDuration = _routeDurationDto
-                    .routeDurationToSeconds(activeRoute.route.duration) ??
+                    .routeDurationToSeconds(activeRoute?.route.duration) ??
                 Duration.zero;
             final durationFromRequested =
-                availableRoutes.requestedDateTime.add(routeDuration);
+                availableRoutes?.requestedDateTime.add(routeDuration);
             final durationMin = _routeDurationDto
-                .routeDurationToMinsString(activeRoute.route.duration);
+                .routeDurationToMinsString(activeRoute?.route.duration);
 
             return Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -64,13 +64,15 @@ class EtaWidget extends ConsumerWidget {
                 Expanded(
                   flex: 2,
                   child: Text(
-                    TimeOfDay.fromDateTime(durationFromRequested)
-                        .format(context),
+                    durationFromRequested == null
+                        ? '--'
+                        : TimeOfDay.fromDateTime(durationFromRequested)
+                            .format(context),
                     textAlign: TextAlign.end,
-                    style: Theme.of(context).textTheme.titleSmall?.apply(
-                          // fontWeightDelta: 2,
-                          fontStyle: FontStyle.italic,
-                        ),
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleSmall
+                        ?.apply(fontStyle: FontStyle.italic),
                   ),
                 ),
               ],
