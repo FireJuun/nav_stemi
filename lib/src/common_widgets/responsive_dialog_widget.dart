@@ -76,7 +76,7 @@ class ResponsiveDialogHeader extends StatelessWidget {
             ],
           ),
         ),
-        gapH12,
+        gapH8,
       ],
     );
   }

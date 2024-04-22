@@ -2,14 +2,17 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
+import 'package:nav_stemi/nav_stemi.dart';
 
+@immutable
 class PatientInfoModel extends Equatable {
   const PatientInfoModel({
     this.lastName,
     this.firstName,
     this.middleName,
     this.birthDate,
-    this.gender,
+    this.sexAtBirth,
     this.cardiologist,
   });
 
@@ -18,23 +21,25 @@ class PatientInfoModel extends Equatable {
   final String? middleName;
 
   final DateTime? birthDate;
-  final String? gender;
+  final SexAtBirth? sexAtBirth;
   final String? cardiologist;
 
+  /// ValueGetter used to allow null values in the copyWith method
+  /// spec: https://stackoverflow.com/a/73432242
   PatientInfoModel copyWith({
     String? lastName,
     String? firstName,
     String? middleName,
-    DateTime? birthDate,
-    String? gender,
+    ValueGetter<DateTime?>? birthDate,
+    ValueGetter<SexAtBirth?>? sexAtBirth,
     String? cardiologist,
   }) {
     return PatientInfoModel(
       lastName: lastName ?? this.lastName,
       firstName: firstName ?? this.firstName,
       middleName: middleName ?? this.middleName,
-      birthDate: birthDate ?? this.birthDate,
-      gender: gender ?? this.gender,
+      birthDate: birthDate != null ? birthDate() : this.birthDate,
+      sexAtBirth: sexAtBirth != null ? sexAtBirth() : this.sexAtBirth,
       cardiologist: cardiologist ?? this.cardiologist,
     );
   }
@@ -45,7 +50,7 @@ class PatientInfoModel extends Equatable {
       'firstName': firstName,
       'middleName': middleName,
       'birthDate': birthDate?.millisecondsSinceEpoch,
-      'gender': gender,
+      'sexAtBirth': sexAtBirth,
       'cardiologist': cardiologist,
     };
   }
@@ -59,7 +64,9 @@ class PatientInfoModel extends Equatable {
       birthDate: map['birthDate'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['birthDate'] as int)
           : null,
-      gender: map['gender'] != null ? map['gender'] as String : null,
+      sexAtBirth: map['sexAtBirth'] != null
+          ? SexAtBirthToEnumConverter.fromString(map['sexAtBirth'] as String)
+          : null,
       cardiologist:
           map['cardiologist'] != null ? map['cardiologist'] as String : null,
     );
@@ -81,7 +88,7 @@ class PatientInfoModel extends Equatable {
       firstName,
       middleName,
       birthDate,
-      gender,
+      sexAtBirth,
       cardiologist,
     ];
   }

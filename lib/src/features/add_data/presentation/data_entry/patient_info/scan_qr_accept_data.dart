@@ -27,9 +27,8 @@ class ScanQrAcceptData extends StatelessWidget {
                 onPressed: onRescanLicense,
                 child: Text('Rescan License'.hardcoded),
               ),
-              gapH8,
+              // gapH4,
               const Divider(thickness: 4),
-              gapH16,
               if (scannedLicense == null)
                 Center(child: Text('No License Scanned'.hardcoded))
               else
@@ -41,6 +40,7 @@ class ScanQrAcceptData extends StatelessWidget {
                     child: ScannedLicenseInfo(scannedLicense!),
                   ),
                 ),
+              // gapH4,
             ],
           ),
         ),
@@ -72,9 +72,11 @@ class ScannedLicenseInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     final patientInfo = scannedLicense.toPatientInfo();
     final birthDate = patientInfo.birthDate;
+    final sexAtBirth = patientInfo.sexAtBirth;
 
     return ListView(
       children: [
+        gapH12,
         Row(
           children: [
             Expanded(
@@ -109,12 +111,7 @@ class ScannedLicenseInfo extends StatelessWidget {
             ),
           ],
         ),
-        gapH32,
-        if (birthDate != null)
-          Text(
-            'Age: ${birthDate.ageFromBirthDate()}',
-          ),
-        gapH32,
+        gapH16,
         Row(
           children: [
             Expanded(
@@ -127,15 +124,29 @@ class ScannedLicenseInfo extends StatelessWidget {
             ),
             gapW32,
             Expanded(
-              child: PatientInfoTextField(
-                readOnly: true,
-                label: 'Gender'.hardcoded,
-                controller: TextEditingController(
-                  text: patientInfo.gender,
-                ),
+              child: Text(
+                birthDate != null
+                    ? 'Age:   ${birthDate.ageFromBirthDate()}'
+                    : '',
+                textAlign: TextAlign.end,
               ),
             ),
           ],
+        ),
+        gapH16,
+        Text('Sex at Birth'.hardcoded, textAlign: TextAlign.center),
+        gapH4,
+        SegmentedButton<SexAtBirth?>(
+          selected: {sexAtBirth},
+          emptySelectionAllowed: true,
+          segments: SexAtBirth.values
+              .map(
+                (sexAtBirth) => ButtonSegment<SexAtBirth?>(
+                  value: sexAtBirth,
+                  label: Text(sexAtBirth.name),
+                ),
+              )
+              .toList(),
         ),
       ],
     );

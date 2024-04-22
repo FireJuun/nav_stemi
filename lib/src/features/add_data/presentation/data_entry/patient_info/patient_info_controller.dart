@@ -34,4 +34,13 @@ class PatientInfoController extends _$PatientInfoController
 
     return success;
   }
+
+  void setPatientInfo(PatientInfoModel patientInfo) =>
+      ref.read(patientInfoServiceProvider).setPatientInfo(patientInfo);
+
+  void setSexAtBirth(SexAtBirth? sexAtBirth) =>
+      ref.read(patientInfoServiceProvider).setSexAtBirth(sexAtBirth);
+
+  void setBirthDate(DateTime? birthDate) =>
+      ref.read(patientInfoServiceProvider).setBirthDate(birthDate);
 }

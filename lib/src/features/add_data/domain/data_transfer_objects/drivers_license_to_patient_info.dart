@@ -20,7 +20,9 @@ class DriversLicenseToPatientInfoDTO {
       middleName: driverLicense.middleName?.titleCase,
       birthDate: birthDate,
       // TODO(FireJuun): implement data conversion for gender info
-      gender: driverLicense.gender,
+      sexAtBirth: SexAtBirthToEnumConverter.fromDriversLicenseString(
+        driverLicense.gender ?? 'unknown',
+      ),
     );
   }
 
@@ -35,8 +37,9 @@ class DriversLicenseToPatientInfoDTO {
       firstName: patientInfo.firstName,
       middleName: patientInfo.middleName,
       birthDate: licenseBirthDateString,
-      // TODO(FireJuun): implement data conversion for gender info
-      // gender: patientInfo.gender,
+      gender: SexAtBirthToEnumConverter.toDriversLicenseString(
+        patientInfo.sexAtBirth ?? SexAtBirth.unknown,
+      ),
     );
   }
 }

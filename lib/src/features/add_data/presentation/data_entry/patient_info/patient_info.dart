@@ -26,12 +26,8 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
       TextEditingController(
     text: widget.patientInfoModel.birthDate?.toBirthDateString(),
   );
-  late final TextEditingController _genderTextController =
-      TextEditingController(text: widget.patientInfoModel.gender);
   late final TextEditingController _cardiologistTextController =
       TextEditingController(text: widget.patientInfoModel.cardiologist);
-
-  DateTime? birthDate;
 
   @override
   void dispose() {
@@ -39,7 +35,6 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
     _firstNameTextController.dispose();
     _middleNameTextController.dispose();
     _birthDateTextController.dispose();
-    _genderTextController.dispose();
     _cardiologistTextController.dispose();
     super.dispose();
   }
@@ -57,10 +52,12 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
       return const Center(child: CircularProgressIndicator());
     }
 
+    final birthDate = widget.patientInfoModel.birthDate;
+
     return SliverMainAxisGroup(
       slivers: [
         SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           sliver: SliverList.list(
             children: [
               Center(
@@ -81,8 +78,9 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
                                     .birthDate
                                     ?.toBirthDateString() ??
                                 '';
-                            _genderTextController.text =
-                                patientInfoModel.gender ?? '';
+                            ref
+                                .read(patientInfoControllerProvider.notifier)
+                                .setPatientInfo(patientInfoModel);
                           });
                         },
                       ),
@@ -91,7 +89,7 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
                   child: Text("Scan Driver's License".hardcoded),
                 ),
               ),
-              gapH16,
+              gapH8,
               const Divider(thickness: 4),
               gapH16,
               Row(
@@ -126,11 +124,6 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
                 ],
               ),
               gapH32,
-              if (birthDate != null)
-                Text(
-                  'Age: ${birthDate?.ageFromBirthDate()}',
-                ),
-              gapH32,
               Row(
                 children: [
                   Expanded(
@@ -158,27 +151,44 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
                             _birthDateTextController.text = '';
                           }
 
-                          setState(() {
-                            birthDate = selectedDate;
-                          });
+                          ref
+                              .read(patientInfoControllerProvider.notifier)
+                              .setBirthDate(selectedDate);
                         },
                       ),
                     ),
                   ),
                   gapW32,
                   Expanded(
-                    child: PatientInfoTextField(
-                      label: 'Gender'.hardcoded,
-                      controller: _genderTextController,
-                      prefixIcon: IconButton(
-                        icon: const Icon(Icons.list),
-                        onPressed: () {
-                          // TODO(FireJuun): Open picker window to select gender
-                        },
-                      ),
+                    child: Text(
+                      birthDate != null
+                          ? 'Age:   ${birthDate.ageFromBirthDate()}'
+                          : '',
+                      textAlign: TextAlign.end,
                     ),
                   ),
                 ],
+              ),
+              gapH32,
+              Text('Sex at Birth'.hardcoded, textAlign: TextAlign.center),
+              gapH4,
+              SegmentedButton<SexAtBirth?>(
+                selected: {widget.patientInfoModel.sexAtBirth},
+                emptySelectionAllowed: true,
+                onSelectionChanged: (sexAtBirthList) {
+                  final newSexAtBirth = sexAtBirthList.firstOrNull;
+                  ref
+                      .read(patientInfoControllerProvider.notifier)
+                      .setSexAtBirth(newSexAtBirth);
+                },
+                segments: SexAtBirth.values
+                    .map(
+                      (sexAtBirth) => ButtonSegment<SexAtBirth?>(
+                        value: sexAtBirth,
+                        label: Text(sexAtBirth.name),
+                      ),
+                    )
+                    .toList(),
               ),
               gapH32,
               const Divider(thickness: 4),

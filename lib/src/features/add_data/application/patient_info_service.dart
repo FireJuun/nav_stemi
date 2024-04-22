@@ -19,6 +19,23 @@ class PatientInfoService {
     patientInfoRepository.setPatientInfo(patientInfo);
   }
 
+  void setSexAtBirth(SexAtBirth? sexAtBirth) {
+    final patientInfo =
+        patientInfoRepository.getPatientInfo() ?? const PatientInfoModel();
+
+    final updated = patientInfo.copyWith(sexAtBirth: () => sexAtBirth);
+    setPatientInfo(updated);
+  }
+
+  void setBirthDate(DateTime? birthDate) {
+    final patientInfo =
+        patientInfoRepository.getPatientInfo() ?? const PatientInfoModel();
+
+    final updated = patientInfo.copyWith(birthDate: () => birthDate);
+
+    setPatientInfo(updated);
+  }
+
   Future<void> setPatientInfoFromScannedLicense(
     DriverLicense driverLicense,
   ) async {
@@ -31,7 +48,8 @@ class PatientInfoService {
       lastName: newInfo.lastName ?? oldInfo.lastName,
       firstName: newInfo.firstName ?? oldInfo.firstName,
       middleName: newInfo.middleName ?? oldInfo.middleName,
-      birthDate: newInfo.birthDate ?? oldInfo.birthDate,
+      birthDate: () => newInfo.birthDate ?? oldInfo.birthDate,
+      sexAtBirth: () => newInfo.sexAtBirth ?? oldInfo.sexAtBirth,
     );
 
     patientInfoRepository.setPatientInfo(merged);
