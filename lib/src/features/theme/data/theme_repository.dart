@@ -105,11 +105,44 @@ class ThemeRepository {
           ),
         ),
       ),
+      segmentedButtonTheme: SegmentedButtonThemeData(
+        style: ButtonStyle(
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+            const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+          ),
+          shape: MaterialStateProperty.all<OutlinedBorder>(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          ),
+          backgroundColor: MaterialStateProperty.resolveWith(
+            (states) {
+              if (states.any(activeStates.contains)) {
+                return colorScheme.primary;
+              } else if (states.any(interactiveStates.contains)) {
+                return colorScheme.primary.withOpacity(0.5);
+              } else if (states.any(disabledStates.contains)) {
+                return Colors.transparent;
+              }
+              return colorScheme.primaryContainer;
+            },
+          ),
+          foregroundColor: MaterialStateProperty.resolveWith(
+            (states) {
+              if (states.any(activeStates.contains)) {
+                return colorScheme.onPrimary;
+              } else if (states.any(interactiveStates.contains)) {
+                return colorScheme.onPrimary.withOpacity(0.5);
+              } else if (states.any(disabledStates.contains)) {
+                return colorScheme.outline;
+              }
+              return colorScheme.onPrimaryContainer;
+            },
+          ),
+        ),
+      ),
       inputDecorationTheme: const InputDecorationTheme(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12)),
         ),
-        // filled: true,
         contentPadding: EdgeInsets.all(8),
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
@@ -172,4 +205,8 @@ const Set<MaterialState> interactiveStates = <MaterialState>{
 
 const Set<MaterialState> activeStates = <MaterialState>{
   MaterialState.selected,
+};
+
+const Set<MaterialState> disabledStates = <MaterialState>{
+  MaterialState.disabled,
 };

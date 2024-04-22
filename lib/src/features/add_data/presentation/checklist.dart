@@ -72,10 +72,10 @@ class _ChecklistItemState extends State<ChecklistItem> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final selected = isSelected ?? false;
 
     return CheckboxListTile(
       value: isSelected,
+      tristate: true,
       contentPadding: const EdgeInsets.symmetric(horizontal: 2),
       visualDensity: VisualDensity.compact,
       controlAffinity: ListTileControlAffinity.leading,
@@ -87,8 +87,16 @@ class _ChecklistItemState extends State<ChecklistItem> {
       title: Text(
         widget.label,
         style: textTheme.bodySmall?.apply(
-          decoration: selected ? TextDecoration.lineThrough : null,
-          color: selected ? colorScheme.outline : colorScheme.onBackground,
+          decoration: switch (isSelected) {
+            true => TextDecoration.lineThrough,
+            false => null,
+            null => TextDecoration.lineThrough,
+          },
+          color: switch (isSelected) {
+            true => colorScheme.outline,
+            false => colorScheme.onBackground,
+            null => colorScheme.error,
+          },
         ),
       ),
     );
