@@ -29,22 +29,36 @@ class Checklist extends StatelessWidget {
           ),
           SliverCrossAxisGroup(
             slivers: [
-              // TODO(FireJuun): add listener for time metrics
-              SliverCrossAxisExpanded(
-                flex: 1,
-                sliver: SliverList.list(
-                  children: [
-                    ChecklistItem(
-                      label: 'EKG by 5 min'.hardcoded,
-                      selectionOverride: () => true,
-                    ),
-                    ChecklistItem(
-                      label: 'Leave by 10 min'.hardcoded,
-                      selectionOverride: () => false,
-                    ),
-                    ChecklistItem(label: 'Give Aspirin 325'.hardcoded),
-                  ],
-                ),
+              Consumer(
+                builder: (context, ref, child) {
+                  final timeMetricsModelValue =
+                      ref.watch(timeMetricsModelProvider);
+
+                  return AsyncValueSliverWidget<TimeMetricsModel?>(
+                    value: timeMetricsModelValue,
+                    data: (timeMetricsModel) {
+                      return SliverCrossAxisExpanded(
+                        flex: 1,
+                        sliver: SliverList.list(
+                          children: [
+                            ChecklistItem(
+                              label: 'EKG by 5 min'.hardcoded,
+                              selectionOverride: () =>
+                                  timeMetricsModel?.hasEkgByFiveMin(),
+                            ),
+                            ChecklistItem(
+                              label: 'Leave by 10 min'.hardcoded,
+                              selectionOverride: () =>
+                                  timeMetricsModel?.hasLeftByTenMin(),
+                            ),
+                            const Divider(thickness: 2),
+                            ChecklistItem(label: 'Give Aspirin 325'.hardcoded),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
               Consumer(
                 builder: (context, ref, child) {
@@ -71,6 +85,7 @@ class Checklist extends StatelessWidget {
                               label: 'Pt Cardiologist'.hardcoded,
                               selectionOverride: () => hasCardiologist,
                             ),
+                            const Divider(thickness: 2),
                             ChecklistItem(label: 'Notify Cath Lab'.hardcoded),
                           ],
                         ),

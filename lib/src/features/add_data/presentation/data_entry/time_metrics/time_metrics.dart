@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nav_stemi/nav_stemi.dart';
 import 'package:timeago_flutter/timeago_flutter.dart';
 
 /// The amount of days to add/subtract from the current date
@@ -7,60 +9,70 @@ import 'package:timeago_flutter/timeago_flutter.dart';
 final _durationBufferAgo = 5.days;
 final _durationBufferFuture = 1.days;
 
-class TimeMetrics extends StatefulWidget {
+class TimeMetrics extends ConsumerWidget {
   const TimeMetrics({super.key});
 
   @override
-  State<TimeMetrics> createState() => _TimeMetricsState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final timeMetricsModelValue = ref.watch(timeMetricsModelProvider);
 
-class _TimeMetricsState extends State<TimeMetrics> {
-  DateTime? _patientContactTime;
-  DateTime? _firstECGTime;
-  DateTime? _stemiActivationTime;
+    return AsyncValueSliverWidget<TimeMetricsModel?>(
+      value: timeMetricsModelValue,
+      data: (timeMetricsModel) {
+        final timeArrivedAtPatient = timeMetricsModel?.timeArrivedAtPatient;
+        final timeOfFirstEkg = timeMetricsModel?.timeOfEkgs.firstOrNull;
+        final timeOfStemiActivation = timeMetricsModel?.timeOfStemiActivation;
+        final timeUnitLeftScene = timeMetricsModel?.timeUnitLeftScene;
+        final timePatientArrivedAtDestination =
+            timeMetricsModel?.timePatientArrivedAtDestination;
 
-  @override
-  Widget build(BuildContext context) {
-    return SliverMainAxisGroup(
-      slivers: [
-        SliverPadding(
-          padding: const EdgeInsetsDirectional.only(bottom: 24),
-          sliver: SliverList.list(
-            children: [
-              TimeMetric(
-                label: 'Patient Contact',
-                timeOccurred: _patientContactTime,
-                onNewTimeSaved: (newTime) {
-                  setState(() {
-                    _patientContactTime = newTime;
-                  });
-                },
+        return SliverMainAxisGroup(
+          slivers: [
+            SliverPadding(
+              padding: const EdgeInsetsDirectional.only(bottom: 24),
+              sliver: SliverList.list(
+                children: [
+                  TimeMetric(
+                    label: 'Arrived at Patient',
+                    timeOccurred: timeArrivedAtPatient,
+                    onNewTimeSaved: (newTime) => ref
+                        .read(timeMetricsControllerProvider.notifier)
+                        .setTimeArrivedAtPatient(newTime),
+                  ),
+                  TimeMetric(
+                    label: 'First EKG',
+                    timeOccurred: timeOfFirstEkg,
+                    onNewTimeSaved: (newTime) => ref
+                        .read(timeMetricsControllerProvider.notifier)
+                        .setTimeOfFirstEkg(newTime),
+                  ),
+                  TimeMetric(
+                    label: 'STEMI Activation',
+                    timeOccurred: timeOfStemiActivation,
+                    onNewTimeSaved: (newTime) => ref
+                        .read(timeMetricsControllerProvider.notifier)
+                        .setTimeOfStemiActivation(newTime),
+                  ),
+                  TimeMetric(
+                    label: 'Unit Left Scene',
+                    timeOccurred: timeUnitLeftScene,
+                    onNewTimeSaved: (newTime) => ref
+                        .read(timeMetricsControllerProvider.notifier)
+                        .setTimeUnitLeftScene(newTime),
+                  ),
+                  TimeMetric(
+                    label: 'Patient at Destination',
+                    timeOccurred: timePatientArrivedAtDestination,
+                    onNewTimeSaved: (newTime) => ref
+                        .read(timeMetricsControllerProvider.notifier)
+                        .setTimePatientArrivedAtDestination(newTime),
+                  ),
+                ],
               ),
-              TimeMetric(
-                label: 'First ECG',
-                timeOccurred: _firstECGTime,
-                onNewTimeSaved: (newTime) {
-                  setState(() {
-                    _firstECGTime = newTime;
-                  });
-                },
-                // timeOccurred: '3:15 pm',
-                // timeAgoInMins: '12 min ago',
-              ),
-              // TODO(FireJuun): should this be ED notification?
-              TimeMetric(
-                label: 'STEMI Activation',
-                timeOccurred: _stemiActivationTime,
-                onNewTimeSaved: (newTime) {
-                  setState(() {
-                    _stemiActivationTime = newTime;
-                  });
-                },
-              ),
-            ],
-          ),
-        ),
-      ],
+            ),
+          ],
+        );
+      },
     );
   }
 }
