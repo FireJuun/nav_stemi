@@ -108,7 +108,25 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
                       showDialog<bool>(
                         context: context,
                         builder: (context) => ScanQrLicenseDialog(
-                          onDataSubmitted: _updatePatientInfo,
+                          onDataSubmitted: (patientInfoModel) {
+                            setState(() {
+                              _lastNameTextController.text =
+                                  patientInfoModel.lastName ?? '';
+                              _firstNameTextController.text =
+                                  patientInfoModel.firstName ?? '';
+                              _middleNameTextController.text =
+                                  patientInfoModel.middleName ?? '';
+                              _birthDateTextController.text = patientInfoModel
+                                      .birthDate
+                                      ?.toBirthDateString() ??
+                                  '';
+                              _sexAtBirth = patientInfoModel.sexAtBirth;
+                              _cardiologistTextController.text =
+                                  patientInfoModel.cardiologist ?? '';
+
+                              _updatePatientInfo(patientInfoModel);
+                            });
+                          },
                         ),
                       );
                     },
