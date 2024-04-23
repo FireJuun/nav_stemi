@@ -157,6 +157,7 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
                       child: PatientInfoTextField(
                         label: 'Date of Birth'.hardcoded,
                         controller: _birthDateTextController,
+                        keyboardType: TextInputType.datetime,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return null;
@@ -229,24 +230,23 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
                 gapH16,
                 Text('Sex at Birth'.hardcoded, textAlign: TextAlign.center),
                 gapH4,
-                FormField<SexAtBirth?>(
-                  builder: (state) => SegmentedButton<SexAtBirth?>(
-                    selected: {widget.patientInfoModel.sexAtBirth},
-                    emptySelectionAllowed: true,
-                    onSelectionChanged: (sexAtBirthList) {
-                      final newSexAtBirth = sexAtBirthList.firstOrNull;
+                SegmentedButton<SexAtBirth?>(
+                  selected: {widget.patientInfoModel.sexAtBirth},
+                  emptySelectionAllowed: true,
+                  onSelectionChanged: (sexAtBirthList) {
+                    final newSexAtBirth = sexAtBirthList.firstOrNull;
 
-                      setState(() => _sexAtBirth = newSexAtBirth);
-                    },
-                    segments: SexAtBirth.values
-                        .map(
-                          (sexAtBirth) => ButtonSegment<SexAtBirth?>(
-                            value: sexAtBirth,
-                            label: Text(sexAtBirth.name),
-                          ),
-                        )
-                        .toList(),
-                  ),
+                    setState(() => _sexAtBirth = newSexAtBirth);
+                    _onFormDataChanged();
+                  },
+                  segments: SexAtBirth.values
+                      .map(
+                        (sexAtBirth) => ButtonSegment<SexAtBirth?>(
+                          value: sexAtBirth,
+                          label: Text(sexAtBirth.name),
+                        ),
+                      )
+                      .toList(),
                 ),
                 gapH16,
                 const Divider(thickness: 4),
@@ -270,6 +270,7 @@ class PatientInfoTextField extends StatelessWidget {
     required this.controller,
     this.prefixIcon,
     this.validator,
+    this.keyboardType,
     this.readOnly = false,
     super.key,
   });
@@ -278,6 +279,7 @@ class PatientInfoTextField extends StatelessWidget {
   final TextEditingController controller;
   final Widget? prefixIcon;
   final String? Function(String?)? validator;
+  final TextInputType? keyboardType;
   final bool readOnly;
 
   @override
@@ -285,6 +287,7 @@ class PatientInfoTextField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       validator: validator,
+      keyboardType: keyboardType,
       decoration: InputDecoration(
         prefixIcon: prefixIcon,
         filled: !readOnly,
