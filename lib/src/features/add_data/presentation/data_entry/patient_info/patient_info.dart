@@ -49,12 +49,20 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
 
   void _onFormDataChanged() {
     final patientInfoModel = PatientInfoModel(
-      lastName: _lastNameTextController.text,
-      firstName: _firstNameTextController.text,
-      middleName: _middleNameTextController.text,
+      lastName: _lastNameTextController.text.isNotEmpty
+          ? _lastNameTextController.text
+          : null,
+      firstName: _firstNameTextController.text.isNotEmpty
+          ? _firstNameTextController.text
+          : null,
+      middleName: _middleNameTextController.text.isNotEmpty
+          ? _middleNameTextController.text
+          : null,
       birthDate: _birthDate,
       sexAtBirth: _sexAtBirth,
-      cardiologist: _cardiologistTextController.text,
+      cardiologist: _cardiologistTextController.text.isNotEmpty
+          ? _cardiologistTextController.text
+          : null,
     );
     _updatePatientInfo(patientInfoModel);
   }

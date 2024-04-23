@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
@@ -28,25 +29,55 @@ class Checklist extends StatelessWidget {
           ),
           SliverCrossAxisGroup(
             slivers: [
+              // TODO(FireJuun): add listener for time metrics
               SliverCrossAxisExpanded(
                 flex: 1,
                 sliver: SliverList.list(
                   children: [
-                    ChecklistItem(label: 'EKG by 5 min'.hardcoded),
+                    ChecklistItem(
+                      label: 'EKG by 5 min'.hardcoded,
+                      selectionOverride: () => true,
+                    ),
+                    ChecklistItem(
+                      label: 'Leave by 10 min'.hardcoded,
+                      selectionOverride: () => false,
+                    ),
                     ChecklistItem(label: 'Give Aspirin 325'.hardcoded),
-                    ChecklistItem(label: 'Leave by 10 min'.hardcoded),
                   ],
                 ),
               ),
-              SliverCrossAxisExpanded(
-                flex: 1,
-                sliver: SliverList.list(
-                  children: [
-                    ChecklistItem(label: 'Pt Info'.hardcoded),
-                    ChecklistItem(label: 'Pt Cardiologist'.hardcoded),
-                    ChecklistItem(label: 'Notify Cath Lab'.hardcoded),
-                  ],
-                ),
+              Consumer(
+                builder: (context, ref, child) {
+                  final patientInfoModelValue =
+                      ref.watch(patientInfoModelProvider);
+
+                  return AsyncValueSliverWidget(
+                    value: patientInfoModelValue,
+                    data: (patientInfoModel) {
+                      final hasPatientInfo =
+                          patientInfoModel?.hasPatientInfo() ?? false;
+                      final hasCardiologist =
+                          patientInfoModel?.hasCardiologistInfo() ?? false;
+
+                      return SliverCrossAxisExpanded(
+                        flex: 1,
+                        sliver: SliverList.list(
+                          children: [
+                            ChecklistItem(
+                              label: 'Pt Info'.hardcoded,
+                              selectionOverride: () => hasPatientInfo,
+                            ),
+                            ChecklistItem(
+                              label: 'Pt Cardiologist'.hardcoded,
+                              selectionOverride: () => hasCardiologist,
+                            ),
+                            ChecklistItem(label: 'Notify Cath Lab'.hardcoded),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
             ],
           ),
@@ -57,31 +88,41 @@ class Checklist extends StatelessWidget {
 }
 
 class ChecklistItem extends StatefulWidget {
-  const ChecklistItem({required this.label, super.key});
+  const ChecklistItem({
+    required this.label,
+    this.selectionOverride,
+    super.key,
+  });
 
   final String label;
+  final ValueGetter<bool?>? selectionOverride;
 
   @override
   State<ChecklistItem> createState() => _ChecklistItemState();
 }
 
 class _ChecklistItemState extends State<ChecklistItem> {
-  bool? isSelected = false;
+  bool? _isSelected = false;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
+    final selectionOverride = widget.selectionOverride;
+    final isSelected =
+        selectionOverride != null ? selectionOverride.call() : _isSelected;
+
     return CheckboxListTile(
       value: isSelected,
       tristate: true,
+      enabled: selectionOverride == null,
       contentPadding: const EdgeInsets.symmetric(horizontal: 2),
       visualDensity: VisualDensity.compact,
       controlAffinity: ListTileControlAffinity.leading,
       onChanged: (newValue) {
         setState(() {
-          isSelected = newValue;
+          _isSelected = newValue;
         });
       },
       title: Text(

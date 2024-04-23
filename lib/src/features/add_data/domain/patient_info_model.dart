@@ -92,4 +92,14 @@ class PatientInfoModel extends Equatable {
       cardiologist,
     ];
   }
+
+  bool hasPatientInfo() =>
+      lastName != null ||
+      firstName != null ||
+      middleName != null ||
+      birthDate != null ||
+      sexAtBirth != null;
+
+  bool hasCardiologistInfo() =>
+      cardiologist != null && cardiologist!.isNotEmpty;
 }
