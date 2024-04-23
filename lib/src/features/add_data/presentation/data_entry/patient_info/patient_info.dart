@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 const _goBackInYears = 60;
 const _goBackDuration = Duration(days: _goBackInYears * 365);
+const _oldestAgeInYears = 150;
+const _oldestAgeDuration = Duration(days: _oldestAgeInYears * 365);
 const _birthDateToStringDTO = BirthDateToStringDTO();
 
 class PatientInfo extends ConsumerStatefulWidget {
@@ -31,6 +34,9 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
   late final TextEditingController _cardiologistTextController =
       TextEditingController(text: widget.patientInfoModel.cardiologist);
 
+  late SexAtBirth? _sexAtBirth = widget.patientInfoModel.sexAtBirth;
+  late DateTime? _birthDate = widget.patientInfoModel.birthDate;
+
   @override
   void dispose() {
     _lastNameTextController.dispose();
@@ -41,22 +47,35 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
     super.dispose();
   }
 
-  Future<void> _submit(PatientInfoModel patientInfoModel) async {
-    if (_formKey.currentState!.validate()) {
-      final scaffoldMessenger = ScaffoldMessenger.of(context);
+  void _onFormDataChanged() {
+    final patientInfoModel = PatientInfoModel(
+      lastName: _lastNameTextController.text,
+      firstName: _firstNameTextController.text,
+      middleName: _middleNameTextController.text,
+      birthDate: _birthDate,
+      sexAtBirth: _sexAtBirth,
+      cardiologist: _cardiologistTextController.text,
+    );
+    _updatePatientInfo(patientInfoModel);
+  }
 
+  Future<void> _updatePatientInfo(PatientInfoModel patientInfoModel) async {
+    if (_formKey.currentState!.validate()) {
+      // final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+      // TODO(FireJuun): debounce this
       // final success =
       ref
           .read(patientInfoControllerProvider.notifier)
           .setPatientInfo(patientInfoModel);
       // if (success) {
-      scaffoldMessenger.showSnackBar(
-        SnackBar(
-          content: Text(
-            'Patient info updated'.hardcoded,
-          ),
-        ),
-      );
+      // scaffoldMessenger.showSnackBar(
+      //   SnackBar(
+      //     content: Text(
+      //       'Patient info updated'.hardcoded,
+      //     ),
+      //   ),
+      // );
       // }
     }
   }
@@ -74,14 +93,13 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    final birthDate = widget.patientInfoModel.birthDate;
-
     return SliverMainAxisGroup(
       slivers: [
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           sliver: Form(
             key: _formKey,
+            onChanged: _onFormDataChanged,
             child: SliverList.list(
               children: [
                 Center(
@@ -90,22 +108,7 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
                       showDialog<bool>(
                         context: context,
                         builder: (context) => ScanQrLicenseDialog(
-                          onDataSubmitted: (patientInfoModel) {
-                            setState(() {
-                              _lastNameTextController.text =
-                                  patientInfoModel.lastName ?? '';
-                              _firstNameTextController.text =
-                                  patientInfoModel.firstName ?? '';
-                              _middleNameTextController.text =
-                                  patientInfoModel.middleName ?? '';
-                              _birthDateTextController.text = patientInfoModel
-                                      .birthDate
-                                      ?.toBirthDateString() ??
-                                  '';
-
-                              _submit(patientInfoModel);
-                            });
-                          },
+                          onDataSubmitted: _updatePatientInfo,
                         ),
                       );
                     },
@@ -150,9 +153,42 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
                 Row(
                   children: [
                     Expanded(
+                      flex: 2,
                       child: PatientInfoTextField(
                         label: 'Date of Birth'.hardcoded,
                         controller: _birthDateTextController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return null;
+                          }
+
+                          /// Date formats used to try and parse the birth date
+                          /// from a given string entered by the user
+                          final formats = [
+                            DateFormat('MM/dd/yy'),
+                            DateFormat('MM/dd/yyyy'),
+                            DateFormat('MM-dd-yy'),
+                            DateFormat('MM-dd-yyyy'),
+                          ];
+
+                          final newBirthDate = const BirthDateToStringDTO()
+                              .tryParse(value, formats: formats);
+                          if (newBirthDate == null) {
+                            return 'Invalid date format';
+                          }
+
+                          if (newBirthDate.isAfter(DateTime.now())) {
+                            return "Can't be in the future";
+                          } else if (newBirthDate.isBefore(
+                            DateTime.now().subtract(_oldestAgeDuration),
+                          )) {
+                            return 'Age too old';
+                          }
+
+                          setState(() => _birthDate = newBirthDate);
+
+                          return null;
+                        },
                         prefixIcon: IconButton(
                           icon: const Icon(Icons.date_range),
                           onPressed: () async {
@@ -174,9 +210,7 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
                               _birthDateTextController.text = '';
                             }
 
-                            ref
-                                .read(patientInfoControllerProvider.notifier)
-                                .setBirthDate(selectedDate);
+                            setState(() => _birthDate = selectedDate);
                           },
                         ),
                       ),
@@ -184,36 +218,37 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
                     gapW32,
                     Expanded(
                       child: Text(
-                        birthDate != null
-                            ? 'Age:   ${birthDate.ageFromBirthDate()}'
+                        _birthDate != null
+                            ? 'Age:   ${_birthDate!.ageFromBirthDate()}'
                             : '',
                         textAlign: TextAlign.end,
                       ),
                     ),
                   ],
                 ),
-                gapH32,
+                gapH16,
                 Text('Sex at Birth'.hardcoded, textAlign: TextAlign.center),
                 gapH4,
-                SegmentedButton<SexAtBirth?>(
-                  selected: {widget.patientInfoModel.sexAtBirth},
-                  emptySelectionAllowed: true,
-                  onSelectionChanged: (sexAtBirthList) {
-                    final newSexAtBirth = sexAtBirthList.firstOrNull;
-                    ref
-                        .read(patientInfoControllerProvider.notifier)
-                        .setSexAtBirth(newSexAtBirth);
-                  },
-                  segments: SexAtBirth.values
-                      .map(
-                        (sexAtBirth) => ButtonSegment<SexAtBirth?>(
-                          value: sexAtBirth,
-                          label: Text(sexAtBirth.name),
-                        ),
-                      )
-                      .toList(),
+                FormField<SexAtBirth?>(
+                  builder: (state) => SegmentedButton<SexAtBirth?>(
+                    selected: {widget.patientInfoModel.sexAtBirth},
+                    emptySelectionAllowed: true,
+                    onSelectionChanged: (sexAtBirthList) {
+                      final newSexAtBirth = sexAtBirthList.firstOrNull;
+
+                      setState(() => _sexAtBirth = newSexAtBirth);
+                    },
+                    segments: SexAtBirth.values
+                        .map(
+                          (sexAtBirth) => ButtonSegment<SexAtBirth?>(
+                            value: sexAtBirth,
+                            label: Text(sexAtBirth.name),
+                          ),
+                        )
+                        .toList(),
+                  ),
                 ),
-                gapH32,
+                gapH16,
                 const Divider(thickness: 4),
                 gapH16,
                 PatientInfoTextField(
@@ -234,6 +269,7 @@ class PatientInfoTextField extends StatelessWidget {
     required this.label,
     required this.controller,
     this.prefixIcon,
+    this.validator,
     this.readOnly = false,
     super.key,
   });
@@ -241,12 +277,14 @@ class PatientInfoTextField extends StatelessWidget {
   final String label;
   final TextEditingController controller;
   final Widget? prefixIcon;
+  final String? Function(String?)? validator;
   final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: controller,
+      validator: validator,
       decoration: InputDecoration(
         prefixIcon: prefixIcon,
         filled: !readOnly,

@@ -35,6 +35,31 @@ class BirthDateToStringDTO {
   }
 
   String _removeSeparatorHyphens(String date) => date.replaceAll('-', '');
+
+  /// Attempts to parse a [String] to a [DateTime].
+  ///
+  /// Attempts to parse [dateTimeString] using each [DateFormat] in [formats].
+  /// If none of them match, falls back to parsing [dateTimeString] with
+  /// [DateTime.tryParse].
+  ///
+  /// Returns `null` if [dateTimeString] could not be parsed.
+  ///
+  /// spec: https://stackoverflow.com/a/71971259
+  DateTime? tryParse(
+    String dateTimeString, {
+    required Iterable<DateFormat> formats,
+    bool utc = false,
+  }) {
+    for (final format in formats) {
+      try {
+        return format.parse(dateTimeString, utc);
+      } on FormatException {
+        // Ignore.
+      }
+    }
+
+    return DateTime.tryParse(dateTimeString);
+  }
 }
 
 extension BirthDateX on DateTime {
