@@ -13,6 +13,7 @@ class ScanQrWidget extends StatefulWidget {
 
 class _ScanQrWidgetState extends State<ScanQrWidget> {
   final cameraController = MobileScannerController(
+    torchEnabled: true,
     detectionSpeed: DetectionSpeed.noDuplicates,
     formats: [BarcodeFormat.pdf417],
   );

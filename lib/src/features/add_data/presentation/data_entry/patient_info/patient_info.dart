@@ -129,10 +129,10 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
                                       ?.toBirthDateString() ??
                                   '';
                               _sexAtBirth = patientInfoModel.sexAtBirth;
-                              _cardiologistTextController.text =
-                                  patientInfoModel.cardiologist ?? '';
 
-                              _updatePatientInfo(patientInfoModel);
+                              /// using this instead of _updatePatientInfo(_)
+                              /// so that cardiologist info isn't overwritten
+                              _onFormDataChanged();
                             });
                           },
                         ),

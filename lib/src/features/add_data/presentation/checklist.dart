@@ -37,19 +37,25 @@ class Checklist extends StatelessWidget {
                   return AsyncValueSliverWidget<TimeMetricsModel?>(
                     value: timeMetricsModelValue,
                     data: (timeMetricsModel) {
+                      final hasEkgByFiveMin = timeMetricsModel == null
+                          ? () => false
+                          : timeMetricsModel.hasEkgByFiveMin;
+
+                      final hasLeftByTenMin = timeMetricsModel == null
+                          ? () => false
+                          : timeMetricsModel.hasLeftByTenMin;
+
                       return SliverCrossAxisExpanded(
                         flex: 1,
                         sliver: SliverList.list(
                           children: [
                             ChecklistItem(
                               label: 'EKG by 5 min'.hardcoded,
-                              selectionOverride: () =>
-                                  timeMetricsModel?.hasEkgByFiveMin(),
+                              selectionOverride: hasEkgByFiveMin,
                             ),
                             ChecklistItem(
                               label: 'Leave by 10 min'.hardcoded,
-                              selectionOverride: () =>
-                                  timeMetricsModel?.hasLeftByTenMin(),
+                              selectionOverride: hasLeftByTenMin,
                             ),
                             const Divider(thickness: 2),
                             ChecklistItem(label: 'Give Aspirin 325'.hardcoded),
