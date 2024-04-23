@@ -5,8 +5,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'patient_info_service.g.dart';
 
-const _birthDateToStringDTO = BirthDateToStringDTO();
-
 class PatientInfoService {
   const PatientInfoService(this.ref);
 
@@ -15,23 +13,26 @@ class PatientInfoService {
   PatientInfoRepository get patientInfoRepository =>
       ref.read(patientInfoRepositoryProvider);
 
+  PatientInfoModel _patientInfo() =>
+      patientInfoRepository.getPatientInfo() ?? const PatientInfoModel();
+
   void setPatientInfo(PatientInfoModel patientInfo) {
     patientInfoRepository.setPatientInfo(patientInfo);
   }
 
   void setSexAtBirth(SexAtBirth? sexAtBirth) {
-    final patientInfo =
-        patientInfoRepository.getPatientInfo() ?? const PatientInfoModel();
-
-    final updated = patientInfo.copyWith(sexAtBirth: () => sexAtBirth);
+    final updated = _patientInfo().copyWith(sexAtBirth: () => sexAtBirth);
     setPatientInfo(updated);
   }
 
   void setBirthDate(DateTime? birthDate) {
-    final patientInfo =
-        patientInfoRepository.getPatientInfo() ?? const PatientInfoModel();
+    final updated = _patientInfo().copyWith(birthDate: () => birthDate);
 
-    final updated = patientInfo.copyWith(birthDate: () => birthDate);
+    setPatientInfo(updated);
+  }
+
+  void setCardiologist(String? cardiologist) {
+    final updated = _patientInfo().copyWith(cardiologist: () => cardiologist);
 
     setPatientInfo(updated);
   }
@@ -39,15 +40,14 @@ class PatientInfoService {
   Future<void> setPatientInfoFromScannedLicense(
     DriverLicense driverLicense,
   ) async {
-    final oldInfo =
-        patientInfoRepository.getPatientInfo() ?? const PatientInfoModel();
+    final oldInfo = _patientInfo();
 
     final newInfo = driverLicense.toPatientInfo();
 
     final merged = oldInfo.copyWith(
-      lastName: newInfo.lastName ?? oldInfo.lastName,
-      firstName: newInfo.firstName ?? oldInfo.firstName,
-      middleName: newInfo.middleName ?? oldInfo.middleName,
+      lastName: () => newInfo.lastName ?? oldInfo.lastName,
+      firstName: () => newInfo.firstName ?? oldInfo.firstName,
+      middleName: () => newInfo.middleName ?? oldInfo.middleName,
       birthDate: () => newInfo.birthDate ?? oldInfo.birthDate,
       sexAtBirth: () => newInfo.sexAtBirth ?? oldInfo.sexAtBirth,
     );

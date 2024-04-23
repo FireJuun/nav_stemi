@@ -16,6 +16,8 @@ class PatientInfo extends ConsumerStatefulWidget {
 }
 
 class _PatientInfoState extends ConsumerState<PatientInfo> {
+  final _formKey = GlobalKey<FormState>();
+
   late final TextEditingController _lastNameTextController =
       TextEditingController(text: widget.patientInfoModel.lastName);
   late final TextEditingController _firstNameTextController =
@@ -39,6 +41,26 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
     super.dispose();
   }
 
+  Future<void> _submit(PatientInfoModel patientInfoModel) async {
+    if (_formKey.currentState!.validate()) {
+      final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+      // final success =
+      ref
+          .read(patientInfoControllerProvider.notifier)
+          .setPatientInfo(patientInfoModel);
+      // if (success) {
+      scaffoldMessenger.showSnackBar(
+        SnackBar(
+          content: Text(
+            'Patient info updated'.hardcoded,
+          ),
+        ),
+      );
+      // }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ref.listen<AsyncValue<void>>(
@@ -58,146 +80,148 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
       slivers: [
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          sliver: SliverList.list(
-            children: [
-              Center(
-                child: FilledButton(
-                  onPressed: () {
-                    showDialog<bool>(
-                      context: context,
-                      builder: (context) => ScanQrLicenseDialog(
-                        onDataSubmitted: (patientInfoModel) {
-                          setState(() {
-                            _lastNameTextController.text =
-                                patientInfoModel.lastName ?? '';
-                            _firstNameTextController.text =
-                                patientInfoModel.firstName ?? '';
-                            _middleNameTextController.text =
-                                patientInfoModel.middleName ?? '';
-                            _birthDateTextController.text = patientInfoModel
-                                    .birthDate
-                                    ?.toBirthDateString() ??
-                                '';
+          sliver: Form(
+            key: _formKey,
+            child: SliverList.list(
+              children: [
+                Center(
+                  child: FilledButton(
+                    onPressed: () {
+                      showDialog<bool>(
+                        context: context,
+                        builder: (context) => ScanQrLicenseDialog(
+                          onDataSubmitted: (patientInfoModel) {
+                            setState(() {
+                              _lastNameTextController.text =
+                                  patientInfoModel.lastName ?? '';
+                              _firstNameTextController.text =
+                                  patientInfoModel.firstName ?? '';
+                              _middleNameTextController.text =
+                                  patientInfoModel.middleName ?? '';
+                              _birthDateTextController.text = patientInfoModel
+                                      .birthDate
+                                      ?.toBirthDateString() ??
+                                  '';
+
+                              _submit(patientInfoModel);
+                            });
+                          },
+                        ),
+                      );
+                    },
+                    child: Text("Scan Driver's License".hardcoded),
+                  ),
+                ),
+                gapH8,
+                const Divider(thickness: 4),
+                gapH16,
+                Row(
+                  children: [
+                    Expanded(
+                      child: PatientInfoTextField(
+                        label: 'First Name'.hardcoded,
+                        controller: _firstNameTextController,
+                      ),
+                    ),
+                    gapW16,
+                    Expanded(
+                      child: PatientInfoTextField(
+                        label: 'Middle Name'.hardcoded,
+                        controller: _middleNameTextController,
+                      ),
+                    ),
+                  ],
+                ),
+                gapH16,
+                Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: PatientInfoTextField(
+                          label: 'Last Name'.hardcoded,
+                          controller: _lastNameTextController,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                gapH32,
+                Row(
+                  children: [
+                    Expanded(
+                      child: PatientInfoTextField(
+                        label: 'Date of Birth'.hardcoded,
+                        controller: _birthDateTextController,
+                        prefixIcon: IconButton(
+                          icon: const Icon(Icons.date_range),
+                          onPressed: () async {
+                            final now = DateTime.now();
+
+                            final selectedDate = await showDatePicker(
+                              context: context,
+                              firstDate: DateTime(1900),
+                              initialDate: now.subtract(_goBackDuration),
+                              initialDatePickerMode: DatePickerMode.year,
+                              lastDate: now,
+                            );
+
+                            if (selectedDate != null) {
+                              _birthDateTextController.text =
+                                  _birthDateToStringDTO
+                                      .convertDatePicker(selectedDate);
+                            } else {
+                              _birthDateTextController.text = '';
+                            }
+
                             ref
                                 .read(patientInfoControllerProvider.notifier)
-                                .setPatientInfo(patientInfoModel);
-                          });
-                        },
+                                .setBirthDate(selectedDate);
+                          },
+                        ),
                       ),
-                    );
-                  },
-                  child: Text("Scan Driver's License".hardcoded),
+                    ),
+                    gapW32,
+                    Expanded(
+                      child: Text(
+                        birthDate != null
+                            ? 'Age:   ${birthDate.ageFromBirthDate()}'
+                            : '',
+                        textAlign: TextAlign.end,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              gapH8,
-              const Divider(thickness: 4),
-              gapH16,
-              Row(
-                children: [
-                  Expanded(
-                    child: PatientInfoTextField(
-                      label: 'First Name'.hardcoded,
-                      controller: _firstNameTextController,
-                    ),
-                  ),
-                  gapW16,
-                  Expanded(
-                    child: PatientInfoTextField(
-                      label: 'Middle Name'.hardcoded,
-                      controller: _middleNameTextController,
-                    ),
-                  ),
-                ],
-              ),
-              gapH16,
-              Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: PatientInfoTextField(
-                        label: 'Last Name'.hardcoded,
-                        controller: _lastNameTextController,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              gapH32,
-              Row(
-                children: [
-                  Expanded(
-                    child: PatientInfoTextField(
-                      label: 'Date of Birth'.hardcoded,
-                      controller: _birthDateTextController,
-                      prefixIcon: IconButton(
-                        icon: const Icon(Icons.date_range),
-                        onPressed: () async {
-                          final now = DateTime.now();
-
-                          final selectedDate = await showDatePicker(
-                            context: context,
-                            firstDate: DateTime(1900),
-                            initialDate: now.subtract(_goBackDuration),
-                            initialDatePickerMode: DatePickerMode.year,
-                            lastDate: now,
-                          );
-
-                          if (selectedDate != null) {
-                            _birthDateTextController.text =
-                                _birthDateToStringDTO
-                                    .convertDatePicker(selectedDate);
-                          } else {
-                            _birthDateTextController.text = '';
-                          }
-
-                          ref
-                              .read(patientInfoControllerProvider.notifier)
-                              .setBirthDate(selectedDate);
-                        },
-                      ),
-                    ),
-                  ),
-                  gapW32,
-                  Expanded(
-                    child: Text(
-                      birthDate != null
-                          ? 'Age:   ${birthDate.ageFromBirthDate()}'
-                          : '',
-                      textAlign: TextAlign.end,
-                    ),
-                  ),
-                ],
-              ),
-              gapH32,
-              Text('Sex at Birth'.hardcoded, textAlign: TextAlign.center),
-              gapH4,
-              SegmentedButton<SexAtBirth?>(
-                selected: {widget.patientInfoModel.sexAtBirth},
-                emptySelectionAllowed: true,
-                onSelectionChanged: (sexAtBirthList) {
-                  final newSexAtBirth = sexAtBirthList.firstOrNull;
-                  ref
-                      .read(patientInfoControllerProvider.notifier)
-                      .setSexAtBirth(newSexAtBirth);
-                },
-                segments: SexAtBirth.values
-                    .map(
-                      (sexAtBirth) => ButtonSegment<SexAtBirth?>(
-                        value: sexAtBirth,
-                        label: Text(sexAtBirth.name),
-                      ),
-                    )
-                    .toList(),
-              ),
-              gapH32,
-              const Divider(thickness: 4),
-              gapH16,
-              PatientInfoTextField(
-                label: "Patient's Cardiologist".hardcoded,
-                controller: _cardiologistTextController,
-              ),
-            ],
+                gapH32,
+                Text('Sex at Birth'.hardcoded, textAlign: TextAlign.center),
+                gapH4,
+                SegmentedButton<SexAtBirth?>(
+                  selected: {widget.patientInfoModel.sexAtBirth},
+                  emptySelectionAllowed: true,
+                  onSelectionChanged: (sexAtBirthList) {
+                    final newSexAtBirth = sexAtBirthList.firstOrNull;
+                    ref
+                        .read(patientInfoControllerProvider.notifier)
+                        .setSexAtBirth(newSexAtBirth);
+                  },
+                  segments: SexAtBirth.values
+                      .map(
+                        (sexAtBirth) => ButtonSegment<SexAtBirth?>(
+                          value: sexAtBirth,
+                          label: Text(sexAtBirth.name),
+                        ),
+                      )
+                      .toList(),
+                ),
+                gapH32,
+                const Divider(thickness: 4),
+                gapH16,
+                PatientInfoTextField(
+                  label: "Patient's Cardiologist".hardcoded,
+                  controller: _cardiologistTextController,
+                ),
+              ],
+            ),
           ),
         ),
       ],

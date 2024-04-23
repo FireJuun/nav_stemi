@@ -27,20 +27,20 @@ class PatientInfoModel extends Equatable {
   /// ValueGetter used to allow null values in the copyWith method
   /// spec: https://stackoverflow.com/a/73432242
   PatientInfoModel copyWith({
-    String? lastName,
-    String? firstName,
-    String? middleName,
+    ValueGetter<String?>? lastName,
+    ValueGetter<String?>? firstName,
+    ValueGetter<String?>? middleName,
     ValueGetter<DateTime?>? birthDate,
     ValueGetter<SexAtBirth?>? sexAtBirth,
-    String? cardiologist,
+    ValueGetter<String?>? cardiologist,
   }) {
     return PatientInfoModel(
-      lastName: lastName ?? this.lastName,
-      firstName: firstName ?? this.firstName,
-      middleName: middleName ?? this.middleName,
+      lastName: lastName != null ? lastName() : this.lastName,
+      firstName: firstName != null ? firstName() : this.firstName,
+      middleName: middleName != null ? middleName() : this.middleName,
       birthDate: birthDate != null ? birthDate() : this.birthDate,
       sexAtBirth: sexAtBirth != null ? sexAtBirth() : this.sexAtBirth,
-      cardiologist: cardiologist ?? this.cardiologist,
+      cardiologist: cardiologist != null ? cardiologist() : this.cardiologist,
     );
   }
 
