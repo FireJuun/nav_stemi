@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
@@ -9,7 +8,7 @@ import 'package:nav_stemi/nav_stemi.dart';
 /// based on:
 /// https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart
 ///
-class ScaffoldWithNestedNavigation extends HookWidget {
+class ScaffoldWithNestedNavigation extends StatefulWidget {
   const ScaffoldWithNestedNavigation({
     required this.navigationShell,
     Key? key,
@@ -17,19 +16,27 @@ class ScaffoldWithNestedNavigation extends HookWidget {
 
   final StatefulNavigationShell navigationShell;
 
-  void _onTap(int index) => navigationShell.goBranch(
+  @override
+  State<ScaffoldWithNestedNavigation> createState() =>
+      _ScaffoldWithNestedNavigationState();
+}
+
+class _ScaffoldWithNestedNavigationState
+    extends State<ScaffoldWithNestedNavigation> {
+  bool _canPop = false;
+
+  void _onTap(int index) => widget.navigationShell.goBranch(
         index,
-        initialLocation: index == navigationShell.currentIndex,
+        initialLocation: index == widget.navigationShell.currentIndex,
       );
 
   @override
   Widget build(BuildContext context) {
-    final canPop = useState(false);
     final colorScheme = Theme.of(context).colorScheme;
-    final isNavPage = navigationShell.currentIndex == 0;
+    final isNavPage = widget.navigationShell.currentIndex == 0;
 
     return PopScope(
-      canPop: canPop.value,
+      canPop: _canPop,
       onPopInvoked: (didPop) async {
         final shouldPop = await showAlertDialog(
               context: context,
@@ -38,7 +45,9 @@ class ScaffoldWithNestedNavigation extends HookWidget {
               defaultActionText: 'EXIT'.hardcoded,
             ) ??
             false;
-        canPop.value = shouldPop;
+
+        setState(() => _canPop = shouldPop);
+
         if (shouldPop && context.mounted) {
           context.goNamed(AppRoute.home.name);
         }
@@ -51,10 +60,10 @@ class ScaffoldWithNestedNavigation extends HookWidget {
           color: isNavPage
               ? colorScheme.primaryContainer
               : colorScheme.secondaryContainer,
-          child: navigationShell,
+          child: widget.navigationShell,
         ),
         bottomNavigationBar: BottomNavBar(
-          selectedIndex: navigationShell.currentIndex,
+          selectedIndex: widget.navigationShell.currentIndex,
           onDestinationSelected: _onTap,
         ),
       ),

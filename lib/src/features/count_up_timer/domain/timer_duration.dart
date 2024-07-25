@@ -1,6 +1,6 @@
 String timerIntToString(int? timerInt) {
   if (timerInt == null) {
-    return '00:00';
+    return '----';
   }
 
   final duration = Duration(seconds: timerInt);
