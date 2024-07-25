@@ -50,9 +50,9 @@ class ThemeRepository {
       colorScheme: colorScheme,
       useMaterial3: true,
       appBarTheme: AppBarTheme(
-        iconTheme: IconThemeData(size: 40, color: colorScheme.onBackground),
+        iconTheme: IconThemeData(size: 40, color: colorScheme.onSurface),
         titleTextStyle: textTheme.displaySmall?.apply(
-          color: colorScheme.onBackground,
+          color: colorScheme.onSurface,
         ),
       ),
       cardTheme: CardTheme(
@@ -69,51 +69,51 @@ class ThemeRepository {
         textStyle: textTheme.bodyMedium,
         menuStyle: const MenuStyle(
           visualDensity: VisualDensity.compact,
-          padding: MaterialStatePropertyAll(
+          padding: WidgetStatePropertyAll(
             EdgeInsets.symmetric(horizontal: 8),
           ),
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: ButtonStyle(
-          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+          padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
             const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           ),
-          shape: MaterialStateProperty.all<OutlinedBorder>(
+          shape: WidgetStateProperty.all<OutlinedBorder>(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
-          textStyle: MaterialStateProperty.all<TextStyle>(
+          textStyle: WidgetStateProperty.all<TextStyle>(
             textTheme.titleMedium!,
           ),
         ),
       ),
       listTileTheme: ListTileThemeData(
         titleTextStyle: textTheme.bodyMedium,
-        textColor: colorScheme.onBackground,
+        textColor: colorScheme.onSurface,
         // selectedColor: colorScheme.error,
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: ButtonStyle(
-          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+          padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
             const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           ),
-          shape: MaterialStateProperty.all<OutlinedBorder>(
+          shape: WidgetStateProperty.all<OutlinedBorder>(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
-          textStyle: MaterialStateProperty.all<TextStyle>(
+          textStyle: WidgetStateProperty.all<TextStyle>(
             textTheme.titleMedium!,
           ),
         ),
       ),
       segmentedButtonTheme: SegmentedButtonThemeData(
         style: ButtonStyle(
-          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+          padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
             const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
           ),
-          shape: MaterialStateProperty.all<OutlinedBorder>(
+          shape: WidgetStateProperty.all<OutlinedBorder>(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
-          backgroundColor: MaterialStateProperty.resolveWith(
+          backgroundColor: WidgetStateProperty.resolveWith(
             (states) {
               if (states.any(activeStates.contains)) {
                 return colorScheme.primary;
@@ -125,7 +125,7 @@ class ThemeRepository {
               return colorScheme.primaryContainer;
             },
           ),
-          foregroundColor: MaterialStateProperty.resolveWith(
+          foregroundColor: WidgetStateProperty.resolveWith(
             (states) {
               if (states.any(activeStates.contains)) {
                 return colorScheme.onPrimary;
@@ -151,9 +151,9 @@ class ThemeRepository {
       ),
       scrollbarTheme: ScrollbarThemeData(
         interactive: true,
-        thumbVisibility: MaterialStateProperty.all(true),
-        trackVisibility: MaterialStateProperty.all(true),
-        thickness: MaterialStateProperty.all(8),
+        thumbVisibility: WidgetStateProperty.all(true),
+        trackVisibility: WidgetStateProperty.all(true),
+        thickness: WidgetStateProperty.all(8),
       ),
       tabBarTheme: TabBarTheme(
         labelStyle: textTheme.titleMedium,
@@ -197,16 +197,16 @@ Stream<AppTheme> appThemeChanges(AppThemeChangesRef ref) {
 }
 
 // spec: https://api.flutter.dev/flutter/material/MaterialStateProperty-class.html
-const Set<MaterialState> interactiveStates = <MaterialState>{
-  MaterialState.pressed,
-  MaterialState.hovered,
-  MaterialState.focused,
+const Set<WidgetState> interactiveStates = <WidgetState>{
+  WidgetState.pressed,
+  WidgetState.hovered,
+  WidgetState.focused,
 };
 
-const Set<MaterialState> activeStates = <MaterialState>{
-  MaterialState.selected,
+const Set<WidgetState> activeStates = <WidgetState>{
+  WidgetState.selected,
 };
 
-const Set<MaterialState> disabledStates = <MaterialState>{
-  MaterialState.disabled,
+const Set<WidgetState> disabledStates = <WidgetState>{
+  WidgetState.disabled,
 };

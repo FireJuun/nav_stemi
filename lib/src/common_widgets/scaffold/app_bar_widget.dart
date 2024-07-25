@@ -24,12 +24,12 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                 children: [
                   Icon(
                     Icons.close,
-                    color: colorScheme.onBackground,
+                    color: colorScheme.onSurface,
                   ),
                   Text(
                     'Exit'.hardcoded,
                     style: textTheme.titleMedium
-                        ?.apply(color: colorScheme.onBackground),
+                        ?.apply(color: colorScheme.onSurface),
                   ),
                 ],
               ),

@@ -67,7 +67,7 @@ class _NavScreenState extends State<NavScreen> {
 
                       if (activeRoute == null || availableRoutes == null) {
                         return Material(
-                          color: Theme.of(context).colorScheme.background,
+                          color: Theme.of(context).colorScheme.surface,
                           child: const ListEDOptions(),
                         );
                       }
@@ -117,8 +117,8 @@ class _NavScreenState extends State<NavScreen> {
                                                     .style
                                                     ?.copyWith(
                                                       backgroundColor:
-                                                          MaterialStatePropertyAll(
-                                                        colorScheme.background,
+                                                          WidgetStatePropertyAll(
+                                                        colorScheme.surface,
                                                       ),
                                                     ),
                                                 icon: const Icon(

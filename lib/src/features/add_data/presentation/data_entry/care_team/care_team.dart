@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:nav_stemi/nav_stemi.dart';
-import 'package:nav_stemi/src/features/add_data/presentation/data_entry/care_team/care_team_header.dart';
 import 'package:random_name_generator/random_name_generator.dart';
 
 /// spec: https://api.flutter.dev/flutter/widgets/SliverAnimatedList-class.html#widgets.SliverAnimatedList.1

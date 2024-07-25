@@ -55,7 +55,7 @@ extension NearbyEdsX on NearbyEds {
   }
 
   List<NearbyEd> get sortedByRouteDuration {
-    final routeDurationDto = RouteDurationDto();
+    const routeDurationDto = RouteDurationDto();
     final sorted = items.values.toList()
       ..sort(
         (a, b) {

@@ -14,7 +14,7 @@ class NavStep extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Material(
-      color: colorScheme.background,
+      color: colorScheme.surface,
       child: InkWell(
         /// implemented because ListTile isn't showing a splash color
         onTap: onTap,

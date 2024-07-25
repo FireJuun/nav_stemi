@@ -68,7 +68,7 @@ class _AddDataScreenState extends State<AddDataScreen> {
                               .style
                               ?.copyWith(
                                 shape:
-                                    MaterialStateProperty.all<OutlinedBorder>(
+                                    WidgetStateProperty.all<OutlinedBorder>(
                                   RoundedRectangleBorder(
                                     side: const BorderSide(),
                                     borderRadius: BorderRadius.circular(20),

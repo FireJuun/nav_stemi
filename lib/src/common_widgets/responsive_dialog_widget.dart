@@ -112,14 +112,14 @@ class ResponsiveDialogFooter extends StatelessWidget {
               if (includeAccept)
                 FilledButton(
                   style: Theme.of(context).filledButtonTheme.style?.copyWith(
-                    backgroundColor: MaterialStateProperty.resolveWith(
+                    backgroundColor: WidgetStateProperty.resolveWith(
                       (states) {
                         if (states.any(interactiveStates.contains)) {
                           return colorScheme.secondary;
                         }
                         // disabled state = grey
                         else if (states
-                            .any((state) => state == MaterialState.disabled)) {
+                            .any((state) => state == WidgetState.disabled)) {
                           return colorScheme.outline;
                         }
                         return colorScheme.primary;

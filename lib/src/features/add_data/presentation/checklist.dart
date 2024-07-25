@@ -156,7 +156,7 @@ class _ChecklistItemState extends State<ChecklistItem> {
           },
           color: switch (isSelected) {
             true => colorScheme.outline,
-            false => colorScheme.onBackground,
+            false => colorScheme.onSurface,
             null => colorScheme.error,
           },
         ),

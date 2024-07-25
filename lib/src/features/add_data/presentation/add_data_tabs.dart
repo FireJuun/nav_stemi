@@ -66,7 +66,7 @@ class PatientInfoDataTab extends ConsumerWidget {
         //   );
         // }
         return PatientInfo(
-            patientInfoModel: patientInfoModel ?? const PatientInfoModel());
+            patientInfoModel: patientInfoModel ?? const PatientInfoModel(),);
       },
     );
   }
