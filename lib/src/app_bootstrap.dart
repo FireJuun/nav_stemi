@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
-import 'package:nav_stemi/src/features/count_up_timer/application/start_stop_timer_service.dart';
 
 /// Original source: Andrea Bizzotto
 /// https://github.com/bizz84/complete-flutter-course
