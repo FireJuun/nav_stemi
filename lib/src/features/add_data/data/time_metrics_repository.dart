@@ -26,7 +26,7 @@ TimeMetricsRepository timeMetricsRepository(TimeMetricsRepositoryRef ref) {
   return TimeMetricsRepository();
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Stream<TimeMetricsModel?> timeMetricsModel(TimeMetricsModelRef ref) {
   final timeMetricsRepository = ref.watch(timeMetricsRepositoryProvider);
   return timeMetricsRepository.watchTimeMetrics();

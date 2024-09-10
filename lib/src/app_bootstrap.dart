@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
+import 'package:nav_stemi/src/features/count_up_timer/application/start_stop_timer_service.dart';
 
 /// Original source: Andrea Bizzotto
 /// https://github.com/bizz84/complete-flutter-course
@@ -12,6 +13,7 @@ abstract class AppBootstrap {
     // * Initialize listeners & services here via container.read(_)
     // container
     //   ..read(___);
+    container.read(startStopTimerServiceProvider);
 
     // * Register error handlers. For more info, see:
     // * https://docs.flutter.dev/testing/errors

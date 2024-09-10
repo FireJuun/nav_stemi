@@ -22,12 +22,11 @@ final timeMetricsRepositoryProvider = Provider<TimeMetricsRepository>.internal(
 );
 
 typedef TimeMetricsRepositoryRef = ProviderRef<TimeMetricsRepository>;
-String _$timeMetricsModelHash() => r'84623640056a501a4114c17d4af7cf54e9def65e';
+String _$timeMetricsModelHash() => r'6ec99ef78b214c2f79275595bdd9018f4c302914';
 
 /// See also [timeMetricsModel].
 @ProviderFor(timeMetricsModel)
-final timeMetricsModelProvider =
-    AutoDisposeStreamProvider<TimeMetricsModel?>.internal(
+final timeMetricsModelProvider = StreamProvider<TimeMetricsModel?>.internal(
   timeMetricsModel,
   name: r'timeMetricsModelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -37,6 +36,6 @@ final timeMetricsModelProvider =
   allTransitiveDependencies: null,
 );
 
-typedef TimeMetricsModelRef = AutoDisposeStreamProviderRef<TimeMetricsModel?>;
+typedef TimeMetricsModelRef = StreamProviderRef<TimeMetricsModel?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
