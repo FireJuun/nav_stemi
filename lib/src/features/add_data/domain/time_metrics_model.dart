@@ -13,30 +13,42 @@ class TimeMetricsModel extends Equatable {
     this.timeOfStemiActivation,
     this.timeUnitLeftScene,
     this.timePatientArrivedAtDestination,
+
+    /// Locks for each time metric to prevent editing
+    this.lockTimeArrivedAtPatient = false,
+    this.lockTimeOfEkgs = false,
+    this.lockTimeOfStemiActivation = false,
+    this.lockTimeUnitLeftScene = false,
+    this.lockTimePatientArrivedAtDestination = false,
   });
 
   /// KEY start time of first medical contact
   /// The time the unit arrived at the patient's side
   /// spec: https://nemsis.org/media/nemsis_v3/release-3.5.0/DataDictionary/PDFHTML/EMSDEMSTATE/sections/elements/eTimes.07.xml
   final DateTime? timeArrivedAtPatient;
+  final bool lockTimeArrivedAtPatient;
 
   /// For now, the timestamps when EKGs are performed
   /// It is possible to expand this data model to include more values
   /// from the eVitals.CardiacRhythmGroup section of the NEMSIS data dictionary
   /// spec: https://nemsis.org/media/nemsis_v3/release-3.5.0/DataDictionary/PDFHTML/EMSDEMSTATE/sections/eVitals.002.xml
   final Set<DateTime?> timeOfEkgs;
+  final bool lockTimeOfEkgs;
 
   /// The time the STEMI was activated
   // TODO(FireJuun): find NEMSIS link for this
   final DateTime? timeOfStemiActivation;
+  final bool lockTimeOfStemiActivation;
 
   /// The time the unit left the scene
   /// spec: https://nemsis.org/media/nemsis_v3/release-3.5.0/DataDictionary/PDFHTML/EMSDEMSTATE/sections/elements/eTimes.08.xml
   final DateTime? timeUnitLeftScene;
+  final bool lockTimeUnitLeftScene;
 
   /// The time the patient arrived at the destination, such as a hospital
   /// https://nemsis.org/media/nemsis_v3/release-3.5.0/DataDictionary/PDFHTML/EMSDEMSTATE/sections/elements/eTimes.11.xml
   final DateTime? timePatientArrivedAtDestination;
+  final bool lockTimePatientArrivedAtDestination;
 
   TimeMetricsModel copyWith({
     ValueGetter<DateTime?>? timeArrivedAtPatient,
@@ -44,6 +56,11 @@ class TimeMetricsModel extends Equatable {
     ValueGetter<DateTime?>? timeOfStemiActivation,
     ValueGetter<DateTime?>? timeUnitLeftScene,
     ValueGetter<DateTime?>? timePatientArrivedAtDestination,
+    ValueGetter<bool>? lockTimeArrivedAtPatient,
+    ValueGetter<bool>? lockTimeOfEkgs,
+    ValueGetter<bool>? lockTimeOfStemiActivation,
+    ValueGetter<bool>? lockTimeUnitLeftScene,
+    ValueGetter<bool>? lockTimePatientArrivedAtDestination,
   }) {
     /// Sort EKGs by time they were performed.
     /// This is preferred when updating EKG info.
@@ -63,6 +80,21 @@ class TimeMetricsModel extends Equatable {
       timePatientArrivedAtDestination: timePatientArrivedAtDestination != null
           ? timePatientArrivedAtDestination()
           : this.timePatientArrivedAtDestination,
+      lockTimeArrivedAtPatient: lockTimeArrivedAtPatient != null
+          ? lockTimeArrivedAtPatient()
+          : this.lockTimeArrivedAtPatient,
+      lockTimeOfEkgs:
+          lockTimeOfEkgs != null ? lockTimeOfEkgs() : this.lockTimeOfEkgs,
+      lockTimeOfStemiActivation: lockTimeOfStemiActivation != null
+          ? lockTimeOfStemiActivation()
+          : this.lockTimeOfStemiActivation,
+      lockTimeUnitLeftScene: lockTimeUnitLeftScene != null
+          ? lockTimeUnitLeftScene()
+          : this.lockTimeUnitLeftScene,
+      lockTimePatientArrivedAtDestination:
+          lockTimePatientArrivedAtDestination != null
+              ? lockTimePatientArrivedAtDestination()
+              : this.lockTimePatientArrivedAtDestination,
     );
   }
 
@@ -74,6 +106,12 @@ class TimeMetricsModel extends Equatable {
       'timeUnitLeftScene': timeUnitLeftScene?.millisecondsSinceEpoch,
       'timePatientArrivedAtDestination':
           timePatientArrivedAtDestination?.millisecondsSinceEpoch,
+      'lockTimeArrivedAtPatient': lockTimeArrivedAtPatient,
+      'lockTimeOfEkgs': lockTimeOfEkgs,
+      'lockTimeOfStemiActivation': lockTimeOfStemiActivation,
+      'lockTimeUnitLeftScene': lockTimeUnitLeftScene,
+      'lockTimePatientArrivedAtDestination':
+          lockTimePatientArrivedAtDestination,
     };
   }
 
@@ -103,6 +141,12 @@ class TimeMetricsModel extends Equatable {
                   map['timePatientArrivedAtDestination'] as int,
                 )
               : null,
+      lockTimeArrivedAtPatient: map['lockTimeArrivedAtPatient'] as bool,
+      lockTimeOfEkgs: map['lockTimeOfEkgs'] as bool,
+      lockTimeOfStemiActivation: map['lockTimeOfStemiActivation'] as bool,
+      lockTimeUnitLeftScene: map['lockTimeUnitLeftScene'] as bool,
+      lockTimePatientArrivedAtDestination:
+          map['lockTimePatientArrivedAtDestination'] as bool,
     );
   }
 
@@ -122,6 +166,11 @@ class TimeMetricsModel extends Equatable {
       timeOfStemiActivation,
       timeUnitLeftScene,
       timePatientArrivedAtDestination,
+      lockTimeArrivedAtPatient,
+      lockTimeOfEkgs,
+      lockTimeOfStemiActivation,
+      lockTimeUnitLeftScene,
+      lockTimePatientArrivedAtDestination,
     ];
   }
 

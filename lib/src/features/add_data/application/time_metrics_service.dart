@@ -30,6 +30,15 @@ class TimeMetricsService {
     setTimeMetrics(updated);
   }
 
+  void toggleTimeArrivedAtPatientLock() {
+    final lastValue = _timeMetrics().lockTimeArrivedAtPatient;
+    final updated = _timeMetrics().copyWith(
+      lockTimeArrivedAtPatient: () => !lastValue,
+    );
+
+    setTimeMetrics(updated);
+  }
+
   void setTimeOfFirstEkg(DateTime? timeOfFirstEkg) {
     final timeMetrics = _timeMetrics();
 
@@ -60,6 +69,15 @@ class TimeMetricsService {
     }
   }
 
+  void toggleTimeOfFirstEkgLock() {
+    final lastValue = _timeMetrics().lockTimeOfEkgs;
+    final updated = _timeMetrics().copyWith(
+      lockTimeOfEkgs: () => !lastValue,
+    );
+
+    setTimeMetrics(updated);
+  }
+
   void addTimeOfEkg(DateTime timeOfEkg) {
     final updated = _timeMetrics()
         .copyWith(timeOfEkgs: () => _timeMetrics().timeOfEkgs..add(timeOfEkg));
@@ -83,9 +101,27 @@ class TimeMetricsService {
     setTimeMetrics(updated);
   }
 
+  void toggleTimeOfStemiActivationLock() {
+    final lastValue = _timeMetrics().lockTimeOfStemiActivation;
+    final updated = _timeMetrics().copyWith(
+      lockTimeOfStemiActivation: () => !lastValue,
+    );
+
+    setTimeMetrics(updated);
+  }
+
   void setTimeUnitLeftScene(DateTime? timeUnitLeftScene) {
     final updated =
         _timeMetrics().copyWith(timeUnitLeftScene: () => timeUnitLeftScene);
+
+    setTimeMetrics(updated);
+  }
+
+  void toggleTimeUnitLeftSceneLock() {
+    final lastValue = _timeMetrics().lockTimeUnitLeftScene;
+    final updated = _timeMetrics().copyWith(
+      lockTimeUnitLeftScene: () => !lastValue,
+    );
 
     setTimeMetrics(updated);
   }
@@ -95,6 +131,15 @@ class TimeMetricsService {
   ) {
     final updated = _timeMetrics().copyWith(
       timePatientArrivedAtDestination: () => timePatientArrivedAtDestination,
+    );
+
+    setTimeMetrics(updated);
+  }
+
+  void toggleTimePatientArrivedAtDestinationLock() {
+    final lastValue = _timeMetrics().lockTimePatientArrivedAtDestination;
+    final updated = _timeMetrics().copyWith(
+      lockTimePatientArrivedAtDestination: () => !lastValue,
     );
 
     setTimeMetrics(updated);

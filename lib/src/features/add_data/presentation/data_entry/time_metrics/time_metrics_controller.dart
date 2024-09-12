@@ -13,31 +13,42 @@ class TimeMetricsController extends _$TimeMetricsController
     // nothing to do
   }
 
+  TimeMetricsService _service() => ref.read(timeMetricsServiceProvider);
+
   void setTimeMetrics(TimeMetricsModel timeMetrics) =>
-      ref.read(timeMetricsServiceProvider).setTimeMetrics(timeMetrics);
+      _service().setTimeMetrics(timeMetrics);
 
-  void clearTimeMetrics() =>
-      ref.read(timeMetricsServiceProvider).clearTimeMetrics();
+  void clearTimeMetrics() => _service().clearTimeMetrics();
 
-  void setTimeArrivedAtPatient(DateTime? timeArrivedAtPatient) => ref
-      .read(timeMetricsServiceProvider)
-      .setTimeArrivedAtPatient(timeArrivedAtPatient);
+  void setTimeArrivedAtPatient(DateTime? timeArrivedAtPatient) =>
+      _service().setTimeArrivedAtPatient(timeArrivedAtPatient);
+
+  void toggleTimeArrivedAtPatientLock() =>
+      _service().toggleTimeArrivedAtPatientLock();
 
   void setTimeOfFirstEkg(DateTime? timeOfFirstEkg) =>
-      ref.read(timeMetricsServiceProvider).setTimeOfFirstEkg(timeOfFirstEkg);
+      _service().setTimeOfFirstEkg(timeOfFirstEkg);
 
-  void setTimeOfStemiActivation(DateTime? timeOfStemiActivation) => ref
-      .read(timeMetricsServiceProvider)
-      .setTimeOfStemiActivation(timeOfStemiActivation);
+  void toggleTimeOfFirstEkgLock() => _service().toggleTimeOfFirstEkgLock();
 
-  void setTimeUnitLeftScene(DateTime? timeUnitLeftScene) => ref
-      .read(timeMetricsServiceProvider)
-      .setTimeUnitLeftScene(timeUnitLeftScene);
+  void setTimeOfStemiActivation(DateTime? timeOfStemiActivation) =>
+      _service().setTimeOfStemiActivation(timeOfStemiActivation);
+
+  void toggleTimeOfStemiActivationLock() =>
+      _service().toggleTimeOfStemiActivationLock();
+
+  void setTimeUnitLeftScene(DateTime? timeUnitLeftScene) =>
+      _service().setTimeUnitLeftScene(timeUnitLeftScene);
+
+  void toggleTimeUnitLeftSceneLock() =>
+      _service().toggleTimeUnitLeftSceneLock();
 
   void setTimePatientArrivedAtDestination(
     DateTime? timePatientArrivedAtDestination,
   ) =>
-      ref
-          .read(timeMetricsServiceProvider)
+      _service()
           .setTimePatientArrivedAtDestination(timePatientArrivedAtDestination);
+
+  void toggleTimePatientArrivedAtDestinationLock() =>
+      _service().toggleTimePatientArrivedAtDestinationLock();
 }

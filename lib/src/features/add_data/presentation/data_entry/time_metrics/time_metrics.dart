@@ -26,6 +26,16 @@ class TimeMetrics extends ConsumerWidget {
         final timePatientArrivedAtDestination =
             timeMetricsModel?.timePatientArrivedAtDestination;
 
+        final isLockedArrivedAtPatient =
+            timeMetricsModel?.lockTimeArrivedAtPatient ?? false;
+        final isLockedFirstEkg = timeMetricsModel?.lockTimeOfEkgs ?? false;
+        final isLockedStemiActivation =
+            timeMetricsModel?.lockTimeOfStemiActivation ?? false;
+        final isLockedUnitLeftScene =
+            timeMetricsModel?.lockTimeUnitLeftScene ?? false;
+        final isLockedPatientArrivedAtDestination =
+            timeMetricsModel?.lockTimePatientArrivedAtDestination ?? false;
+
         return SliverMainAxisGroup(
           slivers: [
             SliverPadding(
@@ -38,6 +48,10 @@ class TimeMetrics extends ConsumerWidget {
                     onNewTimeSaved: (newTime) => ref
                         .read(timeMetricsControllerProvider.notifier)
                         .setTimeArrivedAtPatient(newTime),
+                    isLocked: isLockedArrivedAtPatient,
+                    onToggleLocked: () => ref
+                        .read(timeMetricsControllerProvider.notifier)
+                        .toggleTimeArrivedAtPatientLock(),
                   ),
                   TimeMetric(
                     label: 'First EKG',
@@ -45,6 +59,10 @@ class TimeMetrics extends ConsumerWidget {
                     onNewTimeSaved: (newTime) => ref
                         .read(timeMetricsControllerProvider.notifier)
                         .setTimeOfFirstEkg(newTime),
+                    isLocked: isLockedFirstEkg,
+                    onToggleLocked: () => ref
+                        .read(timeMetricsControllerProvider.notifier)
+                        .toggleTimeOfFirstEkgLock(),
                   ),
                   TimeMetric(
                     label: 'STEMI Activation',
@@ -52,6 +70,10 @@ class TimeMetrics extends ConsumerWidget {
                     onNewTimeSaved: (newTime) => ref
                         .read(timeMetricsControllerProvider.notifier)
                         .setTimeOfStemiActivation(newTime),
+                    isLocked: isLockedStemiActivation,
+                    onToggleLocked: () => ref
+                        .read(timeMetricsControllerProvider.notifier)
+                        .toggleTimeOfStemiActivationLock(),
                   ),
                   TimeMetric(
                     label: 'Unit Left Scene',
@@ -59,6 +81,10 @@ class TimeMetrics extends ConsumerWidget {
                     onNewTimeSaved: (newTime) => ref
                         .read(timeMetricsControllerProvider.notifier)
                         .setTimeUnitLeftScene(newTime),
+                    isLocked: isLockedUnitLeftScene,
+                    onToggleLocked: () => ref
+                        .read(timeMetricsControllerProvider.notifier)
+                        .toggleTimeUnitLeftSceneLock(),
                   ),
                   TimeMetric(
                     label: 'Patient at Destination',
@@ -66,6 +92,10 @@ class TimeMetrics extends ConsumerWidget {
                     onNewTimeSaved: (newTime) => ref
                         .read(timeMetricsControllerProvider.notifier)
                         .setTimePatientArrivedAtDestination(newTime),
+                    isLocked: isLockedPatientArrivedAtDestination,
+                    onToggleLocked: () => ref
+                        .read(timeMetricsControllerProvider.notifier)
+                        .toggleTimePatientArrivedAtDestinationLock(),
                   ),
                 ],
               ),
@@ -77,35 +107,32 @@ class TimeMetrics extends ConsumerWidget {
   }
 }
 
-class TimeMetric extends StatefulWidget {
+class TimeMetric extends StatelessWidget {
   const TimeMetric({
     required this.label,
     required this.timeOccurred,
     required this.onNewTimeSaved,
+    required this.isLocked,
+    required this.onToggleLocked,
     super.key,
   });
 
   final String label;
   final DateTime? timeOccurred;
   final void Function(DateTime?) onNewTimeSaved;
-
-  @override
-  State<TimeMetric> createState() => _TimeMetricState();
-}
-
-class _TimeMetricState extends State<TimeMetric> {
-  bool _locked = false;
+  final bool isLocked;
+  final VoidCallback onToggleLocked;
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
 
-    void clearDateTime() => widget.onNewTimeSaved(null);
+    void clearDateTime() => onNewTimeSaved(null);
 
     Future<void> selectDateTime() async {
       final now = DateTime.now();
-      final initialTime = TimeOfDay.fromDateTime(widget.timeOccurred ?? now);
+      final initialTime = TimeOfDay.fromDateTime(timeOccurred ?? now);
       final minDate = now.subtract(_durationBufferAgo);
       final maxDate = now.add(_durationBufferFuture);
 
@@ -119,7 +146,7 @@ class _TimeMetricState extends State<TimeMetric> {
           context: context,
           firstDate: minDate,
           lastDate: maxDate,
-          initialDate: widget.timeOccurred ?? now,
+          initialDate: timeOccurred ?? now,
         );
 
         if (selectedDate != null) {
@@ -131,7 +158,7 @@ class _TimeMetricState extends State<TimeMetric> {
             selectedTime.minute,
           );
 
-          widget.onNewTimeSaved(newTime);
+          onNewTimeSaved(newTime);
           return;
         }
       }
@@ -151,31 +178,26 @@ class _TimeMetricState extends State<TimeMetric> {
             Row(
               children: [
                 Text(
-                  widget.label,
+                  label,
                   style: textTheme.bodyLarge?.apply(fontWeightDelta: 1),
                 ),
-                if (widget.timeOccurred != null)
-                  Positioned(
-                    right: 0,
-                    child: IconButton(
-                      onPressed: () {
-                        setState(() => _locked = !_locked);
-                      },
-                      icon: _locked
-                          ? const Icon(Icons.lock)
-                          : const Icon(Icons.lock_open),
-                    ),
+                if (timeOccurred != null)
+                  IconButton(
+                    onPressed: onToggleLocked,
+                    icon: isLocked
+                        ? const Icon(Icons.lock)
+                        : const Icon(Icons.lock_open),
                   ),
               ],
             ),
-            if (widget.timeOccurred == null)
+            if (timeOccurred == null)
               IconButton(
-                onPressed: _locked ? null : selectDateTime,
+                onPressed: isLocked ? null : selectDateTime,
                 icon: const Icon(Icons.schedule),
               ),
           ],
         ),
-        subtitle: (widget.timeOccurred == null)
+        subtitle: (timeOccurred == null)
             ? null
             : Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -184,7 +206,7 @@ class _TimeMetricState extends State<TimeMetric> {
                   children: [
                     Expanded(
                       child: Timeago(
-                        date: widget.timeOccurred!,
+                        date: timeOccurred!,
                         allowFromNow: true,
                         // locale: 'en_short',
                         refreshRate: 15.seconds,
@@ -206,8 +228,7 @@ class _TimeMetricState extends State<TimeMetric> {
                       ),
                     ),
                     Text(
-                      TimeOfDay.fromDateTime(widget.timeOccurred!)
-                          .format(context),
+                      TimeOfDay.fromDateTime(timeOccurred!).format(context),
                       style: textTheme.bodyMedium?.apply(
                         fontStyle: FontStyle.italic,
                         fontWeightDelta: -1,
@@ -216,15 +237,15 @@ class _TimeMetricState extends State<TimeMetric> {
                   ],
                 ),
               ),
-        trailing: (widget.timeOccurred == null)
+        trailing: (timeOccurred == null)
             ? FilledButton(
-                onPressed: () => widget.onNewTimeSaved(DateTime.now()),
+                onPressed: () => onNewTimeSaved(DateTime.now()),
                 child: const Text('Now'),
               )
             : TimeMetricsMenu(
                 onSelectDateTime: selectDateTime,
                 onClearDateTime: clearDateTime,
-                isLocked: _locked,
+                isLocked: isLocked,
               ),
       ),
     );
