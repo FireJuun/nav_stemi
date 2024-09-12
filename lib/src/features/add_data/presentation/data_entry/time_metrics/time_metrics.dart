@@ -77,7 +77,7 @@ class TimeMetrics extends ConsumerWidget {
   }
 }
 
-class TimeMetric extends StatelessWidget {
+class TimeMetric extends StatefulWidget {
   const TimeMetric({
     required this.label,
     required this.timeOccurred,
@@ -90,9 +90,57 @@ class TimeMetric extends StatelessWidget {
   final void Function(DateTime?) onNewTimeSaved;
 
   @override
+  State<TimeMetric> createState() => _TimeMetricState();
+}
+
+class _TimeMetricState extends State<TimeMetric> {
+  bool _locked = false;
+
+  @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
+
+    void clearDateTime() => widget.onNewTimeSaved(null);
+
+    Future<void> selectDateTime() async {
+      final now = DateTime.now();
+      final initialTime = TimeOfDay.fromDateTime(widget.timeOccurred ?? now);
+      final minDate = now.subtract(_durationBufferAgo);
+      final maxDate = now.add(_durationBufferFuture);
+
+      final selectedTime = await showTimePicker(
+        context: context,
+        initialTime: initialTime,
+      );
+
+      if (selectedTime != null && context.mounted) {
+        final selectedDate = await showDatePicker(
+          context: context,
+          firstDate: minDate,
+          lastDate: maxDate,
+          initialDate: widget.timeOccurred ?? now,
+        );
+
+        if (selectedDate != null) {
+          final newTime = DateTime(
+            selectedDate.year,
+            selectedDate.month,
+            selectedDate.day,
+            selectedTime.hour,
+            selectedTime.minute,
+          );
+
+          widget.onNewTimeSaved(newTime);
+          return;
+        }
+      }
+
+      /// If the user cancels the time picker or the date picker
+      /// set the DateTime to null.
+      // widget.onNewTimeSaved(null);
+      return;
+    }
 
     return Padding(
       padding: const EdgeInsetsDirectional.only(bottom: 4),
@@ -100,53 +148,34 @@ class TimeMetric extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              label,
-              style: textTheme.bodyLarge?.apply(fontWeightDelta: 1),
+            Row(
+              children: [
+                Text(
+                  widget.label,
+                  style: textTheme.bodyLarge?.apply(fontWeightDelta: 1),
+                ),
+                if (widget.timeOccurred != null)
+                  Positioned(
+                    right: 0,
+                    child: IconButton(
+                      onPressed: () {
+                        setState(() => _locked = !_locked);
+                      },
+                      icon: _locked
+                          ? const Icon(Icons.lock)
+                          : const Icon(Icons.lock_open),
+                    ),
+                  ),
+              ],
             ),
-            IconButton(
-              onPressed: () async {
-                final now = DateTime.now();
-                final initialTime = TimeOfDay.fromDateTime(timeOccurred ?? now);
-                final minDate = now.subtract(_durationBufferAgo);
-                final maxDate = now.add(_durationBufferFuture);
-
-                final selectedTime = await showTimePicker(
-                  context: context,
-                  initialTime: initialTime,
-                );
-                if (selectedTime != null && context.mounted) {
-                  final selectedDate = await showDatePicker(
-                    context: context,
-                    firstDate: minDate,
-                    lastDate: maxDate,
-                    initialDate: timeOccurred ?? now,
-                  );
-
-                  if (selectedDate != null) {
-                    final newTime = DateTime(
-                      selectedDate.year,
-                      selectedDate.month,
-                      selectedDate.day,
-                      selectedTime.hour,
-                      selectedTime.minute,
-                    );
-
-                    onNewTimeSaved(newTime);
-                    return;
-                  }
-                }
-
-                /// If the user cancels the time picker or the date picker
-                /// set the DateTime to null.
-                onNewTimeSaved(null);
-                return;
-              },
-              icon: const Icon(Icons.schedule),
-            ),
+            if (widget.timeOccurred == null)
+              IconButton(
+                onPressed: _locked ? null : selectDateTime,
+                icon: const Icon(Icons.schedule),
+              ),
           ],
         ),
-        subtitle: (timeOccurred == null)
+        subtitle: (widget.timeOccurred == null)
             ? null
             : Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -155,7 +184,7 @@ class TimeMetric extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Timeago(
-                        date: timeOccurred!,
+                        date: widget.timeOccurred!,
                         allowFromNow: true,
                         // locale: 'en_short',
                         refreshRate: 15.seconds,
@@ -177,7 +206,8 @@ class TimeMetric extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      TimeOfDay.fromDateTime(timeOccurred!).format(context),
+                      TimeOfDay.fromDateTime(widget.timeOccurred!)
+                          .format(context),
                       style: textTheme.bodyMedium?.apply(
                         fontStyle: FontStyle.italic,
                         fontWeightDelta: -1,
@@ -186,16 +216,103 @@ class TimeMetric extends StatelessWidget {
                   ],
                 ),
               ),
-        trailing: (timeOccurred == null)
+        trailing: (widget.timeOccurred == null)
             ? FilledButton(
-                onPressed: () => onNewTimeSaved(DateTime.now()),
+                onPressed: () => widget.onNewTimeSaved(DateTime.now()),
                 child: const Text('Now'),
               )
-            : IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.more_vert),
+            : TimeMetricsMenu(
+                onSelectDateTime: selectDateTime,
+                onClearDateTime: clearDateTime,
+                isLocked: _locked,
               ),
       ),
+    );
+  }
+}
+
+/// spec: https://api.flutter.dev/flutter/material/MenuAnchor-class.html
+class TimeMetricsMenu extends StatefulWidget {
+  const TimeMetricsMenu({
+    required this.onSelectDateTime,
+    required this.onClearDateTime,
+    required this.isLocked,
+    super.key,
+  });
+
+  final VoidCallback onSelectDateTime;
+  final VoidCallback onClearDateTime;
+  final bool isLocked;
+
+  @override
+  State<TimeMetricsMenu> createState() => _TimeMetricsMenuState();
+}
+
+class _TimeMetricsMenuState extends State<TimeMetricsMenu> {
+  final FocusNode _buttonFocusNode = FocusNode(debugLabel: 'Time Metrics Menu');
+
+  @override
+  void dispose() {
+    _buttonFocusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MenuAnchor(
+      childFocusNode: _buttonFocusNode,
+      menuChildren: <Widget>[
+        MenuItemButton(
+          onPressed: widget.onSelectDateTime,
+          child: const Text('Change Time'),
+        ),
+        MenuItemButton(
+          onPressed: () async {
+            final shouldClear = await showDialog<bool>(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Clear Time'),
+                      content: const Text(
+                        'Are you sure you want to clear the time?',
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          child: const Text('CLEAR TIME'),
+                        ),
+                      ],
+                    );
+                  },
+                ) ??
+                false;
+
+            if (shouldClear && context.mounted) {
+              widget.onClearDateTime();
+            }
+          },
+          child: const Text('Clear Time'),
+        ),
+      ],
+      builder: (_, MenuController controller, Widget? child) {
+        return IconButton(
+          focusNode: _buttonFocusNode,
+          onPressed: widget.isLocked
+              ? null
+              : () {
+                  if (controller.isOpen) {
+                    controller.close();
+                  } else {
+                    controller.open();
+                  }
+                },
+          icon: const Icon(Icons.more_vert),
+        );
+      },
     );
   }
 }
