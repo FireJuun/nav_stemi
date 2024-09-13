@@ -1,33 +1,26 @@
 import 'package:equatable/equatable.dart';
 import 'package:google_routes_flutter/google_routes_flutter.dart';
 
-typedef ActiveRouteId = Polyline;
-typedef ActiveStepId = Polyline;
-
-/// Determines which point of interest is nearest to the
-/// user's current location.
-enum RouteOption { pciCenter, ed, other, none }
+typedef EncodedPolyline = String;
+typedef ActiveRouteId = EncodedPolyline;
+typedef ActiveStepId = EncodedPolyline;
 
 class ActiveRoute extends Equatable {
   const ActiveRoute({
-    required this.activeRouteId,
+    required this.route,
     required this.activeStepId,
-    this.routeOption = RouteOption.none,
   });
 
-  final ActiveRouteId activeRouteId;
+  final Route route;
   final ActiveStepId activeStepId;
-  final RouteOption routeOption;
 
   ActiveRoute copyWith({
     ActiveRouteId? activeRouteId,
     ActiveStepId? activeStepId,
-    RouteOption? routeOption,
   }) {
     return ActiveRoute(
-      activeRouteId: activeRouteId ?? this.activeRouteId,
+      route: route,
       activeStepId: activeStepId ?? this.activeStepId,
-      routeOption: routeOption ?? this.routeOption,
     );
   }
 
@@ -35,5 +28,5 @@ class ActiveRoute extends Equatable {
   bool get stringify => true;
 
   @override
-  List<Object> get props => [activeRouteId, activeStepId, routeOption];
+  List<Object> get props => [route, activeStepId];
 }

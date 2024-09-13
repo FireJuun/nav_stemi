@@ -86,6 +86,7 @@ class RemoteRoutesRepository {
   Future<AvailableRoutes> getAvailableRoutesForSingleED({
     required maps.LatLng origin,
     required maps.LatLng destination,
+    required EdInfo destinationInfo,
   }) async {
     final requestedTime = DateTime.now();
 
@@ -101,13 +102,14 @@ class RemoteRoutesRepository {
         ),
       ),
       xGoogFieldMask:
-          'routes.duration,routes.distanceMeters,routes.polyline.encodedPolyline',
+          'routes.duration,routes.distanceMeters,routes.polyline.encodedPolyline,routes.legs.*',
       apiKey: Env.routesApi,
     );
 
     return AvailableRoutes(
       origin: origin,
       destination: destination,
+      destinationInfo: destinationInfo,
       requestedDateTime: requestedTime,
       routes: routes.routes,
     );

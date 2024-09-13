@@ -15,10 +15,10 @@ part 'app_routing.g.dart';
 /// ```
 enum AppRoute {
   home,
-  homeAddData,
   goTo,
   nav,
   navGoTo,
+  navInfo,
   navAddData,
 }
 
@@ -42,13 +42,6 @@ GoRouter goRouter(GoRouterRef ref) {
         name: AppRoute.home.name,
         builder: (context, state) => const Home(),
         routes: [
-          GoRoute(
-            path: 'data',
-            name: AppRoute.homeAddData.name,
-            pageBuilder: (context, state) => DialogPage(
-              builder: (_) => const AddDataDialog(),
-            ),
-          ),
           GoRoute(
             path: 'go',
             name: AppRoute.goTo.name,
@@ -84,6 +77,23 @@ GoRouter goRouter(GoRouterRef ref) {
                     pageBuilder: (context, state) => DialogPage(
                       builder: (_) => const GoToDialog(),
                     ),
+                  ),
+                  GoRoute(
+                    path: 'info',
+                    name: AppRoute.navInfo.name,
+                    pageBuilder: (context, state) {
+                      final edInfo = state.extra;
+                      assert(edInfo != null, 'ED info not provided');
+                      assert(
+                        edInfo is EdInfo,
+                        'ED info provided, but as the wrong type',
+                      );
+
+                      return DialogPage(
+                        builder: (_) =>
+                            DestinationInfoDialog(edInfo! as EdInfo),
+                      );
+                    },
                   ),
                 ],
               ),

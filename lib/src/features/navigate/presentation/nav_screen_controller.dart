@@ -11,6 +11,8 @@ class NavScreenController extends _$NavScreenController {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
+  final _latLngBounds = LatLngBoundsDTO();
+
   @override
   FutureOr<void> build() {
     // nothing to do
@@ -33,12 +35,46 @@ class NavScreenController extends _$NavScreenController {
         }),
       );
 
+  void zoomToActiveRoute() => unawaited(
+        _controller.future.then((controller) async {
+          final currentLocation =
+              await ref.read(getLastKnownOrCurrentPositionProvider.future);
+
+          final destination = ref.read(destinationProvider);
+
+          if (destination != null) {
+            await controller.animateCamera(
+              CameraUpdate.newLatLngBounds(
+                _latLngBounds.listToBounds([
+                  currentLocation.toLatLng(),
+                  destination,
+                ]),
+                72,
+              ),
+            );
+          }
+        }),
+      );
+
+  void zoomToSelectedNavigationStep(List<LatLng> stepLocations) => unawaited(
+        _controller.future.then((controller) async {
+          await controller.animateCamera(
+            CameraUpdate.newLatLngBounds(
+              _latLngBounds.listToBounds(stepLocations),
+              72,
+            ),
+          );
+        }),
+      );
+
   void showCurrentLocation() => unawaited(
         _controller.future.then((controller) async {
           final currentLocation =
-              await ref.read(mapsServiceProvider).currentLocation();
-          await controller
-              .animateCamera(CameraUpdate.newLatLng(currentLocation));
+              await ref.read(getLastKnownOrCurrentPositionProvider.future);
+
+          await controller.animateCamera(
+            CameraUpdate.newLatLng(currentLocation.toLatLng()),
+          );
         }),
       );
 

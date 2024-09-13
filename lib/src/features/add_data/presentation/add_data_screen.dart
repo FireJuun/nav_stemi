@@ -3,7 +3,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
-enum BottomModalState { checklist, sync, none }
+// TODO(FireJuun): find a better place for this button
+const _shouldShowSync = false;
 
 class AddDataScreen extends StatefulWidget {
   const AddDataScreen({super.key});
@@ -13,127 +14,110 @@ class AddDataScreen extends StatefulWidget {
 }
 
 class _AddDataScreenState extends State<AddDataScreen> {
-  BottomModalState _bottomModalState = BottomModalState.none;
+  bool isSyncVisible = false;
 
   @override
   Widget build(BuildContext context) {
-    return KeyboardVisibilityBuilder(
-      builder: (context, isKeyboardVisible) {
-        final colorScheme = Theme.of(context).colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
-        bool showBottomModal() =>
-            _bottomModalState != BottomModalState.none && !isKeyboardVisible;
-
-        bool isChecklistActive() =>
-            _bottomModalState == BottomModalState.checklist;
-
-        bool isSyncActive() => _bottomModalState == BottomModalState.sync;
-
-        return Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 8,
-          ),
-          child: Stack(
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 8,
+      ),
+      child: KeyboardVisibilityBuilder(
+        builder: (context, isKeyboardVisible) {
+          return Stack(
             children: [
-              Column(
-                children: [
-                  const DestinationInfo(),
-                  gapH4,
-                  const EtaWidget(),
-                  gapH8,
-                  const Expanded(
-                    child: DataEntryWidget(),
-                  ),
-                  AnimatedContainer(
+              const AddDataScrollview(),
+              if (!isKeyboardVisible)
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: AnimatedContainer(
                     duration: 300.ms,
-                    height: showBottomModal() ? 0 : 60,
-                    child: const SizedBox.shrink(),
-                  ),
-                  AnimatedContainer(
-                    duration: 300.ms,
-                    height: showBottomModal()
+                    height: isSyncVisible
                         ? MediaQuery.of(context).size.height * 0.25
                         : 0,
-                    // TODO(FireJuun): checklist goes here
                     decoration: BoxDecoration(
                       color: colorScheme.primaryContainer,
-                      border: showBottomModal()
+                      border: isSyncVisible
                           ? Border.all(
                               color: colorScheme.onPrimaryContainer,
                             )
                           : null,
                     ),
-                    child: switch (_bottomModalState) {
-                      BottomModalState.checklist =>
-                        Center(child: Text('Checklist'.hardcoded)),
-                      BottomModalState.sync =>
-                        Center(child: Text('Sync'.hardcoded)),
-                      BottomModalState.none =>
-                        const Center(child: SizedBox.shrink()),
-                    },
+                    child: const Sync(),
                   ),
-                ],
-              ),
-              Positioned.directional(
-                textDirection: Directionality.of(context),
-                end: 4,
-                bottom: 4,
-                child: AnimatedSwitcher(
-                  duration: 300.ms,
-                  child: _bottomModalState == BottomModalState.checklist
+                ),
+              if (!isKeyboardVisible && _shouldShowSync)
+                Positioned.directional(
+                  textDirection: Directionality.of(context),
+                  end: 4,
+                  bottom: 4,
+                  child: isSyncVisible
                       ? FilledButton.icon(
                           onPressed: () => setState(
-                            () => _bottomModalState = BottomModalState.none,
+                            () => isSyncVisible = false,
                           ),
-                          icon: const Icon(Icons.checklist),
-                          label: Text('Checklist'.hardcoded),
+                          icon: const Icon(Icons.sync),
+                          label: Text('Sync'.hardcoded),
                         )
-                      : OutlinedButton.icon(
-                          onPressed: isSyncActive()
-                              ? null
-                              : () => setState(
-                                    () => _bottomModalState =
-                                        BottomModalState.checklist,
+                      : FilledButton.tonalIcon(
+                          style: Theme.of(context)
+                              .filledButtonTheme
+                              .style
+                              ?.copyWith(
+                                shape:
+                                    WidgetStateProperty.all<OutlinedBorder>(
+                                  RoundedRectangleBorder(
+                                    side: const BorderSide(),
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
-                          icon: const Icon(Icons.checklist),
-                          label: Text('Checklist'.hardcoded),
+                                ),
+                              ),
+                          onPressed: () => setState(
+                            () => isSyncVisible = true,
+                          ),
+                          icon: const Icon(Icons.sync),
+                          label: Text('Sync'.hardcoded),
                         ),
                 ),
-              )
-                  .animate(
-                    target: isSyncActive() ? 1 : 0,
-                  )
-                  .fadeOut(duration: 200.ms),
-              Positioned.directional(
-                textDirection: Directionality.of(context),
-                start: 4,
-                bottom: 4,
-                child: _bottomModalState == BottomModalState.sync
-                    ? FilledButton.icon(
-                        onPressed: () => setState(
-                          () => _bottomModalState = BottomModalState.none,
-                        ),
-                        icon: const Icon(Icons.sync),
-                        label: Text('Sync'.hardcoded),
-                      )
-                    : OutlinedButton.icon(
-                        onPressed: isChecklistActive()
-                            ? null
-                            : () => setState(
-                                  () =>
-                                      _bottomModalState = BottomModalState.sync,
-                                ),
-                        icon: const Icon(Icons.sync),
-                        label: Text('Sync'.hardcoded),
-                      ),
-              )
-                  .animate(
-                    target: isChecklistActive() ? 1 : 0,
-                  )
-                  .fadeOut(duration: 200.ms),
             ],
-          ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class AddDataScrollview extends StatelessWidget {
+  const AddDataScrollview({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        /// LayoutBuilder is used so that when the keyboard shows up,
+        /// the app will automatically resize the checklist field.
+        /// Otherwise, there's no space to see what you're typing.
+        final checklistHeight = constraints.maxHeight * 0.3;
+        return CustomScrollView(
+          slivers: [
+            const DestinationInfoSliver(),
+            const EtaWidgetSliver(),
+            const SliverToBoxAdapter(child: gapH8),
+            // gapH8,
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: checklistHeight,
+                child: const Checklist(),
+              ),
+            ),
+            const SliverToBoxAdapter(child: gapH8),
+            const SliverFillRemaining(
+              child: AddDataTabs(),
+            ),
+          ],
         );
       },
     );

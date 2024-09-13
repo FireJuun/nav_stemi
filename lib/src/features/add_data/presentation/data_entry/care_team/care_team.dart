@@ -97,10 +97,11 @@ class _CareTeamState extends State<CareTeam> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO(FireJuun): update UI to match design
     return SliverMainAxisGroup(
       slivers: [
-        DataEntryHeader(
-          'Care Team'.hardcoded,
+        CareTeamHeader(
+          ' '.hardcoded,
           trailing: Row(
             children: [
               IconButton(

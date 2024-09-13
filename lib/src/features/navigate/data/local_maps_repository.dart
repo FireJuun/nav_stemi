@@ -15,15 +15,15 @@ class LocalMapsRepository {
     return _store.stream;
   }
 
-  Future<MapsInfo?> getMapsInfo() async {
+  MapsInfo? getMapsInfo() {
     return _store.value;
   }
 
-  Future<void> setMapsInfo(MapsInfo mapsInfo) async {
+  void setMapsInfo(MapsInfo mapsInfo) {
     _store.value = mapsInfo;
   }
 
-  Future<void> clearMapsInfo() async {
+  void clearMapsInfo() {
     _store.value = null;
   }
 }

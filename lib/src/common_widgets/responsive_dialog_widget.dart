@@ -4,9 +4,14 @@ import 'package:nav_stemi/nav_stemi.dart';
 /// original source: https://github.com/MayJuun/wvems_protocols/blob/main/lib/src/features/preferences/presentation/shared/responsive_dialog_widget.dart
 
 class ResponsiveDialogWidget extends StatelessWidget {
-  const ResponsiveDialogWidget({required this.child, super.key});
+  const ResponsiveDialogWidget({
+    required this.child,
+    this.denseHeight = false,
+    super.key,
+  });
 
   final Widget child;
+  final bool denseHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +29,9 @@ class ResponsiveDialogWidget extends StatelessWidget {
             constraints: BoxConstraints(
               maxHeight: (isAboveBreakpoint || !isPortrait)
                   ? double.infinity
-                  : MediaQuery.of(context).size.height - 256,
+                  : denseHeight
+                      ? 500
+                      : MediaQuery.of(context).size.height - 256,
               maxWidth: isAboveBreakpoint ? 600 : double.infinity,
             ),
             child: Container(
@@ -69,27 +76,64 @@ class ResponsiveDialogHeader extends StatelessWidget {
             ],
           ),
         ),
-        gapH12,
-        // const Divider(),
+        gapH8,
       ],
     );
   }
 }
 
 class ResponsiveDialogFooter extends StatelessWidget {
-  const ResponsiveDialogFooter({super.key});
+  const ResponsiveDialogFooter({
+    this.label,
+    this.includeAccept = false,
+    this.onAccept,
+    super.key,
+  });
+
+  final String? label;
+  final bool includeAccept;
+  final VoidCallback? onAccept;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Divider(thickness: 2),
-        OutlinedButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
-        ),
-        gapH8,
-      ],
+    final colorScheme = Theme.of(context).colorScheme;
+    return ColoredBox(
+      color: colorScheme.secondary,
+      child: Column(
+        children: [
+          const Divider(thickness: 2),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              FilledButton.tonal(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(label ?? 'Cancel'.hardcoded),
+              ),
+              if (includeAccept)
+                FilledButton(
+                  style: Theme.of(context).filledButtonTheme.style?.copyWith(
+                    backgroundColor: WidgetStateProperty.resolveWith(
+                      (states) {
+                        if (states.any(interactiveStates.contains)) {
+                          return colorScheme.secondary;
+                        }
+                        // disabled state = grey
+                        else if (states
+                            .any((state) => state == WidgetState.disabled)) {
+                          return colorScheme.outline;
+                        }
+                        return colorScheme.primary;
+                      },
+                    ),
+                  ),
+                  onPressed: onAccept,
+                  child: Text('Accept'.hardcoded),
+                ),
+            ],
+          ),
+          gapH8,
+        ],
+      ),
     );
   }
 }
