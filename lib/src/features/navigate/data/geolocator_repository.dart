@@ -13,9 +13,20 @@ part 'geolocator_repository.g.dart';
 /// source: https://pub.dev/packages/geolocator
 
 class GeolocatorRepository {
+  /// Stream of the current position of the device.
+  /// The stream will emit the last known position of the device
+  Stream<Position?> watchPosition() {
+    return Geolocator.getPositionStream(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 100,
+      ),
+    );
+  }
+
   /// Get the current position of the device.
   ///
-  Future<Position> determinePosition() async {
+  Future<Position> getCurrentPosition() async {
     await checkPermissions();
 
     return Geolocator.getCurrentPosition();
@@ -27,7 +38,7 @@ class GeolocatorRepository {
   ///
   /// If no position is available, the `Future` will return `null`.
   ///
-  Future<Position?> lastKnownPosition() async {
+  Future<Position?> getLastKnownPosition() async {
     await checkPermissions();
 
     return Geolocator.getLastKnownPosition();
@@ -93,4 +104,40 @@ class GeolocatorRepository {
 @Riverpod(keepAlive: true)
 GeolocatorRepository geolocatorRepository(GeolocatorRepositoryRef ref) {
   return GeolocatorRepository();
+}
+
+@riverpod
+Stream<Position?> watchPosition(WatchPositionRef ref) {
+  final geolocatorRepository = ref.watch(geolocatorRepositoryProvider);
+  return geolocatorRepository.watchPosition();
+}
+
+@riverpod
+Future<Position> getCurrentPosition(GetCurrentPositionRef ref) {
+  final geolocatorRepository = ref.watch(geolocatorRepositoryProvider);
+  return geolocatorRepository.getCurrentPosition();
+}
+
+@riverpod
+Future<Position?> getLastKnownPosition(GetLastKnownPositionRef ref) {
+  final geolocatorRepository = ref.watch(geolocatorRepositoryProvider);
+  return geolocatorRepository.getLastKnownPosition();
+}
+
+/// Get the last known position of the device, if available.
+/// Otherwise, get the current position of the device, which
+/// forces the device to get the current location and may take
+/// longer to return a result.
+@riverpod
+Future<Position> getLastKnownOrCurrentPosition(
+  GetLastKnownOrCurrentPositionRef ref,
+) async {
+  final lastKnownPosition =
+      await ref.watch(getLastKnownPositionProvider.future);
+
+  if (lastKnownPosition != null) {
+    return lastKnownPosition;
+  }
+
+  return ref.watch(getCurrentPositionProvider.future);
 }

@@ -1,0 +1,462 @@
+{
+    "routes": [
+      {
+        "legs": [
+          {
+            "distanceMeters": 13850,
+            "duration": "697s",
+            "staticDuration": "722s",
+            "polyline": {
+              "encodedPolyline": "mnuxEfbgfN]c@ICID[d@GBYYfAeBuA{Ae@Sm@EgADw@Kc@nCi@^wAGgHm@_BWiBg@Y@sT_J}Bs@_Ce@wC[yCIyCHaCTuCj@el@dPkFfAsFx@eFd@qFToFD_k@k@wCQcC[yBe@gCw@uCqAsBkAeDaC}H_GgCyA_DyA}Bw@sCu@kDi@cE]g_@gBcEa@}FeAc_@oH}Di@mDYyCKeEAgELu`A|Ewo@~CSIcH?gAEqEs@yDm@[?BwEAKr@s`@?kAIaBIaAUgBk@}B_DgJiBiJI{@EgAB{CN_HHw@pAaGJuA?uAC{A@eAVmFBoBkCO}A?_DTis@vH{JbAe[dDPrN}@@"
+            },
+            "startLocation": {
+              "latLng": {
+                "latitude": 35.6683868,
+                "longitude": -79.8315626
+              }
+            },
+            "endLocation": {
+              "latLng": {
+                "latitude": 35.7706113,
+                "longitude": -79.810263499999991
+              }
+            },
+            "steps": [
+              {
+                "distanceMeters": 64,
+                "staticDuration": "6s",
+                "polyline": {
+                  "encodedPolyline": "mnuxEfbgfN]c@ICID[d@GB"
+                },
+                "startLocation": {
+                  "latLng": {
+                    "latitude": 35.6683868,
+                    "longitude": -79.8315626
+                  }
+                },
+                "endLocation": {
+                  "latLng": {
+                    "latitude": 35.668821699999995,
+                    "longitude": -79.8315985
+                  }
+                },
+                "navigationInstruction": {
+                  "maneuver": "DEPART",
+                  "instructions": "Head northeast toward New Century Dr"
+                },
+                "localizedValues": {
+                  "distance": {
+                    "text": "210 ft"
+                  },
+                  "staticDuration": {
+                    "text": "1 min"
+                  }
+                },
+                "travelMode": "DRIVE"
+              },
+              {
+                "distanceMeters": 19,
+                "staticDuration": "6s",
+                "polyline": {
+                  "encodedPolyline": "cquxEnbgfNYY"
+                },
+                "startLocation": {
+                  "latLng": {
+                    "latitude": 35.668821699999995,
+                    "longitude": -79.8315985
+                  }
+                },
+                "endLocation": {
+                  "latLng": {
+                    "latitude": 35.6689526,
+                    "longitude": -79.8314674
+                  }
+                },
+                "navigationInstruction": {
+                  "maneuver": "TURN_RIGHT",
+                  "instructions": "Turn right toward New Century Dr"
+                },
+                "localizedValues": {
+                  "distance": {
+                    "text": "62 ft"
+                  },
+                  "staticDuration": {
+                    "text": "1 min"
+                  }
+                },
+                "travelMode": "DRIVE"
+              },
+              {
+                "distanceMeters": 61,
+                "staticDuration": "20s",
+                "polyline": {
+                  "encodedPolyline": "}quxEtagfNfAeB"
+                },
+                "startLocation": {
+                  "latLng": {
+                    "latitude": 35.6689526,
+                    "longitude": -79.8314674
+                  }
+                },
+                "endLocation": {
+                  "latLng": {
+                    "latitude": 35.6685885,
+                    "longitude": -79.830962
+                  }
+                },
+                "navigationInstruction": {
+                  "maneuver": "TURN_RIGHT",
+                  "instructions": "Turn right toward New Century Dr"
+                },
+                "localizedValues": {
+                  "distance": {
+                    "text": "200 ft"
+                  },
+                  "staticDuration": {
+                    "text": "1 min"
+                  }
+                },
+                "travelMode": "DRIVE"
+              },
+              {
+                "distanceMeters": 184,
+                "staticDuration": "39s",
+                "polyline": {
+                  "encodedPolyline": "uouxEn~ffNuA{Ae@Sm@EgADw@K"
+                },
+                "startLocation": {
+                  "latLng": {
+                    "latitude": 35.6685885,
+                    "longitude": -79.830962
+                  }
+                },
+                "endLocation": {
+                  "latLng": {
+                    "latitude": 35.670079199999996,
+                    "longitude": -79.830342700000017
+                  }
+                },
+                "navigationInstruction": {
+                  "maneuver": "TURN_LEFT",
+                  "instructions": "Turn left onto New Century Dr"
+                },
+                "localizedValues": {
+                  "distance": {
+                    "text": "0.1 mi"
+                  },
+                  "staticDuration": {
+                    "text": "1 min"
+                  }
+                },
+                "travelMode": "DRIVE"
+              },
+              {
+                "distanceMeters": 68,
+                "staticDuration": "17s",
+                "polyline": {
+                  "encodedPolyline": "_yuxErzffNc@nC"
+                },
+                "startLocation": {
+                  "latLng": {
+                    "latitude": 35.670079199999996,
+                    "longitude": -79.830342700000017
+                  }
+                },
+                "endLocation": {
+                  "latLng": {
+                    "latitude": 35.670264599999996,
+                    "longitude": -79.8310618
+                  }
+                },
+                "navigationInstruction": {
+                  "maneuver": "TURN_LEFT",
+                  "instructions": "Turn left onto McDowell Rd"
+                },
+                "localizedValues": {
+                  "distance": {
+                    "text": "223 ft"
+                  },
+                  "staticDuration": {
+                    "text": "1 min"
+                  }
+                },
+                "travelMode": "DRIVE"
+              },
+              {
+                "distanceMeters": 372,
+                "staticDuration": "25s",
+                "polyline": {
+                  "encodedPolyline": "czuxEb_gfNi@^wAGgHm@_BWiBg@Y@"
+                },
+                "startLocation": {
+                  "latLng": {
+                    "latitude": 35.670264599999996,
+                    "longitude": -79.8310618
+                  }
+                },
+                "endLocation": {
+                  "latLng": {
+                    "latitude": 35.673527899999996,
+                    "longitude": -79.8306358
+                  }
+                },
+                "navigationInstruction": {
+                  "maneuver": "RAMP_RIGHT",
+                  "instructions": "Turn right onto the I-74 W/US-220 N ramp to Greensboro/Interstate 73 N"
+                },
+                "localizedValues": {
+                  "distance": {
+                    "text": "0.2 mi"
+                  },
+                  "staticDuration": {
+                    "text": "1 min"
+                  }
+                },
+                "travelMode": "DRIVE"
+              },
+              {
+                "distanceMeters": 8594,
+                "staticDuration": "286s",
+                "polyline": {
+                  "encodedPolyline": "qnvxEn|ffNsT_J}Bs@_Ce@wC[yCIyCHaCTuCj@el@dPkFfAsFx@eFd@qFToFD_k@k@wCQcC[yBe@gCw@uCqAsBkAeDaC}H_GgCyA_DyA}Bw@sCu@kDi@cE]g_@gBcEa@}FeAc_@oH}Di@mDYyCKeEAgELu`A|Ewo@~C"
+                },
+                "startLocation": {
+                  "latLng": {
+                    "latitude": 35.673527899999996,
+                    "longitude": -79.8306358
+                  }
+                },
+                "endLocation": {
+                  "latLng": {
+                    "latitude": 35.7487801,
+                    "longitude": -79.825907
+                  }
+                },
+                "navigationInstruction": {
+                  "maneuver": "MERGE",
+                  "instructions": "Merge onto I-73 N/I-74/US-220 N"
+                },
+                "localizedValues": {
+                  "distance": {
+                    "text": "5.3 mi"
+                  },
+                  "staticDuration": {
+                    "text": "5 mins"
+                  }
+                },
+                "travelMode": "DRIVE"
+              },
+              {
+                "distanceMeters": 455,
+                "staticDuration": "30s",
+                "polyline": {
+                  "encodedPolyline": "{deyE|~efNSIcH?gAEqEs@yDm@[?"
+                },
+                "startLocation": {
+                  "latLng": {
+                    "latitude": 35.7487801,
+                    "longitude": -79.825907
+                  }
+                },
+                "endLocation": {
+                  "latLng": {
+                    "latitude": 35.752823,
+                    "longitude": -79.8253431
+                  }
+                },
+                "navigationInstruction": {
+                  "maneuver": "RAMP_RIGHT",
+                  "instructions": "Take exit 77 for Spero Rd"
+                },
+                "localizedValues": {
+                  "distance": {
+                    "text": "0.3 mi"
+                  },
+                  "staticDuration": {
+                    "text": "1 min"
+                  }
+                },
+                "travelMode": "DRIVE"
+              },
+              {
+                "distanceMeters": 747,
+                "staticDuration": "46s",
+                "polyline": {
+                  "encodedPolyline": "c~eyEj{efNBwEAKr@s`@?kAIaBIaAUgB"
+                },
+                "startLocation": {
+                  "latLng": {
+                    "latitude": 35.752823,
+                    "longitude": -79.8253431
+                  }
+                },
+                "endLocation": {
+                  "latLng": {
+                    "latitude": 35.7527616,
+                    "longitude": -79.8171016
+                  }
+                },
+                "navigationInstruction": {
+                  "maneuver": "TURN_RIGHT",
+                  "instructions": "Turn right onto Spero Rd"
+                },
+                "localizedValues": {
+                  "distance": {
+                    "text": "0.5 mi"
+                  },
+                  "staticDuration": {
+                    "text": "1 min"
+                  }
+                },
+                "travelMode": "DRIVE"
+              },
+              {
+                "distanceMeters": 1143,
+                "staticDuration": "78s",
+                "polyline": {
+                  "encodedPolyline": "w}eyEzgdfNk@}B_DgJiBiJI{@EgAB{CN_HHw@pAaGJuA?uAC{A@eAVmFBoB"
+                },
+                "startLocation": {
+                  "latLng": {
+                    "latitude": 35.7527616,
+                    "longitude": -79.8171016
+                  }
+                },
+                "endLocation": {
+                  "latLng": {
+                    "latitude": 35.753637499999996,
+                    "longitude": -79.8049924
+                  }
+                },
+                "navigationInstruction": {
+                  "maneuver": "NAME_CHANGE",
+                  "instructions": "Continue onto W Central Ave"
+                },
+                "localizedValues": {
+                  "distance": {
+                    "text": "0.7 mi"
+                  },
+                  "staticDuration": {
+                    "text": "1 min"
+                  }
+                },
+                "travelMode": "DRIVE"
+              },
+              {
+                "distanceMeters": 1882,
+                "staticDuration": "126s",
+                "polyline": {
+                  "encodedPolyline": "gcfyEd|afNkCO}A?_DTis@vH{JbAe[dD"
+                },
+                "startLocation": {
+                  "latLng": {
+                    "latitude": 35.753637499999996,
+                    "longitude": -79.8049924
+                  }
+                },
+                "endLocation": {
+                  "latLng": {
+                    "latitude": 35.770393,
+                    "longitude": -79.8077541
+                  }
+                },
+                "navigationInstruction": {
+                  "maneuver": "TURN_LEFT",
+                  "instructions": "Turn left onto US-220 BUS N/N Fayetteville St"
+                },
+                "localizedValues": {
+                  "distance": {
+                    "text": "1.2 mi"
+                  },
+                  "staticDuration": {
+                    "text": "2 mins"
+                  }
+                },
+                "travelMode": "DRIVE"
+              },
+              {
+                "distanceMeters": 226,
+                "staticDuration": "22s",
+                "polyline": {
+                  "encodedPolyline": "}kiyElmbfNPrN"
+                },
+                "startLocation": {
+                  "latLng": {
+                    "latitude": 35.770393,
+                    "longitude": -79.8077541
+                  }
+                },
+                "endLocation": {
+                  "latLng": {
+                    "latitude": 35.7702984,
+                    "longitude": -79.810253899999992
+                  }
+                },
+                "navigationInstruction": {
+                  "maneuver": "TURN_LEFT",
+                  "instructions": "Turn left onto Art Bryan Dr"
+                },
+                "localizedValues": {
+                  "distance": {
+                    "text": "0.1 mi"
+                  },
+                  "staticDuration": {
+                    "text": "1 min"
+                  }
+                },
+                "travelMode": "DRIVE"
+              },
+              {
+                "distanceMeters": 35,
+                "staticDuration": "21s",
+                "polyline": {
+                  "encodedPolyline": "kkiyE`}bfN}@@"
+                },
+                "startLocation": {
+                  "latLng": {
+                    "latitude": 35.7702984,
+                    "longitude": -79.810253899999992
+                  }
+                },
+                "endLocation": {
+                  "latLng": {
+                    "latitude": 35.7706113,
+                    "longitude": -79.810263499999991
+                  }
+                },
+                "navigationInstruction": {
+                  "maneuver": "TURN_RIGHT",
+                  "instructions": "Turn right"
+                },
+                "localizedValues": {
+                  "distance": {
+                    "text": "115 ft"
+                  },
+                  "staticDuration": {
+                    "text": "1 min"
+                  }
+                },
+                "travelMode": "DRIVE"
+              }
+            ],
+            "localizedValues": {
+              "distance": {
+                "text": "8.6 mi"
+              },
+              "duration": {
+                "text": "12 mins"
+              },
+              "staticDuration": {
+                "text": "12 mins"
+              }
+            }
+          }
+        ],
+        "distanceMeters": 13850,
+        "duration": "697s",
+        "polyline": {
+          "encodedPolyline": "mnuxEfbgfN]c@ICID[d@GBYYfAeBuA{Ae@Sm@EgADw@Kc@nCi@^wAGgHm@_BWiBg@Y@sT_J}Bs@_Ce@wC[yCIyCHaCTuCj@el@dPkFfAsFx@eFd@qFToFD_k@k@wCQcC[yBe@gCw@uCqAsBkAeDaC}H_GgCyA_DyA}Bw@sCu@kDi@cE]g_@gBcEa@}FeAc_@oH}Di@mDYyCKeEAgELu`A|Ewo@~CSIcH?gAEqEs@yDm@[?BwEAKr@s`@?kAIaBIaAUgBk@}B_DgJiBiJI{@EgAB{CN_HHw@pAaGJuA?uAC{A@eAVmFBoBkCO}A?_DTis@vH{JbAe[dDPrN}@@"
+        }
+      }
+    ]
+  }

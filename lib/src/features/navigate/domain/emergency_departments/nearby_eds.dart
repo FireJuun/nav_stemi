@@ -55,13 +55,18 @@ extension NearbyEdsX on NearbyEds {
   }
 
   List<NearbyEd> get sortedByRouteDuration {
-    final routeDurationDto = RouteDurationToSecondsDto();
+    const routeDurationDto = RouteDurationDto();
     final sorted = items.values.toList()
       ..sort(
-        (a, b) =>
-            routeDurationDto.routeDurationToSeconds(a.routeDuration).compareTo(
-                  routeDurationDto.routeDurationToSeconds(b.routeDuration),
-                ),
+        (a, b) {
+          final aDuration =
+              routeDurationDto.routeDurationToSeconds(a.routeDuration) ??
+                  Duration.zero;
+          final bDuration =
+              routeDurationDto.routeDurationToSeconds(b.routeDuration) ??
+                  Duration.zero;
+          return aDuration.compareTo(bDuration);
+        },
       );
     return sorted;
   }

@@ -70,7 +70,7 @@ class Home extends StatelessWidget {
                   child: Text(
                     'Add Data'.hardcoded,
                     style: textTheme.headlineMedium!.apply(
-                      color: Theme.of(context).colorScheme.onBackground,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ),

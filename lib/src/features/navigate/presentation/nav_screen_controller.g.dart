@@ -7,7 +7,7 @@ part of 'nav_screen_controller.dart';
 // **************************************************************************
 
 String _$navScreenControllerHash() =>
-    r'8191c2756612d4b4bc6c633094d362419525dfa7';
+    r'1e25db45654d2d396feb3a145fc414266c0934e7';
 
 /// See also [NavScreenController].
 @ProviderFor(NavScreenController)
