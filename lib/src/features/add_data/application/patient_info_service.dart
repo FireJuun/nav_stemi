@@ -37,6 +37,19 @@ class PatientInfoService {
     setPatientInfo(updated);
   }
 
+  void setDidGetAspirin({required bool? didGetAspirin}) {
+    final updated = _patientInfo().copyWith(didGetAspirin: () => didGetAspirin);
+
+    setPatientInfo(updated);
+  }
+
+  void setIsCathLabNotified({required bool? isCathLabNotified}) {
+    final updated =
+        _patientInfo().copyWith(isCathLabNotified: () => isCathLabNotified);
+
+    setPatientInfo(updated);
+  }
+
   Future<void> setPatientInfoFromScannedLicense(
     DriverLicense driverLicense,
   ) async {

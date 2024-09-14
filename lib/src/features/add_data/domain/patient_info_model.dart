@@ -5,6 +5,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
+const _boolDataToChecklist = BoolDataToChecklistDTO();
+
 @immutable
 class PatientInfoModel extends Equatable {
   const PatientInfoModel({
@@ -14,6 +16,8 @@ class PatientInfoModel extends Equatable {
     this.birthDate,
     this.sexAtBirth,
     this.cardiologist,
+    this.didGetAspirin,
+    this.isCathLabNotified,
   });
 
   final String? lastName;
@@ -24,6 +28,9 @@ class PatientInfoModel extends Equatable {
   final SexAtBirth? sexAtBirth;
   final String? cardiologist;
 
+  final bool? didGetAspirin;
+  final bool? isCathLabNotified;
+
   /// ValueGetter used to allow null values in the copyWith method
   /// spec: https://stackoverflow.com/a/73432242
   PatientInfoModel copyWith({
@@ -33,6 +40,8 @@ class PatientInfoModel extends Equatable {
     ValueGetter<DateTime?>? birthDate,
     ValueGetter<SexAtBirth?>? sexAtBirth,
     ValueGetter<String?>? cardiologist,
+    ValueGetter<bool?>? didGetAspirin,
+    ValueGetter<bool?>? isCathLabNotified,
   }) {
     return PatientInfoModel(
       lastName: lastName != null ? lastName() : this.lastName,
@@ -41,6 +50,11 @@ class PatientInfoModel extends Equatable {
       birthDate: birthDate != null ? birthDate() : this.birthDate,
       sexAtBirth: sexAtBirth != null ? sexAtBirth() : this.sexAtBirth,
       cardiologist: cardiologist != null ? cardiologist() : this.cardiologist,
+      didGetAspirin:
+          didGetAspirin != null ? didGetAspirin() : this.didGetAspirin,
+      isCathLabNotified: isCathLabNotified != null
+          ? isCathLabNotified()
+          : this.isCathLabNotified,
     );
   }
 
@@ -52,6 +66,8 @@ class PatientInfoModel extends Equatable {
       'birthDate': birthDate?.millisecondsSinceEpoch,
       'sexAtBirth': sexAtBirth,
       'cardiologist': cardiologist,
+      'didGetAspirin': didGetAspirin,
+      'isCathLabNotified': isCathLabNotified,
     };
   }
 
@@ -69,6 +85,8 @@ class PatientInfoModel extends Equatable {
           : null,
       cardiologist:
           map['cardiologist'] != null ? map['cardiologist'] as String : null,
+      didGetAspirin: map['didGetAspirin'] as bool?,
+      isCathLabNotified: map['isCathLabNotified'] as bool?,
     );
   }
 
@@ -90,16 +108,25 @@ class PatientInfoModel extends Equatable {
       birthDate,
       sexAtBirth,
       cardiologist,
+      didGetAspirin,
+      isCathLabNotified,
     ];
   }
 
-  bool hasPatientInfo() =>
+  bool patientInfoChecklistState() =>
       lastName != null ||
       firstName != null ||
       middleName != null ||
       birthDate != null ||
       sexAtBirth != null;
 
-  bool hasCardiologistInfo() =>
+  bool cardiologistInfoChecklistState() =>
       cardiologist != null && cardiologist!.isNotEmpty;
+
+  /// converts this to something useful for the checklist
+  bool? aspirinInfoChecklistState() =>
+      _boolDataToChecklist.convertBoolDataToChecklist(boolData: didGetAspirin);
+
+  bool? cathLabInfoChecklistState() => _boolDataToChecklist
+      .convertBoolDataToChecklist(boolData: isCathLabNotified);
 }

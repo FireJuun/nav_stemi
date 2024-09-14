@@ -51,14 +51,40 @@ class Checklist extends StatelessWidget {
                           children: [
                             ChecklistItem(
                               label: 'EKG by 5 min'.hardcoded,
-                              selectionOverride: hasEkgByFiveMin,
+                              isSelected: hasEkgByFiveMin,
                             ),
                             ChecklistItem(
                               label: 'Leave by 10 min'.hardcoded,
-                              selectionOverride: hasLeftByTenMin,
+                              isSelected: hasLeftByTenMin,
                             ),
                             const Divider(thickness: 2),
-                            ChecklistItem(label: 'Give Aspirin 325'.hardcoded),
+                            Consumer(
+                              builder: (context, ref, child) {
+                                final patientInfoModelValue =
+                                    ref.watch(patientInfoModelProvider);
+
+                                return AsyncValueWidget(
+                                  value: patientInfoModelValue,
+                                  data: (patientInfoModel) {
+                                    final hasAspirinInfo = patientInfoModel
+                                        ?.aspirinInfoChecklistState();
+
+                                    return ChecklistItem(
+                                      label: 'Give Aspirin 325'.hardcoded,
+                                      isSelected: () => hasAspirinInfo,
+                                      onChanged: (checklist) => ref
+                                          .read(
+                                            checklistControllerProvider
+                                                .notifier,
+                                          )
+                                          .setDidGetAspirinFromChecklist(
+                                            checklist: checklist,
+                                          ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
                           ],
                         ),
                       );
@@ -75,9 +101,11 @@ class Checklist extends StatelessWidget {
                     value: patientInfoModelValue,
                     data: (patientInfoModel) {
                       final hasPatientInfo =
-                          patientInfoModel?.hasPatientInfo() ?? false;
+                          patientInfoModel?.patientInfoChecklistState();
                       final hasCardiologist =
-                          patientInfoModel?.hasCardiologistInfo() ?? false;
+                          patientInfoModel?.cardiologistInfoChecklistState();
+                      final hasCathLabInfo =
+                          patientInfoModel?.cathLabInfoChecklistState();
 
                       return SliverCrossAxisExpanded(
                         flex: 1,
@@ -85,14 +113,22 @@ class Checklist extends StatelessWidget {
                           children: [
                             ChecklistItem(
                               label: 'Pt Info'.hardcoded,
-                              selectionOverride: () => hasPatientInfo,
+                              isSelected: () => hasPatientInfo,
                             ),
                             ChecklistItem(
                               label: 'Pt Cardiologist'.hardcoded,
-                              selectionOverride: () => hasCardiologist,
+                              isSelected: () => hasCardiologist,
                             ),
                             const Divider(thickness: 2),
-                            ChecklistItem(label: 'Notify Cath Lab'.hardcoded),
+                            ChecklistItem(
+                              label: 'Notify Cath Lab'.hardcoded,
+                              isSelected: () => hasCathLabInfo,
+                              onChanged: (checklist) => ref
+                                  .read(checklistControllerProvider.notifier)
+                                  .setIsCathLabNotifiedFromChecklist(
+                                    checklist: checklist,
+                                  ),
+                            ),
                           ],
                         ),
                       );
@@ -108,53 +144,42 @@ class Checklist extends StatelessWidget {
   }
 }
 
-class ChecklistItem extends StatefulWidget {
+class ChecklistItem extends StatelessWidget {
   const ChecklistItem({
     required this.label,
-    this.selectionOverride,
+    this.isSelected,
+    this.onChanged,
     super.key,
   });
 
   final String label;
-  final ValueGetter<bool?>? selectionOverride;
-
-  @override
-  State<ChecklistItem> createState() => _ChecklistItemState();
-}
-
-class _ChecklistItemState extends State<ChecklistItem> {
-  bool? _isSelected = false;
+  final ValueGetter<bool?>? isSelected;
+  final ValueChanged<bool?>? onChanged;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
-    final selectionOverride = widget.selectionOverride;
-    final isSelected =
-        selectionOverride != null ? selectionOverride.call() : _isSelected;
+    final isSelectedWithOverride = isSelected?.call();
 
     return CheckboxListTile(
-      value: isSelected,
+      value: isSelectedWithOverride,
       tristate: true,
-      enabled: selectionOverride == null,
+      enabled: onChanged != null,
       contentPadding: const EdgeInsets.symmetric(horizontal: 2),
       visualDensity: VisualDensity.compact,
       controlAffinity: ListTileControlAffinity.leading,
-      onChanged: (newValue) {
-        setState(() {
-          _isSelected = newValue;
-        });
-      },
+      onChanged: onChanged,
       title: Text(
-        widget.label,
+        label,
         style: textTheme.bodySmall?.apply(
-          decoration: switch (isSelected) {
+          decoration: switch (isSelectedWithOverride) {
             true => TextDecoration.lineThrough,
             false => null,
             null => TextDecoration.lineThrough,
           },
-          color: switch (isSelected) {
+          color: switch (isSelectedWithOverride) {
             true => colorScheme.outline,
             false => colorScheme.onSurface,
             null => colorScheme.error,
