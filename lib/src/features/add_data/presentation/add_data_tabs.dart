@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
+import 'package:nav_stemi/src/features/add_data/presentation/data_entry/sync_notify/sync_notify.dart';
 
 class AddDataTabs extends StatelessWidget {
   const AddDataTabs({super.key});
@@ -23,7 +24,7 @@ class AddDataTabs extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               Text(
-                'Care Team'.hardcoded,
+                'Sync / Notify'.hardcoded,
                 textAlign: TextAlign.center,
               ),
             ],
@@ -34,7 +35,7 @@ class AddDataTabs extends StatelessWidget {
               children: [
                 DataEntryView(child: TimeMetrics()),
                 DataEntryView(child: PatientInfoDataTab()),
-                DataEntryView(child: CareTeam()),
+                DataEntryView(child: SyncNotify()),
               ],
             ),
           ),
@@ -66,7 +67,8 @@ class PatientInfoDataTab extends ConsumerWidget {
         //   );
         // }
         return PatientInfo(
-            patientInfoModel: patientInfoModel ?? const PatientInfoModel(),);
+          patientInfoModel: patientInfoModel ?? const PatientInfoModel(),
+        );
       },
     );
   }
