@@ -5,7 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'patient_info_repository.g.dart';
 
 class PatientInfoRepository {
-  final _store = InMemoryStore<PatientInfoModel?>(null);
+  final _store = InMemoryStore<PatientInfoModel?>(const PatientInfoModel());
 
   Stream<PatientInfoModel?> watchPatientInfo() {
     return _store.stream;
