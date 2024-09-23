@@ -1,0 +1,28 @@
+{
+    "origin":{
+      "location":{
+        "latLng":{
+          "latitude": 35.66856,
+          "longitude": -79.83191024196512
+        }
+      }
+    },
+    "destination":{
+      "location":{
+        "latLng":{
+          "latitude": 35.77061131735204,
+          "longitude": -79.81026291293811
+        }
+      }
+    },
+    "travelMode": "DRIVE",
+    "routingPreference": "TRAFFIC_AWARE",
+    "computeAlternativeRoutes": false,
+    "routeModifiers": {
+      "avoidTolls": false,
+      "avoidHighways": false,
+      "avoidFerries": false
+    },
+    "languageCode": "en-US",
+    "units": "IMPERIAL"
+  }

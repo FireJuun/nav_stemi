@@ -37,6 +37,7 @@ class ThemeRepository {
   ///
   ThemeData _themeData(Brightness brightness) {
     final colorScheme = SeedColorScheme.fromSeeds(
+      tones: FlexTones.vividSurfaces(brightness),
       primaryKey: _appTheme.value.seedColor,
       secondaryKey: _appTheme.value.secondarySeedColor,
       tertiaryKey: _appTheme.value.tertiarySeedColor,
@@ -49,19 +50,14 @@ class ThemeRepository {
       colorScheme: colorScheme,
       useMaterial3: true,
       appBarTheme: AppBarTheme(
-        iconTheme: IconThemeData(size: 40, color: colorScheme.onBackground),
+        iconTheme: IconThemeData(size: 40, color: colorScheme.onSurface),
         titleTextStyle: textTheme.displaySmall?.apply(
-          color: colorScheme.onBackground,
+          color: colorScheme.onSurface,
         ),
       ),
-      dropdownMenuTheme: DropdownMenuThemeData(
-        textStyle: textTheme.bodyMedium,
-        menuStyle: const MenuStyle(
-          visualDensity: VisualDensity.compact,
-          padding: MaterialStatePropertyAll(
-            EdgeInsets.symmetric(horizontal: 8),
-          ),
-        ),
+      cardTheme: CardTheme(
+        color: colorScheme.primaryContainer,
+        // elevation: 2,
       ),
       chipTheme: ChipThemeData(
         padding: EdgeInsets.zero,
@@ -69,31 +65,85 @@ class ThemeRepository {
         labelStyle:
             textTheme.bodySmall!.apply(color: colorScheme.onPrimaryContainer),
       ),
+      dropdownMenuTheme: DropdownMenuThemeData(
+        textStyle: textTheme.bodyMedium,
+        menuStyle: const MenuStyle(
+          visualDensity: VisualDensity.compact,
+          padding: WidgetStatePropertyAll(
+            EdgeInsets.symmetric(horizontal: 8),
+          ),
+        ),
+      ),
       filledButtonTheme: FilledButtonThemeData(
         style: ButtonStyle(
-          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+          padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
             const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           ),
-          shape: MaterialStateProperty.all<OutlinedBorder>(
+          shape: WidgetStateProperty.all<OutlinedBorder>(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
-          textStyle: MaterialStateProperty.all<TextStyle>(
+          textStyle: WidgetStateProperty.all<TextStyle>(
             textTheme.titleMedium!,
           ),
         ),
       ),
+      listTileTheme: ListTileThemeData(
+        titleTextStyle: textTheme.bodyMedium,
+        textColor: colorScheme.onSurface,
+        // selectedColor: colorScheme.error,
+      ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: ButtonStyle(
-          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+          padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
             const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           ),
-          shape: MaterialStateProperty.all<OutlinedBorder>(
+          shape: WidgetStateProperty.all<OutlinedBorder>(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
-          textStyle: MaterialStateProperty.all<TextStyle>(
+          textStyle: WidgetStateProperty.all<TextStyle>(
             textTheme.titleMedium!,
           ),
         ),
+      ),
+      segmentedButtonTheme: SegmentedButtonThemeData(
+        style: ButtonStyle(
+          padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
+            const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+          ),
+          shape: WidgetStateProperty.all<OutlinedBorder>(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          ),
+          backgroundColor: WidgetStateProperty.resolveWith(
+            (states) {
+              if (states.any(activeStates.contains)) {
+                return colorScheme.primary;
+              } else if (states.any(interactiveStates.contains)) {
+                return colorScheme.primary.withOpacity(0.5);
+              } else if (states.any(disabledStates.contains)) {
+                return Colors.transparent;
+              }
+              return colorScheme.primaryContainer;
+            },
+          ),
+          foregroundColor: WidgetStateProperty.resolveWith(
+            (states) {
+              if (states.any(activeStates.contains)) {
+                return colorScheme.onPrimary;
+              } else if (states.any(interactiveStates.contains)) {
+                return colorScheme.onPrimary.withOpacity(0.5);
+              } else if (states.any(disabledStates.contains)) {
+                return colorScheme.outline;
+              }
+              return colorScheme.onPrimaryContainer;
+            },
+          ),
+        ),
+      ),
+      inputDecorationTheme: const InputDecorationTheme(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+        ),
+        contentPadding: EdgeInsets.all(8),
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         shape: CircleBorder(),
@@ -101,9 +151,13 @@ class ThemeRepository {
       ),
       scrollbarTheme: ScrollbarThemeData(
         interactive: true,
-        thumbVisibility: MaterialStateProperty.all(true),
-        trackVisibility: MaterialStateProperty.all(true),
-        thickness: MaterialStateProperty.all(8),
+        thumbVisibility: WidgetStateProperty.all(true),
+        trackVisibility: WidgetStateProperty.all(true),
+        thickness: WidgetStateProperty.all(8),
+      ),
+      tabBarTheme: TabBarTheme(
+        labelStyle: textTheme.titleMedium,
+        unselectedLabelStyle: textTheme.titleMedium,
       ),
     );
   }
@@ -111,19 +165,19 @@ class ThemeRepository {
 
 TextTheme _buildTextTheme() {
   return TextTheme(
-    displayLarge: _style(96, FontWeight.normal),
-    displayMedium: _style(60, FontWeight.bold),
-    displaySmall: _style(44, FontWeight.w600),
-    headlineMedium: _style(36, FontWeight.bold),
+    displayLarge: _style(60, FontWeight.normal),
+    displayMedium: _style(44, FontWeight.bold),
+    displaySmall: _style(40, FontWeight.w600),
+    headlineMedium: _style(32, FontWeight.w400),
     headlineSmall: _style(22, FontWeight.w500),
-    titleLarge: _style(36, FontWeight.w500),
-    titleMedium: _style(22, FontWeight.w500),
+    titleLarge: _style(24, FontWeight.w500),
+    titleMedium: _style(20, FontWeight.w500),
     titleSmall: _style(16, FontWeight.w300),
     bodyLarge: _style(20, FontWeight.normal),
     bodyMedium: _style(18, FontWeight.normal),
-    bodySmall: _style(12, FontWeight.normal),
+    bodySmall: _style(16, FontWeight.normal),
     labelLarge: _style(18, FontWeight.normal),
-    labelSmall: _style(12, FontWeight.normal),
+    labelSmall: _style(14, FontWeight.normal),
   );
 }
 
@@ -143,12 +197,16 @@ Stream<AppTheme> appThemeChanges(AppThemeChangesRef ref) {
 }
 
 // spec: https://api.flutter.dev/flutter/material/MaterialStateProperty-class.html
-const Set<MaterialState> interactiveStates = <MaterialState>{
-  MaterialState.pressed,
-  MaterialState.hovered,
-  MaterialState.focused,
+const Set<WidgetState> interactiveStates = <WidgetState>{
+  WidgetState.pressed,
+  WidgetState.hovered,
+  WidgetState.focused,
 };
 
-const Set<MaterialState> activeStates = <MaterialState>{
-  MaterialState.selected,
+const Set<WidgetState> activeStates = <WidgetState>{
+  WidgetState.selected,
+};
+
+const Set<WidgetState> disabledStates = <WidgetState>{
+  WidgetState.disabled,
 };
