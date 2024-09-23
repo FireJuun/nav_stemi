@@ -34,12 +34,15 @@ class AppBootstrapLocal extends AppBootstrap {
     final lastTheme = sharedPreferencesRepository.getAppTheme();
     final themeRepository = ThemeRepository(lastTheme);
 
+    final remoteRoutes = RemoteRoutesGoogleRepository();
+
     return ProviderContainer(
       overrides: [
         // repositories
         sharedPreferencesRepositoryProvider
             .overrideWithValue(sharedPreferencesRepository),
         themeRepositoryProvider.overrideWithValue(themeRepository),
+        remoteRoutesRepositoryProvider.overrideWithValue(remoteRoutes),
       ],
       observers: [
         AsyncErrorLogger(),
