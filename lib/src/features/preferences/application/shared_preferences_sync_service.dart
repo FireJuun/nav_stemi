@@ -17,14 +17,9 @@ class SharedPreferencesSyncService {
   final Ref ref;
 
   void _init() {
-    /// Listen for changes to the active PDF,
+    /// Listen for changes to the current app theme,
     /// then save a reference in local storage
-    ref
-
-        /// Listen for changes to the current app theme,
-        /// then save a reference in local storage
-        .listen<AsyncValue<AppTheme>>(appThemeChangesProvider,
-            (previous, next) {
+    ref.listen<AsyncValue<AppTheme>>(appThemeChangesProvider, (previous, next) {
       final appTheme = next.value;
       if (previous is AsyncLoading) {
         // do nothing
