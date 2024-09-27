@@ -2,7 +2,6 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart' as maps;
 
 import 'package:nav_stemi/nav_stemi.dart';
 
@@ -10,10 +9,10 @@ class NearbyEds extends Equatable {
   const NearbyEds({
     required this.items,
   });
-  final Map<maps.LatLng, NearbyEd> items;
+  final Map<AppWaypoint, NearbyEd> items;
 
   NearbyEds copyWith({
-    Map<maps.LatLng, NearbyEd>? items,
+    Map<AppWaypoint, NearbyEd>? items,
   }) {
     return NearbyEds(
       items: items ?? this.items,
@@ -28,8 +27,8 @@ class NearbyEds extends Equatable {
 
   factory NearbyEds.fromMap(Map<String, dynamic> map) {
     return NearbyEds(
-      items: Map<maps.LatLng, NearbyEd>.from(
-        map['items'] as Map<maps.LatLng, NearbyEd>,
+      items: Map<AppWaypoint, NearbyEd>.from(
+        map['items'] as Map<AppWaypoint, NearbyEd>,
       ),
     );
   }
