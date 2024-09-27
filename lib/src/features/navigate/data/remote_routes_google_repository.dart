@@ -1,15 +1,10 @@
-// ignore_for_file: lines_longer_than_80_chars
-
-import 'package:google_maps_flutter/google_maps_flutter.dart' as maps;
 import 'package:google_routes_flutter/google_routes_flutter.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 class RemoteRoutesGoogleRepository implements RemoteRoutesRepository {
-  final _mapsToRoutesDTO = const MapsToRoutesDTO();
-
   @override
   Future<NearbyEds> getDistanceInfoFromEdList({
-    required maps.LatLng origin,
+    required AppWaypoint origin,
     required Map<EdInfo, double> edListAndDistances,
   }) async {
     assert(
@@ -24,7 +19,7 @@ class RemoteRoutesGoogleRepository implements RemoteRoutesRepository {
         RouteMatrixOrigin(
           waypoint: Waypoint(
             location: Location(
-              latLng: _mapsToRoutesDTO.mapsToRoutes(origin),
+              latLng: origin.toGoogleRoutes(),
             ),
           ),
         ),
@@ -34,8 +29,7 @@ class RemoteRoutesGoogleRepository implements RemoteRoutesRepository {
           RouteMatrixDestination(
             waypoint: Waypoint(
               location: Location(
-                latLng:
-                    _mapsToRoutesDTO.mapsToRoutes(emergencyDepartment.location),
+                latLng: emergencyDepartment.location.toGoogleRoutes(),
               ),
             ),
           ),
@@ -45,7 +39,7 @@ class RemoteRoutesGoogleRepository implements RemoteRoutesRepository {
       apiKey: Env.routesApi,
     );
 
-    final items = <maps.LatLng, NearbyEd>{};
+    final items = <AppWaypoint, NearbyEd>{};
 
     assert(routeMatrixes.isNotEmpty, 'No routes found');
     assert(
@@ -74,8 +68,8 @@ class RemoteRoutesGoogleRepository implements RemoteRoutesRepository {
 
   @override
   Future<AvailableRoutes> getAvailableRoutesForSingleED({
-    required maps.LatLng origin,
-    required maps.LatLng destination,
+    required AppWaypoint origin,
+    required AppWaypoint destination,
     required EdInfo destinationInfo,
   }) async {
     final requestedTime = DateTime.now();
@@ -83,12 +77,12 @@ class RemoteRoutesGoogleRepository implements RemoteRoutesRepository {
     final routes = await computeRoute(
       origin: Waypoint(
         location: Location(
-          latLng: _mapsToRoutesDTO.mapsToRoutes(origin),
+          latLng: origin.toGoogleRoutes(),
         ),
       ),
       destination: Waypoint(
         location: Location(
-          latLng: _mapsToRoutesDTO.mapsToRoutes(destination),
+          latLng: destination.toGoogleRoutes(),
         ),
       ),
       xGoogFieldMask:
