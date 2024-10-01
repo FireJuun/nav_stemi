@@ -8,7 +8,11 @@ import GoogleMaps
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    GMSServices.provideAPIKey("AIzaSyBJ51v7rNMBl_tUklX6GvBJkV1zgq2IP6M")
+      // spec: https://www.monterail.com/blog/configuring-flutter-apps-using-dart-define-from-file
+      if let iosMapsApiKey = Bundle.main.object(forInfoDictionaryKey: "IosMapsApi") as? String {
+        GMSServices.provideAPIKey(iosMapsApiKey)
+      }
+      
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

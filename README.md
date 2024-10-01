@@ -10,6 +10,35 @@ EMS Navigation App for critical scenarios
 
 ---
 
+## Setting up Environment variables
+
+This application uses locally defined environment variables for Google Maps Flutter, Google Routes Flutter, and Flutter Mapbox Navigation. Those are defined locally for testing purposes. For production, it is highly advisable to use server-side API keys and other means to prevent man-in-the-middle (MITM) attacks. See the links provided by Andrea Bizzotto at the beginning of [this post](https://codewithandrea.com/articles/flutter-api-keys-dart-define-env-files/) for more info.
+
+You'll need to create an `.env` folder, with three files `.env/development.env`, `.env/staging.env`, `.env/production.env`. Each of these .env files will contain the following tokens:
+
+```text
+ANDROID_MAPS_API={your_android_maps_api_token_here}
+IOS_MAPS_API={your_ios_maps_api_token_here}
+DIRECTIONS_API={your_directions_api_token_here}
+DISTANCE_MATRIX_API={your_distance_matrix_api_token_here}
+ROUTES_API={your_routes_api_token_here}
+MAPBOX_API={your_mapbox_api_token_here}
+```
+
+If you don't have an access token established yet -- such as for Google Maps API -- just leave the `{}` field blank for now. Don't include `{` or `}` in the access token.
+
+### Mapbox vs Google
+
+We initially built this application with pure Google Maps functionality, which included the Routes API, Distance Matrix API, and Directions API. However, over time, it became apparent that turn-by-turn navigation and spoken-steps would need to be handled manually, which was too tedious. Rather than remove all Google API references, per se, we have instead temporarily disabled their logic within the app while still keeping the initial functionality intact.
+
+For now, we are using Mapbox, which is set by this variable in [app_bootstrap_local.dart]:
+
+```dart
+final remoteRoutes = RemoteRoutesGoogleRepository();
+```
+
+You can swap to `RemoteRoutesGoogleRepository()` to see how that works with Google.
+
 ## Getting Started 🚀
 
 This project contains 3 flavors:
@@ -40,7 +69,7 @@ _\*Nav Stemi works on iOS, Android, Web, and Windows._
 To run all unit and widget tests use the following command:
 
 ```sh
-$ flutter test --coverage --test-randomize-ordering-seed random
+flutter test --coverage --test-randomize-ordering-seed random
 ```
 
 To view the generated coverage report you can use [lcov](https://github.com/linux-test-project/lcov).
@@ -109,10 +138,10 @@ Update the `CFBundleLocalizations` array in the `Info.plist` at `ios/Runner/Info
     ...
 
     <key>CFBundleLocalizations</key>
-	<array>
-		<string>en</string>
-		<string>es</string>
-	</array>
+ <array>
+  <string>en</string>
+  <string>es</string>
+ </array>
 
     ...
 ```
