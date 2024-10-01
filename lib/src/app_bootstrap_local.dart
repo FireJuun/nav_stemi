@@ -34,6 +34,7 @@ class AppBootstrapLocal extends AppBootstrap {
     final lastTheme = sharedPreferencesRepository.getAppTheme();
     final themeRepository = ThemeRepository(lastTheme);
 
+    /// Swap between Mapbox <-> Google for app routing
     final remoteRoutes = RemoteRoutesGoogleRepository();
 
     return ProviderContainer(
