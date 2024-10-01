@@ -12,7 +12,7 @@ EMS Navigation App for critical scenarios
 
 ## Setting up Environment variables
 
-This application uses locally defined environment variables for Google Maps Flutter, Google Routes Flutter, and Flutter Mapbox Navigation. Those are defined locally for testing purposes. For production, it is highly advisable to use server-side API keys and other means to prevent man-in-the-middle (MITM) attacks. See the links provided by Andrea Bizzotto at the beginning of [this post](https://codewithandrea.com/articles/flutter-api-keys-dart-define-env-files/) for more info.
+This application uses locally defined environment variables for Google Maps Flutter, Google Routes Flutter, and Flutter Mapbox Navigation. Those are defined locally for testing purposes. For production, it is highly advisable to use server-side API keys and other means to prevent man-in-the-middle (MITM) attacks. See the links provided by Andrea Bizzotto at the beginning of [this post](https://codewithandrea.com/articles/flutter-api-keys-dart-define-env-files/) for more info. Use of compile-time variables in native platforms is [currently being discussed](https://github.com/flutter/flutter/issues/139289) within the Flutter community.
 
 You'll need to create an `.env` folder, with three files `.env/development.env`, `.env/staging.env`, `.env/production.env`. Each of these .env files will contain the following tokens:
 
