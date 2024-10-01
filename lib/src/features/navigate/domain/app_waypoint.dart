@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-import 'package:flutter_mapbox_navigation/flutter_mapbox_navigation.dart';
+// import 'package:flutter_mapbox_navigation/flutter_mapbox_navigation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as maps;
 import 'package:google_routes_flutter/google_routes_flutter.dart' as routes;
 
@@ -67,17 +67,18 @@ class AppWaypoint extends Equatable {
     );
   }
 
-  factory AppWaypoint.fromMapbox(WayPoint waypoint) {
-    assert(waypoint.latitude != null, 'Error: latitude must not be null');
-    assert(waypoint.longitude != null, 'Error: longitude must not be null');
+  // TODO(FireJuun): Implement Mapbox conversion
+  // factory AppWaypoint.fromMapbox(WayPoint waypoint) {
+  //   assert(waypoint.latitude != null, 'Error: latitude must not be null');
+  //   assert(waypoint.longitude != null, 'Error: longitude must not be null');
 
-    return AppWaypoint(
-      latitude: waypoint.latitude!,
-      longitude: waypoint.longitude!,
-      label: waypoint.name ?? '',
-      isSilent: waypoint.isSilent ?? false,
-    );
-  }
+  //   return AppWaypoint(
+  //     latitude: waypoint.latitude!,
+  //     longitude: waypoint.longitude!,
+  //     label: waypoint.name ?? '',
+  //     isSilent: waypoint.isSilent ?? false,
+  //   );
+  // }
 
   final double latitude;
   final double longitude;
@@ -117,12 +118,13 @@ class AppWaypoint extends Equatable {
 
   maps.LatLng toGoogleMaps() => maps.LatLng(latitude, longitude);
 
-  WayPoint toMapbox() => WayPoint(
-        name: label,
-        latitude: latitude,
-        longitude: longitude,
-        isSilent: isSilent,
-      );
+  // TODO(FireJuun): Implement Mapbox conversion
+  // WayPoint toMapbox() => WayPoint(
+  //       name: label,
+  //       latitude: latitude,
+  //       longitude: longitude,
+  //       isSilent: isSilent,
+  //     );
 
   @override
   bool get stringify => true;
