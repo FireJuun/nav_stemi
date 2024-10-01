@@ -28,6 +28,17 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
+/// spec: https://medium.com/@nayanbabariya/set-up-environment-variables-in-flutter-for-secure-and-scalable-apps-7409ae0c383e
+def dartDefines = [:]
+if (project.hasProperty('dart-defines')) {
+    dartDefines = dartDefines + project.property('dart-defines')
+            .split(',')
+            .collectEntries { entry ->
+                def pair = new String(entry.decodeBase64(), 'UTF-8').split('=')
+                pair.length == 2 ? [(pair.first()): pair.last()] : [:]
+            }
+}
+
 android {
     namespace "org.atriumhealth.nav_stemi"
     compileSdkVersion 34
@@ -55,6 +66,7 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        resValue "string", "android_maps_api", dartDefines.ANDROID_MAPS_API
     }
 
     signingConfigs {
