@@ -4,10 +4,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'nav_screen_controller.g.dart';
+part 'nav_screen_google_controller.g.dart';
 
 @riverpod
-class NavScreenController extends _$NavScreenController {
+class NavScreenGoogleController extends _$NavScreenGoogleController {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 

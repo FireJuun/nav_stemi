@@ -32,7 +32,7 @@ class NavSteps extends ConsumerWidget {
                     AppWaypoint.fromGoogleRoutes(endLocation).toGoogleMaps();
 
                 ref
-                    .read(navScreenControllerProvider.notifier)
+                    .read(navScreenGoogleControllerProvider.notifier)
                     .zoomToSelectedNavigationStep([
                   startLocationAsGoogleMap,
                   endLocationAsGoogleMap,
