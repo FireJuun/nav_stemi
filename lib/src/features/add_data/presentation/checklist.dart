@@ -20,7 +20,7 @@ class Checklist extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Center(
                 child: Text(
-                  'Checklist'.hardcoded,
+                  'STEMI Checklist'.hardcoded,
                   style: textTheme.bodyLarge
                       ?.apply(color: colorScheme.onSecondary),
                 ),
