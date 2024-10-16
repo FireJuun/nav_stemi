@@ -13,34 +13,7 @@ class SyncNotify extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           sliver: SliverList.list(
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Text(
-                          'Share current session with others:'.hardcoded,
-                          textAlign: TextAlign.center,
-                        ),
-                        gapH12,
-                        FilledButton(
-                          onPressed: () {
-                            // TODO(FireJuun): Add QR scan functionality
-                          },
-                          child: Text('Scan Session'.hardcoded),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Image.asset(
-                      'assets/placeholder_share_qr.png',
-                      width: 150,
-                      height: 150,
-                    ),
-                  ),
-                ],
-              ),
+              const SyncNotifyShareSession(),
               gapH24,
               Column(
                 children: [
@@ -66,6 +39,46 @@ class SyncNotify extends ConsumerWidget {
                 ],
               ),
             ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class SyncNotifyShareSession extends StatelessWidget {
+  const SyncNotifyShareSession({this.usePrimaryColor = false, super.key});
+
+  final bool usePrimaryColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            children: [
+              Text(
+                'Sync this session with others:'.hardcoded,
+                textAlign: TextAlign.center,
+              ),
+              gapH12,
+              FilledButton(
+                onPressed: () {
+                  // TODO(FireJuun): Add QR scan functionality
+                },
+                child: Text('Scan Session'.hardcoded),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: Image.asset(
+            usePrimaryColor
+                ? 'assets/placeholder_share_qr_primary.png'
+                : 'assets/placeholder_share_qr.png',
+            width: 150,
+            height: 150,
           ),
         ),
       ],
