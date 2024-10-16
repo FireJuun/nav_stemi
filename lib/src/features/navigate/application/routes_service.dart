@@ -45,12 +45,12 @@ class RouteService {
       for (final ed in allEds)
         ed: geolocatorRepository.getDistanceBetween(
           position,
-          ed.location,
+          ed.location.toGoogleMaps(),
         ),
     };
     final sortedItems = nearestTenSortedByDistance(items);
 
-    final origin = position.toLatLng();
+    final origin = position.toAppWaypoint();
 
     final nearbyEds = await remoteRoutesRepository.getDistanceInfoFromEdList(
       origin: origin,
@@ -70,7 +70,7 @@ class RouteService {
     final position =
         await ref.read(getLastKnownOrCurrentPositionProvider.future);
 
-    final origin = position.toLatLng();
+    final origin = position.toAppWaypoint();
     final destination = activeEd.edInfo.location;
 
     /// Get available routes, and set the default as the active route.
@@ -90,8 +90,8 @@ class RouteService {
     final polylines = _setupPolylines(availableRoutes);
 
     final mapsInfo = MapsInfo(
-      origin: origin,
-      destination: destination,
+      origin: origin.toGoogleMaps(),
+      destination: destination.toGoogleMaps(),
       markers: markers,
       polylines: polylines,
     );
@@ -100,8 +100,8 @@ class RouteService {
   }
 
   Future<AvailableRoutes> _setupAvailableRoutes(
-    LatLng origin,
-    LatLng destination,
+    AppWaypoint origin,
+    AppWaypoint destination,
     EdInfo destinationInfo,
   ) async {
     final availableRoutes =
@@ -140,12 +140,12 @@ class RouteService {
   Future<Map<MarkerId, Marker>> _setupMarkers({
     required NearbyEd activeEd,
     required NearbyEds nearbyEds,
-    required LatLng destination,
+    required AppWaypoint destination,
   }) async {
     final markers = {
       const MarkerId('destination'): Marker(
         markerId: const MarkerId('destination'),
-        position: destination,
+        position: destination.toGoogleMaps(),
         infoWindow: InfoWindow(title: activeEd.edInfo.shortName),
         onTap: () => ref
             .read(goRouterProvider)
@@ -163,7 +163,7 @@ class RouteService {
       if (ed.edInfo.location != activeEd.edInfo.location) {
         markers[MarkerId(ed.edInfo.shortName)] = Marker(
           markerId: MarkerId(ed.edInfo.shortName),
-          position: ed.edInfo.location,
+          position: ed.edInfo.location.toGoogleMaps(),
           icon: ed.edInfo.isPCI ? pciIcon : edIcon,
           infoWindow: InfoWindow(title: ed.edInfo.shortName),
           onTap: () => ref

@@ -4,8 +4,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
-class NavScreenMap extends ConsumerWidget {
-  const NavScreenMap({super.key});
+class NavScreenGoogleMap extends ConsumerWidget {
+  const NavScreenGoogleMap({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,7 +27,7 @@ class NavScreenMap extends ConsumerWidget {
         myLocationButtonEnabled: false,
         zoomControlsEnabled: false,
         onMapCreated: (controller) => ref
-            .read(navScreenControllerProvider.notifier)
+            .read(navScreenGoogleControllerProvider.notifier)
             .onMapCreated(controller),
         markers: ref.watch(markersProvider),
         polylines: ref.watch(polylinesProvider),

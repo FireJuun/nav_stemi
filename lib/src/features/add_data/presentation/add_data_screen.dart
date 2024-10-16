@@ -67,8 +67,7 @@ class _AddDataScreenState extends State<AddDataScreen> {
                               .filledButtonTheme
                               .style
                               ?.copyWith(
-                                shape:
-                                    WidgetStateProperty.all<OutlinedBorder>(
+                                shape: WidgetStateProperty.all<OutlinedBorder>(
                                   RoundedRectangleBorder(
                                     side: const BorderSide(),
                                     borderRadius: BorderRadius.circular(20),
@@ -101,21 +100,27 @@ class AddDataScrollview extends StatelessWidget {
         /// the app will automatically resize the checklist field.
         /// Otherwise, there's no space to see what you're typing.
         final checklistHeight = constraints.maxHeight * 0.3;
-        return CustomScrollView(
-          slivers: [
-            const DestinationInfoSliver(),
-            const EtaWidgetSliver(),
-            const SliverToBoxAdapter(child: gapH8),
-            // gapH8,
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: checklistHeight,
-                child: const Checklist(),
+        return Column(
+          children: [
+            const Expanded(
+              child: CustomScrollView(
+                slivers: [
+                  DestinationInfoSliver(),
+                  EtaWidgetSliver(),
+                  SliverToBoxAdapter(child: gapH8),
+                  SliverToBoxAdapter(
+                    child: Divider(thickness: 2),
+                  ),
+                  SliverFillRemaining(
+                    child: AddDataTabs(),
+                  ),
+                ],
               ),
             ),
-            const SliverToBoxAdapter(child: gapH8),
-            const SliverFillRemaining(
-              child: AddDataTabs(),
+            gapH8,
+            SizedBox(
+              height: checklistHeight,
+              child: const Checklist(),
             ),
           ],
         );

@@ -1,6 +1,3 @@
-// ignore_for_file: lines_longer_than_80_chars
-
-import 'package:google_maps_flutter/google_maps_flutter.dart' as maps;
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -15,7 +12,7 @@ abstract class RemoteRoutesRepository {
   ///
   /// This is a batch request, so only one API call is made.
   Future<NearbyEds> getDistanceInfoFromEdList({
-    required maps.LatLng origin,
+    required AppWaypoint origin,
     required Map<EdInfo, double> edListAndDistances,
   }) async =>
       throw UnimplementedError();
@@ -23,8 +20,8 @@ abstract class RemoteRoutesRepository {
   /// Get available routes for a single emergency department
   /// This includes alternate routes, so only one API call is made
   Future<AvailableRoutes> getAvailableRoutesForSingleED({
-    required maps.LatLng origin,
-    required maps.LatLng destination,
+    required AppWaypoint origin,
+    required AppWaypoint destination,
     required EdInfo destinationInfo,
   }) async =>
       throw UnimplementedError();
