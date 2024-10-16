@@ -27,15 +27,17 @@
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
+        <!-- spec: https://medium.com/@nayanbabariya/set-up-environment-variables-in-flutter-for-secure-and-scalable-apps-7409ae0c383e -->
         <meta-data 
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBUlWJ7KOliE8z1EbbJXvz-e8ov5hHfhFo"/>
+            android:value="@string/android_maps_api"/>
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- May enable this if we want background updates for location -->
     <!-- <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> -->
 

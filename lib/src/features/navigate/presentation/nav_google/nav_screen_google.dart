@@ -8,14 +8,14 @@ import 'package:nav_stemi/nav_stemi.dart';
 const _showNarration = false;
 const _showNorthUp = false;
 
-class NavScreen extends StatefulWidget {
-  const NavScreen({super.key});
+class NavScreenGoogle extends StatefulWidget {
+  const NavScreenGoogle({super.key});
 
   @override
-  State<NavScreen> createState() => _NavScreenState();
+  State<NavScreenGoogle> createState() => _NavScreenGoogleState();
 }
 
-class _NavScreenState extends State<NavScreen> {
+class _NavScreenGoogleState extends State<NavScreenGoogle> {
   bool _showSteps = false;
   bool _showNextTurn = true;
 
@@ -37,7 +37,7 @@ class _NavScreenState extends State<NavScreen> {
               /// this screen and in related screens
               ref
                 ..listen<AsyncValue<void>>(
-                  navScreenControllerProvider,
+                  navScreenGoogleControllerProvider,
                   (_, state) => state.showAlertDialogOnError(context),
                 )
                 ..listen(
@@ -63,7 +63,8 @@ class _NavScreenState extends State<NavScreen> {
                   return AsyncValueWidget<ActiveRoute?>(
                     value: activeRouteValue,
                     data: (activeRoute) {
-                      final state = ref.watch(navScreenControllerProvider);
+                      final state =
+                          ref.watch(navScreenGoogleControllerProvider);
 
                       if (activeRoute == null || availableRoutes == null) {
                         return Material(
@@ -85,7 +86,7 @@ class _NavScreenState extends State<NavScreen> {
                                 child: Stack(
                                   alignment: AlignmentDirectional.center,
                                   children: [
-                                    const NavScreenMap(),
+                                    const NavScreenGoogleMap(),
                                     AnimatedSwitcher(
                                       duration: 300.ms,
 
@@ -193,7 +194,7 @@ class _NavScreenState extends State<NavScreen> {
                                               'Show Entire Route'.hardcoded,
                                           onPressed: () => ref
                                               .read(
-                                                navScreenControllerProvider
+                                                navScreenGoogleControllerProvider
                                                     .notifier,
                                               )
                                               .zoomToActiveRoute(),
@@ -207,7 +208,7 @@ class _NavScreenState extends State<NavScreen> {
                                           tooltip: 'My Location'.hardcoded,
                                           onPressed: () => ref
                                               .read(
-                                                navScreenControllerProvider
+                                                navScreenGoogleControllerProvider
                                                     .notifier,
                                               )
                                               .showCurrentLocation(),
@@ -217,7 +218,7 @@ class _NavScreenState extends State<NavScreen> {
                                           tooltip: 'Zoom Out'.hardcoded,
                                           onPressed: () => ref
                                               .read(
-                                                navScreenControllerProvider
+                                                navScreenGoogleControllerProvider
                                                     .notifier,
                                               )
                                               .zoomOut(),
@@ -227,7 +228,7 @@ class _NavScreenState extends State<NavScreen> {
                                           tooltip: 'Zoom In'.hardcoded,
                                           onPressed: () => ref
                                               .read(
-                                                navScreenControllerProvider
+                                                navScreenGoogleControllerProvider
                                                     .notifier,
                                               )
                                               .zoomIn(),

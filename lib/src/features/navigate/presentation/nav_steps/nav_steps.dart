@@ -21,17 +21,21 @@ class NavSteps extends ConsumerWidget {
           itemBuilder: (context, index) => NavStep(
             routeLegStep: routeSteps[index],
             onTap: () {
-              const mapsToRoutesDTO = MapsToRoutesDTO();
               final routeLegStep = routeSteps[index];
               final startLocation = routeLegStep.startLocation?.latLng;
               final endLocation = routeLegStep.endLocation?.latLng;
 
               if (startLocation != null && endLocation != null) {
+                final startLocationAsGoogleMap =
+                    AppWaypoint.fromGoogleRoutes(startLocation).toGoogleMaps();
+                final endLocationAsGoogleMap =
+                    AppWaypoint.fromGoogleRoutes(endLocation).toGoogleMaps();
+
                 ref
-                    .read(navScreenControllerProvider.notifier)
+                    .read(navScreenGoogleControllerProvider.notifier)
                     .zoomToSelectedNavigationStep([
-                  mapsToRoutesDTO.routesToMaps(startLocation),
-                  mapsToRoutesDTO.routesToMaps(endLocation),
+                  startLocationAsGoogleMap,
+                  endLocationAsGoogleMap,
                 ]);
               }
             },

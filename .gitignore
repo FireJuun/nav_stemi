@@ -74,6 +74,8 @@ unlinked_spec.ds
 **/ios/Flutter/App.framework
 **/ios/Flutter/Flutter.framework
 **/ios/Flutter/Flutter.podspec
+# Dart Defines, for different app environments
+**/ios/Flutter/Dart-Defines.xcconfig
 **/ios/Flutter/Generated.xcconfig
 **/ios/Flutter/app.flx
 **/ios/Flutter/app.zip
@@ -99,7 +101,7 @@ app.*.symbols
 app.*.map.json
 
 # Custom
-*.env
+*.env*
 */env.g.dart
 
 # Exceptions to the above rules.
