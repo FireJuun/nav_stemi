@@ -43,6 +43,14 @@ class NextClosestRouteNotAvailableException extends AppException {
         );
 }
 
+class ConvertMetersToMilesException extends AppException {
+  ConvertMetersToMilesException()
+      : super(
+          'convert-meters-to-miles-failed',
+          'Unable to convert distance from meters to miles'.hardcoded,
+        );
+}
+
 class NoNearbyEdsAvailableException extends AppException {
   NoNearbyEdsAvailableException()
       : super('no-nearby-eds-available', 'No nearby EDS available'.hardcoded);

@@ -107,8 +107,8 @@ class _PlaceholderButton extends ConsumerWidget {
         onTap: () => ref
             .read(goToDialogControllerProvider.notifier)
             .goToEd(activeEd: edOption, nearbyEds: nearbyEds),
-        title: Text(edOption.edInfo.shortName),
         leading: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               edOption.edInfo.isPCI
@@ -119,18 +119,20 @@ class _PlaceholderButton extends ConsumerWidget {
             Text(edOption.edInfo.isPCI ? 'PCI'.hardcoded : 'ED'.hardcoded),
           ],
         ),
-        subtitle: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        title: Text(edOption.edInfo.shortName),
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(child: Text('r: ${edOption.routeDistance}')),
-            Expanded(
-              child: Text('dist: ${edOption.distanceBetween.truncate()}'),
+            Text(
+              const RouteDurationDto()
+                  .routeDurationToFormattedString(edOption.routeDuration),
+            ),
+            Text(
+              '${edOption.distanceBetweenInMiles.toStringAsFixed(1)} mi',
+              textAlign: TextAlign.end,
+              style: const TextStyle(fontStyle: FontStyle.italic),
             ),
           ],
-        ),
-        trailing: Text(
-          const RouteDurationDto()
-              .routeDurationToFormattedString(edOption.routeDuration),
         ),
       ),
     );
