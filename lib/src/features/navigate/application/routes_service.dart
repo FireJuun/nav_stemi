@@ -57,7 +57,9 @@ class RouteService {
       edListAndDistances: sortedItems,
     );
 
-    return nearbyEds..sortedByRouteDuration;
+    final nearbyEdsByDuration = nearbyEds.sortedByRouteDuration;
+
+    return nearbyEdsByDuration;
   }
 
   /// Get the available routes for a single emergency department.
