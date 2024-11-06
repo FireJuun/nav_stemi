@@ -175,26 +175,10 @@ class TimeMetric extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                Text(
-                  label,
-                  style: textTheme.bodyLarge?.apply(fontWeightDelta: 1),
-                ),
-                if (timeOccurred != null)
-                  IconButton(
-                    onPressed: onToggleLocked,
-                    icon: isLocked
-                        ? const Icon(Icons.lock)
-                        : const Icon(Icons.lock_open),
-                  ),
-              ],
+            Text(
+              label,
+              style: textTheme.bodyLarge?.apply(fontWeightDelta: 1),
             ),
-            if (timeOccurred == null)
-              IconButton(
-                onPressed: isLocked ? null : selectDateTime,
-                icon: const Icon(Icons.schedule),
-              ),
           ],
         ),
         subtitle: (timeOccurred == null)
@@ -237,16 +221,33 @@ class TimeMetric extends StatelessWidget {
                   ],
                 ),
               ),
-        trailing: (timeOccurred == null)
-            ? FilledButton(
-                onPressed: () => onNewTimeSaved(DateTime.now()),
-                child: const Text('Now'),
-              )
-            : TimeMetricsMenu(
-                onSelectDateTime: selectDateTime,
-                onClearDateTime: clearDateTime,
-                isLocked: isLocked,
-              ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: timeOccurred == null
+              ? [
+                  FilledButton(
+                    onPressed: () => onNewTimeSaved(DateTime.now()),
+                    child: const Text('Now'),
+                  ),
+                  IconButton(
+                    onPressed: isLocked ? null : selectDateTime,
+                    icon: const Icon(Icons.edit_calendar_outlined),
+                  ),
+                ]
+              : [
+                  IconButton(
+                    onPressed: onToggleLocked,
+                    icon: isLocked
+                        ? const Icon(Icons.lock)
+                        : const Icon(Icons.lock_open),
+                  ),
+                  TimeMetricsMenu(
+                    onSelectDateTime: selectDateTime,
+                    onClearDateTime: clearDateTime,
+                    isLocked: isLocked,
+                  ),
+                ],
+        ),
       ),
     );
   }
