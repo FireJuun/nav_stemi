@@ -47,13 +47,17 @@ class NearbyEds extends Equatable {
 
 /// Helper extension to sort the [NearbyEds] by distance from current location.
 extension NearbyEdsX on NearbyEds {
-  List<NearbyEd> get sortedByDistance {
+  NearbyEds get sortedByDistance {
     final sorted = items.values.toList()
       ..sort((a, b) => a.distanceBetween.compareTo(b.distanceBetween));
-    return sorted;
+    return copyWith(
+      items: Map.fromEntries(
+        sorted.map((e) => MapEntry(e.edInfo.location, e)),
+      ),
+    );
   }
 
-  List<NearbyEd> get sortedByRouteDuration {
+  NearbyEds get sortedByRouteDuration {
     const routeDurationDto = RouteDurationDto();
     final sorted = items.values.toList()
       ..sort(
@@ -67,6 +71,11 @@ extension NearbyEdsX on NearbyEds {
           return aDuration.compareTo(bDuration);
         },
       );
-    return sorted;
+
+    return copyWith(
+      items: Map.fromEntries(
+        sorted.map((e) => MapEntry(e.edInfo.location, e)),
+      ),
+    );
   }
 }
