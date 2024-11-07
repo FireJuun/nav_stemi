@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_navigation_flutter/google_navigation_flutter.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
@@ -144,33 +144,38 @@ class RouteService {
     required NearbyEds nearbyEds,
     required AppWaypoint destination,
   }) async {
+    const markerId = 'destination';
     final markers = {
-      const MarkerId('destination'): Marker(
-        markerId: const MarkerId('destination'),
-        position: destination.toGoogleMaps(),
-        infoWindow: InfoWindow(title: activeEd.edInfo.shortName),
-        onTap: () => ref
-            .read(goRouterProvider)
-            .goNamed(AppRoute.navInfo.name, extra: activeEd.edInfo),
+      markerId: Marker(
+        markerId: markerId,
+        options: MarkerOptions(
+          position: destination.toGoogleMaps(),
+          infoWindow: InfoWindow(title: activeEd.edInfo.shortName),
+        ),
+        // onTap: () => ref
+        //     .read(goRouterProvider)
+        //     .goNamed(AppRoute.navInfo.name, extra: activeEd.edInfo),
       ),
     };
 
-    final pciIcon =
-        BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue);
-    final edIcon =
-        BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan);
+    // final pciIcon =
+    //     BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue);
+    // final edIcon =
+    //     BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan);
 
     /// add each ED as a marker on the map
     for (final ed in nearbyEds.items.values) {
       if (ed.edInfo.location != activeEd.edInfo.location) {
-        markers[MarkerId(ed.edInfo.shortName)] = Marker(
-          markerId: MarkerId(ed.edInfo.shortName),
-          position: ed.edInfo.location.toGoogleMaps(),
-          icon: ed.edInfo.isPCI ? pciIcon : edIcon,
-          infoWindow: InfoWindow(title: ed.edInfo.shortName),
-          onTap: () => ref
-              .read(goRouterProvider)
-              .goNamed(AppRoute.navInfo.name, extra: ed.edInfo),
+        markers[ed.edInfo.shortName] = Marker(
+          markerId: ed.edInfo.shortName,
+          options: MarkerOptions(
+            position: ed.edInfo.location.toGoogleMaps(),
+            // icon: ed.edInfo.isPCI ? pciIcon : edIcon,
+            infoWindow: InfoWindow(title: ed.edInfo.shortName),
+            // onTap: () => ref
+            //     .read(goRouterProvider)
+            //     .goNamed(AppRoute.navInfo.name, extra: ed.edInfo),
+          ),
         );
       }
     }
@@ -196,17 +201,23 @@ class RouteService {
       final polylineString = route.polyline!.encodedPolyline;
 
       if (polylineString != null) {
-        final id = PolylineId(uuid.v4());
+        final id = uuid.v4();
         final points = polylinePoints.decodePolyline(polylineString);
         final polyline = Polyline(
           polylineId: id,
-          color: Colors.grey,
-          width: 8,
-          points: points.map((e) => LatLng(e.latitude, e.longitude)).toList(),
-          onTap: () {
-            // TODO(FireJuun): Implement route selection mechanism
-            // ref.read(activeRouteProvider).state = route;
-          },
+          options: PolylineOptions(
+            strokeColor: Colors.grey,
+            strokeWidth: 8,
+            points: points
+                .map(
+                  (e) => LatLng(latitude: e.latitude, longitude: e.longitude),
+                )
+                .toList(),
+          ),
+          // onTap: () {
+          // TODO(FireJuun): Implement route selection mechanism
+          // ref.read(activeRouteProvider).state = route;
+          // },
         );
 
         polylines[id] = polyline;

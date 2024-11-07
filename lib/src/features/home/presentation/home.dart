@@ -1,19 +1,53 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nav_stemi/nav_stemi.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
 
   @override
+  State<Home> createState() => _HomeState();
+}
+
+/// spec: https://github.com/googlemaps/flutter-navigation-sdk/blob/main/example/lib/main.dart
+class _HomeState extends State<Home> {
+  bool _locationPermitted = false;
+  bool _notificationsPermitted = false;
+
+  @override
+  void initState() {
+    _requestPermissions();
+    super.initState();
+  }
+
+  /// Request permission for accessing the device's location and notifications.
+  ///
+  /// Android: Fine and Coarse Location
+  /// iOS: CoreLocation (Always and WhenInUse), Notification
+  Future<void> _requestPermissions() async {
+    final locationPermission = await Permission.location.request();
+
+    var notificationPermission = PermissionStatus.denied;
+    if (Platform.isIOS) {
+      notificationPermission = await Permission.notification.request();
+    }
+    setState(() {
+      _locationPermitted = locationPermission == PermissionStatus.granted;
+      _notificationsPermitted =
+          notificationPermission == PermissionStatus.granted;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // TODO(FireJuun): show [_locationPermitted] and [_notificationsPermitted] in the UI, if not accepted
+
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(
-        // leading: IconButton(
-        //   icon: const Icon(Icons.menu_rounded),
-        //   onPressed: () {},
-        // ),
         title: Text('nav - STEMI'.hardcoded),
         centerTitle: true,
       ),
