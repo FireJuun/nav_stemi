@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
+import 'package:google_navigation_flutter/google_navigation_flutter.dart'
+    as maps;
 // import 'package:flutter_mapbox_navigation/flutter_mapbox_navigation.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart' as maps;
+
 import 'package:google_routes_flutter/google_routes_flutter.dart' as routes;
 
 /// Location class, with [latitude], [longitude],
@@ -116,7 +118,8 @@ class AppWaypoint extends Equatable {
   routes.LatLng toGoogleRoutes() =>
       routes.LatLng(latitude: latitude, longitude: longitude);
 
-  maps.LatLng toGoogleMaps() => maps.LatLng(latitude, longitude);
+  maps.LatLng toGoogleMaps() =>
+      maps.LatLng(latitude: latitude, longitude: longitude);
 
   // TODO(FireJuun): Implement Mapbox conversion
   // WayPoint toMapbox() => WayPoint(

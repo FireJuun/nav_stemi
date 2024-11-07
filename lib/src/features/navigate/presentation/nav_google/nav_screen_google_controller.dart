@@ -1,6 +1,5 @@
 import 'dart:async';
-
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_navigation_flutter/google_navigation_flutter.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -8,8 +7,8 @@ part 'nav_screen_google_controller.g.dart';
 
 @riverpod
 class NavScreenGoogleController extends _$NavScreenGoogleController {
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
+  final Completer<GoogleNavigationViewController> _controller =
+      Completer<GoogleNavigationViewController>();
 
   final _latLngBounds = LatLngBoundsDTO();
 
@@ -20,8 +19,10 @@ class NavScreenGoogleController extends _$NavScreenGoogleController {
 
   /// These methods are called from the UI
   /// They are not reliant on any state, so they can be called directly
-  void onMapCreated(GoogleMapController controller) =>
-      _controller.complete(controller);
+  void onViewCreated(GoogleNavigationViewController controller) {
+    _controller.complete(controller);
+    controller.setMyLocationEnabled(true);
+  }
 
   void zoomIn() => unawaited(
         _controller.future.then((controller) {
@@ -49,7 +50,7 @@ class NavScreenGoogleController extends _$NavScreenGoogleController {
                   currentLocation.toLatLng(),
                   destination,
                 ]),
-                72,
+                padding: 72,
               ),
             );
           }
@@ -61,7 +62,7 @@ class NavScreenGoogleController extends _$NavScreenGoogleController {
           await controller.animateCamera(
             CameraUpdate.newLatLngBounds(
               _latLngBounds.listToBounds(stepLocations),
-              72,
+              padding: 72,
             ),
           );
         }),
@@ -73,7 +74,13 @@ class NavScreenGoogleController extends _$NavScreenGoogleController {
               await ref.read(getLastKnownOrCurrentPositionProvider.future);
 
           await controller.animateCamera(
-            CameraUpdate.newLatLng(currentLocation.toLatLng()),
+            // CameraUpdate.newLatLng(currentLocation.toLatLng()),
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                target: currentLocation.toLatLng(),
+                zoom: 14,
+              ),
+            ),
           );
         }),
       );
