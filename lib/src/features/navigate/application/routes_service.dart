@@ -8,6 +8,13 @@ import 'package:uuid/uuid.dart';
 
 part 'routes_service.g.dart';
 
+/// Currently using Google Navigation for the navigation service instead of
+/// Google Routes. This is because Google Navigation provides a more
+/// user-friendly experience and requires less manual declarations of when
+/// to update map navigation state.
+
+const _useGoogleNavigationForRouting = true;
+
 class RouteService {
   const RouteService(this.ref);
 
@@ -15,6 +22,8 @@ class RouteService {
 
   GeolocatorRepository get geolocatorRepository =>
       ref.read(geolocatorRepositoryProvider);
+  GoogleNavigationRepository get googleNavigationRepository =>
+      ref.read(googleNavigationRepositoryProvider);
   RemoteRoutesRepository get remoteRoutesRepository =>
       ref.read(remoteRoutesRepositoryProvider);
 
@@ -66,6 +75,49 @@ class RouteService {
   /// Set the default as the active route.
   /// Then set map info, markers, and polylines for this route.
   Future<void> goToEd({
+    required NearbyEd activeEd,
+    required NearbyEds nearbyEds,
+  }) async {
+    _useGoogleNavigationForRouting
+        ? await _goToEdWithGoogleNavigation(
+            activeEd: activeEd,
+            nearbyEds: nearbyEds,
+          )
+        : await _goToEdWithGoogleRoutes(
+            activeEd: activeEd,
+            nearbyEds: nearbyEds,
+          );
+  }
+
+  Future<void> _goToEdWithGoogleNavigation({
+    required NearbyEd activeEd,
+    required NearbyEds nearbyEds,
+  }) async {
+    final areTermsAccepted =
+        await googleNavigationRepository.areTermsAccepted();
+
+    if (!areTermsAccepted) {
+      await googleNavigationRepository.showTermsAndConditionsDialog();
+    }
+
+    final isInitalized = await googleNavigationRepository.isInitialized();
+
+    if (!isInitalized) {
+      await googleNavigationRepository.initialize();
+    }
+
+    final routeCalculated =
+        await googleNavigationRepository.setDestination(activeEd.edInfo);
+
+    if (routeCalculated) {
+      // TODO(FireJuun): add turn-by-turn info
+      await googleNavigationRepository.startGuidance();
+    } else {
+      throw RouteInformationNotAvailableException();
+    }
+  }
+
+  Future<void> _goToEdWithGoogleRoutes({
     required NearbyEd activeEd,
     required NearbyEds nearbyEds,
   }) async {

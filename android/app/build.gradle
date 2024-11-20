@@ -29,6 +29,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 /// spec: https://medium.com/@nayanbabariya/set-up-environment-variables-in-flutter-for-secure-and-scalable-apps-7409ae0c383e
+/// another option: https://github.com/googlemaps/flutter-navigation-sdk/blob/main/example/android/app/build.gradle
 def dartDefines = [:]
 if (project.hasProperty('dart-defines')) {
     dartDefines = dartDefines + project.property('dart-defines')
@@ -67,7 +68,7 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        resValue "string", "android_maps_api", dartDefines.ANDROID_MAPS_API
+        resValue "string", "maps_api_key", dartDefines.MAPS_API_KEY
     }
 
     signingConfigs {

@@ -74,6 +74,7 @@ class _HomeState extends State<Home> {
               ],
             ),
             Text.rich(
+              textAlign: TextAlign.center,
               TextSpan(
                 style: textTheme.bodyLarge,
                 children: [
