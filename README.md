@@ -17,27 +17,13 @@ This application uses locally defined environment variables for Google Maps Flut
 You'll need to create an `.env` folder, with three files `.env/development.env`, `.env/staging.env`, `.env/production.env`. Each of these .env files will contain the following tokens:
 
 ```text
-ANDROID_MAPS_API={your_android_maps_api_token_here}
-IOS_MAPS_API={your_ios_maps_api_token_here}
+MAPS_API_KEY={your_google_navigation_api_token_here}
 DIRECTIONS_API={your_directions_api_token_here}
 DISTANCE_MATRIX_API={your_distance_matrix_api_token_here}
 ROUTES_API={your_routes_api_token_here}
-MAPBOX_API={your_mapbox_api_token_here}
 ```
 
 If you don't have an access token established yet -- such as for Google Maps API -- just leave the `{}` field blank for now. Don't include `{` or `}` in the access token.
-
-### Mapbox vs Google
-
-We initially built this application with pure Google Maps functionality, which included the Routes API, Distance Matrix API, and Directions API. However, over time, it became apparent that turn-by-turn navigation and spoken-steps would need to be handled manually, which was too tedious. Rather than remove all Google API references, per se, we have instead temporarily disabled their logic within the app while still keeping the initial functionality intact.
-
-For now, we are using Mapbox, which is set by this variable in [app_bootstrap_local.dart]:
-
-```dart
-final remoteRoutes = RemoteRoutesGoogleRepository();
-```
-
-You can swap to `RemoteRoutesGoogleRepository()` to see how that works with Google.
 
 ## Getting Started 🚀
 

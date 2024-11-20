@@ -2,25 +2,145 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_navigation_flutter/google_navigation_flutter.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 // TODO(FireJuun): Readjust location of these values
 const _showNarration = false;
 const _showNorthUp = false;
 
-class NavScreenGoogle extends StatefulWidget {
-  const NavScreenGoogle({super.key});
+class NavScreenGoogle extends ConsumerStatefulWidget {
+  const NavScreenGoogle({required this.destinations, super.key});
+
+  final ({NearbyEd? activeEd, NearbyEds nearbyEds}) destinations;
 
   @override
-  State<NavScreenGoogle> createState() => _NavScreenGoogleState();
+  ConsumerState<NavScreenGoogle> createState() => _NavScreenGoogleState();
 }
 
-class _NavScreenGoogleState extends State<NavScreenGoogle> {
+class _NavScreenGoogleState extends ConsumerState<NavScreenGoogle> {
   bool _showSteps = false;
   bool _showNextTurn = true;
+  bool _isNavigating = false;
+  bool _isSimulatingRoute = false;
+
+  /// Speed multiplier used for simulation.
+  static const double simulationSpeedMultiplier = 5;
+
+  @override
+  void initState() {
+    super.initState();
+    // final activeEd = widget.destinations.activeEd;
+    // if (activeEd != null) {
+    //   ref
+    //       .read(routeServiceProvider)
+    //       .goToEd(activeEd: activeEd, nearbyEds: widget.destinations.nearbyEds);
+    // }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final lastKnownOrCurrentPositionValue =
+        ref.watch(getLastKnownOrCurrentPositionProvider);
+
+    return Column(
+      children: [
+        Expanded(
+          child: AsyncValueWidget<Position>(
+            value: lastKnownOrCurrentPositionValue,
+            data: (initialPosition) => GoogleMapsNavigationView(
+              onViewCreated: ref
+                  .read(navScreenGoogleControllerProvider.notifier)
+                  .onViewCreated,
+              initialCameraPosition: CameraPosition(
+                target: initialPosition.toLatLng(),
+                zoom: 14,
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                if (_isNavigating)
+                  FilledButton(
+                    onPressed: () {
+                      ref
+                          .read(googleNavigationRepositoryProvider)
+                          .clearDestinations();
+
+                      setState(() {
+                        _isNavigating = false;
+                      });
+                    },
+                    child: const Text('STOP Navigation'),
+                  )
+                else
+                  FilledButton(
+                    onPressed: () {
+                      final activeEd = widget.destinations.activeEd;
+                      if (activeEd != null) {
+                        ref.read(routeServiceProvider).goToEd(
+                              activeEd: activeEd,
+                              nearbyEds: widget.destinations.nearbyEds,
+                            );
+                      }
+                      setState(() {
+                        _isNavigating = true;
+                      });
+                    },
+                    child: const Text('Navigate'),
+                  ),
+                if (_isSimulatingRoute)
+                  FilledButton(
+                    onPressed: () {
+                      ref
+                          .read(googleNavigationRepositoryProvider)
+                          .stopSimulation();
+
+                      setState(() {
+                        _isSimulatingRoute = false;
+                      });
+                    },
+                    child: const Text('STOP Simulation'),
+                  )
+                else
+                  FilledButton(
+                    onPressed: () {
+                      ref
+                          .read(googleNavigationRepositoryProvider)
+                          .simulateLocationsAlongExistingRouteWithOptions(
+                            SimulationOptions(
+                              speedMultiplier: simulationSpeedMultiplier,
+                            ),
+                          );
+
+                      setState(() {
+                        _isSimulatingRoute = true;
+                      });
+                    },
+                    child: const Text('START Simulation'),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+
+    return const NavScreenGoogleMap();
+
+    // TODO(FireJuun): reimplement
     return KeyboardVisibilityBuilder(
       builder: (context, isKeyboardVisible) {
         final colorScheme = Theme.of(context).colorScheme;

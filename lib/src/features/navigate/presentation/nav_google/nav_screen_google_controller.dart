@@ -24,6 +24,9 @@ class NavScreenGoogleController extends _$NavScreenGoogleController {
     controller.setMyLocationEnabled(true);
   }
 
+  Future<LatLng?> userLocation() =>
+      _controller.future.then((controller) async => controller.getMyLocation());
+
   void zoomIn() => unawaited(
         _controller.future.then((controller) {
           controller.animateCamera(CameraUpdate.zoomIn());
@@ -37,24 +40,8 @@ class NavScreenGoogleController extends _$NavScreenGoogleController {
       );
 
   void zoomToActiveRoute() => unawaited(
-        _controller.future.then((controller) async {
-          final currentLocation =
-              await ref.read(getLastKnownOrCurrentPositionProvider.future);
-
-          final destination = ref.read(destinationProvider);
-
-          if (destination != null) {
-            await controller.animateCamera(
-              CameraUpdate.newLatLngBounds(
-                _latLngBounds.listToBounds([
-                  currentLocation.toLatLng(),
-                  destination,
-                ]),
-                padding: 72,
-              ),
-            );
-          }
-        }),
+        _controller.future
+            .then((controller) async => controller.showRouteOverview()),
       );
 
   void zoomToSelectedNavigationStep(List<LatLng> stepLocations) => unawaited(
@@ -89,4 +76,7 @@ class NavScreenGoogleController extends _$NavScreenGoogleController {
   /// They are reliant on state, so they are called via ref
   /// If any errors occur, they are caught, logged, and displayed to the user
   // TODO(FireJuun): run guarded, navigation route calls
+
+  /// spec: https://github.com/googlemaps/flutter-navigation-sdk/blob/main/example/lib/pages/navigation.dart
+  /// Functions below handled here
 }

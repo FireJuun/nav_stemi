@@ -37,6 +37,7 @@ class ListEDOptions extends ConsumerWidget {
         goToDialogControllerProvider,
         (_, state) => state.showAlertDialogOnError(context),
       );
+    // TODO(FireJuun): add error handling for going to new ED
 
     final nearbyEdsValue = ref.watch(nearbyEdsProvider);
 

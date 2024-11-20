@@ -28,9 +28,10 @@
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <!-- spec: https://medium.com/@nayanbabariya/set-up-environment-variables-in-flutter-for-secure-and-scalable-apps-7409ae0c383e -->
+        <!-- another option: https://github.com/googlemaps/flutter-navigation-sdk/blob/main/example/android/app/src/main/AndroidManifest.xml -->
         <meta-data 
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/android_maps_api"/>
+            android:value="@string/maps_api_key"/>
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />

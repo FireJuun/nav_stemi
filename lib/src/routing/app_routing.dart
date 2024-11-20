@@ -68,8 +68,25 @@ GoRouter goRouter(GoRouterRef ref) {
               GoRoute(
                 path: '/nav',
                 name: AppRoute.nav.name,
-                pageBuilder: (context, state) =>
-                    _fadeTransition(context, state, const NavScreenGoogle()),
+                pageBuilder: (context, state) {
+                  final destinations = state.extra;
+                  assert(destinations != null, 'Destinations not provided');
+                  assert(
+                    destinations is ({NearbyEd? activeEd, NearbyEds nearbyEds}),
+                    'Extra provided, but as the wrong type',
+                  );
+
+                  return _fadeTransition(
+                    context,
+                    state,
+                    NavScreenGoogle(
+                      destinations: destinations! as ({
+                        NearbyEd? activeEd,
+                        NearbyEds nearbyEds
+                      }),
+                    ),
+                  );
+                },
                 routes: [
                   GoRoute(
                     path: 'go',
