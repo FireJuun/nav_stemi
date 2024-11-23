@@ -138,8 +138,6 @@ class _NavScreenGoogleState extends ConsumerState<NavScreenGoogle> {
       ],
     );
 
-    return const NavScreenGoogleMap();
-
     // TODO(FireJuun): reimplement
     return KeyboardVisibilityBuilder(
       builder: (context, isKeyboardVisible) {
@@ -206,7 +204,7 @@ class _NavScreenGoogleState extends ConsumerState<NavScreenGoogle> {
                                 child: Stack(
                                   alignment: AlignmentDirectional.center,
                                   children: [
-                                    const NavScreenGoogleMap(),
+                                    // const NavScreenGoogleMap(),
                                     AnimatedSwitcher(
                                       duration: 300.ms,
 
