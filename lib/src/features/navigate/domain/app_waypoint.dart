@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:google_navigation_flutter/google_navigation_flutter.dart'
     as maps;
-// import 'package:flutter_mapbox_navigation/flutter_mapbox_navigation.dart';
-
 import 'package:google_routes_flutter/google_routes_flutter.dart' as routes;
 
 /// Location class, with [latitude], [longitude],
