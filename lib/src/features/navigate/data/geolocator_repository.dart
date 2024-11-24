@@ -111,7 +111,9 @@ GeolocatorRepository geolocatorRepository(GeolocatorRepositoryRef ref) {
 @riverpod
 Stream<Position?> watchPosition(WatchPositionRef ref) {
   final geolocatorRepository = ref.watch(geolocatorRepositoryProvider);
-  return geolocatorRepository.watchPosition();
+  final stream = geolocatorRepository.watchPosition();
+  ref.onDispose(() => stream.listen(null).cancel());
+  return stream;
 }
 
 @riverpod

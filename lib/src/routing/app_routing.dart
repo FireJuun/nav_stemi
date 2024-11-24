@@ -72,7 +72,7 @@ GoRouter goRouter(GoRouterRef ref) {
                   return _fadeTransition(
                     context,
                     state,
-                    const NavScreenGoogle(),
+                    const NavScreen(),
                   );
                 },
                 routes: [
