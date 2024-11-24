@@ -21,13 +21,15 @@ class GoToDialogController extends _$GoToDialogController with NotifierMounted {
     // nothing to do
     state = const AsyncLoading();
     try {
-      // ref.read(availableRoutesRepositoryProvider).setAvailableRoutes(nearbyEds);
-      // ref.read(activeRouteRepositoryProvider).setActiveRoute(nearbyEds);
+      await ref.read(googleNavigationServiceProvider).initialize();
 
-      ref.read(goRouterProvider).goNamed(
-        AppRoute.nav.name,
-        extra: (activeEd: activeEd, nearbyEds: nearbyEds),
+      unawaited(
+        ref
+            .read(googleNavigationServiceProvider)
+            .setDestinations(activeEd.edInfo),
       );
+
+      ref.read(goRouterProvider).goNamed(AppRoute.nav.name);
     } catch (e, st) {
       state = AsyncError(e, st);
     }

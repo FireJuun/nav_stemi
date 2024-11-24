@@ -79,22 +79,14 @@ class RouteService {
     required NearbyEds nearbyEds,
   }) async {
     _useGoogleNavigationForRouting
-        ? await _goToEdWithGoogleNavigation(
-            activeEd: activeEd,
-            nearbyEds: nearbyEds,
-          )
+        ? await googleNavigationService.setDestinations(activeEd.edInfo)
         : await _goToEdWithGoogleRoutes(
             activeEd: activeEd,
             nearbyEds: nearbyEds,
           );
   }
 
-  Future<void> _goToEdWithGoogleNavigation({
-    required NearbyEd activeEd,
-    required NearbyEds nearbyEds,
-  }) async =>
-      googleNavigationService.setDestinations(activeEd.edInfo);
-
+  // TODO(FireJuun): currently unused, consider deprecating
   Future<void> _goToEdWithGoogleRoutes({
     required NearbyEd activeEd,
     required NearbyEds nearbyEds,

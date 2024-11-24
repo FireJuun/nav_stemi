@@ -27,6 +27,12 @@ class GoogleNavigationRepository {
   Stream<NavInfo?> watchNavInfo() => _navInfoStore.stream;
   StreamSubscription<NavInfoEvent>? _navInfoEventSubscription;
 
+  final _destinationsStore = InMemoryStore<Destinations?>(null);
+  Destinations? get destinations => _destinationsStore.value;
+  set destinations(Destinations? value) => _destinationsStore.value = value;
+
+  Stream<Destinations?> watchDestinations() => _destinationsStore.stream;
+
   Future<void> _setupListeners() async {
     /// Subscribe to each event only once.
     _clearListeners();
