@@ -11,10 +11,13 @@ class NavScreenGoogleController extends _$NavScreenGoogleController {
       Completer<GoogleNavigationViewController>();
 
   final _latLngBounds = LatLngBoundsDTO();
+  GoogleNavigationService get _googleNavigationService =>
+      ref.read(googleNavigationServiceProvider);
 
   @override
   FutureOr<void> build() {
-    // nothing to do
+    _googleNavigationService.initialize();
+    ref.onDispose(() => _googleNavigationService.cleanup());
   }
 
   /// These methods are called from the UI

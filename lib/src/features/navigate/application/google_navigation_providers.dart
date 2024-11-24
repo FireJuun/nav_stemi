@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'google_navigation_providers.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 Stream<Destinations?> destinations(DestinationsRef ref) {
   return ref.watch(googleNavigationRepositoryProvider).watchDestinations();
 }

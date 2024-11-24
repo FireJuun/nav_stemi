@@ -213,6 +213,15 @@ class GoogleNavSetDestinationSessionNotInitializedException
         );
 }
 
+class GoogleNavCalculateRouteNoDestinationsException extends AppException {
+  GoogleNavCalculateRouteNoDestinationsException()
+      : super(
+          'calculate-route-no-destinations',
+          '''Cannot calculate the route without an active destination.'''
+              .hardcoded,
+        );
+}
+
 class GoogleNavClearDestinationSessionNotInitializedException
     extends AppException {
   GoogleNavClearDestinationSessionNotInitializedException()

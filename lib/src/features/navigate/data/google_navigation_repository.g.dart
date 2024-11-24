@@ -7,12 +7,12 @@ part of 'google_navigation_repository.dart';
 // **************************************************************************
 
 String _$googleNavigationRepositoryHash() =>
-    r'f32d5305084807274a9430bc54086049ae8bebec';
+    r'dc69f2917e6979f8799c1041b176aaa7be7b8ea4';
 
 /// See also [googleNavigationRepository].
 @ProviderFor(googleNavigationRepository)
 final googleNavigationRepositoryProvider =
-    AutoDisposeProvider<GoogleNavigationRepository>.internal(
+    Provider<GoogleNavigationRepository>.internal(
   googleNavigationRepository,
   name: r'googleNavigationRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,7 +22,6 @@ final googleNavigationRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
-typedef GoogleNavigationRepositoryRef
-    = AutoDisposeProviderRef<GoogleNavigationRepository>;
+typedef GoogleNavigationRepositoryRef = ProviderRef<GoogleNavigationRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

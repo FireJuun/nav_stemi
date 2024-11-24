@@ -6,11 +6,11 @@ part of 'google_navigation_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$destinationsHash() => r'4bae92c088166e1bdda6d06ede14bb3543e6d730';
+String _$destinationsHash() => r'47a6a176a9cf5d9caad12bfe8dc39342c988245b';
 
 /// See also [destinations].
 @ProviderFor(destinations)
-final destinationsProvider = AutoDisposeStreamProvider<Destinations?>.internal(
+final destinationsProvider = StreamProvider<Destinations?>.internal(
   destinations,
   name: r'destinationsProvider',
   debugGetCreateSourceHash:
@@ -19,7 +19,7 @@ final destinationsProvider = AutoDisposeStreamProvider<Destinations?>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef DestinationsRef = AutoDisposeStreamProviderRef<Destinations?>;
+typedef DestinationsRef = StreamProviderRef<Destinations?>;
 String _$navInfoHash() => r'3e6d2039a43f9c46dc7a426178e9c19cea5e8dca';
 
 /// See also [navInfo].
