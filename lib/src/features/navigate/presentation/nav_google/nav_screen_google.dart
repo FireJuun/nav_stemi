@@ -11,9 +11,7 @@ const _showNarration = false;
 const _showNorthUp = false;
 
 class NavScreenGoogle extends ConsumerStatefulWidget {
-  const NavScreenGoogle({required this.destinations, super.key});
-
-  final ({NearbyEd? activeEd, NearbyEds nearbyEds}) destinations;
+  const NavScreenGoogle({super.key});
 
   @override
   ConsumerState<NavScreenGoogle> createState() => _NavScreenGoogleState();
@@ -31,17 +29,12 @@ class _NavScreenGoogleState extends ConsumerState<NavScreenGoogle> {
   @override
   void initState() {
     super.initState();
-    // final activeEd = widget.destinations.activeEd;
-    // if (activeEd != null) {
-    //   ref
-    //       .read(routeServiceProvider)
-    //       .goToEd(activeEd: activeEd, nearbyEds: widget.destinations.nearbyEds);
-    // }
+    // ref.read(googleNavigationServiceProvider).initialize();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    ref.read(googleNavigationServiceProvider).cleanup();
     super.dispose();
   }
 
@@ -88,16 +81,16 @@ class _NavScreenGoogleState extends ConsumerState<NavScreenGoogle> {
                 else
                   FilledButton(
                     onPressed: () {
-                      final activeEd = widget.destinations.activeEd;
-                      if (activeEd != null) {
-                        ref.read(routeServiceProvider).goToEd(
-                              activeEd: activeEd,
-                              nearbyEds: widget.destinations.nearbyEds,
-                            );
-                      }
-                      setState(() {
-                        _isNavigating = true;
-                      });
+                      // final activeEd = widget.destinations.activeEd;
+                      // if (activeEd != null) {
+                      //   ref.read(routeServiceProvider).goToEd(
+                      //         activeEd: activeEd,
+                      //         nearbyEds: widget.destinations.nearbyEds,
+                      //       );
+                      // }
+                      // setState(() {
+                      //   _isNavigating = true;
+                      // });
                     },
                     child: const Text('Navigate'),
                   ),

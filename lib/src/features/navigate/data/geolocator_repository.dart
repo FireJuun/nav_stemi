@@ -58,7 +58,8 @@ class GeolocatorRepository {
   /// Check location permissions and services.
   /// If the user has not granted location permission, the app will request it.
   /// If the user has denied location permission, the app will return an error.
-  /// If the user has permanently denied location permission, the app will return an error.
+  /// If the user has permanently denied location permission,
+  /// the app will return an error.
   /// If the location services are disabled, the app will return an error.
   ///
   /// source: https://pub.dev/packages/geolocator

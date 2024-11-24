@@ -6,6 +6,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'google_navigation_service.g.dart';
 
+/// Includes methods to interact with the Google Navigation SDK.
+/// It is responsible for initializing the navigation session,
+/// setting destinations, starting and stopping guidance, and
+/// simulating user locations.
+///
+/// Note that certain location / notification permissions are
+/// required for the Google Navigation SDK to function properly.
+/// These are handled separately by the [PermissionsService].
+///
 class GoogleNavigationService {
   const GoogleNavigationService(this.ref);
 
@@ -13,16 +22,16 @@ class GoogleNavigationService {
 
   GoogleNavigationRepository get googleNavigationRepository =>
       ref.read(googleNavigationRepositoryProvider);
-  GeolocatorRepository get geolocatorRepository =>
-      ref.read(geolocatorRepositoryProvider);
+  PermissionsService get permissionsService =>
+      ref.read(permissionsServiceProvider);
 
   Future<void> initialize() async {
     await checkTermsAccepted();
-    await geolocatorRepository.checkLocationEnabled();
+    await permissionsService.initialize();
+
     await checkSessionInitialized();
   }
 
-  @visibleForTesting
   Future<void> checkTermsAccepted() async {
     if (!await googleNavigationRepository.areTermsAccepted()) {
       final accepted = await showTermsAndConditionsDialog();
@@ -70,7 +79,7 @@ class GoogleNavigationService {
     } on SessionInitializationException catch (e) {
       switch (e.code) {
         case SessionInitializationError.locationPermissionMissing:
-          throw GoogleNavInitializationLocationPermissionMissingException();
+          throw LocationPermissionMissingException();
         case SessionInitializationError.termsNotAccepted:
           throw GoogleNavInitializationTermsNotAcceptedException();
         case SessionInitializationError.notAuthorized:
@@ -100,6 +109,9 @@ class GoogleNavigationService {
         showTrafficLights: true,
       ),
     );
+
+    // TODO(FireJuun): should this be set in navRouteStatus check?
+    googleNavigationRepository.destinations = destinations;
 
     try {
       final navRouteStatus =

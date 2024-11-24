@@ -308,12 +308,20 @@ class GoogleNavStopGuidanceUnknownError extends AppException {
         );
 }
 
-class GoogleNavInitializationLocationPermissionMissingException
-    extends AppException {
-  GoogleNavInitializationLocationPermissionMissingException()
+class LocationPermissionMissingException extends AppException {
+  LocationPermissionMissingException()
       : super(
           'session-initialization-location-permission-missing',
           'No user location is available. Did you allow location permission?'
+              .hardcoded,
+        );
+}
+
+class NotificationPermissionMissingException extends AppException {
+  NotificationPermissionMissingException()
+      : super(
+          'session-initialization-notification-permission-missing',
+          '''Notifications are not available. Did you allow notification permissions?'''
               .hardcoded,
         );
 }

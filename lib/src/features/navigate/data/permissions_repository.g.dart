@@ -1,27 +1,28 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'go_to_dialog_controller.dart';
+part of 'permissions_repository.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$goToDialogControllerHash() =>
-    r'220dc1501438f4b800baf02dd7bda5122692e575';
+String _$permissionsRepositoryHash() =>
+    r'fdcad95a76d7e0c53b2ec73b7864721c4e96f7df';
 
-/// See also [GoToDialogController].
-@ProviderFor(GoToDialogController)
-final goToDialogControllerProvider =
-    AutoDisposeAsyncNotifierProvider<GoToDialogController, void>.internal(
-  GoToDialogController.new,
-  name: r'goToDialogControllerProvider',
+/// See also [permissionsRepository].
+@ProviderFor(permissionsRepository)
+final permissionsRepositoryProvider =
+    AutoDisposeProvider<PermissionsRepository>.internal(
+  permissionsRepository,
+  name: r'permissionsRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$goToDialogControllerHash,
+      : _$permissionsRepositoryHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$GoToDialogController = AutoDisposeAsyncNotifier<void>;
+typedef PermissionsRepositoryRef
+    = AutoDisposeProviderRef<PermissionsRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
