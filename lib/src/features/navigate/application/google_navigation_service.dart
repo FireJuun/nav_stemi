@@ -27,7 +27,7 @@ class GoogleNavigationService {
     if (!await googleNavigationRepository.areTermsAccepted()) {
       final accepted = await showTermsAndConditionsDialog();
       if (!accepted) {
-        throw GoogleNavigationSessionInitializationTermsNotAcceptedException();
+        throw GoogleNavInitializationTermsNotAcceptedException();
       }
     }
   }
@@ -52,7 +52,7 @@ class GoogleNavigationService {
     try {
       await googleNavigationRepository.resetTermsAccepted();
     } on ResetTermsAndConditionsException {
-      throw GoogleNavigationResetTermsAndConditionsException();
+      throw GoogleNavResetTermsAndConditionsException();
     }
   }
 
@@ -70,11 +70,11 @@ class GoogleNavigationService {
     } on SessionInitializationException catch (e) {
       switch (e.code) {
         case SessionInitializationError.locationPermissionMissing:
-          throw GoogleNavigationSessionInitializationLocationPermissionMissingException();
+          throw GoogleNavInitializationLocationPermissionMissingException();
         case SessionInitializationError.termsNotAccepted:
-          throw GoogleNavigationSessionInitializationTermsNotAcceptedException();
+          throw GoogleNavInitializationTermsNotAcceptedException();
         case SessionInitializationError.notAuthorized:
-          throw GoogleNavigationSessionInitializationNotAuthorizedException();
+          throw GoogleNavInitializationNotAuthorizedException();
       }
     }
   }
@@ -110,39 +110,39 @@ class GoogleNavigationService {
           await startGuidance();
           return true;
         case NavigationRouteStatus.internalError:
-          throw GoogleNavigationInternalErrorException();
+          throw GoogleNavInternalErrorException();
         case NavigationRouteStatus.routeNotFound:
-          throw GoogleNavigationRouteNotFoundException();
+          throw GoogleNavRouteNotFoundException();
         case NavigationRouteStatus.networkError:
-          throw GoogleNavigationNetworkErrorException();
+          throw GoogleNavNetworkErrorException();
         case NavigationRouteStatus.quotaExceeded:
-          throw GoogleNavigationQuotaExceededException();
+          throw GoogleNavQuotaExceededException();
         case NavigationRouteStatus.quotaCheckFailed:
-          throw GoogleNavigationQuotaCheckFailedException();
+          throw GoogleNavQuotaCheckFailedException();
 
         case NavigationRouteStatus.apiKeyNotAuthorized:
-          throw GoogleNavigationApiKeyNotAuthorizedException();
+          throw GoogleNavApiKeyNotAuthorizedException();
         case NavigationRouteStatus.statusCanceled:
-          throw GoogleNavigationStatusCanceledException();
+          throw GoogleNavStatusCanceledException();
 
         case NavigationRouteStatus.duplicateWaypointsError:
-          throw GoogleNavigationDuplicateWaypointsErrorException();
+          throw GoogleNavDuplicateWaypointsErrorException();
         case NavigationRouteStatus.noWaypointsError:
-          throw GoogleNavigationNoWaypointsErrorException();
+          throw GoogleNavNoWaypointsErrorException();
         case NavigationRouteStatus.locationUnavailable:
-          throw GoogleNavigationLocationUnavailableException();
+          throw GoogleNavLocationUnavailableException();
         case NavigationRouteStatus.waypointError:
-          throw GoogleNavigationWaypointErrorException();
+          throw GoogleNavWaypointErrorException();
         case NavigationRouteStatus.travelModeUnsupported:
-          throw GoogleNavigationTravelModeUnsupportedException();
+          throw GoogleNavTravelModeUnsupportedException();
 
         case NavigationRouteStatus.unknown:
-          throw GoogleNavigationUnknownException();
+          throw GoogleNavUnknownException();
         case NavigationRouteStatus.locationUnknown:
-          throw GoogleNavigationLocationUnknownException();
+          throw GoogleNavLocationUnknownException();
       }
     } on SessionNotInitializedException {
-      throw GoogleNavigationSetDestinationSessionNotInitializedException();
+      throw GoogleNavSetDestinationSessionNotInitializedException();
     }
   }
 
@@ -151,7 +151,7 @@ class GoogleNavigationService {
       await googleNavigationRepository.clearDestinations();
       return false;
     } on SessionNotInitializedException {
-      throw GoogleNavigationClearDestinationSessionNotInitializedException();
+      throw GoogleNavClearDestinationSessionNotInitializedException();
     }
   }
 
@@ -161,9 +161,9 @@ class GoogleNavigationService {
       if (await googleNavigationRepository.isGuidanceRunning()) {
         return true;
       }
-      throw GoogleNavigationStartGuidanceUnknownError();
+      throw GoogleNavStartGuidanceUnknownError();
     } on SessionNotInitializedException {
-      throw GoogleNavigationStartGuidanceSessionNotInitializedException();
+      throw GoogleNavStartGuidanceSessionNotInitializedException();
     }
   }
 
@@ -173,9 +173,9 @@ class GoogleNavigationService {
       if (!await googleNavigationRepository.isGuidanceRunning()) {
         return false;
       }
-      throw GoogleNavigationStopGuidanceUnknownError();
+      throw GoogleNavStopGuidanceUnknownError();
     } on SessionNotInitializedException {
-      throw GoogleNavigationStopGuidanceSessionNotInitializedException();
+      throw GoogleNavStopGuidanceSessionNotInitializedException();
     }
   }
 
@@ -188,7 +188,7 @@ class GoogleNavigationService {
         location.toGoogleMaps(),
       );
     } on SessionNotInitializedException {
-      throw GoogleNavigationSetUserLocationSessionNotInitializedException();
+      throw GoogleNavSetUserLocationSessionNotInitializedException();
     }
   }
 
@@ -196,7 +196,7 @@ class GoogleNavigationService {
     try {
       await googleNavigationRepository.simulateLocationsAlongExistingRoute();
     } on SessionNotInitializedException {
-      throw GoogleNavigationSimulateLocationsSessionNotInitializedException();
+      throw GoogleNavSimulateLocationsSessionNotInitializedException();
     }
   }
 
@@ -207,7 +207,7 @@ class GoogleNavigationService {
       await googleNavigationRepository
           .simulateLocationsAlongExistingRouteWithOptions(options);
     } on SessionNotInitializedException {
-      throw GoogleNavigationSimulateLocationsSessionNotInitializedException();
+      throw GoogleNavSimulateLocationsSessionNotInitializedException();
     }
   }
 
@@ -215,7 +215,7 @@ class GoogleNavigationService {
     try {
       await googleNavigationRepository.pauseSimulation();
     } on SessionNotInitializedException {
-      throw GoogleNavigationPauseSimulationSessionNotInitializedException();
+      throw GoogleNavPauseSimulationSessionNotInitializedException();
     }
   }
 
@@ -223,7 +223,7 @@ class GoogleNavigationService {
     try {
       await googleNavigationRepository.resumeSimulation();
     } on SessionNotInitializedException {
-      throw GoogleNavigationResumeSimulationSessionNotInitializedException();
+      throw GoogleNavResumeSimulationSessionNotInitializedException();
     }
   }
 
@@ -231,7 +231,7 @@ class GoogleNavigationService {
     try {
       await googleNavigationRepository.stopSimulation();
     } on SessionNotInitializedException {
-      throw GoogleNavigationStopSimulationSessionNotInitializedException();
+      throw GoogleNavStopSimulationSessionNotInitializedException();
     }
   }
 }

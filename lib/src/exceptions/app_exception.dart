@@ -67,8 +67,8 @@ class NoPCICentersAvailableException extends AppException {
 ///
 /// error messages from here:
 /// https://github.com/googlemaps/flutter-navigation-sdk/blob/b3b5266d815561debb7ff90c70945cc0eaa8f997/example/lib/pages/navigation.dart#L729
-class GoogleNavigationInternalErrorException extends AppException {
-  GoogleNavigationInternalErrorException()
+class GoogleNavInternalErrorException extends AppException {
+  GoogleNavInternalErrorException()
       : super(
           'google-navigation-internal-error',
           'Unexpected internal error occured. Please restart the app.'
@@ -76,16 +76,16 @@ class GoogleNavigationInternalErrorException extends AppException {
         );
 }
 
-class GoogleNavigationRouteNotFoundException extends AppException {
-  GoogleNavigationRouteNotFoundException()
+class GoogleNavRouteNotFoundException extends AppException {
+  GoogleNavRouteNotFoundException()
       : super(
           'google-navigation-route-not-found',
           'The route could not be calculated.'.hardcoded,
         );
 }
 
-class GoogleNavigationNetworkErrorException extends AppException {
-  GoogleNavigationNetworkErrorException()
+class GoogleNavNetworkErrorException extends AppException {
+  GoogleNavNetworkErrorException()
       : super(
           'google-navigation-network-error',
           'Working network connection is required to calculate the route.'
@@ -93,40 +93,40 @@ class GoogleNavigationNetworkErrorException extends AppException {
         );
 }
 
-class GoogleNavigationQuotaExceededException extends AppException {
-  GoogleNavigationQuotaExceededException()
+class GoogleNavQuotaExceededException extends AppException {
+  GoogleNavQuotaExceededException()
       : super(
           'google-navigation-quota-exceeded',
           'Insufficient API quota to use the navigation.'.hardcoded,
         );
 }
 
-class GoogleNavigationQuotaCheckFailedException extends AppException {
-  GoogleNavigationQuotaCheckFailedException()
+class GoogleNavQuotaCheckFailedException extends AppException {
+  GoogleNavQuotaCheckFailedException()
       : super(
           'google-navigation-quota-check-failed',
           'API quota check failed, cannot authorize the navigation.'.hardcoded,
         );
 }
 
-class GoogleNavigationApiKeyNotAuthorizedException extends AppException {
-  GoogleNavigationApiKeyNotAuthorizedException()
+class GoogleNavApiKeyNotAuthorizedException extends AppException {
+  GoogleNavApiKeyNotAuthorizedException()
       : super(
           'google-navigation-api-key-not-authorized',
           'The API key is not authorized to use the navigation.'.hardcoded,
         );
 }
 
-class GoogleNavigationStatusCanceledException extends AppException {
-  GoogleNavigationStatusCanceledException()
+class GoogleNavStatusCanceledException extends AppException {
+  GoogleNavStatusCanceledException()
       : super(
           'google-navigation-status-canceled',
           'The route calculation was canceled.'.hardcoded,
         );
 }
 
-class GoogleNavigationDuplicateWaypointsErrorException extends AppException {
-  GoogleNavigationDuplicateWaypointsErrorException()
+class GoogleNavDuplicateWaypointsErrorException extends AppException {
+  GoogleNavDuplicateWaypointsErrorException()
       : super(
           'google-navigation-duplicate-waypoints',
           'The route could not be calculated because of duplicate waypoints.'
@@ -134,8 +134,8 @@ class GoogleNavigationDuplicateWaypointsErrorException extends AppException {
         );
 }
 
-class GoogleNavigationNoWaypointsErrorException extends AppException {
-  GoogleNavigationNoWaypointsErrorException()
+class GoogleNavNoWaypointsErrorException extends AppException {
+  GoogleNavNoWaypointsErrorException()
       : super(
           'google-navigation-no-waypoints',
           '''The route could not be calculated because no waypoints were provided.'''
@@ -143,8 +143,8 @@ class GoogleNavigationNoWaypointsErrorException extends AppException {
         );
 }
 
-class GoogleNavigationLocationUnavailableException extends AppException {
-  GoogleNavigationLocationUnavailableException()
+class GoogleNavLocationUnavailableException extends AppException {
+  GoogleNavLocationUnavailableException()
       : super(
           'google-navigation-location-unavailable',
           'No user location is available. Did you allow location permission?'
@@ -152,24 +152,24 @@ class GoogleNavigationLocationUnavailableException extends AppException {
         );
 }
 
-class GoogleNavigationWaypointErrorException extends AppException {
-  GoogleNavigationWaypointErrorException()
+class GoogleNavWaypointErrorException extends AppException {
+  GoogleNavWaypointErrorException()
       : super(
           'google-navigation-waypoint-error',
           'Invalid waypoints provided.'.hardcoded,
         );
 }
 
-class GoogleNavigationTravelModeUnsupportedException extends AppException {
-  GoogleNavigationTravelModeUnsupportedException()
+class GoogleNavTravelModeUnsupportedException extends AppException {
+  GoogleNavTravelModeUnsupportedException()
       : super(
           'google-navigation-travel-mode-unsupported',
           'The route could not calculated for the given travel mode.'.hardcoded,
         );
 }
 
-class GoogleNavigationUnknownException extends AppException {
-  GoogleNavigationUnknownException()
+class GoogleNavUnknownException extends AppException {
+  GoogleNavUnknownException()
       : super(
           'google-navigation-unknown-error',
           'The route could not be calculated due to an unknown error.'
@@ -177,8 +177,8 @@ class GoogleNavigationUnknownException extends AppException {
         );
 }
 
-class GoogleNavigationLocationUnknownException extends AppException {
-  GoogleNavigationLocationUnknownException()
+class GoogleNavLocationUnknownException extends AppException {
+  GoogleNavLocationUnknownException()
       : super(
           'google-navigation-location-unknown',
           '''The route could not be calculated, because the user location is unknown.'''
@@ -186,16 +186,16 @@ class GoogleNavigationLocationUnknownException extends AppException {
         );
 }
 
-class GoogleNavigationRouteTokenMalformedException extends AppException {
-  GoogleNavigationRouteTokenMalformedException()
+class GoogleNavRouteTokenMalformedException extends AppException {
+  GoogleNavRouteTokenMalformedException()
       : super(
           'route-token-malformed',
           'The route token is malformed.'.hardcoded,
         );
 }
 
-class GoogleNavigationResetTermsAndConditionsException extends AppException {
-  GoogleNavigationResetTermsAndConditionsException()
+class GoogleNavResetTermsAndConditionsException extends AppException {
+  GoogleNavResetTermsAndConditionsException()
       : super(
           'google-navigation-reset-terms-and-conditions',
           '''Cannot reset the terms after the navigation session has already been initialized.'''
@@ -203,9 +203,9 @@ class GoogleNavigationResetTermsAndConditionsException extends AppException {
         );
 }
 
-class GoogleNavigationSetDestinationSessionNotInitializedException
+class GoogleNavSetDestinationSessionNotInitializedException
     extends AppException {
-  GoogleNavigationSetDestinationSessionNotInitializedException()
+  GoogleNavSetDestinationSessionNotInitializedException()
       : super(
           'set-destination-session-not-initialized',
           '''Cannot set the destination before the navigation session has been initialized.'''
@@ -213,9 +213,9 @@ class GoogleNavigationSetDestinationSessionNotInitializedException
         );
 }
 
-class GoogleNavigationClearDestinationSessionNotInitializedException
+class GoogleNavClearDestinationSessionNotInitializedException
     extends AppException {
-  GoogleNavigationClearDestinationSessionNotInitializedException()
+  GoogleNavClearDestinationSessionNotInitializedException()
       : super(
           'clear-destination-session-not-initialized',
           '''Cannot clear the destination before the navigation session has been initialized.'''
@@ -223,9 +223,9 @@ class GoogleNavigationClearDestinationSessionNotInitializedException
         );
 }
 
-class GoogleNavigationSetUserLocationSessionNotInitializedException
+class GoogleNavSetUserLocationSessionNotInitializedException
     extends AppException {
-  GoogleNavigationSetUserLocationSessionNotInitializedException()
+  GoogleNavSetUserLocationSessionNotInitializedException()
       : super(
           'set-user-location-session-not-initialized',
           '''Cannot set the user location before the navigation session has been initialized.'''
@@ -233,9 +233,9 @@ class GoogleNavigationSetUserLocationSessionNotInitializedException
         );
 }
 
-class GoogleNavigationSimulateLocationsSessionNotInitializedException
+class GoogleNavSimulateLocationsSessionNotInitializedException
     extends AppException {
-  GoogleNavigationSimulateLocationsSessionNotInitializedException()
+  GoogleNavSimulateLocationsSessionNotInitializedException()
       : super(
           'simulate-locations-session-not-initialized',
           '''Cannot start the simulation before the navigation session has been initialized.'''
@@ -243,9 +243,9 @@ class GoogleNavigationSimulateLocationsSessionNotInitializedException
         );
 }
 
-class GoogleNavigationPauseSimulationSessionNotInitializedException
+class GoogleNavPauseSimulationSessionNotInitializedException
     extends AppException {
-  GoogleNavigationPauseSimulationSessionNotInitializedException()
+  GoogleNavPauseSimulationSessionNotInitializedException()
       : super(
           'pause-simulation-session-not-initialized',
           '''Cannot pause the simulation before the navigation session has been initialized.'''
@@ -253,9 +253,9 @@ class GoogleNavigationPauseSimulationSessionNotInitializedException
         );
 }
 
-class GoogleNavigationResumeSimulationSessionNotInitializedException
+class GoogleNavResumeSimulationSessionNotInitializedException
     extends AppException {
-  GoogleNavigationResumeSimulationSessionNotInitializedException()
+  GoogleNavResumeSimulationSessionNotInitializedException()
       : super(
           'resume-simulation-session-not-initialized',
           '''Cannot resume the simulation before the navigation session has been initialized.'''
@@ -263,9 +263,9 @@ class GoogleNavigationResumeSimulationSessionNotInitializedException
         );
 }
 
-class GoogleNavigationStopSimulationSessionNotInitializedException
+class GoogleNavStopSimulationSessionNotInitializedException
     extends AppException {
-  GoogleNavigationStopSimulationSessionNotInitializedException()
+  GoogleNavStopSimulationSessionNotInitializedException()
       : super(
           'stop-simulation-session-not-initialized',
           '''Cannot stop the simulation before the navigation session has been initialized.'''
@@ -273,9 +273,9 @@ class GoogleNavigationStopSimulationSessionNotInitializedException
         );
 }
 
-class GoogleNavigationStartGuidanceSessionNotInitializedException
+class GoogleNavStartGuidanceSessionNotInitializedException
     extends AppException {
-  GoogleNavigationStartGuidanceSessionNotInitializedException()
+  GoogleNavStartGuidanceSessionNotInitializedException()
       : super(
           'start-guidance-session-not-initialized',
           '''Cannot start the guidance before the navigation session has been initialized.'''
@@ -283,17 +283,16 @@ class GoogleNavigationStartGuidanceSessionNotInitializedException
         );
 }
 
-class GoogleNavigationStartGuidanceUnknownError extends AppException {
-  GoogleNavigationStartGuidanceUnknownError()
+class GoogleNavStartGuidanceUnknownError extends AppException {
+  GoogleNavStartGuidanceUnknownError()
       : super(
           'start-guidance-unknown-error',
           '''Cannot start the guidance. An unknown error occurred.'''.hardcoded,
         );
 }
 
-class GoogleNavigationStopGuidanceSessionNotInitializedException
-    extends AppException {
-  GoogleNavigationStopGuidanceSessionNotInitializedException()
+class GoogleNavStopGuidanceSessionNotInitializedException extends AppException {
+  GoogleNavStopGuidanceSessionNotInitializedException()
       : super(
           'start-guidance-session-not-initialized',
           '''Cannot stop the guidance before the navigation session has been initialized.'''
@@ -301,17 +300,17 @@ class GoogleNavigationStopGuidanceSessionNotInitializedException
         );
 }
 
-class GoogleNavigationStopGuidanceUnknownError extends AppException {
-  GoogleNavigationStopGuidanceUnknownError()
+class GoogleNavStopGuidanceUnknownError extends AppException {
+  GoogleNavStopGuidanceUnknownError()
       : super(
           'stop-guidance-unknown-error',
           '''Cannot stop the guidance. An unknown error occurred.'''.hardcoded,
         );
 }
 
-class GoogleNavigationSessionInitializationLocationPermissionMissingException
+class GoogleNavInitializationLocationPermissionMissingException
     extends AppException {
-  GoogleNavigationSessionInitializationLocationPermissionMissingException()
+  GoogleNavInitializationLocationPermissionMissingException()
       : super(
           'session-initialization-location-permission-missing',
           'No user location is available. Did you allow location permission?'
@@ -319,18 +318,16 @@ class GoogleNavigationSessionInitializationLocationPermissionMissingException
         );
 }
 
-class GoogleNavigationSessionInitializationTermsNotAcceptedException
-    extends AppException {
-  GoogleNavigationSessionInitializationTermsNotAcceptedException()
+class GoogleNavInitializationTermsNotAcceptedException extends AppException {
+  GoogleNavInitializationTermsNotAcceptedException()
       : super(
           'session-initialization-terms-not-accepted',
           'Accept the terms and conditions dialog first.'.hardcoded,
         );
 }
 
-class GoogleNavigationSessionInitializationNotAuthorizedException
-    extends AppException {
-  GoogleNavigationSessionInitializationNotAuthorizedException()
+class GoogleNavInitializationNotAuthorizedException extends AppException {
+  GoogleNavInitializationNotAuthorizedException()
       : super(
           'session-initialization-not-authorized',
           'Your API key is empty, invalid or not authorized to use Navigation.'
