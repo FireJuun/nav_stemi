@@ -22,7 +22,7 @@ dependencies:
   # flutter_mapbox_navigation: ^0.2.2
   flutter_polyline_points: ^2.0.0
   flutter_riverpod: ^2.5.1
-  geolocator: ^11.0.0
+  geolocator: ^13.0.2
   go_router: ^13.2.3
   google_navigation_flutter: ^0.4.0
   google_routes_flutter: ^1.0.0+1

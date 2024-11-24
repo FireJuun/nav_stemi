@@ -17,14 +17,16 @@ class NavScreenGoogleController extends _$NavScreenGoogleController {
   @override
   FutureOr<void> build() {
     _googleNavigationService.initialize();
-    ref.onDispose(() => _googleNavigationService.cleanup());
+    ref.onDispose(() {
+      _googleNavigationService.cleanup();
+    });
   }
 
   /// These methods are called from the UI
   /// They are not reliant on any state, so they can be called directly
   void onViewCreated(GoogleNavigationViewController controller) {
     _controller.complete(controller);
-    controller.setMyLocationEnabled(true);
+    unawaited(controller.setMyLocationEnabled(true));
   }
 
   Future<LatLng?> userLocation() =>

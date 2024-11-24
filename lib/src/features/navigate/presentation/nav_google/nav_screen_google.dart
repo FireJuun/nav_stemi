@@ -10,42 +10,46 @@ import 'package:nav_stemi/nav_stemi.dart';
 const _showNarration = false;
 const _showNorthUp = false;
 
-class NavScreenGoogle extends ConsumerStatefulWidget {
-  const NavScreenGoogle({super.key});
+class NavScreenGoogle extends StatefulWidget {
+  const NavScreenGoogle({required this.initialPosition, super.key});
+
+  final Position initialPosition;
 
   @override
-  ConsumerState<NavScreenGoogle> createState() => _NavScreenGoogleState();
+  State<NavScreenGoogle> createState() => _NavScreenGoogleState();
 }
 
-class _NavScreenGoogleState extends ConsumerState<NavScreenGoogle> {
+class _NavScreenGoogleState extends State<NavScreenGoogle> {
   bool _showSteps = false;
   bool _showNextTurn = true;
-  bool _isNavigating = false;
-  bool _isSimulatingRoute = false;
+  final bool _isNavigating = false;
+  final bool _isSimulatingRoute = false;
 
   /// Speed multiplier used for simulation.
   static const double simulationSpeedMultiplier = 5;
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(navScreenGoogleControllerProvider);
-    final lastKnownOrCurrentPositionValue =
-        ref.watch(getLastKnownOrCurrentPositionProvider);
-
     return Column(
       children: [
         Expanded(
-          child: AsyncValueWidget<Position>(
-            value: lastKnownOrCurrentPositionValue,
-            data: (initialPosition) => GoogleMapsNavigationView(
-              onViewCreated: ref
-                  .read(navScreenGoogleControllerProvider.notifier)
-                  .onViewCreated,
-              initialCameraPosition: CameraPosition(
-                target: initialPosition.toLatLng(),
-                zoom: 14,
-              ),
-            ),
+          child: Consumer(
+            builder: (context, ref, child) {
+              ref.watch(navScreenGoogleControllerProvider);
+
+              return GoogleMapsNavigationView(
+                onViewCreated: (controller) {
+                  controller.setMyLocationEnabled(true);
+                  ref
+                      .read(navScreenGoogleControllerProvider.notifier)
+                      .onViewCreated(controller);
+                },
+                initialCameraPosition: CameraPosition(
+                  target: widget.initialPosition.toLatLng(),
+                  zoom: 14,
+                ),
+              );
+            },
           ),
         ),
         Padding(
@@ -57,13 +61,13 @@ class _NavScreenGoogleState extends ConsumerState<NavScreenGoogle> {
                 if (_isNavigating)
                   FilledButton(
                     onPressed: () {
-                      ref
-                          .read(googleNavigationRepositoryProvider)
-                          .clearDestinations();
+                      // ref
+                      //     .read(googleNavigationRepositoryProvider)
+                      //     .clearDestinations();
 
-                      setState(() {
-                        _isNavigating = false;
-                      });
+                      // setState(() {
+                      //   _isNavigating = false;
+                      // });
                     },
                     child: const Text('STOP Navigation'),
                   )
@@ -86,30 +90,30 @@ class _NavScreenGoogleState extends ConsumerState<NavScreenGoogle> {
                 if (_isSimulatingRoute)
                   FilledButton(
                     onPressed: () {
-                      ref
-                          .read(googleNavigationRepositoryProvider)
-                          .stopSimulation();
+                      // ref
+                      //     .read(googleNavigationRepositoryProvider)
+                      //     .stopSimulation();
 
-                      setState(() {
-                        _isSimulatingRoute = false;
-                      });
+                      // setState(() {
+                      //   _isSimulatingRoute = false;
+                      // });
                     },
                     child: const Text('STOP Simulation'),
                   )
                 else
                   FilledButton(
                     onPressed: () {
-                      ref
-                          .read(googleNavigationRepositoryProvider)
-                          .simulateLocationsAlongExistingRouteWithOptions(
-                            SimulationOptions(
-                              speedMultiplier: simulationSpeedMultiplier,
-                            ),
-                          );
+                      // ref
+                      //     .read(googleNavigationRepositoryProvider)
+                      //     .simulateLocationsAlongExistingRouteWithOptions(
+                      //       SimulationOptions(
+                      //         speedMultiplier: simulationSpeedMultiplier,
+                      //       ),
+                      //     );
 
-                      setState(() {
-                        _isSimulatingRoute = true;
-                      });
+                      // setState(() {
+                      //   _isSimulatingRoute = true;
+                      // });
                     },
                     child: const Text('START Simulation'),
                   ),
