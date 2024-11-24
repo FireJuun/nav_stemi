@@ -21,6 +21,9 @@ class GoToDialogController extends _$GoToDialogController with NotifierMounted {
     // nothing to do
     state = const AsyncLoading();
     try {
+      // ref.read(availableRoutesRepositoryProvider).setAvailableRoutes(nearbyEds);
+      // ref.read(activeRouteRepositoryProvider).setActiveRoute(nearbyEds);
+
       ref.read(goRouterProvider).goNamed(
         AppRoute.nav.name,
         extra: (activeEd: activeEd, nearbyEds: nearbyEds),

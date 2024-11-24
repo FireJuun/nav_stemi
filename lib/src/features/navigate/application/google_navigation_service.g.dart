@@ -1,27 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'go_to_dialog_controller.dart';
+part of 'google_navigation_service.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$goToDialogControllerHash() =>
-    r'b2b782da395213b950f6c26f1d3fcab694571767';
+String _$googleNavigationServiceHash() =>
+    r'7a6b6a5b8d18d433230a09aa8ede9752d1e3987e';
 
-/// See also [GoToDialogController].
-@ProviderFor(GoToDialogController)
-final goToDialogControllerProvider =
-    AutoDisposeAsyncNotifierProvider<GoToDialogController, void>.internal(
-  GoToDialogController.new,
-  name: r'goToDialogControllerProvider',
+/// See also [googleNavigationService].
+@ProviderFor(googleNavigationService)
+final googleNavigationServiceProvider =
+    Provider<GoogleNavigationService>.internal(
+  googleNavigationService,
+  name: r'googleNavigationServiceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$goToDialogControllerHash,
+      : _$googleNavigationServiceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$GoToDialogController = AutoDisposeAsyncNotifier<void>;
+typedef GoogleNavigationServiceRef = ProviderRef<GoogleNavigationService>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

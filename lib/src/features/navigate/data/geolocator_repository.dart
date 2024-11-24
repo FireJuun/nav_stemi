@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_navigation_flutter/google_navigation_flutter.dart';
 
@@ -28,7 +27,7 @@ class GeolocatorRepository {
   /// Get the current position of the device.
   ///
   Future<Position> getCurrentPosition() async {
-    await checkPermissions();
+    await checkLocationEnabled();
 
     return Geolocator.getCurrentPosition();
   }
@@ -40,7 +39,7 @@ class GeolocatorRepository {
   /// If no position is available, the `Future` will return `null`.
   ///
   Future<Position?> getLastKnownPosition() async {
-    await checkPermissions();
+    await checkLocationEnabled();
 
     return Geolocator.getLastKnownPosition();
   }
@@ -63,8 +62,9 @@ class GeolocatorRepository {
   /// If the location services are disabled, the app will return an error.
   ///
   /// source: https://pub.dev/packages/geolocator
-  @visibleForTesting
-  Future<bool> checkPermissions() async {
+  Future<bool> checkLocationEnabled() async {
+    // TODO(FireJuun): should we use this package or permissions package for this?
+    /// likely, either one can work...
     bool serviceEnabled;
     LocationPermission permission;
 
