@@ -27,19 +27,8 @@ class _NavScreenGoogleState extends ConsumerState<NavScreenGoogle> {
   static const double simulationSpeedMultiplier = 5;
 
   @override
-  void initState() {
-    super.initState();
-    // ref.read(googleNavigationServiceProvider).initialize();
-  }
-
-  @override
-  void dispose() {
-    ref.read(googleNavigationServiceProvider).cleanup();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    ref.watch(navScreenGoogleControllerProvider);
     final lastKnownOrCurrentPositionValue =
         ref.watch(getLastKnownOrCurrentPositionProvider);
 

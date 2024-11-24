@@ -120,7 +120,7 @@ class GoogleNavigationRepository {
       GoogleMapsNavigator.simulator.removeUserLocation();
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 GoogleNavigationRepository googleNavigationRepository(
   GoogleNavigationRepositoryRef ref,
 ) {

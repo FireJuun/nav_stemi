@@ -20,6 +20,8 @@ class GoogleNavigationService {
 
   final Ref ref;
 
+  GeolocatorRepository get geolocatorRepository =>
+      ref.read(geolocatorRepositoryProvider);
   GoogleNavigationRepository get googleNavigationRepository =>
       ref.read(googleNavigationRepositoryProvider);
   PermissionsService get permissionsService =>
@@ -92,7 +94,7 @@ class GoogleNavigationService {
     await googleNavigationRepository.cleanupNavigationSession();
   }
 
-  Future<RouteCalculated> setDestinations(EdInfo edInfo) async {
+  void setDestination(EdInfo edInfo) {
     final latitude = edInfo.location.latitude;
     final longitude = edInfo.location.longitude;
 
@@ -110,9 +112,12 @@ class GoogleNavigationService {
       ),
     );
 
-    // TODO(FireJuun): should this be set in navRouteStatus check?
     googleNavigationRepository.destinations = destinations;
+  }
 
+  Future<RouteCalculated> calculateDestinationRoutes(
+    Destinations destinations,
+  ) async {
     try {
       final navRouteStatus =
           await googleNavigationRepository.setDestinations(destinations);

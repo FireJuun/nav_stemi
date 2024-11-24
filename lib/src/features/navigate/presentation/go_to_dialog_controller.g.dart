@@ -7,7 +7,7 @@ part of 'go_to_dialog_controller.dart';
 // **************************************************************************
 
 String _$goToDialogControllerHash() =>
-    r'220dc1501438f4b800baf02dd7bda5122692e575';
+    r'19cf085d7fffe606762bb6744717cb236c80ff25';
 
 /// See also [GoToDialogController].
 @ProviderFor(GoToDialogController)

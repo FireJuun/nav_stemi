@@ -79,7 +79,7 @@ class RouteService {
     required NearbyEds nearbyEds,
   }) async {
     _useGoogleNavigationForRouting
-        ? await googleNavigationService.setDestinations(activeEd.edInfo)
+        ? googleNavigationService.setDestination(activeEd.edInfo)
         : await _goToEdWithGoogleRoutes(
             activeEd: activeEd,
             nearbyEds: nearbyEds,
