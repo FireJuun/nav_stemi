@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:google_navigation_flutter/google_navigation_flutter.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -6,45 +8,54 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'google_navigation_repository.g.dart';
 
+typedef TermsAccepted = bool;
 typedef SessionInitialized = bool;
 typedef RouteCalculated = bool;
 typedef GuidanceRunning = bool;
 
 class GoogleNavigationRepository {
-  Future<bool> areTermsAccepted() async =>
+  /// Various listeners, used to update the UI with the latest information.
+  /// Each listener uses an InMemoryStore, so that the latest value can be
+  /// broadcasted to the UI when a widget is rebuilt.
+  ///
+  /// We are also using a StreamSubscription to listen to the events from the
+  /// Google Maps Navigator SDK.
+  final _navInfoStore = InMemoryStore<NavInfo?>(null);
+  NavInfo? get navInfo => _navInfoStore.value;
+  set navInfo(NavInfo? value) => _navInfoStore.value = value;
+
+  Stream<NavInfo?> watchNavInfo() => _navInfoStore.stream;
+  StreamSubscription<NavInfoEvent>? _navInfoEventSubscription;
+
+  Future<void> _setupListeners() async {
+    /// Subscribe to each event only once.
+    _clearListeners();
+
+    // Turn-by-turn nav info listener with up to 30 steps ahead.
+    _navInfoEventSubscription = GoogleMapsNavigator.setNavInfoListener(
+      _onNavInfoEvent,
+      numNextStepsToPreview: 30,
+    );
+  }
+
+  void _clearListeners() {
+    _navInfoEventSubscription?.cancel();
+    _navInfoEventSubscription = null;
+  }
+
+  void _onNavInfoEvent(NavInfoEvent event) => navInfo = event.navInfo;
+
+  Future<TermsAccepted> areTermsAccepted() async =>
       GoogleMapsNavigator.areTermsAccepted();
 
-  Future<void> resetTermsAccepted() async {
-    try {
-      await GoogleMapsNavigator.resetTermsAccepted();
-    } on ResetTermsAndConditionsException {
-      throw GoogleNavigationResetTermsAndConditionsException();
-    }
-  }
+  Future<void> resetTermsAccepted() async =>
+      GoogleMapsNavigator.resetTermsAccepted();
 
-  Future<bool> isInitialized() => GoogleMapsNavigator.isInitialized();
-
-  Future<void> initialize() async {
-    try {
-      await GoogleMapsNavigator.initializeNavigationSession();
-    } on SessionInitializationError catch (e) {
-      switch (e) {
-        case SessionInitializationError.locationPermissionMissing:
-          throw GoogleNavigationSessionInitializationLocationPermissionMissingException();
-        case SessionInitializationError.termsNotAccepted:
-          throw GoogleNavigationSessionInitializationTermsNotAcceptedException();
-        case SessionInitializationError.notAuthorized:
-          throw GoogleNavigationSessionInitializationNotAuthorizedException();
-      }
-    }
-  }
-
-  Future<bool> showTermsAndConditionsDialog({
+  Future<TermsAccepted> showTermsAndConditionsDialog({
+    required String title,
+    required String companyName,
     bool shouldOnlyShowDriverAwarenessDisclaimer = false,
   }) async {
-    final title = 'Nav STEMI'.hardcoded;
-    final companyName = 'Atrium Health'.hardcoded;
-
     return GoogleMapsNavigator.showTermsAndConditionsDialog(
       title,
       companyName,
@@ -53,172 +64,54 @@ class GoogleNavigationRepository {
     );
   }
 
-  Future<SessionInitialized> initializeNavigationSession() async {
-    try {
-      await GoogleMapsNavigator.initializeNavigationSession();
-      return true;
-    } on SessionInitializationException catch (e) {
-      switch (e.code) {
-        case SessionInitializationError.locationPermissionMissing:
-          throw GoogleNavigationSessionInitializationLocationPermissionMissingException();
-        case SessionInitializationError.termsNotAccepted:
-          throw GoogleNavigationSessionInitializationTermsNotAcceptedException();
-        case SessionInitializationError.notAuthorized:
-          throw GoogleNavigationSessionInitializationNotAuthorizedException();
-      }
-    }
+  Future<SessionInitialized> isInitialized() =>
+      GoogleMapsNavigator.isInitialized();
+
+  Future<void> initializeNavigationSession() async {
+    await _setupListeners();
+    return GoogleMapsNavigator.initializeNavigationSession();
   }
 
   Future<void> cleanupNavigationSession() async {
+    _clearListeners();
     await GoogleMapsNavigator.cleanup();
   }
 
-  Future<RouteCalculated> setDestination(EdInfo edInfo) async {
-    final latitude = edInfo.location.latitude;
-    final longitude = edInfo.location.longitude;
+  Future<NavigationRouteStatus> setDestinations(
+    Destinations destinations,
+  ) async =>
+      GoogleMapsNavigator.setDestinations(destinations);
 
-    final destination = Destinations(
-      waypoints: <NavigationWaypoint>[
-        NavigationWaypoint.withLatLngTarget(
-          title: edInfo.shortName,
-          target: LatLng(latitude: latitude, longitude: longitude),
-        ),
-      ],
-      displayOptions: NavigationDisplayOptions(
-        showDestinationMarkers: true,
-        showStopSigns: true,
-        showTrafficLights: true,
-      ),
-    );
+  Future<void> clearDestinations() async =>
+      GoogleMapsNavigator.clearDestinations();
 
-    try {
-      final navRouteStatus =
-          await GoogleMapsNavigator.setDestinations(destination);
-      switch (navRouteStatus) {
-        case NavigationRouteStatus.statusOk:
-          return true;
-        case NavigationRouteStatus.internalError:
-          throw GoogleNavigationInternalErrorException();
-        case NavigationRouteStatus.routeNotFound:
-          throw GoogleNavigationRouteNotFoundException();
-        case NavigationRouteStatus.networkError:
-          throw GoogleNavigationNetworkErrorException();
-        case NavigationRouteStatus.quotaExceeded:
-          throw GoogleNavigationQuotaExceededException();
-        case NavigationRouteStatus.quotaCheckFailed:
-          throw GoogleNavigationQuotaCheckFailedException();
+  Future<GuidanceRunning> isGuidanceRunning() async =>
+      GoogleMapsNavigator.isGuidanceRunning();
 
-        case NavigationRouteStatus.apiKeyNotAuthorized:
-          throw GoogleNavigationApiKeyNotAuthorizedException();
-        case NavigationRouteStatus.statusCanceled:
-          throw GoogleNavigationStatusCanceledException();
+  Future<void> startGuidance() async => GoogleMapsNavigator.startGuidance();
 
-        case NavigationRouteStatus.duplicateWaypointsError:
-          throw GoogleNavigationDuplicateWaypointsErrorException();
-        case NavigationRouteStatus.noWaypointsError:
-          throw GoogleNavigationNoWaypointsErrorException();
-        case NavigationRouteStatus.locationUnavailable:
-          throw GoogleNavigationLocationUnavailableException();
-        case NavigationRouteStatus.waypointError:
-          throw GoogleNavigationWaypointErrorException();
-        case NavigationRouteStatus.travelModeUnsupported:
-          throw GoogleNavigationTravelModeUnsupportedException();
+  Future<void> stopGuidance() async => GoogleMapsNavigator.stopGuidance();
 
-        case NavigationRouteStatus.unknown:
-          throw GoogleNavigationUnknownException();
-        case NavigationRouteStatus.locationUnknown:
-          throw GoogleNavigationLocationUnknownException();
-      }
-    } on SessionNotInitializedException {
-      throw GoogleNavigationSetDestinationSessionNotInitializedException();
-    }
-  }
+  Future<void> simulateUserLocation(LatLng location) async =>
+      GoogleMapsNavigator.simulator.setUserLocation(location);
 
-  Future<RouteCalculated> clearDestinations() async {
-    try {
-      await GoogleMapsNavigator.clearDestinations();
-      return false;
-    } on SessionNotInitializedException {
-      throw GoogleNavigationClearDestinationSessionNotInitializedException();
-    }
-  }
-
-  Future<GuidanceRunning> startGuidance() async {
-    try {
-      await GoogleMapsNavigator.startGuidance();
-      if (await GoogleMapsNavigator.isGuidanceRunning()) {
-        return true;
-      }
-      throw GoogleNavigationStartGuidanceUnknownError();
-    } on SessionNotInitializedException {
-      throw GoogleNavigationStartGuidanceSessionNotInitializedException();
-    }
-  }
-
-  Future<GuidanceRunning> stopGuidance() async {
-    try {
-      await GoogleMapsNavigator.stopGuidance();
-      if (!await GoogleMapsNavigator.isGuidanceRunning()) {
-        return false;
-      }
-      throw GoogleNavigationStopGuidanceUnknownError();
-    } on SessionNotInitializedException {
-      throw GoogleNavigationStopGuidanceSessionNotInitializedException();
-    }
-  }
-
-  Future<void> simulateUserLocation() async {
-    try {
-      await GoogleMapsNavigator.simulator.setUserLocation(
-        locationRandolphEms.toGoogleMaps(),
-      );
-    } on SessionNotInitializedException {
-      throw GoogleNavigationSetUserLocationSessionNotInitializedException();
-    }
-  }
-
-  Future<void> simulateLocationsAlongExistingRoute() async {
-    try {
-      await GoogleMapsNavigator.simulator.simulateLocationsAlongExistingRoute();
-    } on SessionNotInitializedException {
-      throw GoogleNavigationSimulateLocationsSessionNotInitializedException();
-    }
-  }
+  Future<void> simulateLocationsAlongExistingRoute() async =>
+      GoogleMapsNavigator.simulator.simulateLocationsAlongExistingRoute();
 
   Future<void> simulateLocationsAlongExistingRouteWithOptions(
     SimulationOptions options,
-  ) async {
-    try {
-      await GoogleMapsNavigator.simulator
+  ) async =>
+      GoogleMapsNavigator.simulator
           .simulateLocationsAlongExistingRouteWithOptions(options);
-    } on SessionNotInitializedException {
-      throw GoogleNavigationSimulateLocationsSessionNotInitializedException();
-    }
-  }
 
-  Future<void> pauseSimulation() async {
-    try {
-      await GoogleMapsNavigator.simulator.pauseSimulation();
-    } on SessionNotInitializedException {
-      throw GoogleNavigationPauseSimulationSessionNotInitializedException();
-    }
-  }
+  Future<void> pauseSimulation() async =>
+      GoogleMapsNavigator.simulator.pauseSimulation();
 
-  Future<void> resumeSimulation() async {
-    try {
-      await GoogleMapsNavigator.simulator.resumeSimulation();
-    } on SessionNotInitializedException {
-      throw GoogleNavigationResumeSimulationSessionNotInitializedException();
-    }
-  }
+  Future<void> resumeSimulation() async =>
+      GoogleMapsNavigator.simulator.resumeSimulation();
 
-  Future<void> stopSimulation() async {
-    try {
-      await GoogleMapsNavigator.simulator.removeUserLocation();
-    } on SessionNotInitializedException {
-      throw GoogleNavigationStopSimulationSessionNotInitializedException();
-    }
-  }
+  Future<void> stopSimulation() async =>
+      GoogleMapsNavigator.simulator.removeUserLocation();
 }
 
 @riverpod

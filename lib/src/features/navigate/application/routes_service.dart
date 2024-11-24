@@ -22,25 +22,10 @@ class RouteService {
 
   GeolocatorRepository get geolocatorRepository =>
       ref.read(geolocatorRepositoryProvider);
-  GoogleNavigationRepository get googleNavigationRepository =>
-      ref.read(googleNavigationRepositoryProvider);
+  GoogleNavigationService get googleNavigationService =>
+      ref.read(googleNavigationServiceProvider);
   RemoteRoutesRepository get remoteRoutesRepository =>
       ref.read(remoteRoutesRepositoryProvider);
-
-  @visibleForTesting
-  Map<EdInfo, double> nearestTenSortedByDistance(Map<EdInfo, double> items) {
-    /// spec: https://stackoverflow.com/a/72172892
-    final sorted = Map.fromEntries(
-      items.entries.toList()..sort((a, b) => a.value.compareTo(b.value)),
-    );
-
-    final nearestTen = <EdInfo, double>{};
-    for (final entry in sorted.entries.take(10)) {
-      nearestTen[entry.key] = entry.value;
-    }
-
-    return nearestTen;
-  }
 
   /// First check to see the current location of the user,
   /// then get the nearby emergency departments.
@@ -71,6 +56,21 @@ class RouteService {
     return nearbyEdsByDuration;
   }
 
+  @visibleForTesting
+  Map<EdInfo, double> nearestTenSortedByDistance(Map<EdInfo, double> items) {
+    /// spec: https://stackoverflow.com/a/72172892
+    final sorted = Map.fromEntries(
+      items.entries.toList()..sort((a, b) => a.value.compareTo(b.value)),
+    );
+
+    final nearestTen = <EdInfo, double>{};
+    for (final entry in sorted.entries.take(10)) {
+      nearestTen[entry.key] = entry.value;
+    }
+
+    return nearestTen;
+  }
+
   /// Get the available routes for a single emergency department.
   /// Set the default as the active route.
   /// Then set map info, markers, and polylines for this route.
@@ -92,30 +92,8 @@ class RouteService {
   Future<void> _goToEdWithGoogleNavigation({
     required NearbyEd activeEd,
     required NearbyEds nearbyEds,
-  }) async {
-    final areTermsAccepted =
-        await googleNavigationRepository.areTermsAccepted();
-
-    if (!areTermsAccepted) {
-      await googleNavigationRepository.showTermsAndConditionsDialog();
-    }
-
-    final isInitalized = await googleNavigationRepository.isInitialized();
-
-    if (!isInitalized) {
-      await googleNavigationRepository.initialize();
-    }
-
-    final routeCalculated =
-        await googleNavigationRepository.setDestination(activeEd.edInfo);
-
-    if (routeCalculated) {
-      // TODO(FireJuun): add turn-by-turn info
-      await googleNavigationRepository.startGuidance();
-    } else {
-      throw RouteInformationNotAvailableException();
-    }
-  }
+  }) async =>
+      googleNavigationService.setDestinations(activeEd.edInfo);
 
   Future<void> _goToEdWithGoogleRoutes({
     required NearbyEd activeEd,
