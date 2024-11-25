@@ -20,6 +20,8 @@ class GoogleNavigationService {
 
   final Ref ref;
 
+  ActiveDestinationRepository get activeDestinationRepository =>
+      ref.read(activeDestinationRepositoryProvider);
   GeolocatorRepository get geolocatorRepository =>
       ref.read(geolocatorRepositoryProvider);
   GoogleNavigationRepository get googleNavigationRepository =>
@@ -69,7 +71,8 @@ class GoogleNavigationService {
 
   @visibleForTesting
   Future<void> checkSessionInitialized() async {
-    if (!await googleNavigationRepository.isInitialized()) {
+    final isInitialized = await googleNavigationRepository.isInitialized();
+    if (!isInitialized) {
       await initializeNavigationSession();
     }
   }
@@ -77,7 +80,7 @@ class GoogleNavigationService {
   @visibleForTesting
   Future<void> initializeNavigationSession() async {
     try {
-      await GoogleMapsNavigator.initializeNavigationSession();
+      await googleNavigationRepository.initializeNavigationSession();
     } on SessionInitializationException catch (e) {
       switch (e.code) {
         case SessionInitializationError.locationPermissionMissing:
@@ -98,7 +101,7 @@ class GoogleNavigationService {
     final latitude = edInfo.location.latitude;
     final longitude = edInfo.location.longitude;
 
-    final destinations = Destinations(
+    final destination = Destinations(
       waypoints: <NavigationWaypoint>[
         NavigationWaypoint.withLatLngTarget(
           title: edInfo.shortName,
@@ -112,17 +115,20 @@ class GoogleNavigationService {
       ),
     );
 
-    googleNavigationRepository.destinations = destinations;
+    activeDestinationRepository.activeDestination =
+        ActiveDestination(destination: destination, destinationInfo: edInfo);
   }
 
   Future<RouteCalculated> calculateDestinationRoutes() async {
-    final destinations = googleNavigationRepository.destinations;
-    if (destinations == null) {
+    final destination =
+        activeDestinationRepository.activeDestination?.destination;
+
+    if (destination == null) {
       throw GoogleNavSetDestinationSessionNotInitializedException();
     }
     try {
       final navRouteStatus =
-          await googleNavigationRepository.setDestinations(destinations);
+          await googleNavigationRepository.setDestinations(destination);
 
       switch (navRouteStatus) {
         case NavigationRouteStatus.statusOk:

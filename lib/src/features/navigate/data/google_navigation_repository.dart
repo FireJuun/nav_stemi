@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:google_navigation_flutter/google_navigation_flutter.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -27,15 +28,10 @@ class GoogleNavigationRepository {
   Stream<NavInfo?> watchNavInfo() => _navInfoStore.stream;
   StreamSubscription<NavInfoEvent>? _navInfoEventSubscription;
 
-  final _destinationsStore = InMemoryStore<Destinations?>(null);
-  Destinations? get destinations => _destinationsStore.value;
-  set destinations(Destinations? value) => _destinationsStore.value = value;
-
-  Stream<Destinations?> watchDestinations() => _destinationsStore.stream;
-
   Future<void> _setupListeners() async {
     /// Subscribe to each event only once.
     _clearListeners();
+    debugPrint('Setting up listeners');
 
     // Turn-by-turn nav info listener with up to 30 steps ahead.
     _navInfoEventSubscription = GoogleMapsNavigator.setNavInfoListener(
@@ -45,6 +41,7 @@ class GoogleNavigationRepository {
   }
 
   void _clearListeners() {
+    debugPrint('Clearing listeners');
     _navInfoEventSubscription?.cancel();
     _navInfoEventSubscription = null;
   }
@@ -70,15 +67,20 @@ class GoogleNavigationRepository {
     );
   }
 
-  Future<SessionInitialized> isInitialized() =>
-      GoogleMapsNavigator.isInitialized();
+  Future<SessionInitialized> isInitialized() async {
+    final isInitialized = await GoogleMapsNavigator.isInitialized();
+    debugPrint('isInitialized: $isInitialized');
+    return isInitialized;
+  }
 
   Future<void> initializeNavigationSession() async {
+    debugPrint('Initializing navigation session');
     await _setupListeners();
-    return GoogleMapsNavigator.initializeNavigationSession();
+    await GoogleMapsNavigator.initializeNavigationSession();
   }
 
   Future<void> cleanupNavigationSession() async {
+    debugPrint('Cleaning up navigation session');
     _clearListeners();
     await GoogleMapsNavigator.cleanup();
   }
@@ -94,9 +96,15 @@ class GoogleNavigationRepository {
   Future<GuidanceRunning> isGuidanceRunning() async =>
       GoogleMapsNavigator.isGuidanceRunning();
 
-  Future<void> startGuidance() async => GoogleMapsNavigator.startGuidance();
+  Future<void> startGuidance() async {
+    debugPrint('Starting guidance');
+    await GoogleMapsNavigator.startGuidance();
+  }
 
-  Future<void> stopGuidance() async => GoogleMapsNavigator.stopGuidance();
+  Future<void> stopGuidance() async {
+    debugPrint('Stopping guidance');
+    await GoogleMapsNavigator.stopGuidance();
+  }
 
   Future<void> simulateUserLocation(LatLng location) async =>
       GoogleMapsNavigator.simulator.setUserLocation(location);
@@ -125,4 +133,9 @@ GoogleNavigationRepository googleNavigationRepository(
   GoogleNavigationRepositoryRef ref,
 ) {
   return GoogleNavigationRepository();
+}
+
+@Riverpod(keepAlive: true)
+Stream<NavInfo?> navInfo(NavInfoRef ref) {
+  return ref.watch(googleNavigationRepositoryProvider).watchNavInfo();
 }
