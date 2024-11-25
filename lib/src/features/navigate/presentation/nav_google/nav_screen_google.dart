@@ -30,101 +30,6 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: Consumer(
-            builder: (context, ref, child) {
-              ref.watch(navScreenGoogleControllerProvider);
-
-              return GoogleMapsNavigationView(
-                onViewCreated: (controller) {
-                  controller.setMyLocationEnabled(true);
-                  ref
-                      .read(navScreenGoogleControllerProvider.notifier)
-                      .onViewCreated(controller);
-                },
-                initialCameraPosition: CameraPosition(
-                  target: widget.initialPosition.toLatLng(),
-                  zoom: 14,
-                ),
-              );
-            },
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                if (_isNavigating)
-                  FilledButton(
-                    onPressed: () {
-                      // ref
-                      //     .read(googleNavigationRepositoryProvider)
-                      //     .clearDestinations();
-
-                      // setState(() {
-                      //   _isNavigating = false;
-                      // });
-                    },
-                    child: const Text('STOP Navigation'),
-                  )
-                else
-                  FilledButton(
-                    onPressed: () {
-                      // final activeEd = widget.destinations.activeEd;
-                      // if (activeEd != null) {
-                      //   ref.read(routeServiceProvider).goToEd(
-                      //         activeEd: activeEd,
-                      //         nearbyEds: widget.destinations.nearbyEds,
-                      //       );
-                      // }
-                      // setState(() {
-                      //   _isNavigating = true;
-                      // });
-                    },
-                    child: const Text('Navigate'),
-                  ),
-                if (_isSimulatingRoute)
-                  FilledButton(
-                    onPressed: () {
-                      // ref
-                      //     .read(googleNavigationRepositoryProvider)
-                      //     .stopSimulation();
-
-                      // setState(() {
-                      //   _isSimulatingRoute = false;
-                      // });
-                    },
-                    child: const Text('STOP Simulation'),
-                  )
-                else
-                  FilledButton(
-                    onPressed: () {
-                      // ref
-                      //     .read(googleNavigationRepositoryProvider)
-                      //     .simulateLocationsAlongExistingRouteWithOptions(
-                      //       SimulationOptions(
-                      //         speedMultiplier: simulationSpeedMultiplier,
-                      //       ),
-                      //     );
-
-                      // setState(() {
-                      //   _isSimulatingRoute = true;
-                      // });
-                    },
-                    child: const Text('START Simulation'),
-                  ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-
-    // TODO(FireJuun): reimplement
     return KeyboardVisibilityBuilder(
       builder: (context, isKeyboardVisible) {
         final colorScheme = Theme.of(context).colorScheme;
@@ -162,15 +67,15 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
               return AsyncValueWidget<AvailableRoutes?>(
                 value: availableRoutesValue,
                 data: (availableRoutes) {
-                  final activeRouteValue = ref.watch(activeRouteProvider);
+                  final destinationValue = ref.watch(destinationsProvider);
 
-                  return AsyncValueWidget<ActiveRoute?>(
-                    value: activeRouteValue,
-                    data: (activeRoute) {
-                      final state =
-                          ref.watch(navScreenGoogleControllerProvider);
+                  return AsyncValueWidget<Destinations?>(
+                    value: destinationValue,
+                    data: (destination) {
+                      ref.watch(navScreenGoogleControllerProvider);
 
-                      if (activeRoute == null || availableRoutes == null) {
+                      if (destination == null || availableRoutes == null) {
+                        // if (destination == null) {
                         return Material(
                           color: Theme.of(context).colorScheme.surface,
                           child: const ListEDOptions(),
@@ -183,14 +88,34 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
                             children: [
                               NearestEdSelector(
                                 availableRoutes: availableRoutes,
-                                activeRoute: activeRoute,
+                                activeRoute: destination,
                               ),
                               gapH4,
                               Expanded(
                                 child: Stack(
                                   alignment: AlignmentDirectional.center,
                                   children: [
-                                    // const NavScreenGoogleMap(),
+                                    Consumer(
+                                      builder: (context, ref, child) {
+                                        ref.watch(
+                                          navScreenGoogleControllerProvider,
+                                        );
+
+                                        return GoogleMapsNavigationView(
+                                          onViewCreated: ref
+                                              .read(
+                                                navScreenGoogleControllerProvider
+                                                    .notifier,
+                                              )
+                                              .onViewCreated,
+                                          initialCameraPosition: CameraPosition(
+                                            target: widget.initialPosition
+                                                .toLatLng(),
+                                            zoom: 14,
+                                          ),
+                                        );
+                                      },
+                                    ),
                                     AnimatedSwitcher(
                                       duration: 300.ms,
 
@@ -201,17 +126,18 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
                                         child: child,
                                       ),
                                       child: _showNextTurn
-                                          ? Align(
+                                          ? const Align(
                                               alignment: Alignment.topCenter,
-                                              child: NextStep(
-                                                routeLegStep: activeRoute.route
-                                                    .routeStepById(
-                                                  activeRoute.activeStepId,
-                                                )!,
-                                                onTap: () => setState(
-                                                  () => _showNextTurn = false,
-                                                ),
-                                              ),
+
+                                              // child: NextStep(
+                                              //   routeLegStep: activeRoute.route
+                                              //       .routeStepById(
+                                              //     activeRoute.activeStepId,
+                                              //   )!,
+                                              //   onTap: () => setState(
+                                              //     () => _showNextTurn = false,
+                                              //   ),
+                                              // ),
                                             )
                                           : Align(
                                               alignment:
@@ -263,84 +189,82 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
                                 ),
                               ),
                               gapH8,
-                              if (state.isLoading)
-                                const Padding(
-                                  padding: EdgeInsets.all(Sizes.p8),
-                                  child: LinearProgressIndicator(),
-                                )
-                              else
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    PrimaryToggleButton(
-                                      text: 'All Steps'.hardcoded,
-                                      onPressed: () => setState(
-                                        () => _showSteps = !_showSteps,
+                              // if (state.isLoading)
+                              //   const Padding(
+                              //     padding: EdgeInsets.all(Sizes.p8),
+                              //     child: LinearProgressIndicator(),
+                              //   )
+                              // else
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  PrimaryToggleButton(
+                                    text: 'All Steps'.hardcoded,
+                                    onPressed: () => setState(
+                                      () => _showSteps = !_showSteps,
+                                    ),
+                                    isActive: shouldShowSteps(),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      // IconButton(
+                                      //   icon: const Icon(Icons.alt_route),
+                                      //   tooltip: 'Other Routes'.hardcoded,
+                                      //   onPressed: () {
+                                      //     // `TODO`(FireJuun): Query Other Routes Dialog
+                                      //   },
+                                      // ),
+                                      IconButton(
+                                        icon: const Icon(Icons.moving),
+                                        tooltip: 'Show Entire Route'.hardcoded,
+                                        onPressed: () => ref
+                                            .read(
+                                              navScreenGoogleControllerProvider
+                                                  .notifier,
+                                            )
+                                            .zoomToActiveRoute(),
                                       ),
-                                      isActive: shouldShowSteps(),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        // IconButton(
-                                        //   icon: const Icon(Icons.alt_route),
-                                        //   tooltip: 'Other Routes'.hardcoded,
-                                        //   onPressed: () {
-                                        //     // `TODO`(FireJuun): Query Other Routes Dialog
-                                        //   },
-                                        // ),
-                                        IconButton(
-                                          icon: const Icon(Icons.moving),
-                                          tooltip:
-                                              'Show Entire Route'.hardcoded,
-                                          onPressed: () => ref
-                                              .read(
-                                                navScreenGoogleControllerProvider
-                                                    .notifier,
-                                              )
-                                              .zoomToActiveRoute(),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        IconButton(
-                                          icon: const Icon(Icons.my_location),
-                                          tooltip: 'My Location'.hardcoded,
-                                          onPressed: () => ref
-                                              .read(
-                                                navScreenGoogleControllerProvider
-                                                    .notifier,
-                                              )
-                                              .showCurrentLocation(),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.remove),
-                                          tooltip: 'Zoom Out'.hardcoded,
-                                          onPressed: () => ref
-                                              .read(
-                                                navScreenGoogleControllerProvider
-                                                    .notifier,
-                                              )
-                                              .zoomOut(),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.add),
-                                          tooltip: 'Zoom In'.hardcoded,
-                                          onPressed: () => ref
-                                              .read(
-                                                navScreenGoogleControllerProvider
-                                                    .notifier,
-                                              )
-                                              .zoomIn(),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.my_location),
+                                        tooltip: 'My Location'.hardcoded,
+                                        onPressed: () => ref
+                                            .read(
+                                              navScreenGoogleControllerProvider
+                                                  .notifier,
+                                            )
+                                            .showCurrentLocation(),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.remove),
+                                        tooltip: 'Zoom Out'.hardcoded,
+                                        onPressed: () => ref
+                                            .read(
+                                              navScreenGoogleControllerProvider
+                                                  .notifier,
+                                            )
+                                            .zoomOut(),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.add),
+                                        tooltip: 'Zoom In'.hardcoded,
+                                        onPressed: () => ref
+                                            .read(
+                                              navScreenGoogleControllerProvider
+                                                  .notifier,
+                                            )
+                                            .zoomIn(),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                           if (_showNarration)

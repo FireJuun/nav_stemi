@@ -115,16 +115,17 @@ class GoogleNavigationService {
     googleNavigationRepository.destinations = destinations;
   }
 
-  Future<RouteCalculated> calculateDestinationRoutes(
-    Destinations destinations,
-  ) async {
+  Future<RouteCalculated> calculateDestinationRoutes() async {
+    final destinations = googleNavigationRepository.destinations;
+    if (destinations == null) {
+      throw GoogleNavSetDestinationSessionNotInitializedException();
+    }
     try {
       final navRouteStatus =
           await googleNavigationRepository.setDestinations(destinations);
 
       switch (navRouteStatus) {
         case NavigationRouteStatus.statusOk:
-          await startGuidance();
           return true;
         case NavigationRouteStatus.internalError:
           throw GoogleNavInternalErrorException();

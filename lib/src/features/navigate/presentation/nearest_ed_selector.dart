@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_navigation_flutter/google_navigation_flutter.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 const _routeDurationDto = RouteDurationDto();
@@ -14,7 +15,7 @@ class NearestEdSelector extends ConsumerWidget {
   });
 
   final AvailableRoutes availableRoutes;
-  final ActiveRoute activeRoute;
+  final Destinations activeRoute;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,7 +41,7 @@ class NearestEdButtons extends ConsumerWidget {
   });
 
   final AvailableRoutes availableRoutes;
-  final ActiveRoute activeRoute;
+  final Destinations activeRoute;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -78,12 +78,18 @@ class RouteService {
     required NearbyEd activeEd,
     required NearbyEds nearbyEds,
   }) async {
-    _useGoogleNavigationForRouting
-        ? googleNavigationService.setDestination(activeEd.edInfo)
-        : await _goToEdWithGoogleRoutes(
-            activeEd: activeEd,
-            nearbyEds: nearbyEds,
-          );
+    googleNavigationService.setDestination(activeEd.edInfo);
+
+    await _goToEdWithGoogleRoutes(
+      activeEd: activeEd,
+      nearbyEds: nearbyEds,
+    );
+    // _useGoogleNavigationForRouting
+    //     ? googleNavigationService.setDestination(activeEd.edInfo)
+    //     : await _goToEdWithGoogleRoutes(
+    //         activeEd: activeEd,
+    //         nearbyEds: nearbyEds,
+    //       );
   }
 
   // TODO(FireJuun): currently unused, consider deprecating
