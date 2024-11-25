@@ -13,10 +13,13 @@ class NavScreenGoogleController extends _$NavScreenGoogleController {
   final _latLngBounds = LatLngBoundsDTO();
   GoogleNavigationService get _googleNavigationService =>
       ref.read(googleNavigationServiceProvider);
+  GoogleNavigationRepository get _googleNavigationRepository =>
+      ref.read(googleNavigationRepositoryProvider);
 
   @override
-  FutureOr<void> build() {
-    _googleNavigationService.initialize();
+  FutureOr<void> build() async {
+    await _googleNavigationService.initialize();
+
     ref.onDispose(() {
       _googleNavigationService.cleanup();
     });
@@ -24,9 +27,14 @@ class NavScreenGoogleController extends _$NavScreenGoogleController {
 
   /// These methods are called from the UI
   /// They are not reliant on any state, so they can be called directly
-  void onViewCreated(GoogleNavigationViewController controller) {
+  Future<void> onViewCreated(GoogleNavigationViewController controller) async {
     _controller.complete(controller);
-    unawaited(controller.setMyLocationEnabled(true));
+    await controller.setMyLocationEnabled(true);
+    final isLocationEnabled = await controller.isMyLocationEnabled();
+    final destinations = _googleNavigationRepository.destinations;
+    if (isLocationEnabled && destinations != null) {
+      await _googleNavigationService.calculateDestinationRoutes();
+    }
   }
 
   Future<LatLng?> userLocation() =>
