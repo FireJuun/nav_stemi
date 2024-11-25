@@ -235,12 +235,12 @@ class TimeMetric extends StatelessWidget {
                   ),
                 ]
               : [
-                  IconButton(
-                    onPressed: onToggleLocked,
-                    icon: isLocked
-                        ? const Icon(Icons.lock)
-                        : const Icon(Icons.lock_open),
-                  ),
+                  // IconButton(
+                  //   onPressed: onToggleLocked,
+                  //   icon: isLocked
+                  //       ? const Icon(Icons.lock)
+                  //       : const Icon(Icons.lock_open),
+                  // ),
                   TimeMetricsMenu(
                     onSelectDateTime: selectDateTime,
                     onClearDateTime: clearDateTime,
