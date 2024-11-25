@@ -11,10 +11,10 @@ class NavScreenGoogleController extends _$NavScreenGoogleController {
       Completer<GoogleNavigationViewController>();
 
   final _latLngBounds = LatLngBoundsDTO();
+  ActiveDestinationRepository get _activeDestinationRepository =>
+      ref.read(activeDestinationRepositoryProvider);
   GoogleNavigationService get _googleNavigationService =>
       ref.read(googleNavigationServiceProvider);
-  GoogleNavigationRepository get _googleNavigationRepository =>
-      ref.read(googleNavigationRepositoryProvider);
 
   @override
   FutureOr<void> build() async {
@@ -31,8 +31,10 @@ class NavScreenGoogleController extends _$NavScreenGoogleController {
     _controller.complete(controller);
     await controller.setMyLocationEnabled(true);
     final isLocationEnabled = await controller.isMyLocationEnabled();
-    final destinations = _googleNavigationRepository.destinations;
-    if (isLocationEnabled && destinations != null) {
+    final destination =
+        _activeDestinationRepository.activeDestination?.destination;
+
+    if (isLocationEnabled && destination != null) {
       await _googleNavigationService.calculateDestinationRoutes();
     }
   }

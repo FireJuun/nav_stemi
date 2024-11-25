@@ -41,9 +41,12 @@ class RightNavDrawer extends ConsumerWidget {
             ),
             onTap: () {
               unawaited(
+                ref.read(googleNavigationServiceProvider).startGuidance(),
+              );
+              unawaited(
                 ref
                     .read(googleNavigationServiceProvider)
-                    .simulateUserLocation(),
+                    .simulateLocationsAlongExistingRoute(),
               );
 
               if (!context.mounted) return;
@@ -60,6 +63,9 @@ class RightNavDrawer extends ConsumerWidget {
               style: textTheme.titleMedium?.apply(color: textColor),
             ),
             onTap: () {
+              unawaited(
+                ref.read(googleNavigationServiceProvider).stopGuidance(),
+              );
               unawaited(
                 ref.read(googleNavigationServiceProvider).stopSimulation(),
               );
