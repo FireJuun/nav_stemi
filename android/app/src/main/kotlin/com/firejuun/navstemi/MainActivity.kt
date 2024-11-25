@@ -1,4 +1,4 @@
-package org.atriumhealth.nav_stemi
+package com.firejuun.navstemi
 
 import io.flutter.embedding.android.FlutterActivity
 
