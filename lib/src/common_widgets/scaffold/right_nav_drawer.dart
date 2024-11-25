@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
@@ -30,6 +32,43 @@ class RightNavDrawer extends ConsumerWidget {
           ),
           ListTile(
             leading: Icon(
+              Icons.play_circle,
+              color: textColor,
+            ),
+            title: Text(
+              'Start Simulation'.hardcoded,
+              style: textTheme.titleMedium?.apply(color: textColor),
+            ),
+            onTap: () {
+              unawaited(
+                ref
+                    .read(googleNavigationServiceProvider)
+                    .simulateUserLocation(),
+              );
+
+              if (!context.mounted) return;
+              Scaffold.of(context).closeEndDrawer();
+            },
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.stop_circle,
+              color: textColor,
+            ),
+            title: Text(
+              'Stop Simulation'.hardcoded,
+              style: textTheme.titleMedium?.apply(color: textColor),
+            ),
+            onTap: () {
+              unawaited(
+                ref.read(googleNavigationServiceProvider).stopSimulation(),
+              );
+              if (!context.mounted) return;
+              Scaffold.of(context).closeEndDrawer();
+            },
+          ),
+          ListTile(
+            leading: Icon(
               Icons.play_arrow,
               color: textColor,
             ),
@@ -39,7 +78,8 @@ class RightNavDrawer extends ConsumerWidget {
             ),
             onTap: () {
               ref.read(countUpTimerRepositoryProvider).start();
-              Navigator.pop(context);
+              if (!context.mounted) return;
+              Scaffold.of(context).closeEndDrawer();
             },
           ),
           ListTile(
@@ -53,7 +93,8 @@ class RightNavDrawer extends ConsumerWidget {
             ),
             onTap: () {
               ref.read(countUpTimerRepositoryProvider).stop();
-              Navigator.pop(context);
+              if (!context.mounted) return;
+              Scaffold.of(context).closeEndDrawer();
             },
           ),
           ListTile(
@@ -67,7 +108,8 @@ class RightNavDrawer extends ConsumerWidget {
             ),
             onTap: () {
               ref.read(countUpTimerRepositoryProvider).reset();
-              Navigator.pop(context);
+              if (!context.mounted) return;
+              Scaffold.of(context).closeEndDrawer();
             },
           ),
         ],
