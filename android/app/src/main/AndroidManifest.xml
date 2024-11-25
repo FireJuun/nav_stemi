@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.atriumhealth.nav_stemi">
+    package="com.firejuun.navstemi">
    <application
         android:label="${appName}"
         android:name="${applicationName}"
