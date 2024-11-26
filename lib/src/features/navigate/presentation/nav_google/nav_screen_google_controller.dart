@@ -42,6 +42,18 @@ class NavScreenGoogleController extends _$NavScreenGoogleController {
   Future<LatLng?> userLocation() =>
       _controller.future.then((controller) async => controller.getMyLocation());
 
+  void linkEdInfoToDestination(EdInfo edInfo) =>
+      _googleNavigationService.linkEdInfoToDestination(edInfo);
+
+  void setAudioGuidanceType(NavigationAudioGuidanceType guidanceType) =>
+      unawaited(_googleNavigationService.setAudioGuidanceType(guidanceType));
+
+  void startDrivingDirections() =>
+      unawaited(_googleNavigationService.startDrivingDirections());
+
+  void stopDrivingDirections() =>
+      unawaited(_googleNavigationService.stopDrivingDirections());
+
   void zoomIn() => unawaited(
         _controller.future.then((controller) {
           controller.animateCamera(CameraUpdate.zoomIn());

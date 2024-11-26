@@ -85,6 +85,16 @@ class GoogleNavigationRepository {
     await GoogleMapsNavigator.cleanup();
   }
 
+  Future<List<RouteSegment>> getRouteSegments() async {
+    debugPrint('Calculating route segments');
+    return GoogleMapsNavigator.getRouteSegments();
+  }
+
+  Future<void> setAudioGuidance(NavigationAudioGuidanceSettings settings) {
+    debugPrint('Setting audio guidance');
+    return GoogleMapsNavigator.setAudioGuidance(settings);
+  }
+
   Future<NavigationRouteStatus> setDestinations(
     Destinations destinations,
   ) async =>

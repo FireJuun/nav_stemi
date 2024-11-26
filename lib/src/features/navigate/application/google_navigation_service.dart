@@ -20,6 +20,10 @@ class GoogleNavigationService {
 
   final Ref ref;
 
+  // TODO(FireJuun): extract into settings
+  static const _includeSimulationWithGuidanceSetting = true;
+  static const _simulationSpeedMultiplier = 5.0;
+
   ActiveDestinationRepository get activeDestinationRepository =>
       ref.read(activeDestinationRepositoryProvider);
   GeolocatorRepository get geolocatorRepository =>
@@ -97,7 +101,7 @@ class GoogleNavigationService {
     await googleNavigationRepository.cleanupNavigationSession();
   }
 
-  void setDestination(EdInfo edInfo) {
+  void linkEdInfoToDestination(EdInfo edInfo) {
     final latitude = edInfo.location.latitude;
     final longitude = edInfo.location.longitude;
 
@@ -117,6 +121,20 @@ class GoogleNavigationService {
 
     activeDestinationRepository.activeDestination =
         ActiveDestination(destination: destination, destinationInfo: edInfo);
+  }
+
+  Future<void> setAudioGuidanceType(
+    NavigationAudioGuidanceType guidanceType,
+  ) async {
+    final settings = NavigationAudioGuidanceSettings(
+      guidanceType: guidanceType,
+    );
+
+    try {
+      await googleNavigationRepository.setAudioGuidance(settings);
+    } on SessionNotInitializedException {
+      throw GoogleNavSetAudioGuidanceSessionNotInitializedException();
+    }
   }
 
   Future<RouteCalculated> calculateDestinationRoutes() async {
@@ -170,12 +188,40 @@ class GoogleNavigationService {
     }
   }
 
+  Future<List<RouteSegment>> calculateRouteSegments() async {
+    try {
+      final routeSegments = await googleNavigationRepository.getRouteSegments();
+      if (routeSegments.isNotEmpty) {
+        return routeSegments;
+      }
+      throw GoogleNavRouteSegmentsEmptyException();
+    } on SessionNotInitializedException {
+      throw GoogleNavRouteSegmentsSessionNotInitializedException();
+    }
+  }
+
   Future<RouteCalculated> clearDestinations() async {
     try {
       await googleNavigationRepository.clearDestinations();
       return false;
     } on SessionNotInitializedException {
       throw GoogleNavClearDestinationSessionNotInitializedException();
+    }
+  }
+
+  Future<void> startDrivingDirections({bool? includeSimulation}) async {
+    await startGuidance();
+    if (includeSimulation ?? _includeSimulationWithGuidanceSetting) {
+      await simulateLocationsAlongExistingRouteWithOptions(
+        SimulationOptions(speedMultiplier: _simulationSpeedMultiplier),
+      );
+    }
+  }
+
+  Future<void> stopDrivingDirections({bool? includeSimulation}) async {
+    await stopGuidance();
+    if (includeSimulation ?? _includeSimulationWithGuidanceSetting) {
+      await stopSimulation();
     }
   }
 
