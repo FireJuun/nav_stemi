@@ -22,11 +22,10 @@ class NavScreenGoogle extends StatefulWidget {
 class _NavScreenGoogleState extends State<NavScreenGoogle> {
   bool _showSteps = false;
   bool _showNextTurn = true;
-  final bool _isNavigating = false;
-  final bool _isSimulatingRoute = false;
-
-  /// Speed multiplier used for simulation.
-  static const double simulationSpeedMultiplier = 5;
+  bool _showAudioGuidance = false;
+  NavigationAudioGuidanceType _audioGuidanceType =
+      NavigationAudioGuidanceType.alertsAndGuidance;
+  bool _isNavigating = false;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +34,9 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
         final colorScheme = Theme.of(context).colorScheme;
 
         bool shouldShowSteps() => _showSteps && !isKeyboardVisible;
+        bool shouldShowAudioGuidance() =>
+            _showAudioGuidance && !isKeyboardVisible;
+
         return Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 16,
@@ -57,6 +59,9 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
               final activeDestinationValue =
                   ref.watch(activeDestinationProvider);
               ref.watch(navScreenGoogleControllerProvider);
+              final notifier = ref.read(
+                navScreenGoogleControllerProvider.notifier,
+              );
 
               return AsyncValueWidget<ActiveDestination?>(
                 value: activeDestinationValue,
@@ -87,12 +92,7 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
                                     );
 
                                     return GoogleMapsNavigationView(
-                                      onViewCreated: ref
-                                          .read(
-                                            navScreenGoogleControllerProvider
-                                                .notifier,
-                                          )
-                                          .onViewCreated,
+                                      onViewCreated: notifier.onViewCreated,
                                       initialCameraPosition: CameraPosition(
                                         target:
                                             widget.initialPosition.toLatLng(),
@@ -167,16 +167,41 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
                                     child: const NavSteps(),
                                   ),
                                 ),
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: AnimatedContainer(
+                                    duration: 300.ms,
+                                    height:
+                                        shouldShowAudioGuidance() ? null : 0,
+                                    decoration: BoxDecoration(
+                                      color: colorScheme.surface,
+                                      border: shouldShowAudioGuidance()
+                                          ? Border.all(
+                                              color: colorScheme.onSurface,
+                                            )
+                                          : null,
+                                    ),
+                                    clipBehavior: Clip.antiAlias,
+                                    child: AudioGuidancePicker(
+                                      currentValue: _audioGuidanceType,
+                                      onChanged: (guidanceType) {
+                                        setState(
+                                          () {
+                                            _audioGuidanceType = guidanceType;
+                                            _showAudioGuidance = false;
+                                            notifier.setAudioGuidanceType(
+                                              guidanceType,
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
                           gapH8,
-                          // if (state.isLoading)
-                          //   const Padding(
-                          //     padding: EdgeInsets.all(Sizes.p8),
-                          //     child: LinearProgressIndicator(),
-                          //   )
-                          // else
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -191,56 +216,66 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  // IconButton(
-                                  //   icon: const Icon(Icons.alt_route),
-                                  //   tooltip: 'Other Routes'.hardcoded,
-                                  //   onPressed: () {
-                                  //     // `TODO`(FireJuun): Query Other Routes Dialog
-                                  //   },
-                                  // ),
+                                  /// volume up, important, volume off
                                   IconButton(
-                                    icon: const Icon(Icons.moving),
-                                    tooltip: 'Show Entire Route'.hardcoded,
-                                    onPressed: () => ref
-                                        .read(
-                                          navScreenGoogleControllerProvider
-                                              .notifier,
-                                        )
-                                        .zoomToActiveRoute(),
+                                    icon: switch (_audioGuidanceType) {
+                                      NavigationAudioGuidanceType
+                                            .alertsAndGuidance =>
+                                        const Icon(Icons.volume_up),
+                                      NavigationAudioGuidanceType.alertsOnly =>
+                                        const Icon(
+                                          Icons.notification_important_outlined,
+                                        ),
+                                      NavigationAudioGuidanceType.silent =>
+                                        const Icon(Icons.volume_off),
+                                    },
+                                    isSelected: _showAudioGuidance,
+                                    tooltip: 'Audio Guidance'.hardcoded,
+                                    onPressed: () {
+                                      setState(() {
+                                        _showAudioGuidance =
+                                            !_showAudioGuidance;
+                                      });
+                                    },
                                   ),
+                                  if (_isNavigating)
+                                    IconButton(
+                                      icon: const Icon(Icons.stop),
+                                      tooltip:
+                                          'Stop Driving Directions'.hardcoded,
+                                      onPressed: () {
+                                        notifier.stopDrivingDirections();
+                                        setState(() => _isNavigating = false);
+                                      },
+                                    )
+                                  else
+                                    IconButton(
+                                      icon: const Icon(Icons.play_arrow),
+                                      tooltip:
+                                          'Start Driving Directions'.hardcoded,
+                                      onPressed: () {
+                                        notifier.startDrivingDirections();
+                                        setState(() => _isNavigating = true);
+                                      },
+                                    ),
                                 ],
                               ),
                               Row(
                                 children: [
                                   IconButton(
-                                    icon: const Icon(Icons.my_location),
-                                    tooltip: 'My Location'.hardcoded,
-                                    onPressed: () => ref
-                                        .read(
-                                          navScreenGoogleControllerProvider
-                                              .notifier,
-                                        )
-                                        .showCurrentLocation(),
+                                    icon: const Icon(Icons.moving),
+                                    tooltip: 'Show Entire Route'.hardcoded,
+                                    onPressed: notifier.zoomToActiveRoute,
                                   ),
                                   IconButton(
                                     icon: const Icon(Icons.remove),
                                     tooltip: 'Zoom Out'.hardcoded,
-                                    onPressed: () => ref
-                                        .read(
-                                          navScreenGoogleControllerProvider
-                                              .notifier,
-                                        )
-                                        .zoomOut(),
+                                    onPressed: notifier.zoomOut,
                                   ),
                                   IconButton(
                                     icon: const Icon(Icons.add),
                                     tooltip: 'Zoom In'.hardcoded,
-                                    onPressed: () => ref
-                                        .read(
-                                          navScreenGoogleControllerProvider
-                                              .notifier,
-                                        )
-                                        .zoomIn(),
+                                    onPressed: notifier.zoomIn,
                                   ),
                                 ],
                               ),
@@ -290,6 +325,46 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
           ),
         );
       },
+    );
+  }
+}
+
+class AudioGuidancePicker extends StatelessWidget {
+  const AudioGuidancePicker({
+    required this.currentValue,
+    required this.onChanged,
+    super.key,
+  });
+
+  final NavigationAudioGuidanceType currentValue;
+  final ValueChanged<NavigationAudioGuidanceType> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          onPressed: currentValue ==
+                  NavigationAudioGuidanceType.alertsAndGuidance
+              ? null
+              : () => onChanged(NavigationAudioGuidanceType.alertsAndGuidance),
+          icon: const Icon(Icons.volume_up),
+        ),
+        IconButton(
+          onPressed: currentValue == NavigationAudioGuidanceType.alertsOnly
+              ? null
+              : () => onChanged(NavigationAudioGuidanceType.alertsOnly),
+          icon: const Icon(Icons.notification_important_outlined),
+        ),
+        IconButton(
+          onPressed: currentValue == NavigationAudioGuidanceType.silent
+              ? null
+              : () => onChanged(NavigationAudioGuidanceType.silent),
+          icon: const Icon(Icons.volume_off),
+        ),
+      ],
     );
   }
 }

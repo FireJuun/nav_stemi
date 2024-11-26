@@ -32,22 +32,56 @@ class RightNavDrawer extends ConsumerWidget {
           ),
           ListTile(
             leading: Icon(
-              Icons.play_circle,
+              Icons.play_arrow,
               color: textColor,
             ),
             title: Text(
-              'Start Simulation'.hardcoded,
+              'Start Navigation'.hardcoded,
               style: textTheme.titleMedium?.apply(color: textColor),
             ),
             onTap: () {
               unawaited(
-                ref.read(googleNavigationServiceProvider).startGuidance(),
+                ref
+                    .read(googleNavigationServiceProvider)
+                    .startDrivingDirections(),
               );
+
+              if (!context.mounted) return;
+              Scaffold.of(context).closeEndDrawer();
+            },
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.stop,
+              color: textColor,
+            ),
+            title: Text(
+              'Stop Navigation'.hardcoded,
+              style: textTheme.titleMedium?.apply(color: textColor),
+            ),
+            onTap: () {
               unawaited(
                 ref
                     .read(googleNavigationServiceProvider)
-                    .simulateLocationsAlongExistingRoute(),
+                    .stopDrivingDirections(),
               );
+
+              if (!context.mounted) return;
+              Scaffold.of(context).closeEndDrawer();
+            },
+          ),
+          const Divider(),
+          ListTile(
+            leading: Icon(
+              Icons.play_circle,
+              color: textColor,
+            ),
+            title: Text(
+              'Start Timer'.hardcoded,
+              style: textTheme.titleMedium?.apply(color: textColor),
+            ),
+            onTap: () {
+              ref.read(countUpTimerRepositoryProvider).start();
 
               if (!context.mounted) return;
               Scaffold.of(context).closeEndDrawer();
@@ -59,53 +93,19 @@ class RightNavDrawer extends ConsumerWidget {
               color: textColor,
             ),
             title: Text(
-              'Stop Simulation'.hardcoded,
-              style: textTheme.titleMedium?.apply(color: textColor),
-            ),
-            onTap: () {
-              unawaited(
-                ref.read(googleNavigationServiceProvider).stopGuidance(),
-              );
-              unawaited(
-                ref.read(googleNavigationServiceProvider).stopSimulation(),
-              );
-              if (!context.mounted) return;
-              Scaffold.of(context).closeEndDrawer();
-            },
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.play_arrow,
-              color: textColor,
-            ),
-            title: Text(
-              'Start Timer'.hardcoded,
-              style: textTheme.titleMedium?.apply(color: textColor),
-            ),
-            onTap: () {
-              ref.read(countUpTimerRepositoryProvider).start();
-              if (!context.mounted) return;
-              Scaffold.of(context).closeEndDrawer();
-            },
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.stop,
-              color: textColor,
-            ),
-            title: Text(
               'Stop Timer'.hardcoded,
               style: textTheme.titleMedium?.apply(color: textColor),
             ),
             onTap: () {
               ref.read(countUpTimerRepositoryProvider).stop();
+
               if (!context.mounted) return;
               Scaffold.of(context).closeEndDrawer();
             },
           ),
           ListTile(
             leading: Icon(
-              Icons.refresh,
+              Icons.change_circle,
               color: textColor,
             ),
             title: Text(
@@ -114,6 +114,7 @@ class RightNavDrawer extends ConsumerWidget {
             ),
             onTap: () {
               ref.read(countUpTimerRepositoryProvider).reset();
+
               if (!context.mounted) return;
               Scaffold.of(context).closeEndDrawer();
             },

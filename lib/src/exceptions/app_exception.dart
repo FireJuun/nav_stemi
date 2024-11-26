@@ -84,6 +84,34 @@ class GoogleNavRouteNotFoundException extends AppException {
         );
 }
 
+class GoogleNavRouteSegmentsEmptyException extends AppException {
+  GoogleNavRouteSegmentsEmptyException()
+      : super(
+          'google-navigation-route-segments-empty',
+          'The route segments are empty.'.hardcoded,
+        );
+}
+
+class GoogleNavRouteSegmentsSessionNotInitializedException
+    extends AppException {
+  GoogleNavRouteSegmentsSessionNotInitializedException()
+      : super(
+          'google-navigation-route-segments-session-not-initialized',
+          '''Cannot get route segments before the navigation session has been initialized.'''
+              .hardcoded,
+        );
+}
+
+class GoogleNavSetAudioGuidanceSessionNotInitializedException
+    extends AppException {
+  GoogleNavSetAudioGuidanceSessionNotInitializedException()
+      : super(
+          'set-audio-guidance-session-not-initialized',
+          '''Cannot set audio guidance before the navigation session has been initialized.'''
+              .hardcoded,
+        );
+}
+
 class GoogleNavNetworkErrorException extends AppException {
   GoogleNavNetworkErrorException()
       : super(
