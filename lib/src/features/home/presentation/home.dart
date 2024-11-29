@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -12,12 +14,35 @@ class Home extends ConsumerStatefulWidget {
 
 /// spec: https://github.com/googlemaps/flutter-navigation-sdk/blob/main/example/lib/main.dart
 class _HomeState extends ConsumerState<Home> {
-  bool _locationPermitted = false;
-  bool _notificationsPermitted = false;
+  /// spec: https://api.flutter.dev/flutter/widgets/AppLifecycleListener-class.html
+  late final AppLifecycleListener _listener;
+
+  bool _locationPermitted = true;
+  bool _notificationsPermitted = true;
+
+  bool permissionsMissing() => !_locationPermitted || !_notificationsPermitted;
+
+  HomeController get notifier => ref.read(homeControllerProvider.notifier);
 
   @override
   void initState() {
-    ref.read(permissionsServiceProvider).checkPermissionsOnAppStart().then(
+    super.initState();
+    unawaited(_checkAndSavePermissions());
+
+    _listener = AppLifecycleListener(
+      // onRestart: _checkAndSavePermissions,
+      onResume: _checkAndSavePermissions,
+    );
+  }
+
+  @override
+  void dispose() {
+    _listener.dispose();
+    super.dispose();
+  }
+
+  Future<void> _checkAndSavePermissions() async {
+    return notifier.checkPermissionsOnAppStart().then(
       (permissions) {
         setState(() {
           _locationPermitted = permissions.areLocationsPermitted;
@@ -25,12 +50,11 @@ class _HomeState extends ConsumerState<Home> {
         });
       },
     );
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO(FireJuun): show [_locationPermitted] and [_notificationsPermitted] in the UI, if not accepted
+    ref.watch(homeControllerProvider);
 
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
@@ -78,13 +102,85 @@ class _HomeState extends ConsumerState<Home> {
             ),
             Column(
               children: [
-                FilledButton(
-                  onPressed: () => context.goNamed(AppRoute.goTo.name),
-                  child: Text(
-                    '+ GO'.hardcoded,
-                    style: textTheme.headlineMedium!
-                        .apply(color: Theme.of(context).colorScheme.onPrimary),
+                if (permissionsMissing())
+                  Column(
+                    children: [
+                      Text.rich(
+                        textAlign: TextAlign.center,
+                        TextSpan(
+                          style: textTheme.bodyLarge?.apply(
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: 'Error',
+                              style: textTheme.bodyLarge?.apply(
+                                decoration: TextDecoration.underline,
+                                color: Theme.of(context).colorScheme.error,
+                              ),
+                            ),
+                            TextSpan(text: ': '.hardcoded),
+                            TextSpan(
+                              text: 'Missing the following permissions:'
+                                  .hardcoded,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          if (!_locationPermitted)
+                            Text(
+                              '• Location'.hardcoded,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.apply(
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                            ),
+                          if (!_notificationsPermitted)
+                            Text(
+                              '• Notifications'.hardcoded,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.apply(
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                            ),
+                        ],
+                      ),
+                      gapH8,
+                    ],
                   ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    if (permissionsMissing())
+                      FilledButton(
+                        onPressed: notifier.openAppSettingsPage,
+                        child: Text(
+                          'Open App\nSettings'.hardcoded,
+                          textAlign: TextAlign.center,
+                          style: textTheme.headlineSmall!.apply(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        ),
+                      ),
+                    FilledButton(
+                      onPressed: permissionsMissing()
+                          ? null
+                          : () => context.goNamed(AppRoute.goTo.name),
+                      child: Text(
+                        '+ GO'.hardcoded,
+                        style: textTheme.headlineMedium!.apply(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 gapH16,
                 OutlinedButton(
