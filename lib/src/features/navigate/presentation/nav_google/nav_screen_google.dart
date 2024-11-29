@@ -58,10 +58,12 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
 
               final activeDestinationValue =
                   ref.watch(activeDestinationProvider);
+
               ref.watch(navScreenGoogleControllerProvider);
-              final notifier = ref.read(
-                navScreenGoogleControllerProvider.notifier,
-              );
+
+              NavScreenGoogleController notifier() => ref.read(
+                    navScreenGoogleControllerProvider.notifier,
+                  );
 
               return AsyncValueWidget<ActiveDestination?>(
                 value: activeDestinationValue,
@@ -92,7 +94,7 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
                                     );
 
                                     return GoogleMapsNavigationView(
-                                      onViewCreated: notifier.onViewCreated,
+                                      onViewCreated: notifier().onViewCreated,
                                       initialCameraPosition: CameraPosition(
                                         target:
                                             widget.initialPosition.toLatLng(),
@@ -189,7 +191,7 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
                                           () {
                                             _audioGuidanceType = guidanceType;
                                             _showAudioGuidance = false;
-                                            notifier.setAudioGuidanceType(
+                                            notifier().setAudioGuidanceType(
                                               guidanceType,
                                             );
                                           },
@@ -244,7 +246,7 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
                                       tooltip:
                                           'Stop Driving Directions'.hardcoded,
                                       onPressed: () {
-                                        notifier.stopDrivingDirections();
+                                        notifier().stopDrivingDirections();
                                         setState(() => _isNavigating = false);
                                       },
                                     )
@@ -254,7 +256,7 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
                                       tooltip:
                                           'Start Driving Directions'.hardcoded,
                                       onPressed: () {
-                                        notifier.startDrivingDirections();
+                                        notifier().startDrivingDirections();
                                         setState(() => _isNavigating = true);
                                       },
                                     ),
@@ -265,17 +267,17 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
                                   IconButton(
                                     icon: const Icon(Icons.moving),
                                     tooltip: 'Show Entire Route'.hardcoded,
-                                    onPressed: notifier.zoomToActiveRoute,
+                                    onPressed: notifier().zoomToActiveRoute,
                                   ),
                                   IconButton(
                                     icon: const Icon(Icons.remove),
                                     tooltip: 'Zoom Out'.hardcoded,
-                                    onPressed: notifier.zoomOut,
+                                    onPressed: notifier().zoomOut,
                                   ),
                                   IconButton(
                                     icon: const Icon(Icons.add),
                                     tooltip: 'Zoom In'.hardcoded,
-                                    onPressed: notifier.zoomIn,
+                                    onPressed: notifier().zoomIn,
                                   ),
                                 ],
                               ),

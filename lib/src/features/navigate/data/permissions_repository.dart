@@ -7,6 +7,8 @@ typedef LocationPermissionsAccepted = bool;
 typedef NotificationPermissionsAccepted = bool;
 
 class PermissionsRepository {
+  Future<PermissionStatus> checkLocationStatus() => Permission.location.status;
+
   Future<LocationPermissionsAccepted> areLocationsPermitted() async {
     final locationPermission = await Permission.location.status;
     return locationPermission == PermissionStatus.granted;
@@ -16,6 +18,9 @@ class PermissionsRepository {
     final locationPermission = await Permission.locationWhenInUse.request();
     return locationPermission == PermissionStatus.granted;
   }
+
+  Future<PermissionStatus> checkNotificationStatus() =>
+      Permission.notification.status;
 
   Future<NotificationPermissionsAccepted> areNotificationsPermitted() async {
     final notificationPermission = await Permission.notification.status;
@@ -27,6 +32,8 @@ class PermissionsRepository {
     final notificationPermission = await Permission.notification.request();
     return notificationPermission == PermissionStatus.granted;
   }
+
+  Future<bool> openAppSettingsPage() => openAppSettings();
 }
 
 @riverpod

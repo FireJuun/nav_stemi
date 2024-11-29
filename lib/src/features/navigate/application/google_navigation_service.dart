@@ -98,6 +98,9 @@ class GoogleNavigationService {
   }
 
   Future<void> cleanup() async {
+    if (await googleNavigationRepository.isGuidanceRunning()) {
+      await stopGuidance();
+    }
     await googleNavigationRepository.cleanupNavigationSession();
   }
 

@@ -42,6 +42,9 @@ class PermissionsService {
     );
   }
 
+  Future<void> openAppSettingsPage() =>
+      permissionsRepository.openAppSettingsPage();
+
   @visibleForTesting
   Future<LocationsPermitted> checkLocationPermissions() async {
     final areLocationsPermitted =
