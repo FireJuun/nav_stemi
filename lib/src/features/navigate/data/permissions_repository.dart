@@ -34,6 +34,9 @@ class PermissionsRepository {
   }
 
   Future<bool> openAppSettingsPage() => openAppSettings();
+
+  Future<bool> isLocationServiceEnabled() async =>
+      Permission.location.serviceStatus.isEnabled;
 }
 
 @riverpod

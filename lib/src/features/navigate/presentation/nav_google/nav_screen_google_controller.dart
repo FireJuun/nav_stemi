@@ -6,7 +6,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'nav_screen_google_controller.g.dart';
 
 @riverpod
-class NavScreenGoogleController extends _$NavScreenGoogleController {
+class NavScreenGoogleController extends _$NavScreenGoogleController
+    with NotifierMounted {
   final Completer<GoogleNavigationViewController> _controller =
       Completer<GoogleNavigationViewController>();
 
@@ -18,10 +19,13 @@ class NavScreenGoogleController extends _$NavScreenGoogleController {
 
   @override
   FutureOr<void> build() async {
-    await _googleNavigationService.initialize();
+    state = const AsyncData(null);
 
     ref.onDispose(() {
       _googleNavigationService.cleanup();
+      _activeDestinationRepository.activeDestination = null;
+      ref.read(mapSessionReadyProvider.notifier).setValue(newValue: false);
+      setUnmounted();
     });
   }
 
@@ -30,13 +34,8 @@ class NavScreenGoogleController extends _$NavScreenGoogleController {
   Future<void> onViewCreated(GoogleNavigationViewController controller) async {
     _controller.complete(controller);
     await controller.setMyLocationEnabled(true);
-    final isLocationEnabled = await controller.isMyLocationEnabled();
-    final destination =
-        _activeDestinationRepository.activeDestination?.destination;
-
-    if (isLocationEnabled && destination != null) {
-      await _googleNavigationService.calculateDestinationRoutes();
-    }
+    await _googleNavigationService.initialize();
+    ref.read(mapSessionReadyProvider.notifier).setValue(newValue: true);
   }
 
   Future<LatLng?> userLocation() =>
@@ -106,4 +105,13 @@ class NavScreenGoogleController extends _$NavScreenGoogleController {
 
   /// spec: https://github.com/googlemaps/flutter-navigation-sdk/blob/main/example/lib/pages/navigation.dart
   /// Functions below handled here
+}
+
+@Riverpod(keepAlive: true)
+class MapSessionReady extends _$MapSessionReady {
+  @override
+  AsyncValue<bool> build() => const AsyncData(false);
+
+  AsyncData<bool> setValue({required bool newValue}) =>
+      state = AsyncData(newValue);
 }
