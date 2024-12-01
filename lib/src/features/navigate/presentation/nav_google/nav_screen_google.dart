@@ -10,6 +10,9 @@ import 'package:nav_stemi/nav_stemi.dart';
 const _showNarration = false;
 const _showNorthUp = false;
 
+/// spec: https://github.com/googlemaps/flutter-navigation-sdk/blob/main/example/lib/pages/navigation.dart
+enum SimulationState { running, paused, notRunning }
+
 class NavScreenGoogle extends StatefulWidget {
   const NavScreenGoogle({required this.initialPosition, super.key});
 
@@ -22,10 +25,15 @@ class NavScreenGoogle extends StatefulWidget {
 class _NavScreenGoogleState extends State<NavScreenGoogle> {
   bool _showSteps = false;
   bool _showNextTurn = true;
+
+  /// Audio guidance settings
   bool _showAudioGuidance = false;
   NavigationAudioGuidanceType _audioGuidanceType =
       NavigationAudioGuidanceType.alertsAndGuidance;
-  bool _isNavigating = false;
+
+  /// Simulation settings
+  bool _showSimulationControls = false;
+  SimulationState _simulationState = SimulationState.notRunning;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +44,8 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
         bool shouldShowSteps() => _showSteps && !isKeyboardVisible;
         bool shouldShowAudioGuidance() =>
             _showAudioGuidance && !isKeyboardVisible;
+        bool shouldShowSimulationControls() =>
+            _showSimulationControls && !isKeyboardVisible;
 
         return Padding(
           padding: const EdgeInsets.symmetric(
@@ -200,6 +210,36 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
                                     ),
                                   ),
                                 ),
+
+                                /// Simulation controls
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: AnimatedContainer(
+                                    duration: 300.ms,
+                                    height: shouldShowSimulationControls()
+                                        ? null
+                                        : 0,
+                                    decoration: BoxDecoration(
+                                      color: colorScheme.surface,
+                                      border: shouldShowSimulationControls()
+                                          ? Border.all(
+                                              color: colorScheme.onSurface,
+                                            )
+                                          : null,
+                                    ),
+                                    clipBehavior: Clip.antiAlias,
+                                    child: SimulationStatePicker(
+                                      currentValue: _simulationState,
+                                      onChanged: (state) {
+                                        setState(() {
+                                          _simulationState = state;
+                                          _showSimulationControls = false;
+                                          notifier().setSimulationState(state);
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -240,26 +280,27 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
                                       });
                                     },
                                   ),
-                                  if (_isNavigating)
-                                    IconButton(
-                                      icon: const Icon(Icons.stop),
-                                      tooltip:
-                                          'Stop Driving Directions'.hardcoded,
-                                      onPressed: () {
-                                        notifier().stopDrivingDirections();
-                                        setState(() => _isNavigating = false);
-                                      },
-                                    )
-                                  else
-                                    IconButton(
-                                      icon: const Icon(Icons.play_arrow),
-                                      tooltip:
-                                          'Start Driving Directions'.hardcoded,
-                                      onPressed: () {
-                                        notifier().startDrivingDirections();
-                                        setState(() => _isNavigating = true);
-                                      },
-                                    ),
+
+                                  /// start, pause, stop navigation
+                                  IconButton(
+                                    icon: switch (_simulationState) {
+                                      SimulationState.running =>
+                                        const Icon(Icons.play_arrow),
+                                      SimulationState.paused => const Icon(
+                                          Icons.pause,
+                                        ),
+                                      SimulationState.notRunning =>
+                                        const Icon(Icons.stop),
+                                    },
+                                    isSelected: _showSimulationControls,
+                                    tooltip: 'Navigation State'.hardcoded,
+                                    onPressed: () {
+                                      setState(() {
+                                        _showSimulationControls =
+                                            !_showSimulationControls;
+                                      });
+                                    },
+                                  ),
                                 ],
                               ),
                               Row(
@@ -365,6 +406,45 @@ class AudioGuidancePicker extends StatelessWidget {
               ? null
               : () => onChanged(NavigationAudioGuidanceType.silent),
           icon: const Icon(Icons.volume_off),
+        ),
+      ],
+    );
+  }
+}
+
+class SimulationStatePicker extends StatelessWidget {
+  const SimulationStatePicker({
+    required this.currentValue,
+    required this.onChanged,
+    super.key,
+  });
+
+  final SimulationState currentValue;
+  final ValueChanged<SimulationState> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          onPressed: currentValue == SimulationState.running
+              ? null
+              : () => onChanged(SimulationState.running),
+          icon: const Icon(Icons.play_arrow),
+        ),
+        IconButton(
+          onPressed: currentValue == SimulationState.paused
+              ? null
+              : () => onChanged(SimulationState.paused),
+          icon: const Icon(Icons.pause),
+        ),
+        IconButton(
+          onPressed: currentValue == SimulationState.notRunning
+              ? null
+              : () => onChanged(SimulationState.notRunning),
+          icon: const Icon(Icons.stop),
         ),
       ],
     );
