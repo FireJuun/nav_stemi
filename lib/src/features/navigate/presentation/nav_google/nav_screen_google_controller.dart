@@ -14,6 +14,8 @@ class NavScreenGoogleController extends _$NavScreenGoogleController
   final _latLngBounds = LatLngBoundsDTO();
   ActiveDestinationRepository get _activeDestinationRepository =>
       ref.read(activeDestinationRepositoryProvider);
+  GoogleNavigationRepository get _googleNavigationRepository =>
+      ref.read(googleNavigationRepositoryProvider);
   GoogleNavigationService get _googleNavigationService =>
       ref.read(googleNavigationServiceProvider);
 
@@ -47,11 +49,19 @@ class NavScreenGoogleController extends _$NavScreenGoogleController
   void setAudioGuidanceType(NavigationAudioGuidanceType guidanceType) =>
       unawaited(_googleNavigationService.setAudioGuidanceType(guidanceType));
 
-  void startDrivingDirections() =>
-      unawaited(_googleNavigationService.startDrivingDirections());
+  Future<bool> isGuidanceRunning() async =>
+      _googleNavigationRepository.isGuidanceRunning();
 
-  void stopDrivingDirections() =>
-      unawaited(_googleNavigationService.stopDrivingDirections());
+  void setSimulationState(SimulationState simulationState) {
+    switch (simulationState) {
+      case SimulationState.running:
+        unawaited(_googleNavigationService.startDrivingDirections());
+      case SimulationState.paused:
+        unawaited(_googleNavigationService.pauseSimulation());
+      case SimulationState.notRunning:
+        unawaited(_googleNavigationService.stopSimulation());
+    }
+  }
 
   void zoomIn() => unawaited(
         _controller.future.then((controller) {
