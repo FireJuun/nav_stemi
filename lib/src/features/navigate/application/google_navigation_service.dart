@@ -73,6 +73,9 @@ class GoogleNavigationService {
     }
   }
 
+  Future<bool> isInitialized() async =>
+      googleNavigationRepository.isInitialized();
+
   @visibleForTesting
   Future<void> checkSessionInitialized() async {
     final isInitialized = await googleNavigationRepository.isInitialized();
@@ -98,9 +101,18 @@ class GoogleNavigationService {
   }
 
   Future<void> cleanup() async {
-    if (await googleNavigationRepository.isGuidanceRunning()) {
+    final isInitialized = await googleNavigationRepository.isInitialized();
+
+    if (!isInitialized) {
+      return;
+    }
+
+    final isGuidanceRunning =
+        await googleNavigationRepository.isGuidanceRunning();
+    if (isGuidanceRunning) {
       await stopGuidance();
     }
+
     await googleNavigationRepository.cleanupNavigationSession();
   }
 
