@@ -24,7 +24,7 @@ class NavScreenGoogle extends StatefulWidget {
 
 class _NavScreenGoogleState extends State<NavScreenGoogle> {
   bool _showSteps = false;
-  bool _showNextTurn = true;
+  // bool _showNextTurn = true;
 
   /// Audio guidance settings
   bool _showAudioGuidance = false;
@@ -34,6 +34,15 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
   /// Simulation settings
   bool _showSimulationControls = false;
   SimulationState _simulationState = SimulationState.running;
+
+  void _dismissMenus() {
+    setState(() {
+      _showSteps = false;
+      // _showNextTurn = false;
+      _showAudioGuidance = false;
+      _showSimulationControls = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,55 +119,57 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
                                             widget.initialPosition.toLatLng(),
                                         zoom: 14,
                                       ),
+                                      onMapLongClicked: (_) => _dismissMenus(),
+                                      onMapClicked: (_) => _dismissMenus(),
                                     );
                                   },
                                 ),
-                                AnimatedSwitcher(
-                                  duration: 300.ms,
+                                // AnimatedSwitcher(
+                                //   duration: 300.ms,
 
-                                  /// required due to this bug: https://github.com/flutter/flutter/issues/121336#issuecomment-1482620874
-                                  transitionBuilder: (child, animation) =>
-                                      FadeTransition(
-                                    opacity: animation,
-                                    child: child,
-                                  ),
-                                  child: _showNextTurn
-                                      ? const Align(
-                                          alignment: Alignment.topCenter,
+                                //   /// required due to this bug: https://github.com/flutter/flutter/issues/121336#issuecomment-1482620874
+                                //   transitionBuilder: (child, animation) =>
+                                //       FadeTransition(
+                                //     opacity: animation,
+                                //     child: child,
+                                //   ),
+                                //   child: _showNextTurn
+                                //       ? const Align(
+                                //           alignment: Alignment.topCenter,
 
-                                          // child: NextStep(
-                                          //   routeLegStep: activeRoute.route
-                                          //       .routeStepById(
-                                          //     activeRoute.activeStepId,
-                                          //   )!,
-                                          //   onTap: () => setState(
-                                          //     () => _showNextTurn = false,
-                                          //   ),
-                                          // ),
-                                        )
-                                      : Align(
-                                          alignment:
-                                              AlignmentDirectional.topStart,
-                                          child: OutlinedButton.icon(
-                                            style: Theme.of(context)
-                                                .outlinedButtonTheme
-                                                .style
-                                                ?.copyWith(
-                                                  backgroundColor:
-                                                      WidgetStatePropertyAll(
-                                                    colorScheme.surface,
-                                                  ),
-                                                ),
-                                            icon: const Icon(
-                                              Icons.expand_more,
-                                            ),
-                                            label: Text('Next Step'.hardcoded),
-                                            onPressed: () => setState(
-                                              () => _showNextTurn = true,
-                                            ),
-                                          ),
-                                        ),
-                                ),
+                                //           // child: NextStep(
+                                //           //   routeLegStep: activeRoute.route
+                                //           //       .routeStepById(
+                                //           //     activeRoute.activeStepId,
+                                //           //   )!,
+                                //           //   onTap: () => setState(
+                                //           //     () => _showNextTurn = false,
+                                //           //   ),
+                                //           // ),
+                                //         )
+                                //       : Align(
+                                //           alignment:
+                                //               AlignmentDirectional.topStart,
+                                //           child: OutlinedButton.icon(
+                                //             style: Theme.of(context)
+                                //                 .outlinedButtonTheme
+                                //                 .style
+                                //                 ?.copyWith(
+                                //                   backgroundColor:
+                                //                       WidgetStatePropertyAll(
+                                //                     colorScheme.surface,
+                                //                   ),
+                                //                 ),
+                                //             icon: const Icon(
+                                //               Icons.expand_more,
+                                //             ),
+                                //             label: Text('Next Step'.hardcoded),
+                                //             onPressed: () => setState(
+                                //               () => _showNextTurn = true,
+                                //             ),
+                                //           ),
+                                //         ),
+                                // ),
                                 Align(
                                   alignment: Alignment.bottomCenter,
                                   child: AnimatedContainer(
