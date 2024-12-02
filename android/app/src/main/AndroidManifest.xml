@@ -6,6 +6,7 @@
         <intent>
             <action android:name="android.intent.action.VIEW" />
             <data android:scheme="tel" />
+        </intent>
     </queries>
    <application
         android:label="${appName}"
