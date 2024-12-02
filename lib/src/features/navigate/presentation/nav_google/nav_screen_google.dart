@@ -33,7 +33,7 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
 
   /// Simulation settings
   bool _showSimulationControls = false;
-  SimulationState _simulationState = SimulationState.notRunning;
+  SimulationState _simulationState = SimulationState.running;
 
   @override
   Widget build(BuildContext context) {
