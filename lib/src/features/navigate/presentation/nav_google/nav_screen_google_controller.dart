@@ -37,6 +37,7 @@ class NavScreenGoogleController extends _$NavScreenGoogleController
     _controller.complete(controller);
     await controller.setMyLocationEnabled(true);
     await _googleNavigationService.initialize();
+
     ref.read(mapSessionReadyProvider.notifier).setValue(newValue: true);
   }
 

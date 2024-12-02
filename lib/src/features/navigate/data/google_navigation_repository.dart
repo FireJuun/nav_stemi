@@ -75,8 +75,8 @@ class GoogleNavigationRepository {
 
   Future<void> initializeNavigationSession() async {
     debugPrint('Initializing navigation session');
-    await _setupListeners();
     await GoogleMapsNavigator.initializeNavigationSession();
+    await _setupListeners();
   }
 
   Future<void> cleanupNavigationSession() async {

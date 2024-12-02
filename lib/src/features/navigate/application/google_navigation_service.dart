@@ -37,7 +37,10 @@ class GoogleNavigationService {
     await checkTermsAccepted();
     await permissionsService.initialize();
 
-    await checkSessionInitialized();
+    final initialized = await isInitialized();
+    if (!initialized) {
+      await initializeNavigationSession();
+    }
   }
 
   Future<void> checkTermsAccepted() async {
@@ -75,14 +78,6 @@ class GoogleNavigationService {
 
   Future<bool> isInitialized() async =>
       googleNavigationRepository.isInitialized();
-
-  @visibleForTesting
-  Future<void> checkSessionInitialized() async {
-    final isInitialized = await googleNavigationRepository.isInitialized();
-    if (!isInitialized) {
-      await initializeNavigationSession();
-    }
-  }
 
   @visibleForTesting
   Future<void> initializeNavigationSession() async {
