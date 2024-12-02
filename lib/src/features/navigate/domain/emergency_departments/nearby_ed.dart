@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:nav_stemi/nav_stemi.dart';
+import 'package:units_converter/units_converter.dart';
 
 class NearbyEd extends Equatable {
   const NearbyEd({
@@ -58,4 +59,14 @@ class NearbyEd extends Equatable {
   @override
   List<Object?> get props =>
       [distanceBetween, routeDistance, routeDuration, edInfo];
+
+  double get distanceBetweenInMiles {
+    final length = Length(removeTrailingZeros: false)
+      ..convert(LENGTH.meters, distanceBetween);
+    final lengthInMiles = length.miles.value;
+    if (lengthInMiles == null) {
+      throw ConvertMetersToMilesException();
+    }
+    return lengthInMiles;
+  }
 }

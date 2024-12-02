@@ -7,7 +7,7 @@ part of 'nav_screen_google_controller.dart';
 // **************************************************************************
 
 String _$navScreenGoogleControllerHash() =>
-    r'b4e0179237cc3dc2aabf79a7a8a2853631117a03';
+    r'd560b6f5ef9adfe391ef94350ad401f08593799a';
 
 /// See also [NavScreenGoogleController].
 @ProviderFor(NavScreenGoogleController)
@@ -23,5 +23,21 @@ final navScreenGoogleControllerProvider =
 );
 
 typedef _$NavScreenGoogleController = AutoDisposeAsyncNotifier<void>;
+String _$mapSessionReadyHash() => r'cf33261d8cabe5bacd763f3eb3f3ba61708d60e8';
+
+/// See also [MapSessionReady].
+@ProviderFor(MapSessionReady)
+final mapSessionReadyProvider =
+    NotifierProvider<MapSessionReady, AsyncValue<bool>>.internal(
+  MapSessionReady.new,
+  name: r'mapSessionReadyProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$mapSessionReadyHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$MapSessionReady = Notifier<AsyncValue<bool>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

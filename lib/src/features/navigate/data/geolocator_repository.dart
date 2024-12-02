@@ -1,6 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_navigation_flutter/google_navigation_flutter.dart';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'geolocator_repository.g.dart';
@@ -27,7 +27,7 @@ class GeolocatorRepository {
   /// Get the current position of the device.
   ///
   Future<Position> getCurrentPosition() async {
-    await checkPermissions();
+    await checkLocationEnabled();
 
     return Geolocator.getCurrentPosition();
   }
@@ -39,7 +39,7 @@ class GeolocatorRepository {
   /// If no position is available, the `Future` will return `null`.
   ///
   Future<Position?> getLastKnownPosition() async {
-    await checkPermissions();
+    await checkLocationEnabled();
 
     return Geolocator.getLastKnownPosition();
   }
@@ -58,12 +58,14 @@ class GeolocatorRepository {
   /// Check location permissions and services.
   /// If the user has not granted location permission, the app will request it.
   /// If the user has denied location permission, the app will return an error.
-  /// If the user has permanently denied location permission, the app will return an error.
+  /// If the user has permanently denied location permission,
+  /// the app will return an error.
   /// If the location services are disabled, the app will return an error.
   ///
   /// source: https://pub.dev/packages/geolocator
-  @visibleForTesting
-  Future<bool> checkPermissions() async {
+  Future<bool> checkLocationEnabled() async {
+    // TODO(FireJuun): should we use this package or permissions package for this?
+    /// likely, either one can work...
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -109,7 +111,9 @@ GeolocatorRepository geolocatorRepository(GeolocatorRepositoryRef ref) {
 @riverpod
 Stream<Position?> watchPosition(WatchPositionRef ref) {
   final geolocatorRepository = ref.watch(geolocatorRepositoryProvider);
-  return geolocatorRepository.watchPosition();
+  final stream = geolocatorRepository.watchPosition();
+  ref.onDispose(() => stream.listen(null).cancel());
+  return stream;
 }
 
 @riverpod

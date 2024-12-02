@@ -1,3 +1,4 @@
+export 'active_destination.dart';
 export 'active_route.dart';
 export 'app_waypoint.dart';
 export 'available_routes.dart';

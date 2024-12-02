@@ -2,7 +2,10 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_navigation_flutter/google_navigation_flutter.dart';
+
+typedef MarkerId = String;
+typedef PolylineId = String;
 
 class MapsInfo extends Equatable {
   const MapsInfo({
@@ -44,14 +47,18 @@ class MapsInfo extends Equatable {
     return MapsInfo(
       origin: map['origin'] != null && map['origin'] is Map<String, dynamic>
           ? LatLng(
-              (map['origin'] as Map<String, dynamic>)['latitude'] as double,
-              (map['origin'] as Map<String, dynamic>)['longitude'] as double,
+              latitude:
+                  (map['origin'] as Map<String, dynamic>)['latitude'] as double,
+              longitude: (map['origin'] as Map<String, dynamic>)['longitude']
+                  as double,
             )
           : null,
       destination: map['destination'] != null
           ? LatLng(
-              (map['origin'] as Map<String, dynamic>)['latitude'] as double,
-              (map['origin'] as Map<String, dynamic>)['longitude'] as double,
+              latitude:
+                  (map['origin'] as Map<String, dynamic>)['latitude'] as double,
+              longitude: (map['origin'] as Map<String, dynamic>)['longitude']
+                  as double,
             )
           : null,
       markers:

@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:google_routes_flutter/google_routes_flutter.dart';
+import 'package:google_navigation_flutter/google_navigation_flutter.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 class NextStep extends StatelessWidget {
   const NextStep({required this.routeLegStep, required this.onTap, super.key});
 
-  final RouteLegStep routeLegStep;
+  final StepInfo routeLegStep;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final values = routeLegStep.relevantValues();
-
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     const borderRadius = BorderRadius.vertical(
@@ -40,12 +38,12 @@ class NextStep extends StatelessWidget {
                 data: Theme.of(context).iconTheme.copyWith(
                       color: colorScheme.onSecondary,
                     ),
-                child: NavIconByManeuver(values.maneuver),
+                child: NavIconByManeuver(routeLegStep.maneuver),
               ),
               gapW16,
               Expanded(
                 child: Text(
-                  values.instructions,
+                  routeLegStep.fullInstructions,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: textTheme.bodyLarge?.apply(
@@ -55,7 +53,8 @@ class NextStep extends StatelessWidget {
               ),
               gapW8,
               Text(
-                values.distance,
+                // TODO(FireJuun): convert meters to other units
+                '${routeLegStep.distanceFromPrevStepMeters} m',
                 style: textTheme.bodyMedium?.apply(
                   color: colorScheme.onSecondary,
                   fontStyle: FontStyle.italic,

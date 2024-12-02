@@ -9,8 +9,9 @@ import GoogleMaps
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
       // spec: https://www.monterail.com/blog/configuring-flutter-apps-using-dart-define-from-file
-      if let iosMapsApiKey = Bundle.main.object(forInfoDictionaryKey: "IosMapsApi") as? String {
-        GMSServices.provideAPIKey(iosMapsApiKey)
+      // another way to approach this: https://github.com/googlemaps/flutter-navigation-sdk/blob/main/example/ios/Runner/AppDelegate.swift
+      if let mapsApiKey = Bundle.main.object(forInfoDictionaryKey: "MapsApiKey") as? String {
+        GMSServices.provideAPIKey(mapsApiKey)
       }
       
     GeneratedPluginRegistrant.register(with: self)

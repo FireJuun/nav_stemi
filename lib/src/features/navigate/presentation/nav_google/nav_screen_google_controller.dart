@@ -1,27 +1,68 @@
 import 'dart:async';
-
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_navigation_flutter/google_navigation_flutter.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'nav_screen_google_controller.g.dart';
 
 @riverpod
-class NavScreenGoogleController extends _$NavScreenGoogleController {
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
+class NavScreenGoogleController extends _$NavScreenGoogleController
+    with NotifierMounted {
+  final Completer<GoogleNavigationViewController> _controller =
+      Completer<GoogleNavigationViewController>();
 
   final _latLngBounds = LatLngBoundsDTO();
+  ActiveDestinationRepository get _activeDestinationRepository =>
+      ref.read(activeDestinationRepositoryProvider);
+  GoogleNavigationRepository get _googleNavigationRepository =>
+      ref.read(googleNavigationRepositoryProvider);
+  GoogleNavigationService get _googleNavigationService =>
+      ref.read(googleNavigationServiceProvider);
 
   @override
-  FutureOr<void> build() {
-    // nothing to do
+  FutureOr<void> build() async {
+    state = const AsyncData(null);
+
+    ref.onDispose(() {
+      _googleNavigationService.cleanup();
+      _activeDestinationRepository.activeDestination = null;
+      ref.read(mapSessionReadyProvider.notifier).setValue(newValue: false);
+      setUnmounted();
+    });
   }
 
   /// These methods are called from the UI
   /// They are not reliant on any state, so they can be called directly
-  void onMapCreated(GoogleMapController controller) =>
-      _controller.complete(controller);
+  Future<void> onViewCreated(GoogleNavigationViewController controller) async {
+    _controller.complete(controller);
+    await controller.setMyLocationEnabled(true);
+    await _googleNavigationService.initialize();
+
+    ref.read(mapSessionReadyProvider.notifier).setValue(newValue: true);
+  }
+
+  Future<LatLng?> userLocation() =>
+      _controller.future.then((controller) async => controller.getMyLocation());
+
+  void linkEdInfoToDestination(EdInfo edInfo) =>
+      _googleNavigationService.linkEdInfoToDestination(edInfo);
+
+  void setAudioGuidanceType(NavigationAudioGuidanceType guidanceType) =>
+      unawaited(_googleNavigationService.setAudioGuidanceType(guidanceType));
+
+  Future<bool> isGuidanceRunning() async =>
+      _googleNavigationRepository.isGuidanceRunning();
+
+  void setSimulationState(SimulationState simulationState) {
+    switch (simulationState) {
+      case SimulationState.running:
+        unawaited(_googleNavigationService.startDrivingDirections());
+      case SimulationState.paused:
+        unawaited(_googleNavigationService.pauseSimulation());
+      case SimulationState.notRunning:
+        unawaited(_googleNavigationService.stopSimulation());
+    }
+  }
 
   void zoomIn() => unawaited(
         _controller.future.then((controller) {
@@ -36,24 +77,8 @@ class NavScreenGoogleController extends _$NavScreenGoogleController {
       );
 
   void zoomToActiveRoute() => unawaited(
-        _controller.future.then((controller) async {
-          final currentLocation =
-              await ref.read(getLastKnownOrCurrentPositionProvider.future);
-
-          final destination = ref.read(destinationProvider);
-
-          if (destination != null) {
-            await controller.animateCamera(
-              CameraUpdate.newLatLngBounds(
-                _latLngBounds.listToBounds([
-                  currentLocation.toLatLng(),
-                  destination,
-                ]),
-                72,
-              ),
-            );
-          }
-        }),
+        _controller.future
+            .then((controller) async => controller.showRouteOverview()),
       );
 
   void zoomToSelectedNavigationStep(List<LatLng> stepLocations) => unawaited(
@@ -61,7 +86,7 @@ class NavScreenGoogleController extends _$NavScreenGoogleController {
           await controller.animateCamera(
             CameraUpdate.newLatLngBounds(
               _latLngBounds.listToBounds(stepLocations),
-              72,
+              padding: 72,
             ),
           );
         }),
@@ -73,7 +98,13 @@ class NavScreenGoogleController extends _$NavScreenGoogleController {
               await ref.read(getLastKnownOrCurrentPositionProvider.future);
 
           await controller.animateCamera(
-            CameraUpdate.newLatLng(currentLocation.toLatLng()),
+            // CameraUpdate.newLatLng(currentLocation.toLatLng()),
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                target: currentLocation.toLatLng(),
+                zoom: 14,
+              ),
+            ),
           );
         }),
       );
@@ -82,4 +113,16 @@ class NavScreenGoogleController extends _$NavScreenGoogleController {
   /// They are reliant on state, so they are called via ref
   /// If any errors occur, they are caught, logged, and displayed to the user
   // TODO(FireJuun): run guarded, navigation route calls
+
+  /// spec: https://github.com/googlemaps/flutter-navigation-sdk/blob/main/example/lib/pages/navigation.dart
+  /// Functions below handled here
+}
+
+@Riverpod(keepAlive: true)
+class MapSessionReady extends _$MapSessionReady {
+  @override
+  AsyncValue<bool> build() => const AsyncData(false);
+
+  AsyncData<bool> setValue({required bool newValue}) =>
+      state = AsyncData(newValue);
 }

@@ -1,4 +1,4 @@
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_navigation_flutter/google_navigation_flutter.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

@@ -37,7 +37,7 @@ class _ScaffoldWithNestedNavigationState
 
     return PopScope(
       canPop: _canPop,
-      onPopInvoked: (didPop) async {
+      onPopInvokedWithResult: (didPop, _) async {
         final shouldPop = await showAlertDialog(
               context: context,
               title: 'Exit Navigation?'.hardcoded,
