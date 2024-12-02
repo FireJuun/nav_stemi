@@ -1,0 +1,8 @@
+flutter_launcher_icons:
+  image_path_android: 'assets/icons/nav_stemi_android_stg.png'
+  image_path_ios: 'assets/icons/nav_stemi_ios_stg.png'
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  adaptive_icon_foreground: 'assets/icons/nav_stemi_android_stg.png'
+  adaptive_icon_background: '#1C4294'
