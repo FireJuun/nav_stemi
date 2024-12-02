@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
@@ -34,12 +36,18 @@ class RightNavDrawer extends ConsumerWidget {
               color: textColor,
             ),
             title: Text(
-              'Start Timer'.hardcoded,
+              'Start Navigation'.hardcoded,
               style: textTheme.titleMedium?.apply(color: textColor),
             ),
             onTap: () {
-              ref.read(countUpTimerRepositoryProvider).start();
-              Navigator.pop(context);
+              unawaited(
+                ref
+                    .read(googleNavigationServiceProvider)
+                    .startDrivingDirections(),
+              );
+
+              if (!context.mounted) return;
+              Scaffold.of(context).closeEndDrawer();
             },
           ),
           ListTile(
@@ -48,17 +56,56 @@ class RightNavDrawer extends ConsumerWidget {
               color: textColor,
             ),
             title: Text(
+              'Stop Navigation'.hardcoded,
+              style: textTheme.titleMedium?.apply(color: textColor),
+            ),
+            onTap: () {
+              unawaited(
+                ref
+                    .read(googleNavigationServiceProvider)
+                    .stopDrivingDirections(),
+              );
+
+              if (!context.mounted) return;
+              Scaffold.of(context).closeEndDrawer();
+            },
+          ),
+          const Divider(),
+          ListTile(
+            leading: Icon(
+              Icons.play_circle,
+              color: textColor,
+            ),
+            title: Text(
+              'Start Timer'.hardcoded,
+              style: textTheme.titleMedium?.apply(color: textColor),
+            ),
+            onTap: () {
+              ref.read(countUpTimerRepositoryProvider).start();
+
+              if (!context.mounted) return;
+              Scaffold.of(context).closeEndDrawer();
+            },
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.stop_circle,
+              color: textColor,
+            ),
+            title: Text(
               'Stop Timer'.hardcoded,
               style: textTheme.titleMedium?.apply(color: textColor),
             ),
             onTap: () {
               ref.read(countUpTimerRepositoryProvider).stop();
-              Navigator.pop(context);
+
+              if (!context.mounted) return;
+              Scaffold.of(context).closeEndDrawer();
             },
           ),
           ListTile(
             leading: Icon(
-              Icons.refresh,
+              Icons.change_circle,
               color: textColor,
             ),
             title: Text(
@@ -67,7 +114,9 @@ class RightNavDrawer extends ConsumerWidget {
             ),
             onTap: () {
               ref.read(countUpTimerRepositoryProvider).reset();
-              Navigator.pop(context);
+
+              if (!context.mounted) return;
+              Scaffold.of(context).closeEndDrawer();
             },
           ),
         ],

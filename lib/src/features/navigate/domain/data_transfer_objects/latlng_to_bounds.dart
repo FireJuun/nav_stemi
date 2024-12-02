@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_navigation_flutter/google_navigation_flutter.dart';
 
 /// Helper class to determine the bounds of a list of [LatLng]
 /// objects.
@@ -24,6 +24,9 @@ class LatLngBoundsDTO {
       w = min(w, latlng.longitude);
       e = max(e, latlng.longitude);
     }
-    return LatLngBounds(southwest: LatLng(s, w), northeast: LatLng(n, e));
+    return LatLngBounds(
+      southwest: LatLng(latitude: s, longitude: w),
+      northeast: LatLng(latitude: n, longitude: e),
+    );
   }
 }

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:google_routes_flutter/google_routes_flutter.dart';
+import 'package:google_navigation_flutter/google_navigation_flutter.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 class NavStep extends StatelessWidget {
   const NavStep({required this.routeLegStep, required this.onTap, super.key});
 
-  final RouteLegStep routeLegStep;
-  final VoidCallback onTap;
+  final StepInfo routeLegStep;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final values = routeLegStep.relevantValues();
     final colorScheme = Theme.of(context).colorScheme;
 
     return Material(
@@ -20,9 +19,10 @@ class NavStep extends StatelessWidget {
         onTap: onTap,
         splashColor: colorScheme.secondary,
         child: ListTile(
-          leading: NavIconByManeuver(values.maneuver),
-          title: Text(values.instructions),
-          trailing: Text(values.distance),
+          leading: NavIconByManeuver(routeLegStep.maneuver),
+          title: Text(routeLegStep.fullInstructions),
+          // TODO(FireJuun): convert meters to other units
+          trailing: Text('${routeLegStep.distanceFromPrevStepMeters} m'),
         ),
       ),
     );
