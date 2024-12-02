@@ -35,9 +35,6 @@
 		</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<!-- TODO(FireJuun): remove these two keys when done with emulator testing -->
-	<key>NSAppTransportSecurity</key> <dict>
-	<key>NSAllowsArbitraryLoads</key><true/> </dict>
 	<key>NSCameraUsageDescription</key>
 	<string>This app needs camera access to scan QR codes</string>
 	<key>NSLocationAlwaysUsageDescription</key>

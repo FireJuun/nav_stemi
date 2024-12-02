@@ -1,0 +1,15 @@
+flutter_native_splash:
+  color: "#E3E2E2"
+  image: assets/icons/nav_stemi_android_dev.png
+  branding: assets/icons/nav_stemi_android_dev.png
+  # color_dark: "#1C4294"
+  # image_dark: assets/logo-development.png
+  # branding_dark: assets/branding-development.png
+
+  android_12:
+    image: assets/icons/nav_stemi_android_dev.png
+    icon_background_color: "#E3E2E2"
+    # image_dark: assets/logo-development.png
+    # icon_background_color_dark: "#031437"
+
+  web: false
