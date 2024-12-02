@@ -1,5 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.firejuun.navstemi">
+    <queries>
+        <!-- spec: https://github.com/flutter/packages/blob/main/packages/url_launcher/url_launcher/example/android/app/src/main/AndroidManifest.xml -->
+        <!-- If your app checks for call support -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="tel" />
+    </queries>
    <application
         android:label="${appName}"
         android:name="${applicationName}"
