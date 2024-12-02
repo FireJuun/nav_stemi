@@ -6,9 +6,9 @@ flutter_native_splash:
   image_dark: assets/logos/nav_stemi_logo_dark.png
 
   android_12:
-    image: assets/logos/nav_stemi_logo_light.png
+    image: assets/logos/android_12_light.png
     icon_background_color: "#E3E2E2"
-    image_dark: assets/logos/nav_stemi_logo_dark.png
+    image_dark: assets/logos/android_12_dark.png
     icon_background_color_dark: "#1E1E1E"
 
   web: false
