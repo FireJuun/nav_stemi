@@ -10,14 +10,14 @@ Stream<MapsInfo?> mapsInfo(MapsInfoRef ref) {
 }
 
 @riverpod
-LatLng? origin(OriginRef ref) {
+AppWaypoint? origin(OriginRef ref) {
   final mapsInfoStream = ref.watch(mapsInfoProvider).value;
 
   return mapsInfoStream?.origin;
 }
 
 @riverpod
-LatLng? destination(DestinationRef ref) {
+AppWaypoint? destination(DestinationRef ref) {
   final mapsInfoStream = ref.watch(mapsInfoProvider).value;
 
   return mapsInfoStream?.destination;
