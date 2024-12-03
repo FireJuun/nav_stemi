@@ -38,7 +38,29 @@ class NavScreenGoogleController extends _$NavScreenGoogleController
     await controller.setMyLocationEnabled(true);
     await _googleNavigationService.initialize();
 
+    await _setControllerSettingsFromStoredNavigationSettings(controller);
+
     ref.read(mapSessionReadyProvider.notifier).setValue(newValue: true);
+  }
+
+  /// This is only called once, at time of map creation
+  /// It is possible to set this to listen for changes in the future
+  Future<void> _setControllerSettingsFromStoredNavigationSettings(
+    GoogleNavigationViewController controller,
+  ) async {
+    final navSettings =
+        ref.read(navigationSettingsRepositoryProvider).navigationSettings;
+
+    /// North up or tilted
+    await controller.followMyLocation(
+      navSettings.showNorthUp
+          ? CameraPerspective.topDownNorthUp
+          : CameraPerspective.tilted,
+    );
+
+    /// Set the audio guidance type
+    await _googleNavigationService
+        .setAudioGuidanceType(navSettings.audioGuidanceType);
   }
 
   Future<LatLng?> userLocation() =>

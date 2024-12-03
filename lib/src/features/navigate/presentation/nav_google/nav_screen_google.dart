@@ -8,7 +8,6 @@ import 'package:nav_stemi/nav_stemi.dart';
 
 // TODO(FireJuun): Readjust location of these values
 const _showNarration = false;
-const _showNorthUp = false;
 
 /// spec: https://github.com/googlemaps/flutter-navigation-sdk/blob/main/example/lib/pages/navigation.dart
 enum SimulationState { running, paused, notRunning }
@@ -24,12 +23,9 @@ class NavScreenGoogle extends StatefulWidget {
 
 class _NavScreenGoogleState extends State<NavScreenGoogle> {
   bool _showSteps = false;
-  // bool _showNextTurn = true;
 
   /// Audio guidance settings
   bool _showAudioGuidance = false;
-  NavigationAudioGuidanceType _audioGuidanceType =
-      NavigationAudioGuidanceType.alertsAndGuidance;
 
   /// Simulation settings
   bool _showSimulationControls = false;
@@ -124,52 +120,6 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
                                     );
                                   },
                                 ),
-                                // AnimatedSwitcher(
-                                //   duration: 300.ms,
-
-                                //   /// required due to this bug: https://github.com/flutter/flutter/issues/121336#issuecomment-1482620874
-                                //   transitionBuilder: (child, animation) =>
-                                //       FadeTransition(
-                                //     opacity: animation,
-                                //     child: child,
-                                //   ),
-                                //   child: _showNextTurn
-                                //       ? const Align(
-                                //           alignment: Alignment.topCenter,
-
-                                //           // child: NextStep(
-                                //           //   routeLegStep: activeRoute.route
-                                //           //       .routeStepById(
-                                //           //     activeRoute.activeStepId,
-                                //           //   )!,
-                                //           //   onTap: () => setState(
-                                //           //     () => _showNextTurn = false,
-                                //           //   ),
-                                //           // ),
-                                //         )
-                                //       : Align(
-                                //           alignment:
-                                //               AlignmentDirectional.topStart,
-                                //           child: OutlinedButton.icon(
-                                //             style: Theme.of(context)
-                                //                 .outlinedButtonTheme
-                                //                 .style
-                                //                 ?.copyWith(
-                                //                   backgroundColor:
-                                //                       WidgetStatePropertyAll(
-                                //                     colorScheme.surface,
-                                //                   ),
-                                //                 ),
-                                //             icon: const Icon(
-                                //               Icons.expand_more,
-                                //             ),
-                                //             label: Text('Next Step'.hardcoded),
-                                //             onPressed: () => setState(
-                                //               () => _showNextTurn = true,
-                                //             ),
-                                //           ),
-                                //         ),
-                                // ),
                                 Align(
                                   alignment: Alignment.bottomCenter,
                                   child: AnimatedContainer(
@@ -206,11 +156,9 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
                                     ),
                                     clipBehavior: Clip.antiAlias,
                                     child: AudioGuidancePicker(
-                                      currentValue: _audioGuidanceType,
                                       onChanged: (guidanceType) {
                                         setState(
                                           () {
-                                            _audioGuidanceType = guidanceType;
                                             _showAudioGuidance = false;
                                             notifier().setAudioGuidanceType(
                                               guidanceType,
@@ -270,25 +218,32 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   /// volume up, important, volume off
-                                  IconButton(
-                                    icon: switch (_audioGuidanceType) {
-                                      NavigationAudioGuidanceType
-                                            .alertsAndGuidance =>
-                                        const Icon(Icons.volume_up),
-                                      NavigationAudioGuidanceType.alertsOnly =>
-                                        const Icon(
-                                          Icons.notification_important_outlined,
-                                        ),
-                                      NavigationAudioGuidanceType.silent =>
-                                        const Icon(Icons.volume_off),
-                                    },
-                                    isSelected: _showAudioGuidance,
-                                    tooltip: 'Audio Guidance'.hardcoded,
-                                    onPressed: () {
-                                      setState(() {
-                                        _showAudioGuidance =
-                                            !_showAudioGuidance;
-                                      });
+                                  Consumer(
+                                    builder: (context, ref, child) {
+                                      final audioGuidanceType =
+                                          ref.watch(audioGuidanceTypeProvider);
+
+                                      return IconButton(
+                                        icon: switch (audioGuidanceType) {
+                                          AudioGuidanceType.alertsAndGuidance =>
+                                            const Icon(Icons.volume_up),
+                                          AudioGuidanceType.alertsOnly =>
+                                            const Icon(
+                                              Icons
+                                                  .notification_important_outlined,
+                                            ),
+                                          AudioGuidanceType.silent =>
+                                            const Icon(Icons.volume_off),
+                                        },
+                                        isSelected: _showAudioGuidance,
+                                        tooltip: 'Audio Guidance'.hardcoded,
+                                        onPressed: () {
+                                          setState(() {
+                                            _showAudioGuidance =
+                                                !_showAudioGuidance;
+                                          });
+                                        },
+                                      );
                                     },
                                   ),
 
@@ -354,23 +309,6 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
                             .fadeIn(
                               duration: 200.ms,
                             ),
-                      if (_showNorthUp)
-                        Align(
-                          alignment: const Alignment(1, .2),
-                          child: IconButton(
-                            onPressed: () {
-                              // TODO(FireJuun): handle north up toggle (+ redraw)
-                            },
-                            tooltip: 'North Points Up'.hardcoded,
-                            icon: const Icon(Icons.explore),
-                          ),
-                        )
-                            .animate(
-                              target: shouldShowSteps() ? 1 : 0,
-                            )
-                            .fadeIn(
-                              duration: 200.ms,
-                            ),
                     ],
                   );
                 },
@@ -383,39 +321,38 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
   }
 }
 
-class AudioGuidancePicker extends StatelessWidget {
+class AudioGuidancePicker extends ConsumerWidget {
   const AudioGuidancePicker({
-    required this.currentValue,
     required this.onChanged,
     super.key,
   });
 
-  final NavigationAudioGuidanceType currentValue;
-  final ValueChanged<NavigationAudioGuidanceType> onChanged;
+  final ValueChanged<AudioGuidanceType> onChanged;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentValue = ref.watch(audioGuidanceTypeProvider);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
         IconButton(
-          onPressed: currentValue ==
-                  NavigationAudioGuidanceType.alertsAndGuidance
+          onPressed: currentValue == AudioGuidanceType.alertsAndGuidance
               ? null
-              : () => onChanged(NavigationAudioGuidanceType.alertsAndGuidance),
+              : () => onChanged(AudioGuidanceType.alertsAndGuidance),
           icon: const Icon(Icons.volume_up),
         ),
         IconButton(
-          onPressed: currentValue == NavigationAudioGuidanceType.alertsOnly
+          onPressed: currentValue == AudioGuidanceType.alertsOnly
               ? null
-              : () => onChanged(NavigationAudioGuidanceType.alertsOnly),
+              : () => onChanged(AudioGuidanceType.alertsOnly),
           icon: const Icon(Icons.notification_important_outlined),
         ),
         IconButton(
-          onPressed: currentValue == NavigationAudioGuidanceType.silent
+          onPressed: currentValue == AudioGuidanceType.silent
               ? null
-              : () => onChanged(NavigationAudioGuidanceType.silent),
+              : () => onChanged(AudioGuidanceType.silent),
           icon: const Icon(Icons.volume_off),
         ),
       ],

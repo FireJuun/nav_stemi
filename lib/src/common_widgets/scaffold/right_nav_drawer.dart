@@ -4,15 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
-class RightNavDrawer extends ConsumerWidget {
+class RightNavDrawer extends StatelessWidget {
   const RightNavDrawer({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
-
-    final textColor = colorScheme.secondary;
 
     return Drawer(
       child: ListView(
@@ -30,97 +28,79 @@ class RightNavDrawer extends ConsumerWidget {
               ),
             ),
           ),
-          ListTile(
-            leading: Icon(
-              Icons.play_arrow,
-              color: textColor,
-            ),
-            title: Text(
-              'Start Navigation'.hardcoded,
-              style: textTheme.titleMedium?.apply(color: textColor),
-            ),
-            onTap: () {
-              unawaited(
-                ref
-                    .read(googleNavigationServiceProvider)
-                    .startDrivingDirections(),
-              );
-
-              if (!context.mounted) return;
-              Scaffold.of(context).closeEndDrawer();
-            },
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.stop,
-              color: textColor,
-            ),
-            title: Text(
-              'Stop Navigation'.hardcoded,
-              style: textTheme.titleMedium?.apply(color: textColor),
-            ),
-            onTap: () {
-              unawaited(
-                ref
-                    .read(googleNavigationServiceProvider)
-                    .stopDrivingDirections(),
-              );
-
-              if (!context.mounted) return;
-              Scaffold.of(context).closeEndDrawer();
-            },
-          ),
-          const Divider(),
-          ListTile(
-            leading: Icon(
-              Icons.play_circle,
-              color: textColor,
-            ),
-            title: Text(
-              'Start Timer'.hardcoded,
-              style: textTheme.titleMedium?.apply(color: textColor),
-            ),
-            onTap: () {
-              ref.read(countUpTimerRepositoryProvider).start();
-
-              if (!context.mounted) return;
-              Scaffold.of(context).closeEndDrawer();
-            },
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.stop_circle,
-              color: textColor,
-            ),
-            title: Text(
-              'Stop Timer'.hardcoded,
-              style: textTheme.titleMedium?.apply(color: textColor),
-            ),
-            onTap: () {
-              ref.read(countUpTimerRepositoryProvider).stop();
-
-              if (!context.mounted) return;
-              Scaffold.of(context).closeEndDrawer();
-            },
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.change_circle,
-              color: textColor,
-            ),
-            title: Text(
-              'Reset Timer'.hardcoded,
-              style: textTheme.titleMedium?.apply(color: textColor),
-            ),
-            onTap: () {
-              ref.read(countUpTimerRepositoryProvider).reset();
-
-              if (!context.mounted) return;
-              Scaffold.of(context).closeEndDrawer();
-            },
-          ),
+          const ShowNavSteps(),
+          const NavigationSettingsView(),
         ],
       ),
+    );
+  }
+}
+
+class ShowNavSteps extends ConsumerWidget {
+  const ShowNavSteps({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    final textColor = colorScheme.secondary;
+    final mapSessionReadyValue = ref.watch(mapSessionReadyProvider);
+
+    return AsyncValueWidget(
+      value: mapSessionReadyValue,
+      data: (mapSessionReady) {
+        if (!mapSessionReady) {
+          return const SizedBox();
+        }
+
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: Icon(
+                Icons.play_arrow,
+                color: textColor,
+              ),
+              title: Text(
+                'Start Navigation'.hardcoded,
+                style: textTheme.titleMedium?.apply(color: textColor),
+              ),
+              onTap: () {
+                unawaited(
+                  ref
+                      .read(googleNavigationServiceProvider)
+                      .startDrivingDirections(),
+                );
+
+                if (!context.mounted) return;
+                Scaffold.of(context).closeEndDrawer();
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.stop,
+                color: textColor,
+              ),
+              title: Text(
+                'Stop Navigation'.hardcoded,
+                style: textTheme.titleMedium?.apply(color: textColor),
+              ),
+              onTap: () {
+                unawaited(
+                  ref
+                      .read(googleNavigationServiceProvider)
+                      .stopDrivingDirections(),
+                );
+
+                if (!context.mounted) return;
+                Scaffold.of(context).closeEndDrawer();
+              },
+            ),
+            const Divider(),
+          ],
+        );
+      },
     );
   }
 }
