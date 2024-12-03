@@ -25,7 +25,7 @@ final navigationSettingsRepositoryProvider =
 typedef NavigationSettingsRepositoryRef
     = ProviderRef<NavigationSettingsRepository>;
 String _$navigationSettingsChangesHash() =>
-    r'3b51c18b3992d6e498238d20f753f62cbe17e81d';
+    r'c14d14fcd0cce097fbb689982ffb2ba75fc0a18a';
 
 /// See also [navigationSettingsChanges].
 @ProviderFor(navigationSettingsChanges)
@@ -41,5 +41,21 @@ final navigationSettingsChangesProvider =
 );
 
 typedef NavigationSettingsChangesRef = StreamProviderRef<NavigationSettings>;
+String _$audioGuidanceTypeHash() => r'75ce127b9f1c34ac25fde07904045606a1e89edb';
+
+/// See also [audioGuidanceType].
+@ProviderFor(audioGuidanceType)
+final audioGuidanceTypeProvider =
+    AutoDisposeProvider<AudioGuidanceType>.internal(
+  audioGuidanceType,
+  name: r'audioGuidanceTypeProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$audioGuidanceTypeHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef AudioGuidanceTypeRef = AutoDisposeProviderRef<AudioGuidanceType>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

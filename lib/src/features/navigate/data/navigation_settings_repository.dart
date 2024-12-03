@@ -12,6 +12,29 @@ class NavigationSettingsRepository {
   NavigationSettings get navigationSettings => _store.value;
   set navigationSettings(NavigationSettings value) => _store.value = value;
 
+  void setShowNorthUp({required bool value}) {
+    navigationSettings = navigationSettings.copyWith(showNorthUp: value);
+  }
+
+  void setAudioGuidanceType({required AudioGuidanceType value}) {
+    navigationSettings = navigationSettings.copyWith(audioGuidanceType: value);
+  }
+
+  void setShouldSimulateLocation({required bool value}) {
+    navigationSettings =
+        navigationSettings.copyWith(shouldSimulateLocation: value);
+  }
+
+  void setSimulationSpeedMultiplier({required double value}) {
+    navigationSettings =
+        navigationSettings.copyWith(simulationSpeedMultiplier: value);
+  }
+
+  void setSimulationStartingLocation({required AppWaypoint? value}) {
+    navigationSettings =
+        navigationSettings.copyWith(simulationStartingLocation: () => value);
+  }
+
   Stream<NavigationSettings> navigationSettingsChanges() => _store.stream;
 }
 
@@ -30,4 +53,13 @@ Stream<NavigationSettings> navigationSettingsChanges(
   return ref
       .watch(navigationSettingsRepositoryProvider)
       .navigationSettingsChanges();
+}
+
+@riverpod
+AudioGuidanceType audioGuidanceType(AudioGuidanceTypeRef ref) {
+  return ref.watch(
+        navigationSettingsChangesProvider
+            .select((settings) => settings.value?.audioGuidanceType),
+      ) ??
+      AudioGuidanceType.alertsAndGuidance;
 }

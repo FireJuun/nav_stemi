@@ -20,9 +20,10 @@ class GoogleNavigationService {
 
   final Ref ref;
 
-  // TODO(FireJuun): extract into settings
-  static const _includeSimulationWithGuidanceSetting = true;
-  static const _simulationSpeedMultiplier = 5.0;
+  bool _includeSimulationWithGuidanceSetting() =>
+      navigationSettingsRepository.navigationSettings.shouldSimulateLocation;
+  double _simulationSpeedMultiplier() =>
+      navigationSettingsRepository.navigationSettings.simulationSpeedMultiplier;
 
   ActiveDestinationRepository get activeDestinationRepository =>
       ref.read(activeDestinationRepositoryProvider);
@@ -32,6 +33,8 @@ class GoogleNavigationService {
       ref.read(googleNavigationRepositoryProvider);
   PermissionsService get permissionsService =>
       ref.read(permissionsServiceProvider);
+  NavigationSettingsRepository get navigationSettingsRepository =>
+      ref.read(navigationSettingsRepositoryProvider);
 
   Future<void> initialize() async {
     await checkTermsAccepted();
@@ -142,6 +145,7 @@ class GoogleNavigationService {
 
     try {
       await googleNavigationRepository.setAudioGuidance(settings);
+      navigationSettingsRepository.setAudioGuidanceType(value: guidanceType);
     } on SessionNotInitializedException {
       throw GoogleNavSetAudioGuidanceSessionNotInitializedException();
     }
@@ -221,16 +225,16 @@ class GoogleNavigationService {
 
   Future<void> startDrivingDirections({bool? includeSimulation}) async {
     await startGuidance();
-    if (includeSimulation ?? _includeSimulationWithGuidanceSetting) {
+    if (includeSimulation ?? _includeSimulationWithGuidanceSetting()) {
       await simulateLocationsAlongExistingRouteWithOptions(
-        SimulationOptions(speedMultiplier: _simulationSpeedMultiplier),
+        SimulationOptions(speedMultiplier: _simulationSpeedMultiplier()),
       );
     }
   }
 
   Future<void> stopDrivingDirections({bool? includeSimulation}) async {
     await stopGuidance();
-    if (includeSimulation ?? _includeSimulationWithGuidanceSetting) {
+    if (includeSimulation ?? _includeSimulationWithGuidanceSetting()) {
       await stopSimulation();
     }
   }

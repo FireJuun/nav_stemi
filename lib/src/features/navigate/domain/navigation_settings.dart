@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:google_navigation_flutter/google_navigation_flutter.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
@@ -21,12 +22,15 @@ class NavigationSettings {
   final double simulationSpeedMultiplier;
   final AppWaypoint? simulationStartingLocation;
 
+  /// Only the [simulationStartingLocation] needs [ValueGetter],
+  /// since it is the only nullable field.
+  ///
   NavigationSettings copyWith({
     bool? showNorthUp,
     AudioGuidanceType? audioGuidanceType,
     bool? shouldSimulateLocation,
     double? simulationSpeedMultiplier,
-    AppWaypoint? simulationStartingLocation,
+    ValueGetter<AppWaypoint?>? simulationStartingLocation,
   }) {
     return NavigationSettings(
       showNorthUp: showNorthUp ?? this.showNorthUp,
@@ -35,8 +39,9 @@ class NavigationSettings {
           shouldSimulateLocation ?? this.shouldSimulateLocation,
       simulationSpeedMultiplier:
           simulationSpeedMultiplier ?? this.simulationSpeedMultiplier,
-      simulationStartingLocation:
-          simulationStartingLocation ?? this.simulationStartingLocation,
+      simulationStartingLocation: simulationStartingLocation != null
+          ? simulationStartingLocation()
+          : this.simulationStartingLocation,
     );
   }
 
@@ -104,5 +109,16 @@ extension AudioGuidanceTypeX on AudioGuidanceType {
 
   Map<String, dynamic> toMap(AudioGuidanceType audioGuidanceType) {
     return {'audioGuidanceType': toString()};
+  }
+
+  String shortName() {
+    switch (this) {
+      case AudioGuidanceType.alertsAndGuidance:
+        return 'Alerts & Guidance';
+      case AudioGuidanceType.alertsOnly:
+        return 'Alerts Only';
+      case AudioGuidanceType.silent:
+        return 'Silent';
+    }
   }
 }

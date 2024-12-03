@@ -62,9 +62,7 @@ class _HomeState extends ConsumerState<Home> {
         title: Text('nav - STEMI'.hardcoded),
         centerTitle: true,
       ),
-      endDrawer: const Drawer(
-        child: Center(child: Text('text')),
-      ),
+      endDrawer: const RightNavDrawer(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
