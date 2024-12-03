@@ -40,14 +40,16 @@
 	<key>NSCameraUsageDescription</key>
 	<string>This app needs camera access to scan QR codes</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app needs access to location when in the background.</string>
+	<string>For driving directions to work correctly, this app needs access to location when in the background.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>For driving directions to work correctly, this app needs access to location when the app is open and in the background.</string>
 	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
 	<dict>
 		<key>NavStemiLocationKey</key>
 		<string>Location access for navSTEMI app, which is critical for it to function.</string>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs access to location when open.</string>
+	<string>For driving directions to work correctly, this app needs access to location when in the background.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app needs photos access to get QR code from photo library</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
