@@ -44,6 +44,13 @@ class GoogleNavigationService {
     if (!initialized) {
       await initializeNavigationSession();
     }
+
+    final shouldSimulate =
+        navigationSettingsRepository.navigationSettings.shouldSimulateLocation;
+
+    if (shouldSimulate) {
+      await initializeSimulationSession();
+    }
   }
 
   Future<void> checkTermsAccepted() async {
@@ -96,6 +103,21 @@ class GoogleNavigationService {
           throw GoogleNavInitializationNotAuthorizedException();
       }
     }
+  }
+
+  @visibleForTesting
+  Future<void> initializeSimulationSession() async {
+    final navigationSettings = navigationSettingsRepository.navigationSettings;
+    final location = navigationSettings.simulationStartingLocation;
+    final speedMultiplier = navigationSettings.simulationSpeedMultiplier;
+
+    if (location != null) {
+      await simulateUserLocation(location);
+    }
+
+    await simulateLocationsAlongExistingRouteWithOptions(
+      SimulationOptions(speedMultiplier: speedMultiplier),
+    );
   }
 
   Future<void> cleanup() async {
@@ -263,10 +285,7 @@ class GoogleNavigationService {
     }
   }
 
-  // TODO(FireJuun): add ability to add different simulated locations
-  Future<void> simulateUserLocation({
-    AppWaypoint location = locationRandolphEms,
-  }) async {
+  Future<void> simulateUserLocation(AppWaypoint location) async {
     try {
       await googleNavigationRepository.simulateUserLocation(
         location.toGoogleMaps(),

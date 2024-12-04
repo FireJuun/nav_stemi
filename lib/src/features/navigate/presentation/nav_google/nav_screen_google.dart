@@ -248,23 +248,37 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
                                   ),
 
                                   /// start, pause, stop navigation
-                                  IconButton(
-                                    icon: switch (_simulationState) {
-                                      SimulationState.running =>
-                                        const Icon(Icons.play_arrow),
-                                      SimulationState.paused => const Icon(
-                                          Icons.pause,
-                                        ),
-                                      SimulationState.notRunning =>
-                                        const Icon(Icons.stop),
-                                    },
-                                    isSelected: _showSimulationControls,
-                                    tooltip: 'Navigation State'.hardcoded,
-                                    onPressed: () {
-                                      setState(() {
-                                        _showSimulationControls =
-                                            !_showSimulationControls;
-                                      });
+
+                                  Consumer(
+                                    builder: (context, ref, child) {
+                                      final showSimulationControls = ref.watch(
+                                        shouldSimulateLocationProvider,
+                                      );
+
+                                      return (!showSimulationControls)
+                                          ? const SizedBox()
+                                          : IconButton(
+                                              icon: switch (_simulationState) {
+                                                SimulationState.running =>
+                                                  const Icon(Icons.play_arrow),
+                                                SimulationState.paused =>
+                                                  const Icon(
+                                                    Icons.pause,
+                                                  ),
+                                                SimulationState.notRunning =>
+                                                  const Icon(Icons.stop),
+                                              },
+                                              isSelected:
+                                                  _showSimulationControls,
+                                              tooltip:
+                                                  'Navigation State'.hardcoded,
+                                              onPressed: () {
+                                                setState(() {
+                                                  _showSimulationControls =
+                                                      !_showSimulationControls;
+                                                });
+                                              },
+                                            );
                                     },
                                   ),
                                 ],
@@ -388,12 +402,14 @@ class SimulationStatePicker extends StatelessWidget {
               : () => onChanged(SimulationState.paused),
           icon: const Icon(Icons.pause),
         ),
-        IconButton(
-          onPressed: currentValue == SimulationState.notRunning
-              ? null
-              : () => onChanged(SimulationState.notRunning),
-          icon: const Icon(Icons.stop),
-        ),
+        // TODO(FireJuun): reimplement ability to stop navigation?
+        /// is this ever needed?
+        // IconButton(
+        //   onPressed: currentValue == SimulationState.notRunning
+        //       ? null
+        //       : () => onChanged(SimulationState.notRunning),
+        //   icon: const Icon(Icons.stop),
+        // ),
       ],
     );
   }

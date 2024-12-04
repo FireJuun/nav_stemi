@@ -68,35 +68,41 @@ class SyncNotifyShareSession extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Column(
-            children: [
-              Text(
-                'Sync this session with others:'.hardcoded,
-                textAlign: TextAlign.center,
-              ),
-              gapH12,
-              FilledButton(
-                onPressed: () {
-                  // TODO(FireJuun): Add QR scan functionality
-                },
-                child: Text('Scan Session'.hardcoded),
-              ),
-            ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              children: [
+                Text(
+                  'Sync this session with others:'.hardcoded,
+                  textAlign: TextAlign.center,
+                ),
+                gapH12,
+                FilledButton(
+                  onPressed: () {
+                    // TODO(FireJuun): Add QR scan functionality
+                  },
+                  child: Text(
+                    'Scan Session'.hardcoded,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        Expanded(
-          child: Image.asset(
-            usePrimaryColor
-                ? 'assets/placeholder_share_qr_primary.png'
-                : 'assets/placeholder_share_qr.png',
-            width: 150,
-            height: 150,
+          Expanded(
+            child: Image.asset(
+              usePrimaryColor
+                  ? 'assets/placeholder_share_qr_primary.png'
+                  : 'assets/placeholder_share_qr.png',
+              width: 150,
+              height: 150,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

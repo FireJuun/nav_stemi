@@ -78,7 +78,7 @@ class NavScreenGoogleController extends _$NavScreenGoogleController
   void setSimulationState(SimulationState simulationState) {
     switch (simulationState) {
       case SimulationState.running:
-        unawaited(_googleNavigationService.startDrivingDirections());
+        unawaited(_googleNavigationService.resumeSimulation());
       case SimulationState.paused:
         unawaited(_googleNavigationService.pauseSimulation());
       case SimulationState.notRunning:

@@ -1,5 +1,5 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:google_navigation_flutter/google_navigation_flutter.dart';
+import 'package:nav_stemi/nav_stemi.dart';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -45,8 +45,8 @@ class GeolocatorRepository {
   }
 
   double getDistanceBetween(
-    Position currentLocation,
-    LatLng destination,
+    AppWaypoint currentLocation,
+    AppWaypoint destination,
   ) =>
       Geolocator.distanceBetween(
         currentLocation.latitude,

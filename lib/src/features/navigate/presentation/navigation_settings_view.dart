@@ -38,6 +38,13 @@ class NavigationSettingsView extends ConsumerWidget {
             ),
 
             /// Audio Guidance Type
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Text('Audio Guidance'.hardcoded),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: SegmentedButton<AudioGuidanceType>(
@@ -54,11 +61,25 @@ class NavigationSettingsView extends ConsumerWidget {
                     )
                     .toList(),
                 selected: {navigationSettings.audioGuidanceType},
+                showSelectedIcon: false,
                 onSelectionChanged: (selections) {
                   assert(selections.length == 1, 'Only one selection allowed');
-                  ref
-                      .read(navigationSettingsViewControllerProvider.notifier)
-                      .setAudioGuidanceType(value: selections.first);
+                  final newValue = selections.first;
+
+                  if (ref.exists(navScreenGoogleControllerProvider)) {
+                    /// Only set the audio guidance type if the map
+                    /// is already loaded / running.
+                    ///
+                    /// This state is exclusive with NavScreenGoogleController
+                    ref
+                        .read(navScreenGoogleControllerProvider.notifier)
+                        .setAudioGuidanceType(newValue);
+                  } else {
+                    /// Otherwise, just save it as a local preference
+                    ref
+                        .read(navigationSettingsViewControllerProvider.notifier)
+                        .setAudioGuidanceType(value: newValue);
+                  }
                 },
               ),
             ),
@@ -79,12 +100,15 @@ class NavigationSettingsView extends ConsumerWidget {
             ),
 
             /// Simulation Speed Multiplier
-            NavSimulationSlider(
-              initialValue: navigationSettings.simulationSpeedMultiplier,
-              onChanged: (value) => ref
-                  .read(navigationSettingsViewControllerProvider.notifier)
-                  .setSimulationSpeedMultiplier(value: value),
-            ),
+            if (navigationSettings.shouldSimulateLocation)
+              NavSimulationSlider(
+                initialValue: navigationSettings.simulationSpeedMultiplier,
+                onChanged: (value) => ref
+                    .read(navigationSettingsViewControllerProvider.notifier)
+                    .setSimulationSpeedMultiplier(value: value),
+              ),
+            if (navigationSettings.shouldSimulateLocation)
+              const SimulationStartingLocationPicker(),
           ],
         );
       },
@@ -124,7 +148,7 @@ class _NavSimulationSliderState extends State<NavSimulationSlider> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text('Simulation Speed Multiplier'.hardcoded),
+      title: Text('Simulation Driving\nSpeed Multiplier'.hardcoded),
       trailing: Text('$_value'),
       subtitle: Slider(
         value: _value,
@@ -133,6 +157,48 @@ class _NavSimulationSliderState extends State<NavSimulationSlider> {
         label: '$_value',
         onChanged: _updateValue,
         onChangeEnd: (newValue) => widget.onChanged(_truncate(newValue)),
+      ),
+    );
+  }
+}
+
+class SimulationStartingLocationPicker extends ConsumerWidget {
+  const SimulationStartingLocationPicker({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final startingLocation = ref.watch(simulationStartingLocationProvider);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text('Simulation Starting Location'.hardcoded),
+          ),
+          gapH8,
+          DropdownMenu<AppWaypoint?>(
+            expandedInsets: EdgeInsets.zero,
+            initialSelection: startingLocation,
+            onSelected: (value) {
+              if (value is AppWaypoint) {
+                ref
+                    .read(navigationSettingsRepositoryProvider)
+                    .setSimulationStartingLocation(value: value);
+                // ignore: avoid_print
+                print('Selected: $value');
+              }
+            },
+            dropdownMenuEntries: [
+              ...simulationLocations
+                  .map((e) => DropdownMenuEntry(value: e, label: e.label)),
+              // TODO(FireJuun): implement ability to restart from last location
+              /// or to include null values here
+              // const DropdownMenuEntry(value: null, label: '--Last Location--'),
+            ],
+          ),
+        ],
       ),
     );
   }
