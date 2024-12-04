@@ -32,9 +32,25 @@ class NavigationSettingsView extends ConsumerWidget {
             SwitchListTile(
               title: Text('Show North Up'.hardcoded),
               value: navigationSettings.showNorthUp,
-              onChanged: (value) => ref
-                  .read(navigationSettingsViewControllerProvider.notifier)
-                  .setShowNorthUp(value: value),
+              onChanged: (value) {
+                // TODO(FireJuun): extract this into a controller
+                /// Set the show north up preference
+                /// if the map is already running, set this in the app as well
+
+                if (ref.exists(navScreenGoogleControllerProvider)) {
+                  ref
+                      .read(navigationSettingsViewControllerProvider.notifier)
+                      .setShowNorthUp(value: value);
+                  ref
+                      .read(navScreenGoogleControllerProvider.notifier)
+                      .setShowNorthUp(showNorthUp: value);
+                } else {
+                  /// Otherwise, just save it as a local preference
+                  ref
+                      .read(navigationSettingsViewControllerProvider.notifier)
+                      .setShowNorthUp(value: value);
+                }
+              },
             ),
 
             /// Audio Guidance Type
@@ -63,6 +79,7 @@ class NavigationSettingsView extends ConsumerWidget {
                 selected: {navigationSettings.audioGuidanceType},
                 showSelectedIcon: false,
                 onSelectionChanged: (selections) {
+                  // TODO(FireJuun): extract this into a controller
                   assert(selections.length == 1, 'Only one selection allowed');
                   final newValue = selections.first;
 
@@ -74,6 +91,10 @@ class NavigationSettingsView extends ConsumerWidget {
                     ref
                         .read(navScreenGoogleControllerProvider.notifier)
                         .setAudioGuidanceType(newValue);
+
+                    ref
+                        .read(navigationSettingsViewControllerProvider.notifier)
+                        .setAudioGuidanceType(value: newValue);
                   } else {
                     /// Otherwise, just save it as a local preference
                     ref

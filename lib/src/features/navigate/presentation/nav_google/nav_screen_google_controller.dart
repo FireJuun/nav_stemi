@@ -51,16 +51,23 @@ class NavScreenGoogleController extends _$NavScreenGoogleController
     final navSettings =
         ref.read(navigationSettingsRepositoryProvider).navigationSettings;
 
-    /// North up or tilted
-    await controller.followMyLocation(
-      navSettings.showNorthUp
-          ? CameraPerspective.topDownNorthUp
-          : CameraPerspective.tilted,
-    );
+    /// Set the map style
+    await setShowNorthUp(showNorthUp: navSettings.showNorthUp);
 
     /// Set the audio guidance type
     await _googleNavigationService
         .setAudioGuidanceType(navSettings.audioGuidanceType);
+  }
+
+  Future<void> setShowNorthUp({required bool showNorthUp}) async {
+    /// North up or tilted
+    await _controller.future.then(
+      (controller) => controller.followMyLocation(
+        showNorthUp
+            ? CameraPerspective.topDownNorthUp
+            : CameraPerspective.tilted,
+      ),
+    );
   }
 
   Future<LatLng?> userLocation() =>
