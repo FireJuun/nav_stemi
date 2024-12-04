@@ -1,6 +1,6 @@
 name: nav_stemi
 description: EMS Navigation App for critical scenarios
-version: 0.0.1+3
+version: 0.0.1+4
 publish_to: none
 
 environment:
