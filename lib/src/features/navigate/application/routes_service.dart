@@ -35,12 +35,13 @@ class RouteService {
     /// Otherwise use the current location of the user.
     ///
     if (shouldSimulateLocation) {
-      assert(
-        simulationStartingLocation != null,
-        'If simulating a location, then simulationStartingLocation must be set',
-      );
+      // TODO(FireJuun): reimplement ability for starting location to be null
+      // assert(
+      //   simulationStartingLocation != null,
+      //   'If simulating a location, then simulationStartingLocation must be set',
+      // );
 
-      origin = navigationSettings.simulationStartingLocation!;
+      origin = navigationSettings.simulationStartingLocation;
     } else {
       final lastKnownPosition =
           await ref.read(getLastKnownOrCurrentPositionProvider.future);

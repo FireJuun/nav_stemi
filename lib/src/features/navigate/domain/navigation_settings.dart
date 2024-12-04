@@ -13,14 +13,15 @@ class NavigationSettings {
     this.audioGuidanceType = AudioGuidanceType.alertsAndGuidance,
     this.shouldSimulateLocation = false,
     this.simulationSpeedMultiplier = 3.0,
-    this.simulationStartingLocation,
+    // TODO(FireJuun): re-enable null location handling
+    this.simulationStartingLocation = randolphEms,
   });
 
   final bool showNorthUp;
   final AudioGuidanceType audioGuidanceType;
   final bool shouldSimulateLocation;
   final double simulationSpeedMultiplier;
-  final AppWaypoint? simulationStartingLocation;
+  final AppWaypoint simulationStartingLocation;
 
   /// Only the [simulationStartingLocation] needs [ValueGetter],
   /// since it is the only nullable field.
@@ -30,7 +31,7 @@ class NavigationSettings {
     AudioGuidanceType? audioGuidanceType,
     bool? shouldSimulateLocation,
     double? simulationSpeedMultiplier,
-    ValueGetter<AppWaypoint?>? simulationStartingLocation,
+    ValueGetter<AppWaypoint>? simulationStartingLocation,
   }) {
     return NavigationSettings(
       showNorthUp: showNorthUp ?? this.showNorthUp,
@@ -51,7 +52,7 @@ class NavigationSettings {
       'audioGuidanceType': audioGuidanceType.toMap(audioGuidanceType),
       'shouldSimulateLocation': shouldSimulateLocation,
       'simulationSpeedMultiplier': simulationSpeedMultiplier,
-      'simulationStartingLocation': simulationStartingLocation?.toMap(),
+      'simulationStartingLocation': simulationStartingLocation.toMap(),
     };
   }
 
@@ -69,11 +70,15 @@ class NavigationSettings {
       ),
       shouldSimulateLocation: map['shouldSimulateLocation'] as bool,
       simulationSpeedMultiplier: map['simulationSpeedMultiplier'] as double,
-      simulationStartingLocation: map['simulationStartingLocation'] != null
-          ? AppWaypoint.fromMap(
-              map['simulationStartingLocation'] as Map<String, dynamic>,
-            )
-          : null,
+      simulationStartingLocation: AppWaypoint.fromMap(
+        map['simulationStartingLocation'] as Map<String, dynamic>,
+      ),
+      // TODO(FireJuun): re-enable null location handling
+      // simulationStartingLocation: map['simulationStartingLocation'] != null
+      //     ? AppWaypoint.fromMap(
+      //         map['simulationStartingLocation'] as Map<String, dynamic>,
+      //       )
+      //     : null,
     );
   }
 
