@@ -11,7 +11,10 @@ class GoToDialogController extends _$GoToDialogController with NotifierMounted {
   FutureOr<void> build() {
     // nothing to do
     state = const AsyncData(null);
-    ref.onDispose(setUnmounted);
+    ref.onDispose(() {
+      ref.invalidate(nearbyEdsProvider);
+      setUnmounted();
+    });
   }
 
   Future<void> goToEd({

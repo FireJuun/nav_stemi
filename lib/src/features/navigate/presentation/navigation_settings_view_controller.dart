@@ -28,6 +28,6 @@ class NavigationSettingsViewController
   void setSimulationSpeedMultiplier({required double value}) =>
       _navigationSettingsRepository.setSimulationSpeedMultiplier(value: value);
 
-  void setSimulationStartingLocation({required AppWaypoint? value}) =>
+  void setSimulationStartingLocation({required AppWaypoint value}) =>
       _navigationSettingsRepository.setSimulationStartingLocation(value: value);
 }

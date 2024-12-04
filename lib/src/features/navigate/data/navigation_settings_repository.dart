@@ -30,7 +30,7 @@ class NavigationSettingsRepository {
         navigationSettings.copyWith(simulationSpeedMultiplier: value);
   }
 
-  void setSimulationStartingLocation({required AppWaypoint? value}) {
+  void setSimulationStartingLocation({required AppWaypoint value}) {
     navigationSettings =
         navigationSettings.copyWith(simulationStartingLocation: () => value);
   }
@@ -62,4 +62,20 @@ AudioGuidanceType audioGuidanceType(AudioGuidanceTypeRef ref) {
             .select((settings) => settings.value?.audioGuidanceType),
       ) ??
       AudioGuidanceType.alertsAndGuidance;
+}
+
+@riverpod
+bool shouldSimulateLocation(ShouldSimulateLocationRef ref) {
+  return ref.watch(
+    navigationSettingsChangesProvider
+        .select((settings) => settings.value?.shouldSimulateLocation ?? false),
+  );
+}
+
+@riverpod
+AppWaypoint? simulationStartingLocation(SimulationStartingLocationRef ref) {
+  return ref.watch(
+    navigationSettingsChangesProvider
+        .select((settings) => settings.value?.simulationStartingLocation),
+  );
 }

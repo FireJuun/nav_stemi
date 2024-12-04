@@ -16,25 +16,47 @@ class RouteService {
       ref.read(googleNavigationServiceProvider);
   RemoteRoutesRepository get remoteRoutesRepository =>
       ref.read(remoteRoutesRepositoryProvider);
+  NavigationSettingsRepository get navigationSettingsRepository =>
+      ref.read(navigationSettingsRepositoryProvider);
 
   /// First check to see the current location of the user,
   /// then get the nearby emergency departments.
   Future<NearbyEds> getNearbyEDsFromCurrentLocation() async {
-    final position =
-        await ref.read(getLastKnownOrCurrentPositionProvider.future);
+    final navigationSettings = navigationSettingsRepository.navigationSettings;
+    final shouldSimulateLocation = navigationSettings.shouldSimulateLocation;
+    final simulationStartingLocation =
+        navigationSettings.simulationStartingLocation;
+
+    late final AppWaypoint origin;
+
+    /// If we are simulating location, then use the simulationStartingLocation,
+    /// which cannot be set to null.
+    ///
+    /// Otherwise use the current location of the user.
+    ///
+    if (shouldSimulateLocation) {
+      assert(
+        simulationStartingLocation != null,
+        'If simulating a location, then simulationStartingLocation must be set',
+      );
+
+      origin = navigationSettings.simulationStartingLocation!;
+    } else {
+      final lastKnownPosition =
+          await ref.read(getLastKnownOrCurrentPositionProvider.future);
+      origin = lastKnownPosition.toAppWaypoint();
+    }
 
     final allEds = ref.read(allEDsProvider);
 
     final items = <EdInfo, double>{
       for (final ed in allEds)
         ed: geolocatorRepository.getDistanceBetween(
-          position,
-          ed.location.toGoogleMaps(),
+          origin,
+          ed.location,
         ),
     };
     final sortedItems = nearestTenSortedByDistance(items);
-
-    final origin = position.toAppWaypoint();
 
     final nearbyEds = await remoteRoutesRepository.getDistanceInfoFromEdList(
       origin: origin,

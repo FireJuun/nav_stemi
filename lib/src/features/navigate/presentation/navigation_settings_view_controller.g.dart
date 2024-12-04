@@ -7,7 +7,7 @@ part of 'navigation_settings_view_controller.dart';
 // **************************************************************************
 
 String _$navigationSettingsViewControllerHash() =>
-    r'c9ea0a42c35a0286a61dbee5b7358e660400a7d4';
+    r'f1a505f036f96e0283edebd41e327a5e373deaee';
 
 /// See also [NavigationSettingsViewController].
 @ProviderFor(NavigationSettingsViewController)

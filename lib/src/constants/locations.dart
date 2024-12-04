@@ -94,3 +94,24 @@ const locations = <EdInfo>[
     telephone: '+13366255151',
   ),
 ];
+
+const simulationLocations = [
+  /// Randolph EMS
+  AppWaypoint(
+    latitude: 35.668559944183734,
+    longitude: -79.83191024196512,
+    label: 'New Century Dr',
+  ),
+
+  AppWaypoint(
+    latitude: 35.69035468873936,
+    longitude: -79.80255486524308,
+    label: 'E Dixie Dr',
+  ),
+
+  AppWaypoint(
+    latitude: 35.5156040045054,
+    longitude: -79.5770717840869,
+    label: 'Jabo Hussey Rd',
+  ),
+];

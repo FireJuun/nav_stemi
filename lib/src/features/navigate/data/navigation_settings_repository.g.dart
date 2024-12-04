@@ -41,7 +41,7 @@ final navigationSettingsChangesProvider =
 );
 
 typedef NavigationSettingsChangesRef = StreamProviderRef<NavigationSettings>;
-String _$audioGuidanceTypeHash() => r'75ce127b9f1c34ac25fde07904045606a1e89edb';
+String _$audioGuidanceTypeHash() => r'bcc6ef402f259de0be69bf96caf58f9c10ef5d16';
 
 /// See also [audioGuidanceType].
 @ProviderFor(audioGuidanceType)
@@ -57,5 +57,38 @@ final audioGuidanceTypeProvider =
 );
 
 typedef AudioGuidanceTypeRef = AutoDisposeProviderRef<AudioGuidanceType>;
+String _$shouldSimulateLocationHash() =>
+    r'1fd6a8e76fed37e186419cbffda631002072910d';
+
+/// See also [shouldSimulateLocation].
+@ProviderFor(shouldSimulateLocation)
+final shouldSimulateLocationProvider = AutoDisposeProvider<bool>.internal(
+  shouldSimulateLocation,
+  name: r'shouldSimulateLocationProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$shouldSimulateLocationHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef ShouldSimulateLocationRef = AutoDisposeProviderRef<bool>;
+String _$simulationStartingLocationHash() =>
+    r'ab24d8cd2e4911b0dea7136435d6aee560ac9954';
+
+/// See also [simulationStartingLocation].
+@ProviderFor(simulationStartingLocation)
+final simulationStartingLocationProvider =
+    AutoDisposeProvider<AppWaypoint?>.internal(
+  simulationStartingLocation,
+  name: r'simulationStartingLocationProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$simulationStartingLocationHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef SimulationStartingLocationRef = AutoDisposeProviderRef<AppWaypoint?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
