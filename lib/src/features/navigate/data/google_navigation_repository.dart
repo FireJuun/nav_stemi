@@ -28,6 +28,8 @@ class GoogleNavigationRepository {
   Stream<NavInfo?> watchNavInfo() => _navInfoStore.stream;
   StreamSubscription<NavInfoEvent>? _navInfoEventSubscription;
 
+  StreamSubscription<void>? _onRouteChangedSubscription;
+
   Future<void> _setupListeners() async {
     /// Subscribe to each event only once.
     _clearListeners();
@@ -38,15 +40,26 @@ class GoogleNavigationRepository {
       _onNavInfoEvent,
       numNextStepsToPreview: 30,
     );
+
+    // Rerouting event listener.
+    _onRouteChangedSubscription =
+        GoogleMapsNavigator.setOnRouteChangedListener(_onRouteChangedEvent);
   }
 
   void _clearListeners() {
     debugPrint('Clearing listeners');
     _navInfoEventSubscription?.cancel();
     _navInfoEventSubscription = null;
+
+    _onRouteChangedSubscription?.cancel();
+    _onRouteChangedSubscription = null;
   }
 
   void _onNavInfoEvent(NavInfoEvent event) => navInfo = event.navInfo;
+
+  void _onRouteChangedEvent() {
+    debugPrint('Route Changed');
+  }
 
   Future<TermsAccepted> areTermsAccepted() async =>
       GoogleMapsNavigator.areTermsAccepted();
