@@ -30,7 +30,6 @@ class _HomeState extends ConsumerState<Home> {
     unawaited(_checkAndSavePermissions());
 
     _listener = AppLifecycleListener(
-      // onRestart: _checkAndSavePermissions,
       onResume: _checkAndSavePermissions,
     );
   }
@@ -42,14 +41,12 @@ class _HomeState extends ConsumerState<Home> {
   }
 
   Future<void> _checkAndSavePermissions() async {
-    return notifier.checkPermissionsOnAppStart().then(
-      (permissions) {
-        setState(() {
-          _locationPermitted = permissions.areLocationsPermitted;
-          _notificationsPermitted = permissions.areNotificationsPermitted;
-        });
-      },
-    );
+    final permissions = await notifier.checkPermissionsOnAppStart();
+
+    setState(() {
+      _locationPermitted = permissions.areLocationsPermitted;
+      _notificationsPermitted = permissions.areNotificationsPermitted;
+    });
   }
 
   @override

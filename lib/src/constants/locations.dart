@@ -97,11 +97,7 @@ const locations = <EdInfo>[
 
 const simulationLocations = [
   /// Randolph EMS
-  AppWaypoint(
-    latitude: 35.668559944183734,
-    longitude: -79.83191024196512,
-    label: 'New Century Dr',
-  ),
+  randolphEms,
 
   AppWaypoint(
     latitude: 35.69035468873936,
@@ -115,3 +111,9 @@ const simulationLocations = [
     label: 'Jabo Hussey Rd',
   ),
 ];
+
+const randolphEms = AppWaypoint(
+  latitude: 35.668559944183734,
+  longitude: -79.83191024196512,
+  label: 'New Century Dr',
+);

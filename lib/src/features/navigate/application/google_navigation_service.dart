@@ -54,9 +54,10 @@ class GoogleNavigationService {
   }
 
   Future<void> checkTermsAccepted() async {
-    if (!await googleNavigationRepository.areTermsAccepted()) {
-      final accepted = await showTermsAndConditionsDialog();
-      if (!accepted) {
+    final accepted = await googleNavigationRepository.areTermsAccepted();
+    if (!accepted) {
+      final response = await showTermsAndConditionsDialog();
+      if (!response) {
         throw GoogleNavInitializationTermsNotAcceptedException();
       }
     }
@@ -111,9 +112,7 @@ class GoogleNavigationService {
     final location = navigationSettings.simulationStartingLocation;
     final speedMultiplier = navigationSettings.simulationSpeedMultiplier;
 
-    if (location != null) {
-      await simulateUserLocation(location);
-    }
+    await simulateUserLocation(location);
 
     await simulateLocationsAlongExistingRouteWithOptions(
       SimulationOptions(speedMultiplier: speedMultiplier),

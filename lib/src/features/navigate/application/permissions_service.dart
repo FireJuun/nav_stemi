@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'permissions_service.g.dart';
@@ -21,8 +21,7 @@ class PermissionsService {
       ref.read(permissionsRepositoryProvider);
 
   Future<void> initialize() async {
-    await checkLocationPermissions();
-    await checkNotificationPermissions();
+    await checkPermissionsOnAppStart();
     await geolocatorRepository.checkLocationEnabled();
     await geolocatorRepository.getLastKnownPosition();
   }
@@ -32,9 +31,13 @@ class PermissionsService {
         LocationsPermitted areLocationsPermitted,
         NotificationsPermitted areNotificationsPermitted
       })> checkPermissionsOnAppStart() async {
-    final locationsPermitted = await checkLocationPermissions();
-    final notificationsPermitted = await checkNotificationPermissions();
+    final statuses = await permissionsRepository.checkAppPermissions();
+
     await googleNavigationService.checkTermsAccepted();
+
+    final locationsPermitted =
+        statuses[Permission.locationWhenInUse]!.isGranted;
+    final notificationsPermitted = statuses[Permission.notification]!.isGranted;
 
     return (
       areLocationsPermitted: locationsPermitted,
@@ -42,33 +45,8 @@ class PermissionsService {
     );
   }
 
-  Future<void> openAppSettingsPage() =>
-      permissionsRepository.openAppSettingsPage();
-
-  @visibleForTesting
-  Future<LocationsPermitted> checkLocationPermissions() async {
-    final areLocationsPermitted =
-        await permissionsRepository.areLocationsPermitted();
-    if (areLocationsPermitted) {
-      return true;
-    } else {
-      final granted = await permissionsRepository.requestLocationPermission();
-      return granted;
-    }
-  }
-
-  @visibleForTesting
-  Future<NotificationsPermitted> checkNotificationPermissions() async {
-    final areNotificationsPermitted =
-        await permissionsRepository.areNotificationsPermitted();
-
-    if (areNotificationsPermitted) {
-      return true;
-    } else {
-      final granted =
-          await permissionsRepository.requestNotificationPermission();
-      return granted;
-    }
+  Future<void> openAppSettingsPage() async {
+    await permissionsRepository.openAppSettingsPage();
   }
 }
 

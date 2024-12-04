@@ -13,8 +13,9 @@ abstract class AppBootstrap {
     // container
     //   ..read(___);
     container
-      ..read(startStopTimerServiceProvider)
-      ..read(activeDestinationSyncServiceProvider);
+      ..read(activeDestinationSyncServiceProvider)
+      ..read(sharedPreferencesSyncServiceProvider)
+      ..read(startStopTimerServiceProvider);
 
     // * Register error handlers. For more info, see:
     // * https://docs.flutter.dev/testing/errors

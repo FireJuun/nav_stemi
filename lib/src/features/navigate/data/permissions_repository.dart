@@ -3,34 +3,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'permissions_repository.g.dart';
 
-typedef LocationPermissionsAccepted = bool;
-typedef NotificationPermissionsAccepted = bool;
-
 class PermissionsRepository {
-  Future<PermissionStatus> checkLocationStatus() => Permission.location.status;
-
-  Future<LocationPermissionsAccepted> areLocationsPermitted() async {
-    final locationPermission = await Permission.location.status;
-    return locationPermission == PermissionStatus.granted;
-  }
-
-  Future<LocationPermissionsAccepted> requestLocationPermission() async {
-    final locationPermission = await Permission.locationWhenInUse.request();
-    return locationPermission == PermissionStatus.granted;
-  }
-
-  Future<PermissionStatus> checkNotificationStatus() =>
-      Permission.notification.status;
-
-  Future<NotificationPermissionsAccepted> areNotificationsPermitted() async {
-    final notificationPermission = await Permission.notification.status;
-    return notificationPermission == PermissionStatus.granted;
-  }
-
-  Future<NotificationPermissionsAccepted>
-      requestNotificationPermission() async {
-    final notificationPermission = await Permission.notification.request();
-    return notificationPermission == PermissionStatus.granted;
+  Future<Map<Permission, PermissionStatus>> checkAppPermissions() async {
+    final statuses =
+        await [Permission.locationWhenInUse, Permission.notification].request();
+    return statuses;
   }
 
   Future<bool> openAppSettingsPage() => openAppSettings();
