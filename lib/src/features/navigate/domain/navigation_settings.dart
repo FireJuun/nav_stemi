@@ -103,17 +103,17 @@ extension AudioGuidanceTypeX on AudioGuidanceType {
         return AudioGuidanceType.alertsOnly;
       case 'silent':
         return AudioGuidanceType.silent;
+
+      /// If the value is invalid, return the default value. It's
+      /// not worth causing a full app crash for an invalid setting.
       default:
-        throw ArgumentError.value(
-          map['audioGuidanceType'],
-          'audioGuidanceType',
-          'Invalid value',
-        );
+        debugPrint('Invalid value: ${map['audioGuidanceType']}');
+        return AudioGuidanceType.alertsAndGuidance;
     }
   }
 
   Map<String, dynamic> toMap(AudioGuidanceType audioGuidanceType) {
-    return {'audioGuidanceType': toString()};
+    return {'audioGuidanceType': name};
   }
 
   String shortName() {
