@@ -23,10 +23,6 @@ class Env {
   /// Designed to only request the info that you need, saving costs
   static String get routesApi => const String.fromEnvironment('ROUTES_API');
 
-  /// Mapbox API key
-  /// Used for navigation and map rendering
-  static String get mapboxApi => const String.fromEnvironment('MAPBOX_API');
-
   /// Determine which Maps API key to show based on platform
   static String mapsApi() {
     if (Platform.isAndroid) {
