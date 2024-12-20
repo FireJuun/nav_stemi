@@ -10,7 +10,11 @@ const _dto = BoolDataToChecklistDTO();
 class ChecklistController extends _$ChecklistController with NotifierMounted {
   @override
   FutureOr<void> build() {
-    ref.onDispose(setUnmounted);
+    ref.onDispose(() {
+      // close data & other state
+      print('closing');
+      setUnmounted();
+    });
     // nothing to do
   }
 

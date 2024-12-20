@@ -58,7 +58,7 @@ final audioGuidanceTypeProvider =
 
 typedef AudioGuidanceTypeRef = AutoDisposeProviderRef<AudioGuidanceType>;
 String _$shouldSimulateLocationHash() =>
-    r'1fd6a8e76fed37e186419cbffda631002072910d';
+    r'e57d06aabeb6048a6693021c161fc370de28d334';
 
 /// See also [shouldSimulateLocation].
 @ProviderFor(shouldSimulateLocation)
