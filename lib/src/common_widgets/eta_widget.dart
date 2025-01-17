@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_navigation_flutter/google_navigation_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:sliver_tools/sliver_tools.dart';
@@ -19,65 +20,49 @@ class EtaWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final availableRoutesValue = ref.watch(availableRoutesProvider);
+    final navInfoValue = ref.watch(navInfoProvider);
 
-    return AsyncValueWidget<AvailableRoutes?>(
-      value: availableRoutesValue,
-      data: (availableRoutes) {
-        final activeRouteValue = ref.watch(activeRouteProvider);
+    return AsyncValueWidget<NavInfo?>(
+      value: navInfoValue,
+      data: (navInfo) {
+        if (navInfo == null) {
+          return const SizedBox();
+        }
 
-        return AsyncValueWidget<ActiveRoute?>(
-          value: activeRouteValue,
-          data: (activeRoute) {
-            // if (activeRoute == null || availableRoutes == null) {
-            //   throw RouteInformationNotAvailableException();
-            // }
+        final routeDuration =
+            Duration(seconds: navInfo.timeToFinalDestinationSeconds ?? 0);
+        final etaDateTime = DateTime.now().add(routeDuration);
 
-            // TODO(FireJuun): Adjust ETA after multiple navigation steps (or refresh time on occasion)
-
-            final routeDuration = _routeDurationDto
-                    .routeDurationToSeconds(activeRoute?.route.duration) ??
-                Duration.zero;
-            final durationFromRequested =
-                availableRoutes?.requestedDateTime.add(routeDuration);
-            final durationMin = _routeDurationDto
-                .routeDurationToMinsString(activeRoute?.route.duration);
-
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    'ETA:'.hardcoded,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                ),
-                Expanded(
-                  flex: 3,
-                  child: Text(
-                    durationMin,
-                    textAlign: TextAlign.end,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    durationFromRequested == null
-                        ? '--'
-                        : TimeOfDay.fromDateTime(durationFromRequested)
-                            .format(context),
-                    textAlign: TextAlign.end,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleSmall
-                        ?.apply(fontStyle: FontStyle.italic),
-                  ),
-                ),
-              ],
-            );
-          },
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 2,
+              child: Text(
+                'ETA:'.hardcoded,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ),
+            Expanded(
+              flex: 3,
+              child: Text(
+                '''${routeDuration.inMinutes.toString().padLeft(2, '0')}:${(routeDuration.inSeconds % 60).toString().padLeft(2, '0')}''',
+                textAlign: TextAlign.end,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Text(
+                TimeOfDay.fromDateTime(etaDateTime).format(context),
+                textAlign: TextAlign.end,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleSmall
+                    ?.apply(fontStyle: FontStyle.italic),
+              ),
+            ),
+          ],
         );
       },
     );

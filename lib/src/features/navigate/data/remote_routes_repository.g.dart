@@ -7,7 +7,7 @@ part of 'remote_routes_repository.dart';
 // **************************************************************************
 
 String _$remoteRoutesRepositoryHash() =>
-    r'45fcb31a0034e5b841a1bfd5172e4e9a443023ed';
+    r'0996efc767595bb47a959029743403f7ef94dd95';
 
 /// See also [remoteRoutesRepository].
 @ProviderFor(remoteRoutesRepository)

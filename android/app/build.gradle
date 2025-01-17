@@ -28,8 +28,20 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
+/// spec: https://medium.com/@nayanbabariya/set-up-environment-variables-in-flutter-for-secure-and-scalable-apps-7409ae0c383e
+/// another option: https://github.com/googlemaps/flutter-navigation-sdk/blob/main/example/android/app/build.gradle
+def dartDefines = [:]
+if (project.hasProperty('dart-defines')) {
+    dartDefines = dartDefines + project.property('dart-defines')
+            .split(',')
+            .collectEntries { entry ->
+                def pair = new String(entry.decodeBase64(), 'UTF-8').split('=')
+                pair.length == 2 ? [(pair.first()): pair.last()] : [:]
+            }
+}
+
 android {
-    namespace "org.atriumhealth.nav_stemi"
+    namespace "com.firejuun.navstemi"
     compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
@@ -48,13 +60,15 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "org.atriumhealth.nav_stemi"
+        applicationId "com.firejuun.navstemi"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion 21
+        minSdkVersion 23
+        compileSdkVersion flutter.compileSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        resValue "string", "maps_api_key", dartDefines.MAPS_API_KEY
     }
 
     signingConfigs {

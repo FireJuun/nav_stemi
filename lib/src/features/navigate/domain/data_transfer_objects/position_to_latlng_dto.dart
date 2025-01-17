@@ -1,5 +1,6 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_navigation_flutter/google_navigation_flutter.dart';
+import 'package:nav_stemi/nav_stemi.dart';
 
 /// Helper class to convert a [Position] to a [LatLng]
 /// and vice versa.
@@ -8,5 +9,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 ///
 
 extension PositionX on Position {
-  LatLng toLatLng() => LatLng(latitude, longitude);
+  LatLng toLatLng() => LatLng(latitude: latitude, longitude: longitude);
+  AppWaypoint toAppWaypoint() =>
+      AppWaypoint(latitude: latitude, longitude: longitude);
 }

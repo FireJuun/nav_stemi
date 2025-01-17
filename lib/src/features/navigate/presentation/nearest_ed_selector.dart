@@ -2,32 +2,41 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_navigation_flutter/google_navigation_flutter.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 const _routeDurationDto = RouteDurationDto();
 
 class NearestEdSelector extends ConsumerWidget {
   const NearestEdSelector({
-    required this.availableRoutes,
-    required this.activeRoute,
+    required this.activeDestination,
     super.key,
   });
 
-  final AvailableRoutes availableRoutes;
-  final ActiveRoute activeRoute;
+  final ActiveDestination activeDestination;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      children: [
-        const DestinationInfo(),
-        const EtaWidget(),
-        gapH4,
-        NearestEdButtons(
-          availableRoutes: availableRoutes,
-          activeRoute: activeRoute,
-        ),
-      ],
+    final navInfoValue = ref.watch(navInfoProvider);
+
+    return AsyncValueWidget<NavInfo?>(
+      value: navInfoValue,
+      data: (navInfo) {
+        if (navInfo == null) {
+          return const SizedBox();
+        }
+        return Column(
+          children: [
+            const DestinationInfo(),
+            const EtaWidget(),
+            gapH4,
+            NearestEdButtons(
+              availableRoutes: navInfo,
+              activeDestination: activeDestination,
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -35,12 +44,12 @@ class NearestEdSelector extends ConsumerWidget {
 class NearestEdButtons extends ConsumerWidget {
   const NearestEdButtons({
     required this.availableRoutes,
-    required this.activeRoute,
+    required this.activeDestination,
     super.key,
   });
 
-  final AvailableRoutes availableRoutes;
-  final ActiveRoute activeRoute;
+  final NavInfo availableRoutes;
+  final ActiveDestination activeDestination;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,7 +58,7 @@ class NearestEdButtons extends ConsumerWidget {
     return AsyncValueWidget<NearbyEds>(
       value: nearbyEdsValue,
       data: (nearbyEds) {
-        final isCurrentRoutePCI = availableRoutes.destinationInfo.isPCI;
+        final isCurrentRoutePCI = activeDestination.destinationInfo.isPCI;
         final nextClosestRoute = nearbyEds.items.values
             .firstWhereOrNull((ed) => ed.edInfo.isPCI != isCurrentRoutePCI);
 

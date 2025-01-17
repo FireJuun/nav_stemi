@@ -8,6 +8,7 @@ part 'shared_preferences_repository.g.dart';
 
 enum _StoredValues {
   appTheme,
+  navigationSettings,
 }
 
 class SharedPreferencesRepository {
@@ -31,6 +32,27 @@ class SharedPreferencesRepository {
       return AppTheme.fromJson(appThemeString);
     } else {
       return kFirstAppTheme;
+    }
+  }
+
+  void saveNavigationSettings(NavigationSettings? navigationSettings) {
+    if (navigationSettings == null) {
+      _prefs.remove(_StoredValues.navigationSettings.name);
+    } else {
+      _prefs.setString(
+        _StoredValues.navigationSettings.name,
+        navigationSettings.toJson(),
+      );
+    }
+  }
+
+  NavigationSettings getNavigationSettings() {
+    final navigationSettingsString =
+        _prefs.getString(_StoredValues.navigationSettings.name);
+    if (navigationSettingsString != null) {
+      return NavigationSettings.fromJson(navigationSettingsString);
+    } else {
+      return kDefaultNavigationSettings;
     }
   }
 }

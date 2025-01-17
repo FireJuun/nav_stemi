@@ -7,7 +7,7 @@ part of 'checklist_controller.dart';
 // **************************************************************************
 
 String _$checklistControllerHash() =>
-    r'c36e10d613a3f741bb29ce309f17b80416886986';
+    r'7a68667ba0a98deb4f02ac00a67203d7ea881584';
 
 /// See also [ChecklistController].
 @ProviderFor(ChecklistController)

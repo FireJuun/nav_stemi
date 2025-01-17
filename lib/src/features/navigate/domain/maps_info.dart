@@ -2,7 +2,11 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_navigation_flutter/google_navigation_flutter.dart';
+import 'package:nav_stemi/nav_stemi.dart';
+
+typedef MarkerId = String;
+typedef PolylineId = String;
 
 class MapsInfo extends Equatable {
   const MapsInfo({
@@ -12,14 +16,14 @@ class MapsInfo extends Equatable {
     this.polylines = const {},
   });
 
-  final LatLng? origin;
-  final LatLng? destination;
+  final AppWaypoint? origin;
+  final AppWaypoint? destination;
   final Map<MarkerId, Marker> markers;
   final Map<PolylineId, Polyline> polylines;
 
   MapsInfo copyWith({
-    LatLng? origin,
-    LatLng? destination,
+    AppWaypoint? origin,
+    AppWaypoint? destination,
     Map<MarkerId, Marker>? markers,
     Map<PolylineId, Polyline>? polylines,
   }) {
@@ -42,17 +46,11 @@ class MapsInfo extends Equatable {
 
   factory MapsInfo.fromMap(Map<String, dynamic> map) {
     return MapsInfo(
-      origin: map['origin'] != null && map['origin'] is Map<String, dynamic>
-          ? LatLng(
-              (map['origin'] as Map<String, dynamic>)['latitude'] as double,
-              (map['origin'] as Map<String, dynamic>)['longitude'] as double,
-            )
+      origin: map['origin'] != null
+          ? AppWaypoint.fromMap(map['origin'] as Map<String, dynamic>)
           : null,
       destination: map['destination'] != null
-          ? LatLng(
-              (map['origin'] as Map<String, dynamic>)['latitude'] as double,
-              (map['origin'] as Map<String, dynamic>)['longitude'] as double,
-            )
+          ? AppWaypoint.fromMap(map['destination'] as Map<String, dynamic>)
           : null,
       markers:
           Map<MarkerId, Marker>.from(map['markers'] as Map<MarkerId, Marker>),
@@ -72,13 +70,4 @@ class MapsInfo extends Equatable {
 
   @override
   List<Object?> get props => [origin, destination, markers, polylines];
-}
-
-extension LatLngX on LatLng {
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'latitude': latitude,
-      'longitude': longitude,
-    };
-  }
 }
