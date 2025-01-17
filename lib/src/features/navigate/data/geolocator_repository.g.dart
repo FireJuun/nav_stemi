@@ -22,7 +22,7 @@ final geolocatorRepositoryProvider = Provider<GeolocatorRepository>.internal(
 );
 
 typedef GeolocatorRepositoryRef = ProviderRef<GeolocatorRepository>;
-String _$watchPositionHash() => r'1aae2bd41545cc89a0a93522c7bc8b891e6428d5';
+String _$watchPositionHash() => r'117a2afb9d7bd6dc341e5e7067444ea68dc7cfbf';
 
 /// See also [watchPosition].
 @ProviderFor(watchPosition)

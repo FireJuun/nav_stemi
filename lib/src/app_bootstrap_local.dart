@@ -33,7 +33,12 @@ class AppBootstrapLocal extends AppBootstrap {
 
     final lastTheme = sharedPreferencesRepository.getAppTheme();
     final themeRepository = ThemeRepository(lastTheme);
+    final navigationSettings =
+        sharedPreferencesRepository.getNavigationSettings();
+    final navigationSettingsRepository =
+        NavigationSettingsRepository(navigationSettings);
 
+    /// Swap between Mapbox <-> Google for app routing
     final remoteRoutes = RemoteRoutesGoogleRepository();
 
     return ProviderContainer(
@@ -41,6 +46,8 @@ class AppBootstrapLocal extends AppBootstrap {
         // repositories
         sharedPreferencesRepositoryProvider
             .overrideWithValue(sharedPreferencesRepository),
+        navigationSettingsRepositoryProvider
+            .overrideWithValue(navigationSettingsRepository),
         themeRepositoryProvider.overrideWithValue(themeRepository),
         remoteRoutesRepositoryProvider.overrideWithValue(remoteRoutes),
       ],

@@ -7,7 +7,7 @@ part of 'time_metrics_controller.dart';
 // **************************************************************************
 
 String _$timeMetricsControllerHash() =>
-    r'665f3aa3903942c117a78836d9e6c675669627d1';
+    r'fe0e5b5ac3a4e41949a1ab2216cdc69d994619d0';
 
 /// See also [TimeMetricsController].
 @ProviderFor(TimeMetricsController)

@@ -2,7 +2,7 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart' as maps;
+import 'package:nav_stemi/nav_stemi.dart';
 
 class EdInfo extends Equatable {
   const EdInfo({
@@ -18,7 +18,7 @@ class EdInfo extends Equatable {
 
   final String name;
   final String shortName;
-  final maps.LatLng location;
+  final AppWaypoint location;
   final String address;
   final String website;
   final String telephone;
@@ -28,7 +28,7 @@ class EdInfo extends Equatable {
   EdInfo copyWith({
     String? name,
     String? shortName,
-    maps.LatLng? location,
+    AppWaypoint? location,
     String? address,
     String? website,
     String? telephone,
@@ -64,14 +64,10 @@ class EdInfo extends Equatable {
   }
 
   factory EdInfo.fromMap(Map<String, dynamic> map) {
-    final location =
-        maps.LatLng.fromJson(map['location'] as Map<String, dynamic>);
-    assert(location != null, 'Location is null');
-
     return EdInfo(
       name: map['name'] as String,
       shortName: map['shortName'] as String,
-      location: location!,
+      location: map['location'] as AppWaypoint,
       address: map['address'] as String,
       website: map['website'] as String,
       telephone: map['telephone'] as String,

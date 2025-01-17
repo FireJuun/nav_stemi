@@ -17,10 +17,14 @@ class DestinationInfo extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final availableRoutesValue = ref.watch(availableRoutesProvider);
-    return AsyncValueWidget<AvailableRoutes?>(
-      value: availableRoutesValue,
-      data: (availableRoutes) {
+    final activeDesinationValue = ref.watch(activeDestinationProvider);
+    return AsyncValueWidget<ActiveDestination?>(
+      value: activeDesinationValue,
+      data: (activeDestination) {
+        if (activeDestination == null) {
+          return const SizedBox();
+        }
+
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -30,21 +34,22 @@ class DestinationInfo extends ConsumerWidget {
             ),
             Expanded(
               child: Text(
-                availableRoutes?.destinationInfo.name ?? '--',
+                activeDestination.destinationInfo.name,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ),
-            if (availableRoutes != null)
-              IconButton(
-                onPressed: () => ref.read(goRouterProvider).goNamed(
+            IconButton(
+              onPressed: () {
+                ref.read(goRouterProvider).goNamed(
                       AppRoute.navInfo.name,
-                      extra: availableRoutes.destinationInfo,
-                    ),
-                icon: const Icon(Icons.info_outline),
-              ),
+                      extra: activeDestination.destinationInfo,
+                    );
+              },
+              icon: const Icon(Icons.info_outline),
+            ),
           ],
         );
       },

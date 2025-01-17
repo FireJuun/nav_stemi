@@ -10,6 +10,21 @@ EMS Navigation App for critical scenarios
 
 ---
 
+## Setting up Environment variables
+
+This application uses locally defined environment variables for Google Maps Flutter, Google Routes Flutter, and Flutter Mapbox Navigation. Those are defined locally for testing purposes. For production, it is highly advisable to use server-side API keys and other means to prevent man-in-the-middle (MITM) attacks. See the links provided by Andrea Bizzotto at the beginning of [this post](https://codewithandrea.com/articles/flutter-api-keys-dart-define-env-files/) for more info. Use of compile-time variables in native platforms is [currently being discussed](https://github.com/flutter/flutter/issues/139289) within the Flutter community.
+
+You'll need to create an `.env` folder, with three files `.env/development.env`, `.env/staging.env`, `.env/production.env`. Each of these .env files will contain the following tokens:
+
+```text
+MAPS_API_KEY={your_google_navigation_api_token_here}
+DIRECTIONS_API={your_directions_api_token_here}
+DISTANCE_MATRIX_API={your_distance_matrix_api_token_here}
+ROUTES_API={your_routes_api_token_here}
+```
+
+If you don't have an access token established yet -- such as for Google Maps API -- just leave the `{}` field blank for now. Don't include `{` or `}` in the access token.
+
 ## Getting Started 🚀
 
 This project contains 3 flavors:
@@ -40,7 +55,7 @@ _\*Nav Stemi works on iOS, Android, Web, and Windows._
 To run all unit and widget tests use the following command:
 
 ```sh
-$ flutter test --coverage --test-randomize-ordering-seed random
+flutter test --coverage --test-randomize-ordering-seed random
 ```
 
 To view the generated coverage report you can use [lcov](https://github.com/linux-test-project/lcov).
@@ -109,10 +124,10 @@ Update the `CFBundleLocalizations` array in the `Info.plist` at `ios/Runner/Info
     ...
 
     <key>CFBundleLocalizations</key>
-	<array>
-		<string>en</string>
-		<string>es</string>
-	</array>
+ <array>
+  <string>en</string>
+  <string>es</string>
+ </array>
 
     ...
 ```

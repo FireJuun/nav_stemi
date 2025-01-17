@@ -68,8 +68,13 @@ GoRouter goRouter(GoRouterRef ref) {
               GoRoute(
                 path: '/nav',
                 name: AppRoute.nav.name,
-                pageBuilder: (context, state) =>
-                    _fadeTransition(context, state, const NavScreen()),
+                pageBuilder: (context, state) {
+                  return _fadeTransition(
+                    context,
+                    state,
+                    const NavScreen(),
+                  );
+                },
                 routes: [
                   GoRoute(
                     path: 'go',

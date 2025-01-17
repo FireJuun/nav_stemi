@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -9,7 +11,10 @@ class GoToDialogController extends _$GoToDialogController with NotifierMounted {
   FutureOr<void> build() {
     // nothing to do
     state = const AsyncData(null);
-    ref.onDispose(setUnmounted);
+    ref.onDispose(() {
+      ref.invalidate(nearbyEdsProvider);
+      setUnmounted();
+    });
   }
 
   Future<void> goToEd({
@@ -19,9 +24,10 @@ class GoToDialogController extends _$GoToDialogController with NotifierMounted {
     // nothing to do
     state = const AsyncLoading();
     try {
-      await ref
-          .read(routeServiceProvider)
-          .goToEd(activeEd: activeEd, nearbyEds: nearbyEds);
+      ref
+          .read(googleNavigationServiceProvider)
+          .linkEdInfoToDestination(activeEd.edInfo);
+
       ref.read(goRouterProvider).goNamed(AppRoute.nav.name);
     } catch (e, st) {
       state = AsyncError(e, st);
