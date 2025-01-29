@@ -20,6 +20,8 @@ final themeRepositoryProvider = Provider<ThemeRepository>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ThemeRepositoryRef = ProviderRef<ThemeRepository>;
 String _$appThemeChangesHash() => r'1e5eef1f2037c8796e0c646fc308fd48b891921c';
 
@@ -35,6 +37,8 @@ final appThemeChangesProvider = StreamProvider<AppTheme>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef AppThemeChangesRef = StreamProviderRef<AppTheme>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

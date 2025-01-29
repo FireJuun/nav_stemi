@@ -55,8 +55,6 @@ class SharedPreferencesSyncService {
 }
 
 @Riverpod(keepAlive: true)
-SharedPreferencesSyncService sharedPreferencesSyncService(
-  SharedPreferencesSyncServiceRef ref,
-) {
+SharedPreferencesSyncService sharedPreferencesSyncService(Ref ref) {
   return SharedPreferencesSyncService(ref);
 }

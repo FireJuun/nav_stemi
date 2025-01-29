@@ -22,6 +22,8 @@ final googleNavigationRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GoogleNavigationRepositoryRef = ProviderRef<GoogleNavigationRepository>;
 String _$navInfoHash() => r'3f0fe3217e1c08518211601046b947ff26832968';
 
@@ -36,6 +38,8 @@ final navInfoProvider = StreamProvider<NavInfo?>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef NavInfoRef = StreamProviderRef<NavInfo?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

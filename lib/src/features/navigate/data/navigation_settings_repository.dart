@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -39,24 +40,20 @@ class NavigationSettingsRepository {
 }
 
 @Riverpod(keepAlive: true)
-NavigationSettingsRepository navigationSettingsRepository(
-  NavigationSettingsRepositoryRef ref,
-) {
+NavigationSettingsRepository navigationSettingsRepository(Ref ref) {
   ///  set this in the app bootstrap section
   throw UnimplementedError();
 }
 
 @Riverpod(keepAlive: true)
-Stream<NavigationSettings> navigationSettingsChanges(
-  NavigationSettingsChangesRef ref,
-) {
+Stream<NavigationSettings> navigationSettingsChanges(Ref ref) {
   return ref
       .watch(navigationSettingsRepositoryProvider)
       .navigationSettingsChanges();
 }
 
 @riverpod
-AudioGuidanceType audioGuidanceType(AudioGuidanceTypeRef ref) {
+AudioGuidanceType audioGuidanceType(Ref ref) {
   return ref.watch(
         navigationSettingsChangesProvider
             .select((settings) => settings.value?.audioGuidanceType),
@@ -65,7 +62,7 @@ AudioGuidanceType audioGuidanceType(AudioGuidanceTypeRef ref) {
 }
 
 @riverpod
-bool shouldSimulateLocation(ShouldSimulateLocationRef ref) {
+bool shouldSimulateLocation(Ref ref) {
   return ref.watch(
     navigationSettingsChangesProvider
         .select((settings) => settings.value?.shouldSimulateLocation ?? false),
@@ -73,7 +70,7 @@ bool shouldSimulateLocation(ShouldSimulateLocationRef ref) {
 }
 
 @riverpod
-AppWaypoint? simulationStartingLocation(SimulationStartingLocationRef ref) {
+AppWaypoint? simulationStartingLocation(Ref ref) {
   return ref.watch(
     navigationSettingsChangesProvider
         .select((settings) => settings.value?.simulationStartingLocation),

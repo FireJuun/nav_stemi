@@ -22,6 +22,8 @@ final navigationSettingsRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef NavigationSettingsRepositoryRef
     = ProviderRef<NavigationSettingsRepository>;
 String _$navigationSettingsChangesHash() =>
@@ -40,6 +42,8 @@ final navigationSettingsChangesProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef NavigationSettingsChangesRef = StreamProviderRef<NavigationSettings>;
 String _$audioGuidanceTypeHash() => r'bcc6ef402f259de0be69bf96caf58f9c10ef5d16';
 
@@ -56,6 +60,8 @@ final audioGuidanceTypeProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef AudioGuidanceTypeRef = AutoDisposeProviderRef<AudioGuidanceType>;
 String _$shouldSimulateLocationHash() =>
     r'e57d06aabeb6048a6693021c161fc370de28d334';
@@ -72,6 +78,8 @@ final shouldSimulateLocationProvider = AutoDisposeProvider<bool>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ShouldSimulateLocationRef = AutoDisposeProviderRef<bool>;
 String _$simulationStartingLocationHash() =>
     r'ab24d8cd2e4911b0dea7136435d6aee560ac9954';
@@ -89,6 +97,8 @@ final simulationStartingLocationProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SimulationStartingLocationRef = AutoDisposeProviderRef<AppWaypoint?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

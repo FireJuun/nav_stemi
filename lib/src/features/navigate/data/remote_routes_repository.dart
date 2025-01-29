@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -28,5 +29,5 @@ abstract class RemoteRoutesRepository {
 }
 
 @Riverpod(keepAlive: true)
-RemoteRoutesRepository remoteRoutesRepository(RemoteRoutesRepositoryRef ref) =>
+RemoteRoutesRepository remoteRoutesRepository(Ref ref) =>
     throw UnimplementedError();

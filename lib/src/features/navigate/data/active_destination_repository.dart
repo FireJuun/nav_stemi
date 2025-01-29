@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -15,13 +16,11 @@ class ActiveDestinationRepository {
 }
 
 @Riverpod(keepAlive: true)
-ActiveDestinationRepository activeDestinationRepository(
-  ActiveDestinationRepositoryRef ref,
-) {
+ActiveDestinationRepository activeDestinationRepository(Ref ref) {
   return ActiveDestinationRepository();
 }
 
 @Riverpod(keepAlive: true)
-Stream<ActiveDestination?> activeDestination(ActiveDestinationRef ref) {
+Stream<ActiveDestination?> activeDestination(Ref ref) {
   return ref.watch(activeDestinationRepositoryProvider).watchDestinations();
 }

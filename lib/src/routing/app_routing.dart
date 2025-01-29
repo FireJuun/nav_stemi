@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -24,7 +25,7 @@ enum AppRoute {
 
 /// returns the GoRouter instance that defines all the routes in the app
 @Riverpod(keepAlive: true)
-GoRouter goRouter(GoRouterRef ref) {
+GoRouter goRouter(Ref ref) {
   final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
   final shellNavNavigatorKey =
       GlobalKey<NavigatorState>(debugLabel: 'shellNav');

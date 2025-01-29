@@ -51,6 +51,6 @@ class PermissionsService {
 }
 
 @Riverpod(keepAlive: true)
-PermissionsService permissionsService(PermissionsServiceRef ref) {
+PermissionsService permissionsService(Ref ref) {
   return PermissionsService(ref);
 }

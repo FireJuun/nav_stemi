@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:nav_stemi/src/export.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -30,14 +31,12 @@ class AvailableRoutesRepository {
 }
 
 @Riverpod(keepAlive: true)
-AvailableRoutesRepository availableRoutesRepository(
-  AvailableRoutesRepositoryRef ref,
-) {
+AvailableRoutesRepository availableRoutesRepository(Ref ref) {
   return AvailableRoutesRepository();
 }
 
 @riverpod
-Stream<AvailableRoutes?> availableRoutes(AvailableRoutesRef ref) {
+Stream<AvailableRoutes?> availableRoutes(Ref ref) {
   final availableRoutesRepository =
       ref.watch(availableRoutesRepositoryProvider);
   return availableRoutesRepository.watchAvailableRoutes();
