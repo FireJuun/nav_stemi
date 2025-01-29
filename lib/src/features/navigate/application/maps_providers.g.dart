@@ -19,6 +19,8 @@ final mapsInfoProvider = AutoDisposeStreamProvider<MapsInfo?>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef MapsInfoRef = AutoDisposeStreamProviderRef<MapsInfo?>;
 String _$originHash() => r'063aa34171e7fbb280d149aa8283c724391b6107';
 
@@ -33,6 +35,8 @@ final originProvider = AutoDisposeProvider<AppWaypoint?>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef OriginRef = AutoDisposeProviderRef<AppWaypoint?>;
 String _$destinationHash() => r'4b922be58fe31666f8051f27bbac336ed1fe993e';
 
@@ -47,6 +51,8 @@ final destinationProvider = AutoDisposeProvider<AppWaypoint?>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef DestinationRef = AutoDisposeProviderRef<AppWaypoint?>;
 String _$markersHash() => r'6b5ab3cc4e275e6b734e99e4fe4a784d4b438362';
 
@@ -61,6 +67,8 @@ final markersProvider = AutoDisposeProvider<Set<Marker>>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef MarkersRef = AutoDisposeProviderRef<Set<Marker>>;
 String _$polylinesHash() => r'fc6b1dfab91d87c4074fb9e38e1a64bef4840c3c';
 
@@ -75,6 +83,8 @@ final polylinesProvider = AutoDisposeProvider<Set<Polyline>>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef PolylinesRef = AutoDisposeProviderRef<Set<Polyline>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

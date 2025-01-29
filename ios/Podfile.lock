@@ -123,7 +123,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
-  flutter_native_splash: e8a1e01082d97a8099d973f919f57904c925008a
+  flutter_native_splash: f71420956eb811e6d310720fee915f1d42852e7a
   geolocator_apple: 9bcea1918ff7f0062d98345d238ae12718acfbc1
   google_navigation_flutter: e0dd05d370f0862a236381b9dbb33d6c7eb5f7bf
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7

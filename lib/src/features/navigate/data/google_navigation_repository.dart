@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_navigation_flutter/google_navigation_flutter.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -152,13 +153,11 @@ class GoogleNavigationRepository {
 }
 
 @Riverpod(keepAlive: true)
-GoogleNavigationRepository googleNavigationRepository(
-  GoogleNavigationRepositoryRef ref,
-) {
+GoogleNavigationRepository googleNavigationRepository(Ref ref) {
   return GoogleNavigationRepository();
 }
 
 @Riverpod(keepAlive: true)
-Stream<NavInfo?> navInfo(NavInfoRef ref) {
+Stream<NavInfo?> navInfo(Ref ref) {
   return ref.watch(googleNavigationRepositoryProvider).watchNavInfo();
 }

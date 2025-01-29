@@ -63,8 +63,6 @@ class ActiveDestinationSyncService {
 }
 
 @Riverpod(keepAlive: true)
-ActiveDestinationSyncService activeDestinationSyncService(
-  ActiveDestinationSyncServiceRef ref,
-) {
+ActiveDestinationSyncService activeDestinationSyncService(Ref ref) {
   return ActiveDestinationSyncService(ref);
 }

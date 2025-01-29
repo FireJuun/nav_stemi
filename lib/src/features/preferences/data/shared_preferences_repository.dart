@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -58,9 +59,7 @@ class SharedPreferencesRepository {
 }
 
 @Riverpod(keepAlive: true)
-SharedPreferencesRepository sharedPreferencesRepository(
-  SharedPreferencesRepositoryRef ref,
-) {
+SharedPreferencesRepository sharedPreferencesRepository(Ref ref) {
   // needs to be set in bootstrap
   throw UnimplementedError();
 }

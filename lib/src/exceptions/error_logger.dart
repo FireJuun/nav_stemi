@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -19,6 +20,6 @@ class ErrorLogger {
 }
 
 @riverpod
-ErrorLogger errorLogger(ErrorLoggerRef ref) {
+ErrorLogger errorLogger(Ref ref) {
   return ErrorLogger();
 }

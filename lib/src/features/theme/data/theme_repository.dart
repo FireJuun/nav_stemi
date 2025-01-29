@@ -1,5 +1,6 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -185,13 +186,13 @@ TextStyle _style(double s, FontWeight w) =>
     TextStyle(fontSize: s, fontWeight: w);
 
 @Riverpod(keepAlive: true)
-ThemeRepository themeRepository(ThemeRepositoryRef ref) {
+ThemeRepository themeRepository(Ref ref) {
   // set this in the app bootstrap section
   throw UnimplementedError();
 }
 
 @Riverpod(keepAlive: true)
-Stream<AppTheme> appThemeChanges(AppThemeChangesRef ref) {
+Stream<AppTheme> appThemeChanges(Ref ref) {
   final themeRepository = ref.watch(themeRepositoryProvider);
   return themeRepository.appThemeChanges;
 }

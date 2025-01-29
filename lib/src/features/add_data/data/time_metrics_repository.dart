@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -22,12 +23,12 @@ class TimeMetricsRepository {
 }
 
 @Riverpod(keepAlive: true)
-TimeMetricsRepository timeMetricsRepository(TimeMetricsRepositoryRef ref) {
+TimeMetricsRepository timeMetricsRepository(Ref ref) {
   return TimeMetricsRepository();
 }
 
 @Riverpod(keepAlive: true)
-Stream<TimeMetricsModel?> timeMetricsModel(TimeMetricsModelRef ref) {
+Stream<TimeMetricsModel?> timeMetricsModel(Ref ref) {
   final timeMetricsRepository = ref.watch(timeMetricsRepositoryProvider);
   return timeMetricsRepository.watchTimeMetrics();
 }

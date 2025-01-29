@@ -22,6 +22,8 @@ final countUpTimerRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef CountUpTimerRepositoryRef
     = AutoDisposeProviderRef<CountUpTimerRepository>;
 String _$countUpTimerHash() => r'b50e8965c8cd765cf2da2352795f3cb8c9773a80';
@@ -37,6 +39,8 @@ final countUpTimerProvider = AutoDisposeStreamProvider<int>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef CountUpTimerRef = AutoDisposeStreamProviderRef<int>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
