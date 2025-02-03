@@ -57,7 +57,7 @@ class StartStopTimerService {
   }
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 StartStopTimerService startStopTimerService(Ref ref) {
   return StartStopTimerService(ref);
 }

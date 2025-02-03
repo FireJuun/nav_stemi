@@ -23,7 +23,7 @@ class PatientInfoRepository {
   }
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 PatientInfoRepository patientInfoRepository(Ref ref) {
   return PatientInfoRepository();
 }

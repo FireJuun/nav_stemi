@@ -7,7 +7,7 @@ part of 'permissions_service.dart';
 // **************************************************************************
 
 String _$permissionsServiceHash() =>
-    r'18049e97088df92e4e3d391dff1b43231a0d91fe';
+    r'b5c12802c74f6e02be45e972ef9c85b0c0f7cde2';
 
 /// See also [permissionsService].
 @ProviderFor(permissionsService)

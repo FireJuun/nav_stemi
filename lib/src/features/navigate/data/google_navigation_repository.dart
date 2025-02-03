@@ -157,7 +157,7 @@ GoogleNavigationRepository googleNavigationRepository(Ref ref) {
   return GoogleNavigationRepository();
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 Stream<NavInfo?> navInfo(Ref ref) {
   return ref.watch(googleNavigationRepositoryProvider).watchNavInfo();
 }

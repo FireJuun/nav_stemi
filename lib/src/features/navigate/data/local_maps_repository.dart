@@ -29,7 +29,7 @@ class LocalMapsRepository {
   }
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 LocalMapsRepository localMapsRepository(Ref ref) {
   return LocalMapsRepository();
 }

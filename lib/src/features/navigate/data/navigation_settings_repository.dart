@@ -45,7 +45,7 @@ NavigationSettingsRepository navigationSettingsRepository(Ref ref) {
   throw UnimplementedError();
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 Stream<NavigationSettings> navigationSettingsChanges(Ref ref) {
   return ref
       .watch(navigationSettingsRepositoryProvider)

@@ -6,7 +6,7 @@ part of 'routes_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$allEDsHash() => r'5d9e3fc2a9031dbd350e4d74f9682e78bcfdda9c';
+String _$allEDsHash() => r'95bbc2f7eea2f159621cd314af9fa44b9bfa1e6e';
 
 /// See also [allEDs].
 @ProviderFor(allEDs)
@@ -22,7 +22,7 @@ final allEDsProvider = Provider<List<EdInfo>>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AllEDsRef = ProviderRef<List<EdInfo>>;
-String _$nearbyEdsHash() => r'66ee0ef9f5a48ca31e694801eafc25d6f98130d5';
+String _$nearbyEdsHash() => r'3469c418d0b4dd77f69b56eaca3ed7c1730e7634';
 
 /// See also [nearbyEds].
 @ProviderFor(nearbyEds)

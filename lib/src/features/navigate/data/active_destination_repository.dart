@@ -15,12 +15,12 @@ class ActiveDestinationRepository {
   Stream<ActiveDestination?> watchDestinations() => _store.stream;
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 ActiveDestinationRepository activeDestinationRepository(Ref ref) {
   return ActiveDestinationRepository();
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 Stream<ActiveDestination?> activeDestination(Ref ref) {
   return ref.watch(activeDestinationRepositoryProvider).watchDestinations();
 }

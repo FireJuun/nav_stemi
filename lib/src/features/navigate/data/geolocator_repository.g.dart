@@ -7,7 +7,7 @@ part of 'geolocator_repository.dart';
 // **************************************************************************
 
 String _$geolocatorRepositoryHash() =>
-    r'2046929b53322692ed41701a5e24efabbf2839d5';
+    r'529d17b116a74dfac8114550b737bedc1b70004e';
 
 /// See also [geolocatorRepository].
 @ProviderFor(geolocatorRepository)
@@ -24,7 +24,7 @@ final geolocatorRepositoryProvider = Provider<GeolocatorRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef GeolocatorRepositoryRef = ProviderRef<GeolocatorRepository>;
-String _$watchPositionHash() => r'117a2afb9d7bd6dc341e5e7067444ea68dc7cfbf';
+String _$watchPositionHash() => r'3cd3c7d726645dd121b7fe7d6ba25abce58bfa68';
 
 /// See also [watchPosition].
 @ProviderFor(watchPosition)
@@ -42,7 +42,7 @@ final watchPositionProvider = AutoDisposeStreamProvider<Position?>.internal(
 // ignore: unused_element
 typedef WatchPositionRef = AutoDisposeStreamProviderRef<Position?>;
 String _$getCurrentPositionHash() =>
-    r'1e41396a73137122b67c8e9a30ab504650ac7422';
+    r'94478b6f8440b40310a2f7981ba834a144c0315b';
 
 /// See also [getCurrentPosition].
 @ProviderFor(getCurrentPosition)
@@ -60,7 +60,7 @@ final getCurrentPositionProvider = AutoDisposeFutureProvider<Position>.internal(
 // ignore: unused_element
 typedef GetCurrentPositionRef = AutoDisposeFutureProviderRef<Position>;
 String _$getLastKnownPositionHash() =>
-    r'31a800417ffd195a86db23e09a6c57c984b4f19e';
+    r'8cf1a661af1ccfafd923a03fe38197157b80f90e';
 
 /// See also [getLastKnownPosition].
 @ProviderFor(getLastKnownPosition)
@@ -79,7 +79,7 @@ final getLastKnownPositionProvider =
 // ignore: unused_element
 typedef GetLastKnownPositionRef = AutoDisposeFutureProviderRef<Position?>;
 String _$getLastKnownOrCurrentPositionHash() =>
-    r'83eed17d204262146489b74088f8ec238e808c6e';
+    r'80ae7e1499c75f20cc7932bef91205b429bf310a';
 
 /// Get the last known position of the device, if available.
 /// Otherwise, get the current position of the device, which
