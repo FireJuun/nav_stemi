@@ -119,7 +119,7 @@ class ThemeRepository {
               if (states.any(activeStates.contains)) {
                 return colorScheme.primary;
               } else if (states.any(interactiveStates.contains)) {
-                return colorScheme.primary.withOpacity(0.5);
+                return colorScheme.primary.withValues(alpha: 0.5);
               } else if (states.any(disabledStates.contains)) {
                 return Colors.transparent;
               }
@@ -131,7 +131,7 @@ class ThemeRepository {
               if (states.any(activeStates.contains)) {
                 return colorScheme.onPrimary;
               } else if (states.any(interactiveStates.contains)) {
-                return colorScheme.onPrimary.withOpacity(0.5);
+                return colorScheme.onPrimary.withValues(alpha: 0.5);
               } else if (states.any(disabledStates.contains)) {
                 return colorScheme.outline;
               }
