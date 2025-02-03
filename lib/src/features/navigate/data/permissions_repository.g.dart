@@ -7,7 +7,7 @@ part of 'permissions_repository.dart';
 // **************************************************************************
 
 String _$permissionsRepositoryHash() =>
-    r'fdcad95a76d7e0c53b2ec73b7864721c4e96f7df';
+    r'ef46907a0bed848870197eb8679e993f090f3a4c';
 
 /// See also [permissionsRepository].
 @ProviderFor(permissionsRepository)

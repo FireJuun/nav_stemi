@@ -7,7 +7,7 @@ part of 'available_routes_repository.dart';
 // **************************************************************************
 
 String _$availableRoutesRepositoryHash() =>
-    r'77844a96363b568b5b9dfd7da129a21d1131f1e7';
+    r'5f6f794ea73735de1eddf496779b695b0fb255f9';
 
 /// See also [availableRoutesRepository].
 @ProviderFor(availableRoutesRepository)
@@ -25,7 +25,7 @@ final availableRoutesRepositoryProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AvailableRoutesRepositoryRef = ProviderRef<AvailableRoutesRepository>;
-String _$availableRoutesHash() => r'43ef06037e8384f33ad31363f319ffaea2379b07';
+String _$availableRoutesHash() => r'c7152ee6991de1018fcb7cdd5249493bf710a175';
 
 /// See also [availableRoutes].
 @ProviderFor(availableRoutes)

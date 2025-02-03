@@ -7,7 +7,7 @@ part of 'shared_preferences_repository.dart';
 // **************************************************************************
 
 String _$sharedPreferencesRepositoryHash() =>
-    r'9c45bc516c8f5955f1cb61a80657e5373a84f93d';
+    r'08a1b756abe0325908f56bffdc13219c6b786102';
 
 /// See also [sharedPreferencesRepository].
 @ProviderFor(sharedPreferencesRepository)

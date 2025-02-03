@@ -147,7 +147,7 @@ class NavScreenGoogleController extends _$NavScreenGoogleController
   /// Functions below handled here
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 class MapSessionReady extends _$MapSessionReady {
   @override
   AsyncValue<bool> build() => const AsyncData(false);

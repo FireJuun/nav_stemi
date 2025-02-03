@@ -7,7 +7,7 @@ part of 'google_navigation_service.dart';
 // **************************************************************************
 
 String _$googleNavigationServiceHash() =>
-    r'7a6b6a5b8d18d433230a09aa8ede9752d1e3987e';
+    r'a9b145c582152e60e9249c2b1b7630216af1a005';
 
 /// See also [googleNavigationService].
 @ProviderFor(googleNavigationService)

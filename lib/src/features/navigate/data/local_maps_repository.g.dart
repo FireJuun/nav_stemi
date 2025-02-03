@@ -7,11 +7,12 @@ part of 'local_maps_repository.dart';
 // **************************************************************************
 
 String _$localMapsRepositoryHash() =>
-    r'9e2e17c38197cd3c9debaa4f51d9b780dd8473a0';
+    r'c6dd3cc2ba9e9522948d618a2976220a3996cfef';
 
 /// See also [localMapsRepository].
 @ProviderFor(localMapsRepository)
-final localMapsRepositoryProvider = Provider<LocalMapsRepository>.internal(
+final localMapsRepositoryProvider =
+    AutoDisposeProvider<LocalMapsRepository>.internal(
   localMapsRepository,
   name: r'localMapsRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -23,6 +24,6 @@ final localMapsRepositoryProvider = Provider<LocalMapsRepository>.internal(
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef LocalMapsRepositoryRef = ProviderRef<LocalMapsRepository>;
+typedef LocalMapsRepositoryRef = AutoDisposeProviderRef<LocalMapsRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
