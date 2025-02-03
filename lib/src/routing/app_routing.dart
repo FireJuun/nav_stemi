@@ -56,9 +56,20 @@ GoRouter goRouter(Ref ref) {
       // https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
-          // the UI shell
-          return ScaffoldWithNestedNavigation(
-            navigationShell: navigationShell,
+          /// Listens for changes to active destination and time metrics.
+          /// These should clear when you go back to the home screen.
+          return Consumer(
+            builder: (context, ref, _) {
+              ref
+                ..watch(activeDestinationProvider)
+                ..watch(activeDestinationSyncServiceProvider)
+                ..watch(startStopTimerServiceProvider);
+
+              /// The UI shell
+              return ScaffoldWithNestedNavigation(
+                navigationShell: navigationShell,
+              );
+            },
           );
         },
         branches: [
