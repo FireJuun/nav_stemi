@@ -6,6 +6,15 @@ import 'package:nav_stemi/nav_stemi.dart';
 // TODO(FireJuun): should these be modifiable via settings?
 const _countUpTimeWarningThreshold = Duration(minutes: 45);
 const _countUpTimeErrorThreshold = Duration(minutes: 60);
+const _countUpTimePastErrorThreshold = Duration(minutes: 90);
+
+enum TimerDurationState {
+  running,
+  warning,
+  error,
+  pastError,
+  unknown,
+}
 
 class CountUpTimerView extends ConsumerWidget {
   const CountUpTimerView({this.height = 60, super.key});
@@ -20,30 +29,48 @@ class CountUpTimerView extends ConsumerWidget {
     final timer = ref.watch(countUpTimerProvider);
     final timerDuration = timerIntAsDuration(timer.value);
 
-    final containerColor = switch (timerDuration) {
-      < Duration.zero => colorScheme.error,
-      >= Duration.zero && < _countUpTimeWarningThreshold =>
-        colorScheme.tertiary.lighten().withAlpha(110),
+    // TODO(FireJuun): setup tests for color logic
+    final timerDurationState = switch (timerDuration) {
+      <= Duration.zero => TimerDurationState.unknown,
+      > Duration.zero && < _countUpTimeWarningThreshold =>
+        TimerDurationState.running,
       >= _countUpTimeWarningThreshold && < _countUpTimeErrorThreshold =>
-        // ignore: avoid_redundant_argument_values
-        Colors.yellow[700],
-      >= _countUpTimeErrorThreshold => colorScheme.error,
-      _ => colorScheme.error,
+        TimerDurationState.warning,
+      >= _countUpTimeErrorThreshold && < _countUpTimePastErrorThreshold =>
+        TimerDurationState.error,
+      >= _countUpTimePastErrorThreshold => TimerDurationState.pastError,
+      _ => TimerDurationState.unknown,
     };
-    final foregroundColor = containerColor == colorScheme.error
-        ? colorScheme.onError
-        : colorScheme.onTertiaryContainer;
+
+    final containerColor = switch (timerDurationState) {
+      TimerDurationState.unknown => Colors.transparent,
+      TimerDurationState.running =>
+        colorScheme.tertiary.lighten().withAlpha(110),
+      TimerDurationState.warning => Colors.yellow[700],
+      TimerDurationState.error => colorScheme.error,
+      TimerDurationState.pastError => Colors.black,
+    };
+
+    final foregroundColor = switch (timerDurationState) {
+      TimerDurationState.unknown => Colors.transparent,
+      TimerDurationState.running => colorScheme.onTertiaryContainer,
+      TimerDurationState.warning => colorScheme.onTertiaryContainer,
+      TimerDurationState.error => colorScheme.onError,
+      TimerDurationState.pastError => colorScheme.onError,
+    };
 
     return Container(
       height: height,
       padding: const EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
-        // TODO(FireJuun): setup test for color logic
         color: containerColor,
-        border: Border.all(
-          color: colorScheme.onTertiaryContainer,
-          width: 4,
-        ),
+        border: timerDurationState == TimerDurationState.running ||
+                timerDurationState == TimerDurationState.warning
+            ? Border.all(
+                color: colorScheme.onTertiaryContainer,
+                width: 4,
+              )
+            : null,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
