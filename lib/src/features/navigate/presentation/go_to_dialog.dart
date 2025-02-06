@@ -4,6 +4,9 @@ import 'package:nav_stemi/nav_stemi.dart';
 import 'package:nav_stemi/src/features/add_data/presentation/data_entry/sync_notify/sync_notify.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
+// TODO(FireJuun): should this be modifiable via settings
+const _routeTooLongThreshold = Duration(minutes: 45);
+
 class GoToDialog extends StatelessWidget {
   const GoToDialog({super.key});
 
@@ -92,19 +95,43 @@ class _PlaceholderButton extends ConsumerWidget {
   final NearbyEd edOption;
   final NearbyEds nearbyEds;
 
+  // TODO(FireJuun): add testing / validation
+  bool checkIfOverTimeThreshold(
+    AsyncValue<int> countUpTime,
+    NearbyEd edOption,
+  ) {
+    final timeElapsed = Duration(seconds: countUpTime.value ?? 0);
+    final timeToDestination = const RouteDurationDto()
+            .routeDurationToSeconds(edOption.routeDuration) ??
+        Duration.zero;
+    return (timeToDestination + timeElapsed) > _routeTooLongThreshold;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final countUpTime = ref.watch(countUpTimerProvider);
+
+    final isOverTimeThreshold = checkIfOverTimeThreshold(countUpTime, edOption);
+
     final colorScheme = Theme.of(context).colorScheme;
-    final foregroundColor =
-        edOption.edInfo.isPCI ? colorScheme.onPrimary : colorScheme.onSecondary;
-    final backgroundColor =
-        edOption.edInfo.isPCI ? colorScheme.primary : colorScheme.secondary;
+    final foregroundColor = isOverTimeThreshold
+        ? colorScheme.onError
+        : colorScheme.onSecondaryContainer;
+    final backgroundColor = isOverTimeThreshold
+        ? colorScheme.error
+        : colorScheme.secondaryContainer;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
       child: ListTile(
         tileColor: backgroundColor,
         textColor: foregroundColor,
+        shape: edOption.edInfo.isPCI
+            ? RoundedRectangleBorder(
+                side: const BorderSide(width: 4),
+                borderRadius: BorderRadius.circular(8),
+              )
+            : null,
         onTap: () => ref
             .read(goToDialogControllerProvider.notifier)
             .goToEd(activeEd: edOption, nearbyEds: nearbyEds),
