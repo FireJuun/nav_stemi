@@ -338,7 +338,7 @@ class GoogleNavigationService {
   }
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 GoogleNavigationService googleNavigationService(Ref ref) {
   return GoogleNavigationService(ref);
 }

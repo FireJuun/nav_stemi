@@ -104,7 +104,7 @@ class GeolocatorRepository {
   }
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 GeolocatorRepository geolocatorRepository(Ref ref) {
   return GeolocatorRepository();
 }
