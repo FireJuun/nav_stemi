@@ -41,7 +41,13 @@ GoRouter goRouter(Ref ref) {
       GoRoute(
         path: '/',
         name: AppRoute.home.name,
-        builder: (context, state) => const Home(),
+        builder: (context, state) => Consumer(
+          builder: (context, ref, _) {
+            /// required to pass the active destination to the nav screen
+            ref.watch(activeDestinationProvider);
+            return const Home();
+          },
+        ),
         routes: [
           GoRoute(
             path: 'go',
@@ -61,9 +67,21 @@ GoRouter goRouter(Ref ref) {
           return Consumer(
             builder: (context, ref, _) {
               ref
+
+                /// ensure permissions + know current location
+                ..watch(permissionsServiceProvider)
+                ..watch(geolocatorRepositoryProvider)
+
+                /// know active destination, restart nav if it changes
                 ..watch(activeDestinationProvider)
                 ..watch(activeDestinationSyncServiceProvider)
-                ..watch(startStopTimerServiceProvider);
+
+                /// sync timer with add info screen
+                ..watch(startStopTimerServiceProvider)
+
+                /// ensure google nav providers are available
+                ..watch(googleNavigationServiceProvider)
+                ..watch(googleNavigationRepositoryProvider);
 
               /// The UI shell
               return ScaffoldWithNestedNavigation(
