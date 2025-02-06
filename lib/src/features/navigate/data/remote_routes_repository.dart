@@ -28,6 +28,6 @@ abstract class RemoteRoutesRepository {
       throw UnimplementedError();
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 RemoteRoutesRepository remoteRoutesRepository(Ref ref) =>
     throw UnimplementedError();

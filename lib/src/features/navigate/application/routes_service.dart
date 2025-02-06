@@ -85,7 +85,7 @@ class RouteService {
   }
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 RouteService routeService(Ref ref) {
   return RouteService(ref);
 }

@@ -30,7 +30,7 @@ class AvailableRoutesRepository {
   }
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 AvailableRoutesRepository availableRoutesRepository(Ref ref) {
   return AvailableRoutesRepository();
 }
