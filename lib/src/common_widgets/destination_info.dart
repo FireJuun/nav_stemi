@@ -1,16 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
-import 'package:sliver_tools/sliver_tools.dart';
-
-class DestinationInfoSliver extends StatelessWidget {
-  const DestinationInfoSliver({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const SliverPinnedHeader(child: DestinationInfo());
-  }
-}
 
 class DestinationInfo extends ConsumerWidget {
   const DestinationInfo({super.key});
