@@ -33,7 +33,7 @@ class ListEDOptions extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref
       ..listen(
-        nearbyEdsProvider,
+        nearbyHospitalsProvider,
         (_, state) => state.showAlertDialogOnError(context),
       )
       ..listen(
@@ -42,19 +42,19 @@ class ListEDOptions extends ConsumerWidget {
       );
     // TODO(FireJuun): add error handling for going to new ED
 
-    final nearbyEdsValue = ref.watch(nearbyEdsProvider);
+    final nearbyHospitalsValue = ref.watch(nearbyHospitalsProvider);
 
-    return AsyncValueWidget<NearbyEds>(
-      value: nearbyEdsValue,
+    return AsyncValueWidget<NearbyHospitals>(
+      value: nearbyHospitalsValue,
       data: _DialogOption.new,
     );
   }
 }
 
 class _DialogOption extends ConsumerWidget {
-  const _DialogOption(this.nearbyEds, {super.key});
+  const _DialogOption(this.nearbyHospitals, {super.key});
 
-  final NearbyEds nearbyEds;
+  final NearbyHospitals nearbyHospitals;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -75,12 +75,12 @@ class _DialogOption extends ConsumerWidget {
         ),
         const SliverToBoxAdapter(child: gapH24),
         SliverList.builder(
-          itemCount: nearbyEds.items.length,
+          itemCount: nearbyHospitals.items.length,
           itemBuilder: (context, index) {
-            final edOption = nearbyEds.items.values.toList()[index];
+            final edOption = nearbyHospitals.items.values.toList()[index];
             return _PlaceholderButton(
               edOption: edOption,
-              nearbyEds: nearbyEds,
+              nearbyHospitals: nearbyHospitals,
             );
           },
         ),
@@ -90,15 +90,18 @@ class _DialogOption extends ConsumerWidget {
 }
 
 class _PlaceholderButton extends ConsumerWidget {
-  const _PlaceholderButton({required this.edOption, required this.nearbyEds});
+  const _PlaceholderButton({
+    required this.edOption,
+    required this.nearbyHospitals,
+  });
 
-  final NearbyEd edOption;
-  final NearbyEds nearbyEds;
+  final NearbyHospital edOption;
+  final NearbyHospitals nearbyHospitals;
 
   // TODO(FireJuun): add testing / validation
   bool checkIfOverTimeThreshold(
     AsyncValue<int> countUpTime,
-    NearbyEd edOption,
+    NearbyHospital edOption,
   ) {
     final timeElapsed = Duration(seconds: countUpTime.value ?? 0);
     final timeToDestination = const RouteDurationDto()
@@ -126,28 +129,32 @@ class _PlaceholderButton extends ConsumerWidget {
       child: ListTile(
         tileColor: backgroundColor,
         textColor: foregroundColor,
-        shape: edOption.edInfo.isPCI
+        shape: edOption.hospitalInfo.isPCI
             ? RoundedRectangleBorder(
                 side: const BorderSide(width: 4),
                 borderRadius: BorderRadius.circular(8),
               )
             : null,
-        onTap: () => ref
-            .read(goToDialogControllerProvider.notifier)
-            .goToEd(activeEd: edOption, nearbyEds: nearbyEds),
+        onTap: () =>
+            ref.read(goToDialogControllerProvider.notifier).goToHospital(
+                  activeHospital: edOption,
+                  nearbyHospitals: nearbyHospitals,
+                ),
         leading: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              edOption.edInfo.isPCI
+              edOption.hospitalInfo.isPCI
                   ? Icons.monitor_heart_outlined
                   : Icons.local_hospital,
               color: foregroundColor,
             ),
-            Text(edOption.edInfo.isPCI ? 'PCI'.hardcoded : 'ED'.hardcoded),
+            Text(
+              edOption.hospitalInfo.isPCI ? 'PCI'.hardcoded : 'ED'.hardcoded,
+            ),
           ],
         ),
-        title: Text(edOption.edInfo.shortName),
+        title: Text(edOption.hospitalInfo.shortName),
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

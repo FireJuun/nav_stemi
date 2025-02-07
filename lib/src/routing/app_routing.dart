@@ -117,16 +117,19 @@ GoRouter goRouter(Ref ref) {
                     path: 'info',
                     name: AppRoute.navInfo.name,
                     pageBuilder: (context, state) {
-                      final edInfo = state.extra;
-                      assert(edInfo != null, 'ED info not provided');
+                      final hospitalInfo = state.extra;
                       assert(
-                        edInfo is EdInfo,
-                        'ED info provided, but as the wrong type',
+                        hospitalInfo != null,
+                        'Hospital info not provided',
+                      );
+                      assert(
+                        hospitalInfo is Hospital,
+                        'Hospital info provided, but as the wrong type',
                       );
 
                       return DialogPage(
                         builder: (_) =>
-                            DestinationInfoDialog(edInfo! as EdInfo),
+                            DestinationInfoDialog(hospitalInfo! as Hospital),
                       );
                     },
                   ),

@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
-class EdInfo extends Equatable {
-  const EdInfo({
+class Hospital extends Equatable {
+  const Hospital({
     required this.name,
     required this.shortName,
     required this.location,
@@ -25,7 +25,7 @@ class EdInfo extends Equatable {
   final bool isPCI;
   final bool is24HourPci;
 
-  EdInfo copyWith({
+  Hospital copyWith({
     String? name,
     String? shortName,
     AppWaypoint? location,
@@ -35,7 +35,7 @@ class EdInfo extends Equatable {
     bool? isPCI,
     bool? is24HourPci,
   }) {
-    return EdInfo(
+    return Hospital(
       name: name ?? this.name,
       shortName: shortName ?? this.shortName,
       location: location ?? this.location,
@@ -63,8 +63,8 @@ class EdInfo extends Equatable {
     };
   }
 
-  factory EdInfo.fromMap(Map<String, dynamic> map) {
-    return EdInfo(
+  factory Hospital.fromMap(Map<String, dynamic> map) {
+    return Hospital(
       name: map['name'] as String,
       shortName: map['shortName'] as String,
       location: map['location'] as AppWaypoint,
@@ -78,8 +78,8 @@ class EdInfo extends Equatable {
 
   String toJson() => json.encode(toMap());
 
-  factory EdInfo.fromJson(String source) =>
-      EdInfo.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Hospital.fromJson(String source) =>
+      Hospital.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   bool get stringify => true;

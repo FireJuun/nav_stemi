@@ -7,12 +7,12 @@ part of 'google_navigation_repository.dart';
 // **************************************************************************
 
 String _$googleNavigationRepositoryHash() =>
-    r'7a682aec7f74ab49e87a2fc14d958f6f4a18c959';
+    r'f84fb79ff3eb1924b9447969696dec83bddcce4a';
 
 /// See also [googleNavigationRepository].
 @ProviderFor(googleNavigationRepository)
 final googleNavigationRepositoryProvider =
-    Provider<GoogleNavigationRepository>.internal(
+    AutoDisposeProvider<GoogleNavigationRepository>.internal(
   googleNavigationRepository,
   name: r'googleNavigationRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -24,7 +24,8 @@ final googleNavigationRepositoryProvider =
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef GoogleNavigationRepositoryRef = ProviderRef<GoogleNavigationRepository>;
+typedef GoogleNavigationRepositoryRef
+    = AutoDisposeProviderRef<GoogleNavigationRepository>;
 String _$navInfoHash() => r'2ccc1681ba9b5826c7b72c97e122a266072ce9e5';
 
 /// See also [navInfo].

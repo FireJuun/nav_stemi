@@ -7,11 +7,12 @@ part of 'geolocator_repository.dart';
 // **************************************************************************
 
 String _$geolocatorRepositoryHash() =>
-    r'529d17b116a74dfac8114550b737bedc1b70004e';
+    r'793fac9e475417e458323f7cc05d9947f071fec4';
 
 /// See also [geolocatorRepository].
 @ProviderFor(geolocatorRepository)
-final geolocatorRepositoryProvider = Provider<GeolocatorRepository>.internal(
+final geolocatorRepositoryProvider =
+    AutoDisposeProvider<GeolocatorRepository>.internal(
   geolocatorRepository,
   name: r'geolocatorRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -23,7 +24,7 @@ final geolocatorRepositoryProvider = Provider<GeolocatorRepository>.internal(
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef GeolocatorRepositoryRef = ProviderRef<GeolocatorRepository>;
+typedef GeolocatorRepositoryRef = AutoDisposeProviderRef<GeolocatorRepository>;
 String _$watchPositionHash() => r'3cd3c7d726645dd121b7fe7d6ba25abce58bfa68';
 
 /// See also [watchPosition].
