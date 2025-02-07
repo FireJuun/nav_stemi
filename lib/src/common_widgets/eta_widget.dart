@@ -2,16 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_navigation_flutter/google_navigation_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
-import 'package:sliver_tools/sliver_tools.dart';
-
-class EtaWidgetSliver extends StatelessWidget {
-  const EtaWidgetSliver({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const SliverPinnedHeader(child: EtaWidget());
-  }
-}
 
 class EtaWidget extends ConsumerWidget {
   const EtaWidget({super.key});
