@@ -14,3 +14,7 @@ String timerIntToString(int? timerInt) {
     return '${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds';
   }
 }
+
+Duration timerIntAsDuration(int? timerInt) {
+  return Duration(seconds: timerInt ?? 0);
+}

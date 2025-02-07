@@ -10,11 +10,11 @@ class ActiveDestination extends Equatable {
   });
 
   final Destinations? destination;
-  final EdInfo destinationInfo;
+  final Hospital destinationInfo;
 
   ActiveDestination copyWith({
     Destinations? destination,
-    EdInfo? destinationInfo,
+    Hospital? destinationInfo,
   }) {
     return ActiveDestination(
       destination: destination ?? this.destination,

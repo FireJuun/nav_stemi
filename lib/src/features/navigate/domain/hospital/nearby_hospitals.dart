@@ -5,16 +5,16 @@ import 'package:equatable/equatable.dart';
 
 import 'package:nav_stemi/nav_stemi.dart';
 
-class NearbyEds extends Equatable {
-  const NearbyEds({
+class NearbyHospitals extends Equatable {
+  const NearbyHospitals({
     required this.items,
   });
-  final Map<AppWaypoint, NearbyEd> items;
+  final Map<AppWaypoint, NearbyHospital> items;
 
-  NearbyEds copyWith({
-    Map<AppWaypoint, NearbyEd>? items,
+  NearbyHospitals copyWith({
+    Map<AppWaypoint, NearbyHospital>? items,
   }) {
-    return NearbyEds(
+    return NearbyHospitals(
       items: items ?? this.items,
     );
   }
@@ -25,18 +25,18 @@ class NearbyEds extends Equatable {
     };
   }
 
-  factory NearbyEds.fromMap(Map<String, dynamic> map) {
-    return NearbyEds(
-      items: Map<AppWaypoint, NearbyEd>.from(
-        map['items'] as Map<AppWaypoint, NearbyEd>,
+  factory NearbyHospitals.fromMap(Map<String, dynamic> map) {
+    return NearbyHospitals(
+      items: Map<AppWaypoint, NearbyHospital>.from(
+        map['items'] as Map<AppWaypoint, NearbyHospital>,
       ),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory NearbyEds.fromJson(String source) =>
-      NearbyEds.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory NearbyHospitals.fromJson(String source) =>
+      NearbyHospitals.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   bool get stringify => true;
@@ -45,19 +45,19 @@ class NearbyEds extends Equatable {
   List<Object> get props => [items];
 }
 
-/// Helper extension to sort the [NearbyEds] by distance from current location.
-extension NearbyEdsX on NearbyEds {
-  NearbyEds get sortedByDistance {
+/// Helper extension to sort the [NearbyHospitals] by distance from current location.
+extension NearbyHospitalsX on NearbyHospitals {
+  NearbyHospitals get sortedByDistance {
     final sorted = items.values.toList()
       ..sort((a, b) => a.distanceBetween.compareTo(b.distanceBetween));
     return copyWith(
       items: Map.fromEntries(
-        sorted.map((e) => MapEntry(e.edInfo.location, e)),
+        sorted.map((e) => MapEntry(e.hospitalInfo.location(), e)),
       ),
     );
   }
 
-  NearbyEds get sortedByRouteDuration {
+  NearbyHospitals get sortedByRouteDuration {
     const routeDurationDto = RouteDurationDto();
     final sorted = items.values.toList()
       ..sort(
@@ -74,7 +74,7 @@ extension NearbyEdsX on NearbyEds {
 
     return copyWith(
       items: Map.fromEntries(
-        sorted.map((e) => MapEntry(e.edInfo.location, e)),
+        sorted.map((e) => MapEntry(e.hospitalInfo.location(), e)),
       ),
     );
   }

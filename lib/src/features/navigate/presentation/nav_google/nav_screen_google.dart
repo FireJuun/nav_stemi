@@ -94,7 +94,7 @@ class _NavScreenGoogleState extends State<NavScreenGoogle> {
                     children: [
                       Column(
                         children: [
-                          NearestEdSelector(
+                          NearestHospitalSelector(
                             activeDestination: activeDestination,
                           ),
                           gapH4,

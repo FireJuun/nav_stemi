@@ -51,9 +51,12 @@ class ConvertMetersToMilesException extends AppException {
         );
 }
 
-class NoNearbyEdsAvailableException extends AppException {
-  NoNearbyEdsAvailableException()
-      : super('no-nearby-eds-available', 'No nearby EDS available'.hardcoded);
+class NoNearbyHospitalsAvailableException extends AppException {
+  NoNearbyHospitalsAvailableException()
+      : super(
+          'no-nearby-hospitals-available',
+          'No nearby hospitals available'.hardcoded,
+        );
 }
 
 class NoPCICentersAvailableException extends AppException {

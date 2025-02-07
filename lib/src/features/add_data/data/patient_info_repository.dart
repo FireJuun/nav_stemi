@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:nav_stemi/src/export.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -22,13 +23,13 @@ class PatientInfoRepository {
   }
 }
 
-@Riverpod(keepAlive: true)
-PatientInfoRepository patientInfoRepository(PatientInfoRepositoryRef ref) {
+@riverpod
+PatientInfoRepository patientInfoRepository(Ref ref) {
   return PatientInfoRepository();
 }
 
 @riverpod
-Stream<PatientInfoModel?> patientInfoModel(PatientInfoModelRef ref) {
+Stream<PatientInfoModel?> patientInfoModel(Ref ref) {
   final patientInfoRepository = ref.watch(patientInfoRepositoryProvider);
   return patientInfoRepository.watchPatientInfo();
 }

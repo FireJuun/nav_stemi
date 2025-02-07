@@ -7,11 +7,12 @@ part of 'patient_info_repository.dart';
 // **************************************************************************
 
 String _$patientInfoRepositoryHash() =>
-    r'39a03474b2beae1e9bad0d7b453e0feb541a1012';
+    r'4f2b710708b4757a276df95714f0c90e06de9ef3';
 
 /// See also [patientInfoRepository].
 @ProviderFor(patientInfoRepository)
-final patientInfoRepositoryProvider = Provider<PatientInfoRepository>.internal(
+final patientInfoRepositoryProvider =
+    AutoDisposeProvider<PatientInfoRepository>.internal(
   patientInfoRepository,
   name: r'patientInfoRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -21,8 +22,11 @@ final patientInfoRepositoryProvider = Provider<PatientInfoRepository>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef PatientInfoRepositoryRef = ProviderRef<PatientInfoRepository>;
-String _$patientInfoModelHash() => r'8f66296e8571ec96c49c90db8bf219910cad8a99';
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef PatientInfoRepositoryRef
+    = AutoDisposeProviderRef<PatientInfoRepository>;
+String _$patientInfoModelHash() => r'46ffc1ee0ae6be26d7f8d1ee09895b55dacf7b7a';
 
 /// See also [patientInfoModel].
 @ProviderFor(patientInfoModel)
@@ -37,6 +41,8 @@ final patientInfoModelProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef PatientInfoModelRef = AutoDisposeStreamProviderRef<PatientInfoModel?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

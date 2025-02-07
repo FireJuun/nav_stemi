@@ -29,21 +29,10 @@ class AddDataScrollview extends StatelessWidget {
         final checklistHeight = constraints.maxHeight * 0.3;
         return Column(
           children: [
-            const Expanded(
-              child: CustomScrollView(
-                slivers: [
-                  DestinationInfoSliver(),
-                  EtaWidgetSliver(),
-                  SliverToBoxAdapter(child: gapH8),
-                  SliverToBoxAdapter(
-                    child: Divider(thickness: 2),
-                  ),
-                  SliverFillRemaining(
-                    child: AddDataTabs(),
-                  ),
-                ],
-              ),
-            ),
+            const DestinationInfo(),
+            const EtaWidget(),
+            const Divider(thickness: 2),
+            const Expanded(child: AddDataTabs()),
             gapH8,
             SizedBox(
               height: checklistHeight,
