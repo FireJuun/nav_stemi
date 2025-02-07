@@ -135,14 +135,14 @@ class GoogleNavigationService {
     await googleNavigationRepository.cleanupNavigationSession();
   }
 
-  void linkEdInfoToDestination(EdInfo edInfo) {
-    final latitude = edInfo.location.latitude;
-    final longitude = edInfo.location.longitude;
+  void linkHospitalInfoToDestination(Hospital hospitalInfo) {
+    final latitude = hospitalInfo.location.latitude;
+    final longitude = hospitalInfo.location.longitude;
 
     final destination = Destinations(
       waypoints: <NavigationWaypoint>[
         NavigationWaypoint.withLatLngTarget(
-          title: edInfo.shortName,
+          title: hospitalInfo.shortName,
           target: LatLng(latitude: latitude, longitude: longitude),
         ),
       ],
@@ -153,8 +153,8 @@ class GoogleNavigationService {
       ),
     );
 
-    activeDestinationRepository.activeDestination =
-        ActiveDestination(destination: destination, destinationInfo: edInfo);
+    activeDestinationRepository.activeDestination = ActiveDestination(
+        destination: destination, destinationInfo: hospitalInfo);
   }
 
   Future<void> setAudioGuidanceType(

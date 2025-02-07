@@ -5,7 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'active_destination_repository.g.dart';
 
 /// Tracks if a destination has been set by the user.
-/// Ties this destination to [EdInfo] metadata.
+/// Ties this destination to [Hospital] metadata.
 /// If a destination is set, the user can navigate to it.
 class ActiveDestinationRepository {
   final _store = InMemoryStore<ActiveDestination?>(null);

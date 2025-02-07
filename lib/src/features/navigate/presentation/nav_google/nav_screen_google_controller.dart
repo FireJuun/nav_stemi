@@ -73,8 +73,8 @@ class NavScreenGoogleController extends _$NavScreenGoogleController
   Future<LatLng?> userLocation() =>
       _controller.future.then((controller) async => controller.getMyLocation());
 
-  void linkEdInfoToDestination(EdInfo edInfo) =>
-      _googleNavigationService.linkEdInfoToDestination(edInfo);
+  void linkHospitalInfoToDestination(Hospital hospitalInfo) =>
+      _googleNavigationService.linkHospitalInfoToDestination(hospitalInfo);
 
   void setAudioGuidanceType(NavigationAudioGuidanceType guidanceType) =>
       unawaited(_googleNavigationService.setAudioGuidanceType(guidanceType));

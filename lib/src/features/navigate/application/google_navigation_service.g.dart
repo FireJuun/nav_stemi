@@ -7,12 +7,12 @@ part of 'google_navigation_service.dart';
 // **************************************************************************
 
 String _$googleNavigationServiceHash() =>
-    r'a9b145c582152e60e9249c2b1b7630216af1a005';
+    r'fc788bd700b1b719344f12149c0de7e907a7c85a';
 
 /// See also [googleNavigationService].
 @ProviderFor(googleNavigationService)
 final googleNavigationServiceProvider =
-    Provider<GoogleNavigationService>.internal(
+    AutoDisposeProvider<GoogleNavigationService>.internal(
   googleNavigationService,
   name: r'googleNavigationServiceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -24,6 +24,7 @@ final googleNavigationServiceProvider =
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef GoogleNavigationServiceRef = ProviderRef<GoogleNavigationService>;
+typedef GoogleNavigationServiceRef
+    = AutoDisposeProviderRef<GoogleNavigationService>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

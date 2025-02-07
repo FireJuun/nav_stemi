@@ -4,8 +4,8 @@ import 'package:nav_stemi/nav_stemi.dart';
 const locationRandolphEms =
     AppWaypoint(latitude: 35.668559944183734, longitude: -79.83191024196512);
 
-const locations = <EdInfo>[
-  EdInfo(
+const locations = <Hospital>[
+  Hospital(
     name: 'Atrium Health Stanly Emergency Department',
     shortName: 'Atrium | Stanly ED',
     location: AppWaypoint(
@@ -16,7 +16,7 @@ const locations = <EdInfo>[
     website: 'https://atriumhealth.org/locations/detail/atrium-health-stanly',
     telephone: '+19803234000',
   ),
-  EdInfo(
+  Hospital(
     name:
         'Atrium Health Wake Forest Baptist | High Point Medical Center Emergency Room',
     shortName: 'Atrium | Wake Forest | High Point Medical Center',
@@ -28,7 +28,7 @@ const locations = <EdInfo>[
     telephone: '+13368786009',
     isPCI: true,
   ),
-  EdInfo(
+  Hospital(
     name: 'Chatham Hospital Emergency Department',
     shortName: 'Chatham Hospital ED',
     location: AppWaypoint(
@@ -40,7 +40,7 @@ const locations = <EdInfo>[
         'https://www.unchealth.org/care-services/locations/chatham-hospital-emergency-department-chatham-hospital',
     telephone: '+19197994000',
   ),
-  EdInfo(
+  Hospital(
     name: 'Cone Health Emergency Department at Drawbridge Parkway',
     shortName: 'Cone Health ED | Drawbridge Parkway',
     location: AppWaypoint(
@@ -52,7 +52,7 @@ const locations = <EdInfo>[
         'https://www.conehealth.com/medcenter-greensboro-at-drawbridge-parkway/services/locations/emergency-department-drawbridge-parkway/',
     telephone: '+13368903000',
   ),
-  EdInfo(
+  Hospital(
     name: 'Cone Health Emergency Department at MedCenter High Point',
     shortName: 'Cone Health ED | MedCenter High Point',
     location: AppWaypoint(
@@ -63,7 +63,7 @@ const locations = <EdInfo>[
     website: 'https://www.conehealth.com/medcenter-high-point/',
     telephone: '+13368843777',
   ),
-  EdInfo(
+  Hospital(
     name: 'FirstHealth Montgomery Memorial Hospital: Emergency Room',
     shortName: 'FirstHealth | Montgomery Memorial ER',
     location: AppWaypoint(
@@ -74,7 +74,7 @@ const locations = <EdInfo>[
     website: 'http://www.firsthealth.org/',
     telephone: '+19105715000',
   ),
-  EdInfo(
+  Hospital(
     name: 'FirstHealth Moore Regional Hospital Emergency Room',
     shortName: 'FirstHealth | Moore Regional ER',
     location:
@@ -84,7 +84,7 @@ const locations = <EdInfo>[
         'https://www.firsthealth.org/directory/hospitals-and-service-locations/firsthealth-moore-regional-hospital',
     telephone: '+19107151000',
   ),
-  EdInfo(
+  Hospital(
     name: 'Randolph Health: Emergency Room',
     shortName: 'Randolph Health ER',
     location:

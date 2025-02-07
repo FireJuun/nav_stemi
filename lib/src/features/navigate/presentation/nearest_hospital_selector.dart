@@ -7,8 +7,8 @@ import 'package:nav_stemi/nav_stemi.dart';
 
 const _routeDurationDto = RouteDurationDto();
 
-class NearestEdSelector extends ConsumerWidget {
-  const NearestEdSelector({
+class NearestHospitalSelector extends ConsumerWidget {
+  const NearestHospitalSelector({
     required this.activeDestination,
     super.key,
   });
@@ -30,7 +30,7 @@ class NearestEdSelector extends ConsumerWidget {
             const DestinationInfo(),
             const EtaWidget(),
             gapH4,
-            NearestEdButtons(
+            NearestHospitalButtons(
               availableRoutes: navInfo,
               activeDestination: activeDestination,
             ),
@@ -41,8 +41,8 @@ class NearestEdSelector extends ConsumerWidget {
   }
 }
 
-class NearestEdButtons extends ConsumerWidget {
-  const NearestEdButtons({
+class NearestHospitalButtons extends ConsumerWidget {
+  const NearestHospitalButtons({
     required this.availableRoutes,
     required this.activeDestination,
     super.key,
@@ -53,14 +53,15 @@ class NearestEdButtons extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final nearbyEdsValue = ref.watch(nearbyEdsProvider);
+    final nearbyHospitalsValue = ref.watch(nearbyHospitalsProvider);
 
-    return AsyncValueWidget<NearbyEds>(
-      value: nearbyEdsValue,
-      data: (nearbyEds) {
+    return AsyncValueWidget<NearbyHospitals>(
+      value: nearbyHospitalsValue,
+      data: (nearbyHospitals) {
         final isCurrentRoutePCI = activeDestination.destinationInfo.isPCI;
-        final nextClosestRoute = nearbyEds.items.values
-            .firstWhereOrNull((ed) => ed.edInfo.isPCI != isCurrentRoutePCI);
+        final nextClosestRoute = nearbyHospitals.items.values.firstWhereOrNull(
+          (hospital) => hospital.hospitalInfo.isPCI != isCurrentRoutePCI,
+        );
 
         if (nextClosestRoute == null) {
           throw NextClosestRouteNotAvailableException();
@@ -81,7 +82,10 @@ class NearestEdButtons extends ConsumerWidget {
               OutlinedButton(
                 onPressed: () => ref
                     .read(goToDialogControllerProvider.notifier)
-                    .goToEd(activeEd: nextClosestRoute, nearbyEds: nearbyEds),
+                    .goToHospital(
+                      activeHospital: nextClosestRoute,
+                      nearbyHospitals: nearbyHospitals,
+                    ),
                 child: Text('ED $durationMin'),
               ),
             ]
@@ -91,7 +95,10 @@ class NearestEdButtons extends ConsumerWidget {
               OutlinedButton(
                 onPressed: () => ref
                     .read(goToDialogControllerProvider.notifier)
-                    .goToEd(activeEd: nextClosestRoute, nearbyEds: nearbyEds),
+                    .goToHospital(
+                      activeHospital: nextClosestRoute,
+                      nearbyHospitals: nearbyHospitals,
+                    ),
                 child: Text('PCI $durationMin'),
               ),
               FilledButton(
@@ -104,7 +111,7 @@ class NearestEdButtons extends ConsumerWidget {
               onPressed: () {
                 /// refresh current location and list of nearby EDs
                 ref
-                  ..invalidate(nearbyEdsProvider)
+                  ..invalidate(nearbyHospitalsProvider)
                   ..invalidate(getCurrentPositionProvider);
                 context.goNamed(AppRoute.navGoTo.name);
               },

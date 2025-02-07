@@ -7,12 +7,12 @@ part of 'available_routes_repository.dart';
 // **************************************************************************
 
 String _$availableRoutesRepositoryHash() =>
-    r'5f6f794ea73735de1eddf496779b695b0fb255f9';
+    r'f4e8d712f1b78130f309597958f79f396ed031ac';
 
 /// See also [availableRoutesRepository].
 @ProviderFor(availableRoutesRepository)
 final availableRoutesRepositoryProvider =
-    Provider<AvailableRoutesRepository>.internal(
+    AutoDisposeProvider<AvailableRoutesRepository>.internal(
   availableRoutesRepository,
   name: r'availableRoutesRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -24,7 +24,8 @@ final availableRoutesRepositoryProvider =
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef AvailableRoutesRepositoryRef = ProviderRef<AvailableRoutesRepository>;
+typedef AvailableRoutesRepositoryRef
+    = AutoDisposeProviderRef<AvailableRoutesRepository>;
 String _$availableRoutesHash() => r'c7152ee6991de1018fcb7cdd5249493bf710a175';
 
 /// See also [availableRoutes].

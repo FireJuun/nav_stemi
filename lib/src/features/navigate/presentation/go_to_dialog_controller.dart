@@ -12,21 +12,21 @@ class GoToDialogController extends _$GoToDialogController with NotifierMounted {
     // nothing to do
     state = const AsyncData(null);
     ref.onDispose(() {
-      ref.invalidate(nearbyEdsProvider);
+      ref.invalidate(nearbyHospitalsProvider);
       setUnmounted();
     });
   }
 
-  Future<void> goToEd({
-    required NearbyEd activeEd,
-    required NearbyEds nearbyEds,
+  Future<void> goToHospital({
+    required NearbyHospital activeHospital,
+    required NearbyHospitals nearbyHospitals,
   }) async {
     // nothing to do
     state = const AsyncLoading();
     try {
       ref
           .read(googleNavigationServiceProvider)
-          .linkEdInfoToDestination(activeEd.edInfo);
+          .linkHospitalInfoToDestination(activeHospital.hospitalInfo);
 
       ref.read(goRouterProvider).goNamed(AppRoute.nav.name);
     } catch (e, st) {

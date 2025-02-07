@@ -60,7 +60,7 @@ class DestinationInfo extends ConsumerWidget {
 class DestinationInfoDialog extends StatelessWidget {
   const DestinationInfoDialog(this.edDestinationInfo, {super.key});
 
-  final EdInfo edDestinationInfo;
+  final Hospital edDestinationInfo;
 
   @override
   Widget build(BuildContext context) {
