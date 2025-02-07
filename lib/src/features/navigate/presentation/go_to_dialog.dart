@@ -5,7 +5,7 @@ import 'package:nav_stemi/src/features/add_data/presentation/data_entry/sync_not
 import 'package:sliver_tools/sliver_tools.dart';
 
 // TODO(FireJuun): should this be modifiable via settings?
-const _routeTooLongThreshold = Duration(minutes: 45);
+const _routeTooLongThreshold = Duration(minutes: 60);
 
 class GoToDialog extends StatelessWidget {
   const GoToDialog({super.key});

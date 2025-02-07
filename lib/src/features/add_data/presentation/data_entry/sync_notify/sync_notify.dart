@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class SyncNotify extends ConsumerWidget {
   const SyncNotify({super.key});
@@ -36,7 +35,7 @@ class SyncNotify extends ConsumerWidget {
                           children: [
                             const Divider(thickness: 2),
                             Text(
-                              'Contact Destination'.hardcoded,
+                              'Notify Destination'.hardcoded,
                               style: Theme.of(context).textTheme.titleLarge,
                               textAlign: TextAlign.center,
                             ),
@@ -89,17 +88,17 @@ class SyncNotifyShareSession extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
         children: [
           Expanded(
             child: Column(
               children: [
                 Text(
-                  'Sync this session with others:'.hardcoded,
+                  'Sync with others:'.hardcoded,
                   textAlign: TextAlign.center,
                 ),
-                gapH12,
+                gapH8,
                 FilledButton(
                   onPressed: () {
                     // TODO(FireJuun): Add QR scan functionality
@@ -117,8 +116,8 @@ class SyncNotifyShareSession extends StatelessWidget {
               usePrimaryColor
                   ? 'assets/placeholder_share_qr_primary.png'
                   : 'assets/placeholder_share_qr.png',
-              width: 150,
-              height: 150,
+              width: 132,
+              height: 132,
             ),
           ),
         ],
