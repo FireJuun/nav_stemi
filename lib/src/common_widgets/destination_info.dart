@@ -34,7 +34,7 @@ class DestinationInfo extends ConsumerWidget {
             ),
             Expanded(
               child: Text(
-                activeDestination.destinationInfo.name,
+                activeDestination.destinationInfo.facilityBrandedName,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
                 textAlign: TextAlign.center,
@@ -74,28 +74,29 @@ class DestinationInfoDialog extends StatelessWidget {
               children: [
                 Center(
                   child: Text(
-                    edDestinationInfo.name,
+                    edDestinationInfo.facilityBrandedName,
                     style: Theme.of(context).textTheme.titleMedium,
                     textAlign: TextAlign.center,
                   ),
                 ),
                 gapH24,
                 Text(
-                  edDestinationInfo.address,
+                  edDestinationInfo.facilityAddress,
                   style: Theme.of(context).textTheme.titleSmall,
                   textAlign: TextAlign.center,
                 ),
+                // TODO(FireJuun): extract mult phone numbers
                 Text(
-                  edDestinationInfo.telephone,
+                  edDestinationInfo.facilityPhone1,
                   style: Theme.of(context).textTheme.titleSmall,
                   textAlign: TextAlign.center,
                 ),
-                gapH24,
-                Text(
-                  edDestinationInfo.website,
-                  style: Theme.of(context).textTheme.titleSmall,
-                  textAlign: TextAlign.center,
-                ),
+                // gapH24,
+                // Text(
+                //   edDestinationInfo.website,
+                //   style: Theme.of(context).textTheme.titleSmall,
+                //   textAlign: TextAlign.center,
+                // ),
               ],
             ),
           ),

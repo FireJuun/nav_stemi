@@ -54,7 +54,7 @@ class RouteService {
       for (final hospital in allHospitals)
         hospital: geolocatorRepository.getDistanceBetween(
           origin,
-          hospital.location,
+          hospital.location(),
         ),
     };
     final sortedItems = nearestTenSortedByDistance(items);

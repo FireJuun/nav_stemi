@@ -129,7 +129,7 @@ class _PlaceholderButton extends ConsumerWidget {
       child: ListTile(
         tileColor: backgroundColor,
         textColor: foregroundColor,
-        shape: edOption.hospitalInfo.isPCI
+        shape: edOption.hospitalInfo.isPci()
             ? RoundedRectangleBorder(
                 side: const BorderSide(width: 4),
                 borderRadius: BorderRadius.circular(8),
@@ -144,17 +144,17 @@ class _PlaceholderButton extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              edOption.hospitalInfo.isPCI
+              edOption.hospitalInfo.isPci()
                   ? Icons.monitor_heart_outlined
                   : Icons.local_hospital,
               color: foregroundColor,
             ),
             Text(
-              edOption.hospitalInfo.isPCI ? 'PCI'.hardcoded : 'ED'.hardcoded,
+              edOption.hospitalInfo.isPci() ? 'PCI'.hardcoded : 'ED'.hardcoded,
             ),
           ],
         ),
-        title: Text(edOption.hospitalInfo.shortName),
+        title: Text(edOption.hospitalInfo.facilityBrandedName),
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

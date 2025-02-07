@@ -29,7 +29,7 @@ class RemoteRoutesGoogleRepository implements RemoteRoutesRepository {
           RouteMatrixDestination(
             waypoint: Waypoint(
               location: Location(
-                latLng: hospital.location.toGoogleRoutes(),
+                latLng: hospital.location().toGoogleRoutes(),
               ),
             ),
           ),
@@ -55,7 +55,7 @@ class RemoteRoutesGoogleRepository implements RemoteRoutesRepository {
       final hospitalInfo = destination.key;
       final distanceBetween = destination.value;
 
-      items[hospitalInfo.location] = NearbyHospital(
+      items[hospitalInfo.location()] = NearbyHospital(
         distanceBetween: distanceBetween,
         routeDistance: routeEntry.distanceMeters,
         routeDuration: routeEntry.duration,

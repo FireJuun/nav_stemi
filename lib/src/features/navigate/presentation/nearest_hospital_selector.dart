@@ -58,9 +58,9 @@ class NearestHospitalButtons extends ConsumerWidget {
     return AsyncValueWidget<NearbyHospitals>(
       value: nearbyHospitalsValue,
       data: (nearbyHospitals) {
-        final isCurrentRoutePCI = activeDestination.destinationInfo.isPCI;
+        final isCurrentRoutePCI = activeDestination.destinationInfo.isPci();
         final nextClosestRoute = nearbyHospitals.items.values.firstWhereOrNull(
-          (hospital) => hospital.hospitalInfo.isPCI != isCurrentRoutePCI,
+          (hospital) => hospital.hospitalInfo.isPci() != isCurrentRoutePCI,
         );
 
         if (nextClosestRoute == null) {

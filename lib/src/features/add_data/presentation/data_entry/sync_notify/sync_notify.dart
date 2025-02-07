@@ -32,17 +32,18 @@ class SyncNotify extends ConsumerWidget {
                           onPressed: () async {
                             final contactUri = Uri(
                               scheme: 'tel',
-                              path: activeDestination.destinationInfo.telephone,
+                              path: activeDestination
+                                  .destinationInfo.facilityPhone1,
                             );
                             final canLaunch = await canLaunchUrl(contactUri);
                             if (canLaunch) {
                               debugPrint(
-                                '''Calling ${activeDestination.destinationInfo.shortName}: ${activeDestination.destinationInfo.telephone}''',
+                                '''Calling ${activeDestination.destinationInfo.facilityBrandedName}: ${activeDestination.destinationInfo.facilityPhone1}''',
                               );
                               await launchUrl(contactUri);
                             } else {
                               debugPrint(
-                                '''Cannot call ${activeDestination.destinationInfo.shortName}''',
+                                '''Cannot call ${activeDestination.destinationInfo.facilityBrandedName}''',
                               );
                             }
                           },

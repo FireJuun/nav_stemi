@@ -52,7 +52,7 @@ extension NearbyHospitalsX on NearbyHospitals {
       ..sort((a, b) => a.distanceBetween.compareTo(b.distanceBetween));
     return copyWith(
       items: Map.fromEntries(
-        sorted.map((e) => MapEntry(e.hospitalInfo.location, e)),
+        sorted.map((e) => MapEntry(e.hospitalInfo.location(), e)),
       ),
     );
   }
@@ -74,7 +74,7 @@ extension NearbyHospitalsX on NearbyHospitals {
 
     return copyWith(
       items: Map.fromEntries(
-        sorted.map((e) => MapEntry(e.hospitalInfo.location, e)),
+        sorted.map((e) => MapEntry(e.hospitalInfo.location(), e)),
       ),
     );
   }
