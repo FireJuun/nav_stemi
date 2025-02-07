@@ -85,18 +85,47 @@ class DestinationInfoDialog extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleSmall,
                   textAlign: TextAlign.center,
                 ),
-                // TODO(FireJuun): extract mult phone numbers
+                Text(
+                  '''${edDestinationInfo.facilityCity}, ${edDestinationInfo.facilityState} ${edDestinationInfo.facilityZip}''',
+                  style: Theme.of(context).textTheme.titleSmall,
+                  textAlign: TextAlign.center,
+                ),
+                gapH24,
+                // TODO(FireJuun): streamline + handle onTap events for multiple phone numbers
                 Text(
                   edDestinationInfo.facilityPhone1,
                   style: Theme.of(context).textTheme.titleSmall,
                   textAlign: TextAlign.center,
                 ),
-                // gapH24,
-                // Text(
-                //   edDestinationInfo.website,
-                //   style: Theme.of(context).textTheme.titleSmall,
-                //   textAlign: TextAlign.center,
-                // ),
+                Text(
+                  edDestinationInfo.facilityPhone1Note ?? '',
+                  style: Theme.of(context).textTheme.titleSmall,
+                  textAlign: TextAlign.center,
+                ),
+                gapH24,
+                // TODO(FireJuun): streamline + handle onTap events for multiple phone numbers
+                Text(
+                  edDestinationInfo.facilityPhone2 ?? '',
+                  style: Theme.of(context).textTheme.titleSmall,
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  edDestinationInfo.facilityPhone2Note ?? '',
+                  style: Theme.of(context).textTheme.titleSmall,
+                  textAlign: TextAlign.center,
+                ),
+                gapH24,
+                // TODO(FireJuun): streamline + handle onTap events for multiple phone numbers
+                Text(
+                  edDestinationInfo.facilityPhone3 ?? '',
+                  style: Theme.of(context).textTheme.titleSmall,
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  edDestinationInfo.facilityPhone3Note ?? '',
+                  style: Theme.of(context).textTheme.titleSmall,
+                  textAlign: TextAlign.center,
+                ),
               ],
             ),
           ),

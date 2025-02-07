@@ -4,10 +4,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'hospital_providers.g.dart';
 
-// TODO(FireJuun): swap to Firebase list of locations
 @riverpod
-List<Hospital> allHospitals(Ref ref) {
-  return locations;
+Future<List<Hospital>> allHospitals(Ref ref) async {
+  return ref.read(hospitalsRepositoryProvider).fetchHospitals();
 }
 
 @riverpod
