@@ -82,56 +82,74 @@ class DestinationInfoDialog extends StatelessWidget {
                 gapH24,
                 Text(
                   edDestinationInfo.facilityAddress,
-                  style: Theme.of(context).textTheme.titleSmall,
+                  style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
                 Text(
                   '''${edDestinationInfo.facilityCity}, ${edDestinationInfo.facilityState} ${edDestinationInfo.facilityZip}''',
-                  style: Theme.of(context).textTheme.titleSmall,
+                  style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
-                gapH24,
-                // TODO(FireJuun): streamline + handle onTap events for multiple phone numbers
-                Text(
-                  edDestinationInfo.facilityPhone1,
-                  style: Theme.of(context).textTheme.titleSmall,
-                  textAlign: TextAlign.center,
+
+                /// Dynamically show 1-3 phone numbers
+                /// based on data available for each site
+                DestinationPhoneItem(
+                  phoneNumber: edDestinationInfo.facilityPhone1,
+                  phoneNote: edDestinationInfo.facilityPhone1Note,
                 ),
-                Text(
-                  edDestinationInfo.facilityPhone1Note ?? '',
-                  style: Theme.of(context).textTheme.titleSmall,
-                  textAlign: TextAlign.center,
-                ),
-                gapH24,
-                // TODO(FireJuun): streamline + handle onTap events for multiple phone numbers
-                Text(
-                  edDestinationInfo.facilityPhone2 ?? '',
-                  style: Theme.of(context).textTheme.titleSmall,
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  edDestinationInfo.facilityPhone2Note ?? '',
-                  style: Theme.of(context).textTheme.titleSmall,
-                  textAlign: TextAlign.center,
-                ),
-                gapH24,
-                // TODO(FireJuun): streamline + handle onTap events for multiple phone numbers
-                Text(
-                  edDestinationInfo.facilityPhone3 ?? '',
-                  style: Theme.of(context).textTheme.titleSmall,
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  edDestinationInfo.facilityPhone3Note ?? '',
-                  style: Theme.of(context).textTheme.titleSmall,
-                  textAlign: TextAlign.center,
-                ),
+                if (edDestinationInfo.facilityPhone2 != null)
+                  DestinationPhoneItem(
+                    phoneNumber: edDestinationInfo.facilityPhone2!,
+                    phoneNote: edDestinationInfo.facilityPhone2Note,
+                  ),
+                if (edDestinationInfo.facilityPhone3 != null)
+                  DestinationPhoneItem(
+                    phoneNumber: edDestinationInfo.facilityPhone3!,
+                    phoneNote: edDestinationInfo.facilityPhone3Note,
+                  ),
               ],
             ),
           ),
           ResponsiveDialogFooter(label: 'Close'.hardcoded),
         ],
       ),
+    );
+  }
+}
+
+class DestinationPhoneItem extends StatelessWidget {
+  const DestinationPhoneItem({
+    required this.phoneNumber,
+    required this.phoneNote,
+    super.key,
+  });
+
+  final String phoneNumber;
+  final String? phoneNote;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        gapH16,
+        GestureDetector(
+          onTap: () async => callDestination(phoneNumber),
+          child: Text(
+            phoneNumber,
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.apply(decoration: TextDecoration.underline),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        if (phoneNote != null)
+          Text(
+            phoneNote!,
+            style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.center,
+          ),
+      ],
     );
   }
 }

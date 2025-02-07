@@ -15,7 +15,7 @@ class SyncNotify extends ConsumerWidget {
           sliver: SliverList.list(
             children: [
               const SyncNotifyShareSession(),
-              gapH32,
+              gapH8,
               Center(
                 child: Consumer(
                   builder: (context, ref, child) {
@@ -28,26 +28,45 @@ class SyncNotify extends ConsumerWidget {
                         if (activeDestination == null) {
                           return Text('--'.hardcoded);
                         }
-                        return FilledButton(
-                          onPressed: () async {
-                            final contactUri = Uri(
-                              scheme: 'tel',
-                              path: activeDestination
-                                  .destinationInfo.facilityPhone1,
-                            );
-                            final canLaunch = await canLaunchUrl(contactUri);
-                            if (canLaunch) {
-                              debugPrint(
-                                '''Calling ${activeDestination.destinationInfo.facilityBrandedName}: ${activeDestination.destinationInfo.facilityPhone1}''',
-                              );
-                              await launchUrl(contactUri);
-                            } else {
-                              debugPrint(
-                                '''Cannot call ${activeDestination.destinationInfo.facilityBrandedName}''',
-                              );
-                            }
-                          },
-                          child: Text('Contact Destination'.hardcoded),
+
+                        final edDestinationInfo =
+                            activeDestination.destinationInfo;
+
+                        return Column(
+                          children: [
+                            const Divider(thickness: 2),
+                            Text(
+                              'Contact Destination'.hardcoded,
+                              style: Theme.of(context).textTheme.titleLarge,
+                              textAlign: TextAlign.center,
+                            ),
+                            const Divider(thickness: 2),
+                            Wrap(
+                              alignment: WrapAlignment.center,
+                              spacing: 32,
+                              children: [
+                                DestinationPhoneItem(
+                                  phoneNumber: edDestinationInfo.facilityPhone1,
+                                  phoneNote:
+                                      edDestinationInfo.facilityPhone1Note,
+                                ),
+                                if (edDestinationInfo.facilityPhone2 != null)
+                                  DestinationPhoneItem(
+                                    phoneNumber:
+                                        edDestinationInfo.facilityPhone2!,
+                                    phoneNote:
+                                        edDestinationInfo.facilityPhone2Note,
+                                  ),
+                                if (edDestinationInfo.facilityPhone3 != null)
+                                  DestinationPhoneItem(
+                                    phoneNumber:
+                                        edDestinationInfo.facilityPhone3!,
+                                    phoneNote:
+                                        edDestinationInfo.facilityPhone3Note,
+                                  ),
+                              ],
+                            ),
+                          ],
                         );
                       },
                     );
