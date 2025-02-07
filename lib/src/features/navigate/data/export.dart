@@ -1,5 +1,6 @@
 export 'active_destination_repository.dart';
 export 'available_routes_repository.dart';
+export 'hospitals_repository.dart';
 export 'geolocator_repository.dart';
 export 'google_navigation_repository.dart';
 export 'local_maps_repository.dart';

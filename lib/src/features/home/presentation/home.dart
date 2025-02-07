@@ -66,12 +66,6 @@ class _HomeState extends ConsumerState<Home> {
           children: [
             Column(
               children: [
-                // TODO(FireJuun): remove
-                FilledButton(
-                  onPressed: () async =>
-                      ref.read(hospitalsRepositoryProvider).fetchCollection(),
-                  child: Text('Firebase List'.hardcoded),
-                ),
                 // TODO(FireJuun): move this to admin UI, to add/update hospitals list
                 // FilledButton(
                 //   onPressed: selectAndUploadCSV,

@@ -6,11 +6,11 @@ part of 'hospital_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$allHospitalsHash() => r'0e45940b8086d5884f00aeb55fc49fd6dbbb5324';
+String _$allHospitalsHash() => r'c800c95a7b8c55ba8de913889f66af7ffae1ce60';
 
 /// See also [allHospitals].
 @ProviderFor(allHospitals)
-final allHospitalsProvider = AutoDisposeProvider<List<Hospital>>.internal(
+final allHospitalsProvider = AutoDisposeFutureProvider<List<Hospital>>.internal(
   allHospitals,
   name: r'allHospitalsProvider',
   debugGetCreateSourceHash:
@@ -21,8 +21,8 @@ final allHospitalsProvider = AutoDisposeProvider<List<Hospital>>.internal(
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef AllHospitalsRef = AutoDisposeProviderRef<List<Hospital>>;
-String _$nearbyHospitalsHash() => r'57f3ce3fbca48cd853c8f7d2c7f663856881ad8c';
+typedef AllHospitalsRef = AutoDisposeFutureProviderRef<List<Hospital>>;
+String _$nearbyHospitalsHash() => r'63eeafc256527ae2fa4055746f4ad36a61871312';
 
 /// See also [nearbyHospitals].
 @ProviderFor(nearbyHospitals)

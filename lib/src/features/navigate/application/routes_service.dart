@@ -48,7 +48,9 @@ class RouteService {
       origin = lastKnownPosition.toAppWaypoint();
     }
 
-    final allHospitals = ref.read(allHospitalsProvider);
+    final allHospitals = await ref.read(allHospitalsProvider.future);
+
+    assert(allHospitals.isNotEmpty, 'No hospitals found');
 
     final items = <Hospital, double>{
       for (final hospital in allHospitals)
