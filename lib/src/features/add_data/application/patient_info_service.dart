@@ -74,6 +74,6 @@ class PatientInfoService {
 }
 
 @riverpod
-PatientInfoService patientInfoService(PatientInfoServiceRef ref) {
+PatientInfoService patientInfoService(Ref ref) {
   return PatientInfoService(ref);
 }

@@ -13,7 +13,7 @@ class AvailableRoutes extends Equatable {
 
   final AppWaypoint origin;
   final AppWaypoint destination;
-  final EdInfo destinationInfo;
+  final Hospital destinationInfo;
   final DateTime requestedDateTime;
 
   final List<Route>? routes;
@@ -21,7 +21,7 @@ class AvailableRoutes extends Equatable {
   AvailableRoutes copyWith({
     AppWaypoint? origin,
     AppWaypoint? destination,
-    EdInfo? destinationInfo,
+    Hospital? destinationInfo,
     DateTime? requestedDateTime,
     List<Route>? routes,
   }) {

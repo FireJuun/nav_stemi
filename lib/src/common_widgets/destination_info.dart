@@ -1,16 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
-import 'package:sliver_tools/sliver_tools.dart';
-
-class DestinationInfoSliver extends StatelessWidget {
-  const DestinationInfoSliver({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const SliverPinnedHeader(child: DestinationInfo());
-  }
-}
 
 class DestinationInfo extends ConsumerWidget {
   const DestinationInfo({super.key});
@@ -34,7 +24,7 @@ class DestinationInfo extends ConsumerWidget {
             ),
             Expanded(
               child: Text(
-                activeDestination.destinationInfo.name,
+                activeDestination.destinationInfo.facilityBrandedName,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
                 textAlign: TextAlign.center,
@@ -60,7 +50,7 @@ class DestinationInfo extends ConsumerWidget {
 class DestinationInfoDialog extends StatelessWidget {
   const DestinationInfoDialog(this.edDestinationInfo, {super.key});
 
-  final EdInfo edDestinationInfo;
+  final Hospital edDestinationInfo;
 
   @override
   Widget build(BuildContext context) {
@@ -74,34 +64,82 @@ class DestinationInfoDialog extends StatelessWidget {
               children: [
                 Center(
                   child: Text(
-                    edDestinationInfo.name,
+                    edDestinationInfo.facilityBrandedName,
                     style: Theme.of(context).textTheme.titleMedium,
                     textAlign: TextAlign.center,
                   ),
                 ),
                 gapH24,
                 Text(
-                  edDestinationInfo.address,
-                  style: Theme.of(context).textTheme.titleSmall,
+                  edDestinationInfo.facilityAddress,
+                  style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
                 Text(
-                  edDestinationInfo.telephone,
-                  style: Theme.of(context).textTheme.titleSmall,
+                  '''${edDestinationInfo.facilityCity}, ${edDestinationInfo.facilityState} ${edDestinationInfo.facilityZip}''',
+                  style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
-                gapH24,
-                Text(
-                  edDestinationInfo.website,
-                  style: Theme.of(context).textTheme.titleSmall,
-                  textAlign: TextAlign.center,
+
+                /// Dynamically show 1-3 phone numbers
+                /// based on data available for each site
+                DestinationPhoneItem(
+                  phoneNumber: edDestinationInfo.facilityPhone1,
+                  phoneNote: edDestinationInfo.facilityPhone1Note,
                 ),
+                if (edDestinationInfo.facilityPhone2 != null)
+                  DestinationPhoneItem(
+                    phoneNumber: edDestinationInfo.facilityPhone2!,
+                    phoneNote: edDestinationInfo.facilityPhone2Note,
+                  ),
+                if (edDestinationInfo.facilityPhone3 != null)
+                  DestinationPhoneItem(
+                    phoneNumber: edDestinationInfo.facilityPhone3!,
+                    phoneNote: edDestinationInfo.facilityPhone3Note,
+                  ),
               ],
             ),
           ),
           ResponsiveDialogFooter(label: 'Close'.hardcoded),
         ],
       ),
+    );
+  }
+}
+
+class DestinationPhoneItem extends StatelessWidget {
+  const DestinationPhoneItem({
+    required this.phoneNumber,
+    required this.phoneNote,
+    super.key,
+  });
+
+  final String phoneNumber;
+  final String? phoneNote;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        gapH16,
+        GestureDetector(
+          onTap: () async => callDestination(phoneNumber),
+          child: Text(
+            phoneNumber,
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.apply(decoration: TextDecoration.underline),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        if (phoneNote != null)
+          Text(
+            phoneNote!,
+            style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.center,
+          ),
+      ],
     );
   }
 }

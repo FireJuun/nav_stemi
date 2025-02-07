@@ -4,6 +4,9 @@ import 'package:nav_stemi/nav_stemi.dart';
 import 'package:nav_stemi/src/features/add_data/presentation/data_entry/sync_notify/sync_notify.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
+// TODO(FireJuun): should this be modifiable via settings?
+const _routeTooLongThreshold = Duration(minutes: 60);
+
 class GoToDialog extends StatelessWidget {
   const GoToDialog({super.key});
 
@@ -30,7 +33,7 @@ class ListEDOptions extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref
       ..listen(
-        nearbyEdsProvider,
+        nearbyHospitalsProvider,
         (_, state) => state.showAlertDialogOnError(context),
       )
       ..listen(
@@ -39,19 +42,19 @@ class ListEDOptions extends ConsumerWidget {
       );
     // TODO(FireJuun): add error handling for going to new ED
 
-    final nearbyEdsValue = ref.watch(nearbyEdsProvider);
+    final nearbyHospitalsValue = ref.watch(nearbyHospitalsProvider);
 
-    return AsyncValueWidget<NearbyEds>(
-      value: nearbyEdsValue,
+    return AsyncValueWidget<NearbyHospitals>(
+      value: nearbyHospitalsValue,
       data: _DialogOption.new,
     );
   }
 }
 
 class _DialogOption extends ConsumerWidget {
-  const _DialogOption(this.nearbyEds, {super.key});
+  const _DialogOption(this.nearbyHospitals, {super.key});
 
-  final NearbyEds nearbyEds;
+  final NearbyHospitals nearbyHospitals;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -72,12 +75,12 @@ class _DialogOption extends ConsumerWidget {
         ),
         const SliverToBoxAdapter(child: gapH24),
         SliverList.builder(
-          itemCount: nearbyEds.items.length,
+          itemCount: nearbyHospitals.items.length,
           itemBuilder: (context, index) {
-            final edOption = nearbyEds.items.values.toList()[index];
+            final edOption = nearbyHospitals.items.values.toList()[index];
             return _PlaceholderButton(
               edOption: edOption,
-              nearbyEds: nearbyEds,
+              nearbyHospitals: nearbyHospitals,
             );
           },
         ),
@@ -87,40 +90,71 @@ class _DialogOption extends ConsumerWidget {
 }
 
 class _PlaceholderButton extends ConsumerWidget {
-  const _PlaceholderButton({required this.edOption, required this.nearbyEds});
+  const _PlaceholderButton({
+    required this.edOption,
+    required this.nearbyHospitals,
+  });
 
-  final NearbyEd edOption;
-  final NearbyEds nearbyEds;
+  final NearbyHospital edOption;
+  final NearbyHospitals nearbyHospitals;
+
+  // TODO(FireJuun): add testing / validation
+  bool checkIfOverTimeThreshold(
+    AsyncValue<int> countUpTime,
+    NearbyHospital edOption,
+  ) {
+    final timeElapsed = Duration(seconds: countUpTime.value ?? 0);
+    final timeToDestination = const RouteDurationDto()
+            .routeDurationToSeconds(edOption.routeDuration) ??
+        Duration.zero;
+    return (timeToDestination + timeElapsed) > _routeTooLongThreshold;
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final countUpTime = ref.watch(countUpTimerProvider);
+
+    final isOverTimeThreshold = checkIfOverTimeThreshold(countUpTime, edOption);
+
     final colorScheme = Theme.of(context).colorScheme;
-    final foregroundColor =
-        edOption.edInfo.isPCI ? colorScheme.onPrimary : colorScheme.onSecondary;
-    final backgroundColor =
-        edOption.edInfo.isPCI ? colorScheme.primary : colorScheme.secondary;
+    final foregroundColor = isOverTimeThreshold
+        ? colorScheme.onError
+        : colorScheme.onSecondaryContainer;
+    final backgroundColor = isOverTimeThreshold
+        ? colorScheme.error
+        : colorScheme.secondaryContainer;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
       child: ListTile(
         tileColor: backgroundColor,
         textColor: foregroundColor,
-        onTap: () => ref
-            .read(goToDialogControllerProvider.notifier)
-            .goToEd(activeEd: edOption, nearbyEds: nearbyEds),
+        shape: edOption.hospitalInfo.isPci()
+            ? RoundedRectangleBorder(
+                side: const BorderSide(width: 4),
+                borderRadius: BorderRadius.circular(8),
+              )
+            : null,
+        onTap: () =>
+            ref.read(goToDialogControllerProvider.notifier).goToHospital(
+                  activeHospital: edOption,
+                  nearbyHospitals: nearbyHospitals,
+                ),
         leading: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              edOption.edInfo.isPCI
+              edOption.hospitalInfo.isPci()
                   ? Icons.monitor_heart_outlined
                   : Icons.local_hospital,
               color: foregroundColor,
             ),
-            Text(edOption.edInfo.isPCI ? 'PCI'.hardcoded : 'ED'.hardcoded),
+            Text(
+              edOption.hospitalInfo.isPci() ? 'PCI'.hardcoded : 'ED'.hardcoded,
+            ),
           ],
         ),
-        title: Text(edOption.edInfo.shortName),
+        title: Text(edOption.hospitalInfo.facilityBrandedName),
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

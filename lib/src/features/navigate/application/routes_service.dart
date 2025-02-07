@@ -21,7 +21,7 @@ class RouteService {
 
   /// First check to see the current location of the user,
   /// then get the nearby emergency departments.
-  Future<NearbyEds> getNearbyEDsFromCurrentLocation() async {
+  Future<NearbyHospitals> getNearbyHospitalsFromCurrentLocation() async {
     final navigationSettings = navigationSettingsRepository.navigationSettings;
     final shouldSimulateLocation = navigationSettings.shouldSimulateLocation;
     final simulationStartingLocation =
@@ -48,35 +48,40 @@ class RouteService {
       origin = lastKnownPosition.toAppWaypoint();
     }
 
-    final allEds = ref.read(allEDsProvider);
+    final allHospitals = await ref.read(allHospitalsProvider.future);
 
-    final items = <EdInfo, double>{
-      for (final ed in allEds)
-        ed: geolocatorRepository.getDistanceBetween(
+    assert(allHospitals.isNotEmpty, 'No hospitals found');
+
+    final items = <Hospital, double>{
+      for (final hospital in allHospitals)
+        hospital: geolocatorRepository.getDistanceBetween(
           origin,
-          ed.location,
+          hospital.location(),
         ),
     };
     final sortedItems = nearestTenSortedByDistance(items);
 
-    final nearbyEds = await remoteRoutesRepository.getDistanceInfoFromEdList(
+    final nearbyHospitals =
+        await remoteRoutesRepository.getDistanceInfoFromHospitalList(
       origin: origin,
-      edListAndDistances: sortedItems,
+      hospitalListAndDistances: sortedItems,
     );
 
-    final nearbyEdsByDuration = nearbyEds.sortedByRouteDuration;
+    final nearbyHospitalsByDuration = nearbyHospitals.sortedByRouteDuration;
 
-    return nearbyEdsByDuration;
+    return nearbyHospitalsByDuration;
   }
 
   @visibleForTesting
-  Map<EdInfo, double> nearestTenSortedByDistance(Map<EdInfo, double> items) {
+  Map<Hospital, double> nearestTenSortedByDistance(
+    Map<Hospital, double> items,
+  ) {
     /// spec: https://stackoverflow.com/a/72172892
     final sorted = Map.fromEntries(
       items.entries.toList()..sort((a, b) => a.value.compareTo(b.value)),
     );
 
-    final nearestTen = <EdInfo, double>{};
+    final nearestTen = <Hospital, double>{};
     for (final entry in sorted.entries.take(10)) {
       nearestTen[entry.key] = entry.value;
     }
@@ -85,7 +90,7 @@ class RouteService {
   }
 }
 
-@Riverpod(keepAlive: true)
-RouteService routeService(RouteServiceRef ref) {
+@riverpod
+RouteService routeService(Ref ref) {
   return RouteService(ref);
 }

@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -28,7 +29,7 @@ class LocalMapsRepository {
   }
 }
 
-@Riverpod(keepAlive: true)
-LocalMapsRepository localMapsRepository(LocalMapsRepositoryRef ref) {
+@riverpod
+LocalMapsRepository localMapsRepository(Ref ref) {
   return LocalMapsRepository();
 }

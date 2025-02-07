@@ -1,5 +1,6 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -118,7 +119,7 @@ class ThemeRepository {
               if (states.any(activeStates.contains)) {
                 return colorScheme.primary;
               } else if (states.any(interactiveStates.contains)) {
-                return colorScheme.primary.withOpacity(0.5);
+                return colorScheme.primary.withValues(alpha: 0.5);
               } else if (states.any(disabledStates.contains)) {
                 return Colors.transparent;
               }
@@ -130,7 +131,7 @@ class ThemeRepository {
               if (states.any(activeStates.contains)) {
                 return colorScheme.onPrimary;
               } else if (states.any(interactiveStates.contains)) {
-                return colorScheme.onPrimary.withOpacity(0.5);
+                return colorScheme.onPrimary.withValues(alpha: 0.5);
               } else if (states.any(disabledStates.contains)) {
                 return colorScheme.outline;
               }
@@ -185,13 +186,13 @@ TextStyle _style(double s, FontWeight w) =>
     TextStyle(fontSize: s, fontWeight: w);
 
 @Riverpod(keepAlive: true)
-ThemeRepository themeRepository(ThemeRepositoryRef ref) {
+ThemeRepository themeRepository(Ref ref) {
   // set this in the app bootstrap section
   throw UnimplementedError();
 }
 
 @Riverpod(keepAlive: true)
-Stream<AppTheme> appThemeChanges(AppThemeChangesRef ref) {
+Stream<AppTheme> appThemeChanges(Ref ref) {
   final themeRepository = ref.watch(themeRepositoryProvider);
   return themeRepository.appThemeChanges;
 }

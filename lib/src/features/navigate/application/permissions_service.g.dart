@@ -7,11 +7,12 @@ part of 'permissions_service.dart';
 // **************************************************************************
 
 String _$permissionsServiceHash() =>
-    r'18049e97088df92e4e3d391dff1b43231a0d91fe';
+    r'd439ac2cfd09cd0b57c73a93d45b5b7ecbdf1f64';
 
 /// See also [permissionsService].
 @ProviderFor(permissionsService)
-final permissionsServiceProvider = Provider<PermissionsService>.internal(
+final permissionsServiceProvider =
+    AutoDisposeProvider<PermissionsService>.internal(
   permissionsService,
   name: r'permissionsServiceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -21,6 +22,8 @@ final permissionsServiceProvider = Provider<PermissionsService>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef PermissionsServiceRef = ProviderRef<PermissionsService>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef PermissionsServiceRef = AutoDisposeProviderRef<PermissionsService>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

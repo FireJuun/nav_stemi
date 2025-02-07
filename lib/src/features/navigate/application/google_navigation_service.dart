@@ -135,14 +135,14 @@ class GoogleNavigationService {
     await googleNavigationRepository.cleanupNavigationSession();
   }
 
-  void linkEdInfoToDestination(EdInfo edInfo) {
-    final latitude = edInfo.location.latitude;
-    final longitude = edInfo.location.longitude;
+  void linkHospitalInfoToDestination(Hospital hospitalInfo) {
+    final latitude = hospitalInfo.latitude;
+    final longitude = hospitalInfo.longitude;
 
     final destination = Destinations(
       waypoints: <NavigationWaypoint>[
         NavigationWaypoint.withLatLngTarget(
-          title: edInfo.shortName,
+          title: hospitalInfo.facilityBrandedName,
           target: LatLng(latitude: latitude, longitude: longitude),
         ),
       ],
@@ -153,8 +153,10 @@ class GoogleNavigationService {
       ),
     );
 
-    activeDestinationRepository.activeDestination =
-        ActiveDestination(destination: destination, destinationInfo: edInfo);
+    activeDestinationRepository.activeDestination = ActiveDestination(
+      destination: destination,
+      destinationInfo: hospitalInfo,
+    );
   }
 
   Future<void> setAudioGuidanceType(
@@ -338,9 +340,7 @@ class GoogleNavigationService {
   }
 }
 
-@Riverpod(keepAlive: true)
-GoogleNavigationService googleNavigationService(
-  GoogleNavigationServiceRef ref,
-) {
+@riverpod
+GoogleNavigationService googleNavigationService(Ref ref) {
   return GoogleNavigationService(ref);
 }

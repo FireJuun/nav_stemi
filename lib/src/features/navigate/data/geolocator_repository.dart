@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
@@ -103,13 +104,13 @@ class GeolocatorRepository {
   }
 }
 
-@Riverpod(keepAlive: true)
-GeolocatorRepository geolocatorRepository(GeolocatorRepositoryRef ref) {
+@riverpod
+GeolocatorRepository geolocatorRepository(Ref ref) {
   return GeolocatorRepository();
 }
 
 @riverpod
-Stream<Position?> watchPosition(WatchPositionRef ref) {
+Stream<Position?> watchPosition(Ref ref) {
   final geolocatorRepository = ref.watch(geolocatorRepositoryProvider);
   final stream = geolocatorRepository.watchPosition();
   ref.onDispose(() => stream.listen(null).cancel());
@@ -117,13 +118,13 @@ Stream<Position?> watchPosition(WatchPositionRef ref) {
 }
 
 @riverpod
-Future<Position> getCurrentPosition(GetCurrentPositionRef ref) {
+Future<Position> getCurrentPosition(Ref ref) {
   final geolocatorRepository = ref.watch(geolocatorRepositoryProvider);
   return geolocatorRepository.getCurrentPosition();
 }
 
 @riverpod
-Future<Position?> getLastKnownPosition(GetLastKnownPositionRef ref) {
+Future<Position?> getLastKnownPosition(Ref ref) {
   final geolocatorRepository = ref.watch(geolocatorRepositoryProvider);
   return geolocatorRepository.getLastKnownPosition();
 }
@@ -133,9 +134,7 @@ Future<Position?> getLastKnownPosition(GetLastKnownPositionRef ref) {
 /// forces the device to get the current location and may take
 /// longer to return a result.
 @riverpod
-Future<Position> getLastKnownOrCurrentPosition(
-  GetLastKnownOrCurrentPositionRef ref,
-) async {
+Future<Position> getLastKnownOrCurrentPosition(Ref ref) async {
   final lastKnownPosition =
       await ref.watch(getLastKnownPositionProvider.future);
 

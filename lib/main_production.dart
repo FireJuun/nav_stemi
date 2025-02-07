@@ -7,6 +7,11 @@ import 'package:nav_stemi/nav_stemi.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // TODO(FireJuun): set up firebase options for production
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
+
   // turn off the # in the URLs on the web
   usePathUrlStrategy();
   // ensure URL changes in the address bar when using push / pushNamed

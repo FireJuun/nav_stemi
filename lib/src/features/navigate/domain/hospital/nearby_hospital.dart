@@ -3,42 +3,43 @@ import 'package:equatable/equatable.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:units_converter/units_converter.dart';
 
-class NearbyEd extends Equatable {
-  const NearbyEd({
+class NearbyHospital extends Equatable {
+  const NearbyHospital({
     required this.distanceBetween,
     required this.routeDistance,
     required this.routeDuration,
-    required this.edInfo,
+    required this.hospitalInfo,
   });
 
-  factory NearbyEd.fromMap(Map<String, dynamic> map) {
-    return NearbyEd(
+  factory NearbyHospital.fromMap(Map<String, dynamic> map) {
+    return NearbyHospital(
       distanceBetween: map['distanceBetween'] as double,
       routeDistance: map['routeDistance'] as int?,
       routeDuration: map['routeDuration'] as String?,
-      edInfo: EdInfo.fromMap(map['edInfo'] as Map<String, dynamic>),
+      hospitalInfo:
+          Hospital.fromMap(map['hospitalInfo'] as Map<String, dynamic>),
     );
   }
 
-  factory NearbyEd.fromJson(String source) =>
-      NearbyEd.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory NearbyHospital.fromJson(String source) =>
+      NearbyHospital.fromMap(json.decode(source) as Map<String, dynamic>);
 
   final double distanceBetween;
   final int? routeDistance;
   final String? routeDuration;
-  final EdInfo edInfo;
+  final Hospital hospitalInfo;
 
-  NearbyEd copyWith({
+  NearbyHospital copyWith({
     double? distanceBetween,
     int? routeDistance,
     String? routeDuration,
-    EdInfo? edInfo,
+    Hospital? hospitalInfo,
   }) {
-    return NearbyEd(
+    return NearbyHospital(
       distanceBetween: distanceBetween ?? this.distanceBetween,
       routeDistance: routeDistance ?? this.routeDistance,
       routeDuration: routeDuration ?? this.routeDuration,
-      edInfo: edInfo ?? this.edInfo,
+      hospitalInfo: hospitalInfo ?? this.hospitalInfo,
     );
   }
 
@@ -47,7 +48,7 @@ class NearbyEd extends Equatable {
       'distanceBetween': distanceBetween,
       'routeDistance': routeDistance,
       'routeDuration': routeDuration,
-      'edInfo': edInfo.toMap(),
+      'hospitalInfo': hospitalInfo.toMap(),
     };
   }
 
@@ -58,7 +59,7 @@ class NearbyEd extends Equatable {
 
   @override
   List<Object?> get props =>
-      [distanceBetween, routeDistance, routeDuration, edInfo];
+      [distanceBetween, routeDistance, routeDuration, hospitalInfo];
 
   double get distanceBetweenInMiles {
     final length = Length(removeTrailingZeros: false)

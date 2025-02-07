@@ -147,6 +147,6 @@ class TimeMetricsService {
 }
 
 @riverpod
-TimeMetricsService timeMetricsService(TimeMetricsServiceRef ref) {
+TimeMetricsService timeMetricsService(Ref ref) {
   return TimeMetricsService(ref);
 }

@@ -2,18 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_navigation_flutter/google_navigation_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
-import 'package:sliver_tools/sliver_tools.dart';
-
-const _routeDurationDto = RouteDurationDto();
-
-class EtaWidgetSliver extends StatelessWidget {
-  const EtaWidgetSliver({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const SliverPinnedHeader(child: EtaWidget());
-  }
-}
 
 class EtaWidget extends ConsumerWidget {
   const EtaWidget({super.key});
@@ -29,8 +17,15 @@ class EtaWidget extends ConsumerWidget {
           return const SizedBox();
         }
 
-        final routeDuration =
-            Duration(seconds: navInfo.timeToFinalDestinationSeconds ?? 0);
+        final timeToDestination = navInfo.timeToFinalDestinationSeconds;
+
+        /// Sometimes, a -1 value is provided, which is not valid.
+        /// No need to show the ETA if the value is invalid.
+        if (timeToDestination == null || timeToDestination < 0) {
+          return const SizedBox();
+        }
+
+        final routeDuration = Duration(seconds: timeToDestination);
         final etaDateTime = DateTime.now().add(routeDuration);
 
         return Row(

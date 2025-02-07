@@ -1,16 +1,21 @@
 name: nav_stemi
 description: EMS Navigation App for critical scenarios
-version: 0.0.1+4
+version: 0.0.5+5
 publish_to: none
 
 environment:
   sdk: ">=3.3.0 <4.0.0"
 
 dependencies:
+  cloud_firestore: ^5.6.2
   collection: ^1.18.0
+  csv: ^6.0.0
   dio: ^5.4.2+1
-  duration: ^3.0.13
+  duration: ^3.0.13 
   equatable: ^2.0.5
+  file_picker: ^8.3.1
+  firebase_auth: ^5.4.2
+  firebase_core: ^3.11.0
   flex_color_scheme: ^7.3.1
   flutter:
     sdk: flutter
@@ -19,12 +24,12 @@ dependencies:
   flutter_keyboard_visibility: ^6.0.0
   flutter_localizations:
     sdk: flutter
-  flutter_riverpod: ^2.5.1
+  flutter_riverpod: ^2.6.1
   geolocator: ^13.0.2
   go_router: ^13.2.3
   google_navigation_flutter: ^0.4.0
   google_routes_flutter: ^1.0.0+1
-  hooks_riverpod: ^2.5.1
+  hooks_riverpod: ^2.6.1
   intl: ^0.19.0
   mobile_scanner: ^6.0.2
   permission_handler: ^11.3.1
@@ -47,7 +52,7 @@ dev_dependencies:
     sdk: flutter
   mockito: ^5.4.4
   mocktail: ^1.0.3
-  riverpod_generator: ^2.4.0
+  riverpod_generator: ^2.6.4
   very_good_analysis: ^5.1.0
 
 flutter:

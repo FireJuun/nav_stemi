@@ -66,6 +66,11 @@ class _HomeState extends ConsumerState<Home> {
           children: [
             Column(
               children: [
+                // TODO(FireJuun): move this to admin UI, to add/update hospitals list
+                // FilledButton(
+                //   onPressed: selectAndUploadCSV,
+                //   child: Text('Upload CSV'.hardcoded),
+                // ),
                 Text(
                   'Click `Go` to begin'.hardcoded,
                   style:
