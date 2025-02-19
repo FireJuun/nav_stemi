@@ -206,7 +206,7 @@ class TimeMetricsModel extends Equatable {
     }
 
     if (firstEkg.isAfter(timeArrived) &&
-        firstEkg.difference(timeArrived).inMinutes <= 5) {
+        firstEkg.difference(timeArrived).inSeconds <= 300) {
       /// Data present and meets the 5 minute requirement
       return true;
     } else {
@@ -231,11 +231,36 @@ class TimeMetricsModel extends Equatable {
     }
 
     if (timeLeftScene.isAfter(timeArrived) &&
-        timeLeftScene.difference(timeArrived).inMinutes <= 10) {
+        timeLeftScene.difference(timeArrived).inSeconds <= 600) {
       /// Data present and meets the 10 minute requirement
       return true;
     } else {
       /// Data present, but failed to meet the 10 minute requirement
+      return null;
+    }
+  }
+
+  /// Tri-state boolean that checks for all data to be present,
+  /// then checks to see if the time metric has been met.
+  ///
+  /// true -> data present and meets the 60 minute requirement
+  /// null -> data present, but failed to meet the 10 minute requirement
+  /// false -> no data present
+  bool? hasArrivedBySixtyMin() {
+    final timeArrived = timeArrivedAtPatient;
+    final timeAtDestination = timePatientArrivedAtDestination;
+
+    if (timeArrived == null || timeAtDestination == null) {
+      /// No data present
+      return false;
+    }
+
+    if (timeAtDestination.isAfter(timeArrived) &&
+        timeAtDestination.difference(timeArrived).inSeconds <= 3600) {
+      /// Data present and meets the 60 minute requirement
+      return true;
+    } else {
+      /// Data present, but failed to meet the 60 minute requirement
       return null;
     }
   }
