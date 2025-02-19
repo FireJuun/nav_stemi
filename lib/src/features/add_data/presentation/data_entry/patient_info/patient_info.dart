@@ -48,26 +48,29 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
   }
 
   void _onFormDataChanged() {
-    final patientInfoModel = PatientInfoModel(
-      lastName: _lastNameTextController.text.isNotEmpty
+    final lastModel = widget.patientInfoModel;
+    final patientInfoModel = lastModel.copyWith(
+      lastName: () => _lastNameTextController.text.isNotEmpty
           ? _lastNameTextController.text
           : null,
-      firstName: _firstNameTextController.text.isNotEmpty
+      firstName: () => _firstNameTextController.text.isNotEmpty
           ? _firstNameTextController.text
           : null,
-      middleName: _middleNameTextController.text.isNotEmpty
+      middleName: () => _middleNameTextController.text.isNotEmpty
           ? _middleNameTextController.text
           : null,
-      birthDate: _birthDate,
-      sexAtBirth: _sexAtBirth,
-      cardiologist: _cardiologistTextController.text.isNotEmpty
+      birthDate: () => _birthDate,
+      sexAtBirth: () => _sexAtBirth,
+      cardiologist: () => _cardiologistTextController.text.isNotEmpty
           ? _cardiologistTextController.text
           : null,
     );
-    _updatePatientInfo(patientInfoModel);
+    _updatePatientInfoModel(patientInfoModel);
   }
 
-  Future<void> _updatePatientInfo(PatientInfoModel patientInfoModel) async {
+  Future<void> _updatePatientInfoModel(
+    PatientInfoModel patientInfoModel,
+  ) async {
     if (_formKey.currentState!.validate()) {
       // final scaffoldMessenger = ScaffoldMessenger.of(context);
 
@@ -75,7 +78,7 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
       // final success =
       ref
           .read(patientInfoControllerProvider.notifier)
-          .setPatientInfo(patientInfoModel);
+          .setPatientInfoModel(patientInfoModel);
       // if (success) {
       // scaffoldMessenger.showSnackBar(
       //   SnackBar(
