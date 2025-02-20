@@ -31,17 +31,38 @@ class TimeMetricsController extends _$TimeMetricsController
 
   void toggleTimeOfFirstEkgLock() => _service().toggleTimeOfFirstEkgLock();
 
-  void setTimeOfStemiActivation(DateTime? timeOfStemiActivation) =>
-      _service().setTimeOfStemiActivation(timeOfStemiActivation);
+  void setTimeOfStemiActivationDecision(DateTime? timeOfStemiActivation) =>
+      _service().setTimeOfStemiActivationDecision(timeOfStemiActivation);
 
-  void toggleTimeOfStemiActivationLock() =>
-      _service().toggleTimeOfStemiActivationLock();
+  void setWasStemiActivated(bool? wasStemiActivated) =>
+      _service().setWasStemiActivated(wasStemiActivated);
+
+  void toggleTimeOfStemiActivationDecisionLock() =>
+      _service().toggleTimeOfStemiActivationDecisionLock();
 
   void setTimeUnitLeftScene(DateTime? timeUnitLeftScene) =>
       _service().setTimeUnitLeftScene(timeUnitLeftScene);
 
   void toggleTimeUnitLeftSceneLock() =>
       _service().toggleTimeUnitLeftSceneLock();
+
+  void setTimeOfAspirinGivenDecision(DateTime? timeOfAspirinGivenDecision) =>
+      _service().setTimeOfAspirinGivenDecision(timeOfAspirinGivenDecision);
+
+  void setWasAspirinGiven(bool? wasAspirinGiven) =>
+      _service().setWasAspirinGiven(wasAspirinGiven);
+
+  void toggleTimeOfAspirinGivenDecisionLock() =>
+      _service().toggleTimeOfAspirinGivenDecisionLock();
+
+  void setTimeCathLabNotifiedDecision(DateTime? timeCathLabNotifiedDecision) =>
+      _service().setTimeCathLabNotifiedDecision(timeCathLabNotifiedDecision);
+
+  void setWasCathLabNotified(bool? wasCathLabNotified) =>
+      _service().setWasCathLabNotified(wasCathLabNotified);
+
+  void toggleTimeCathLabNotifiedDecisionLock() =>
+      _service().toggleTimeCathLabNotifiedDecisionLock();
 
   void setTimePatientArrivedAtDestination(
     DateTime? timePatientArrivedAtDestination,
