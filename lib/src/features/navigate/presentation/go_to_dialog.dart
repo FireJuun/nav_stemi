@@ -163,7 +163,8 @@ class _PlaceholderButton extends ConsumerWidget {
                   .routeDurationToFormattedString(edOption.routeDuration),
             ),
             Text(
-              '${edOption.distanceBetweenInMiles.toStringAsFixed(1)} mi',
+              '${edOption.distanceBetweenInMiles.toStringAsFixed(1)} mi'
+                  .hardcoded,
               textAlign: TextAlign.end,
               style: const TextStyle(fontStyle: FontStyle.italic),
             ),
