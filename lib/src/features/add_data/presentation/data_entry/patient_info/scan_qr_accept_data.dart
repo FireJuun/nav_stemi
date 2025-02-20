@@ -139,6 +139,7 @@ class ScannedLicenseInfo extends StatelessWidget {
         SegmentedButton<SexAtBirth?>(
           selected: {sexAtBirth},
           emptySelectionAllowed: true,
+          showSelectedIcon: false,
           segments: SexAtBirth.values
               .map(
                 (sexAtBirth) => ButtonSegment<SexAtBirth?>(
