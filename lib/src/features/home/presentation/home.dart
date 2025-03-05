@@ -43,10 +43,12 @@ class _HomeState extends ConsumerState<Home> {
   Future<void> _checkAndSavePermissions() async {
     final permissions = await notifier.checkPermissionsOnAppStart();
 
-    setState(() {
-      _locationPermitted = permissions.areLocationsPermitted;
-      _notificationsPermitted = permissions.areNotificationsPermitted;
-    });
+    if (context.mounted) {
+      setState(() {
+        _locationPermitted = permissions.areLocationsPermitted;
+        _notificationsPermitted = permissions.areNotificationsPermitted;
+      });
+    }
   }
 
   @override

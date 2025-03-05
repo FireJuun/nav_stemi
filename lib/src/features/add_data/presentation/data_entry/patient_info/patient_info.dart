@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 const _goBackInYears = 60;
@@ -9,10 +10,18 @@ const _oldestAgeInYears = 150;
 const _oldestAgeDuration = Duration(days: _oldestAgeInYears * 365);
 const _birthDateToStringDTO = BirthDateToStringDTO();
 
-class PatientInfo extends ConsumerStatefulWidget {
-  const PatientInfo({required this.patientInfoModel, super.key});
+/// Date formats used to try and parse the birth date
+/// from a given string entered by the user
+final _dateFormats = [DateFormat('MM/dd/yyyy')];
 
-  final PatientInfoModel patientInfoModel;
+final _birthDateFormatter = MaskTextInputFormatter(
+  mask: '##/##/####',
+  filter: {'#': RegExp('[0-9]')},
+  initialText: 'MM/DD/YYYY',
+);
+
+class PatientInfo extends ConsumerStatefulWidget {
+  const PatientInfo({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PatientInfoState();
@@ -21,73 +30,14 @@ class PatientInfo extends ConsumerStatefulWidget {
 class _PatientInfoState extends ConsumerState<PatientInfo> {
   final _formKey = GlobalKey<FormState>();
 
-  late final TextEditingController _lastNameTextController =
-      TextEditingController(text: widget.patientInfoModel.lastName);
-  late final TextEditingController _firstNameTextController =
-      TextEditingController(text: widget.patientInfoModel.firstName);
-  late final TextEditingController _middleNameTextController =
-      TextEditingController(text: widget.patientInfoModel.middleName);
-  late final TextEditingController _birthDateTextController =
-      TextEditingController(
-    text: widget.patientInfoModel.birthDate?.toBirthDateString(),
-  );
-  late final TextEditingController _cardiologistTextController =
-      TextEditingController(text: widget.patientInfoModel.cardiologist);
-
-  late SexAtBirth? _sexAtBirth = widget.patientInfoModel.sexAtBirth;
-  late DateTime? _birthDate = widget.patientInfoModel.birthDate;
-
-  @override
-  void dispose() {
-    _lastNameTextController.dispose();
-    _firstNameTextController.dispose();
-    _middleNameTextController.dispose();
-    _birthDateTextController.dispose();
-    _cardiologistTextController.dispose();
-    super.dispose();
-  }
+  PatientInfoModel _patientInfoModel = const PatientInfoModel();
 
   void _onFormDataChanged() {
-    final lastModel = widget.patientInfoModel;
-    final patientInfoModel = lastModel.copyWith(
-      lastName: () => _lastNameTextController.text.isNotEmpty
-          ? _lastNameTextController.text
-          : null,
-      firstName: () => _firstNameTextController.text.isNotEmpty
-          ? _firstNameTextController.text
-          : null,
-      middleName: () => _middleNameTextController.text.isNotEmpty
-          ? _middleNameTextController.text
-          : null,
-      birthDate: () => _birthDate,
-      sexAtBirth: () => _sexAtBirth,
-      cardiologist: () => _cardiologistTextController.text.isNotEmpty
-          ? _cardiologistTextController.text
-          : null,
-    );
-    _updatePatientInfoModel(patientInfoModel);
-  }
-
-  Future<void> _updatePatientInfoModel(
-    PatientInfoModel patientInfoModel,
-  ) async {
-    if (_formKey.currentState!.validate()) {
-      // final scaffoldMessenger = ScaffoldMessenger.of(context);
-
-      // TODO(FireJuun): debounce this
-      // final success =
+    final isValid = _formKey.currentState?.validate() ?? false;
+    if (isValid) {
       ref
           .read(patientInfoControllerProvider.notifier)
-          .setPatientInfoModel(patientInfoModel);
-      // if (success) {
-      // scaffoldMessenger.showSnackBar(
-      //   SnackBar(
-      //     content: Text(
-      //       'Patient info updated'.hardcoded,
-      //     ),
-      //   ),
-      // );
-      // }
+          .setPatientInfoModel(_patientInfoModel);
     }
   }
 
@@ -104,225 +54,346 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return SliverMainAxisGroup(
-      slivers: [
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          sliver: Form(
-            key: _formKey,
-            onChanged: _onFormDataChanged,
-            child: SliverList.list(
-              children: [
-                Center(
-                  child: FilledButton(
-                    onPressed: () {
-                      showDialog<bool>(
-                        context: context,
-                        builder: (context) => ScanQrLicenseDialog(
-                          onDataSubmitted: (patientInfoModel) {
-                            setState(() {
-                              _lastNameTextController.text =
-                                  patientInfoModel.lastName ?? '';
-                              _firstNameTextController.text =
-                                  patientInfoModel.firstName ?? '';
-                              _middleNameTextController.text =
-                                  patientInfoModel.middleName ?? '';
-                              _birthDateTextController.text = patientInfoModel
-                                      .birthDate
-                                      ?.toBirthDateString() ??
-                                  '';
-                              _sexAtBirth = patientInfoModel.sexAtBirth;
+    final patientInfoModelValue = ref.watch(patientInfoModelProvider);
 
-                              /// using this instead of _updatePatientInfo(_)
-                              /// so that cardiologist info isn't overwritten
-                              _onFormDataChanged();
-                            });
-                          },
-                        ),
-                      );
-                    },
-                    child: Text("Scan Driver's License".hardcoded),
-                  ),
-                ),
-                gapH8,
-                const Divider(thickness: 4),
-                gapH16,
-                Row(
+    return AsyncValueSliverWidget(
+      value: patientInfoModelValue,
+      data: (patientInfoModel) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (_patientInfoModel != patientInfoModel &&
+              patientInfoModel != null) {
+            setState(() => _patientInfoModel = patientInfoModel);
+          }
+        });
+
+        return SliverMainAxisGroup(
+          slivers: [
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              sliver: Form(
+                key: _formKey,
+                onChanged: _onFormDataChanged,
+                child: SliverList.list(
                   children: [
-                    Expanded(
-                      child: PatientInfoTextField(
-                        label: 'First Name'.hardcoded,
-                        controller: _firstNameTextController,
-                      ),
-                    ),
-                    gapW16,
-                    Expanded(
-                      child: PatientInfoTextField(
-                        label: 'Middle Name'.hardcoded,
-                        controller: _middleNameTextController,
-                      ),
-                    ),
-                  ],
-                ),
-                gapH16,
-                Row(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: PatientInfoTextField(
-                          label: 'Last Name'.hardcoded,
-                          controller: _lastNameTextController,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                gapH32,
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: PatientInfoTextField(
-                        label: 'Date of Birth'.hardcoded,
-                        controller: _birthDateTextController,
-                        keyboardType: TextInputType.datetime,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return null;
-                          }
+                    Center(
+                      child: FilledButton(
+                        onPressed: () {
+                          showDialog<bool>(
+                            context: context,
+                            builder: (context) => ScanQrLicenseDialog(
+                              onDataSubmitted: (patientInfoModel) {
+                                setState(() {
+                                  _patientInfoModel = patientInfoModel;
 
-                          /// Date formats used to try and parse the birth date
-                          /// from a given string entered by the user
-                          final formats = [
-                            DateFormat('MM/dd/yy'),
-                            DateFormat('MM/dd/yyyy'),
-                            DateFormat('MM-dd-yy'),
-                            DateFormat('MM-dd-yyyy'),
-                          ];
-
-                          final newBirthDate = const BirthDateToStringDTO()
-                              .tryParse(value, formats: formats);
-                          if (newBirthDate == null) {
-                            return 'Invalid date format';
-                          }
-
-                          if (newBirthDate.isAfter(DateTime.now())) {
-                            return "Can't be in the future";
-                          } else if (newBirthDate.isBefore(
-                            DateTime.now().subtract(_oldestAgeDuration),
-                          )) {
-                            return 'Age too old';
-                          }
-
-                          setState(() => _birthDate = newBirthDate);
-
-                          return null;
+                                  /// using this instead of _updatePatientInfo(_)
+                                  /// so that cardiologist info isn't overwritten
+                                  _onFormDataChanged();
+                                });
+                              },
+                            ),
+                          );
                         },
-                        prefixIcon: IconButton(
-                          icon: const Icon(Icons.date_range),
-                          onPressed: () async {
-                            final now = DateTime.now();
-
-                            final selectedDate = await showDatePicker(
-                              context: context,
-                              firstDate: DateTime(1900),
-                              initialDate: now.subtract(_goBackDuration),
-                              initialDatePickerMode: DatePickerMode.year,
-                              lastDate: now,
-                            );
-
-                            if (selectedDate != null) {
-                              _birthDateTextController.text =
-                                  _birthDateToStringDTO
-                                      .convertDatePicker(selectedDate);
-                            } else {
-                              _birthDateTextController.text = '';
-                            }
-
-                            setState(() => _birthDate = selectedDate);
-                          },
-                        ),
+                        child: Text("Scan Driver's License".hardcoded),
                       ),
                     ),
-                    gapW32,
-                    Expanded(
-                      child: Text(
-                        _birthDate != null
-                            ? 'Age:   ${_birthDate!.ageFromBirthDate()}'
-                            : '',
-                        textAlign: TextAlign.end,
-                      ),
+                    gapH8,
+                    const Divider(thickness: 4),
+                    gapH16,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: PatientInfoTextField(
+                            label: 'First Name'.hardcoded,
+                            initialValue: _patientInfoModel.firstName,
+                            onChanged: (value) {
+                              setState(() {
+                                _patientInfoModel = _patientInfoModel.copyWith(
+                                  firstName: () => value,
+                                );
+
+                                /// These are called via `Form: onChanged`, but
+                                /// some data fields need to be updated manually
+                                // _onFormDataChanged();
+                              });
+                            },
+                          ),
+                        ),
+                        gapW16,
+                        Expanded(
+                          child: PatientInfoTextField(
+                            label: 'Middle Name'.hardcoded,
+                            initialValue: _patientInfoModel.middleName,
+                            onChanged: (value) {
+                              setState(() {
+                                _patientInfoModel = _patientInfoModel.copyWith(
+                                  middleName: () => value,
+                                );
+
+                                /// These are called via `Form: onChanged`, but
+                                /// some data fields need to be updated manually
+                                // _onFormDataChanged();
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    gapH16,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            child: PatientInfoTextField(
+                              label: 'Last Name'.hardcoded,
+                              initialValue: _patientInfoModel.lastName,
+                              onChanged: (value) {
+                                setState(() {
+                                  _patientInfoModel =
+                                      _patientInfoModel.copyWith(
+                                    lastName: () => value,
+                                  );
+
+                                  /// These are called via `Form: onChanged`, but
+                                  /// some data fields need to be updated manually
+                                  // _onFormDataChanged();
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    gapH32,
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: PatientInfoTextField(
+                            label: 'Date of Birth',
+                            initialValue:
+                                _patientInfoModel.birthDate?.toString(),
+                            hint: 'MM/DD/YYYY',
+                            onChanged: (value) {
+                              /// For this TextField, _onFormDataChanged
+                              /// Only works if updated manually
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  value.length != 10) {
+                                setState(() {
+                                  _patientInfoModel =
+                                      _patientInfoModel.copyWith(
+                                    birthDate: () => null,
+                                  );
+                                  _onFormDataChanged();
+                                });
+                              } else {
+                                // TODO(FireJuun): implement date saving, only if valid
+                                final isValidDate =
+                                    _formKey.currentState?.validate() ?? false;
+
+                                if (isValidDate && value.length == 10) {
+                                  final newBirthDate =
+                                      _birthDateToStringDTO.tryParse(
+                                    value,
+                                    formats: _dateFormats,
+                                  );
+
+                                  setState(() {
+                                    _patientInfoModel =
+                                        _patientInfoModel.copyWith(
+                                      birthDate: () => newBirthDate,
+                                    );
+
+                                    _onFormDataChanged();
+                                  });
+                                }
+                              }
+                            },
+                            keyboardType: TextInputType.phone,
+                            formatter: _birthDateFormatter,
+                            validator: (value) {
+                              /// only accepts MM/DD/YYYY format
+                              /// 10 characters long
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  value.length != 10) {
+                                return null;
+                              }
+
+                              // if (value.length != 10) {
+                              // TODO(FireJuun): only show this when you click away
+                              //   return 'Some error message';
+                              // }
+
+                              /// Date formats used to parse the birth date
+                              /// from a string entered by the user
+                              final newBirthDate = _birthDateToStringDTO
+                                  .tryParse(value, formats: _dateFormats);
+                              if (newBirthDate == null) {
+                                return 'Invalid date format';
+                              }
+
+                              if (newBirthDate.isAfter(DateTime.now())) {
+                                return "Can't be in the future";
+                              } else if (newBirthDate.isBefore(
+                                DateTime.now().subtract(_oldestAgeDuration),
+                              )) {
+                                return 'Age too old';
+                              }
+
+                              return null;
+                            },
+                            prefixIcon: IconButton(
+                              icon: const Icon(Icons.date_range),
+                              onPressed: () async {
+                                final now = DateTime.now();
+
+                                final newBirthDate = await showDatePicker(
+                                  context: context,
+                                  firstDate: DateTime(1900),
+                                  initialDate: now.subtract(_goBackDuration),
+                                  initialDatePickerMode: DatePickerMode.year,
+                                  lastDate: now,
+                                );
+
+                                setState(() {
+                                  _patientInfoModel =
+                                      _patientInfoModel.copyWith(
+                                    birthDate: () => newBirthDate,
+                                  );
+
+                                  _onFormDataChanged();
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                        gapW16,
+                        Expanded(
+                          child: Text(
+                            _patientInfoModel.birthDate != null
+                                ? '''Age:   ${_patientInfoModel.birthDate!.ageFromBirthDate()}'''
+                                : '',
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ],
+                    ),
+                    gapH16,
+                    Text('Sex at Birth'.hardcoded, textAlign: TextAlign.center),
+                    gapH4,
+                    SegmentedButton<SexAtBirth?>(
+                      selected: {_patientInfoModel.sexAtBirth},
+                      showSelectedIcon: false,
+                      emptySelectionAllowed: true,
+                      onSelectionChanged: (sexAtBirthList) {
+                        /// For this SegmentedButton, _onFormDataChanged
+                        /// Only works if updated manually
+                        ///
+                        final newSexAtBirth = sexAtBirthList.firstOrNull;
+
+                        final newModel = _patientInfoModel.copyWith(
+                          sexAtBirth: () => newSexAtBirth,
+                        );
+
+                        setState(() {
+                          _patientInfoModel = newModel;
+
+                          _onFormDataChanged();
+                        });
+                      },
+                      segments: SexAtBirth.values
+                          .map(
+                            (sexAtBirth) => ButtonSegment<SexAtBirth?>(
+                              value: sexAtBirth,
+                              label: Text(sexAtBirth.name),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                    gapH16,
+                    const Divider(thickness: 4),
+                    gapH16,
+                    PatientInfoTextField(
+                      label: "Patient's Cardiologist".hardcoded,
+                      initialValue: _patientInfoModel.cardiologist,
+                      onChanged: (value) {
+                        setState(() {
+                          _patientInfoModel = _patientInfoModel.copyWith(
+                            cardiologist: () => value,
+                          );
+
+                          /// These are called via `Form: onChanged`, but
+                          /// some data fields need to be updated manually
+                          // _onFormDataChanged();
+                        });
+                      },
                     ),
                   ],
                 ),
-                gapH16,
-                Text('Sex at Birth'.hardcoded, textAlign: TextAlign.center),
-                gapH4,
-                SegmentedButton<SexAtBirth?>(
-                  selected: {widget.patientInfoModel.sexAtBirth},
-                  emptySelectionAllowed: true,
-                  onSelectionChanged: (sexAtBirthList) {
-                    final newSexAtBirth = sexAtBirthList.firstOrNull;
-
-                    setState(() => _sexAtBirth = newSexAtBirth);
-                    _onFormDataChanged();
-                  },
-                  segments: SexAtBirth.values
-                      .map(
-                        (sexAtBirth) => ButtonSegment<SexAtBirth?>(
-                          value: sexAtBirth,
-                          label: Text(sexAtBirth.name),
-                        ),
-                      )
-                      .toList(),
-                ),
-                gapH16,
-                const Divider(thickness: 4),
-                gapH16,
-                PatientInfoTextField(
-                  label: "Patient's Cardiologist".hardcoded,
-                  controller: _cardiologistTextController,
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
     );
   }
 }
 
-class PatientInfoTextField extends StatelessWidget {
+class PatientInfoTextField extends StatefulWidget {
   const PatientInfoTextField({
     required this.label,
-    required this.controller,
+    required this.initialValue,
+    required this.onChanged,
     this.prefixIcon,
     this.validator,
+    this.formatter,
+    this.hint,
     this.keyboardType,
     this.readOnly = false,
     super.key,
   });
 
   final String label;
-  final TextEditingController controller;
+  final String? initialValue;
+  final FormFieldSetter<String>? onChanged;
   final Widget? prefixIcon;
-  final String? Function(String?)? validator;
+  final MaskTextInputFormatter? formatter;
+  final FormFieldValidator<String>? validator;
+  final String? hint;
   final TextInputType? keyboardType;
   final bool readOnly;
 
   @override
+  State<PatientInfoTextField> createState() => _PatientInfoTextFieldState();
+}
+
+class _PatientInfoTextFieldState extends State<PatientInfoTextField> {
+  late final TextEditingController _textEditingController =
+      TextEditingController(text: widget.initialValue);
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: controller,
-      validator: validator,
-      keyboardType: keyboardType,
+      controller: _textEditingController,
+      validator: widget.validator,
+      onChanged: widget.onChanged,
+      inputFormatters: (widget.formatter != null) ? [widget.formatter!] : null,
+      keyboardType: widget.keyboardType,
       decoration: InputDecoration(
-        prefixIcon: prefixIcon,
-        filled: !readOnly,
-        label: Text(label, textAlign: TextAlign.center),
+        prefixIcon: widget.prefixIcon,
+        filled: !widget.readOnly,
+        hintText: widget.hint,
+        label: Text(widget.label, textAlign: TextAlign.center),
       ),
-      readOnly: readOnly,
+      readOnly: widget.readOnly,
       onTapOutside: (PointerDownEvent event) {
         FocusManager.instance.primaryFocus?.unfocus();
       },
