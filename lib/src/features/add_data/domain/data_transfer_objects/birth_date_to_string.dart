@@ -52,7 +52,7 @@ class BirthDateToStringDTO {
   }) {
     for (final format in formats) {
       try {
-        return format.parse(dateTimeString, utc);
+        return format.parseStrict(dateTimeString, utc);
       } on FormatException {
         // Ignore.
       }
