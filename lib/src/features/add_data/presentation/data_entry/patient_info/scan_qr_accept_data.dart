@@ -83,7 +83,8 @@ class ScannedLicenseInfo extends StatelessWidget {
               child: PatientInfoTextField(
                 readOnly: true,
                 label: 'First Name'.hardcoded,
-                controller: TextEditingController(text: patientInfo.firstName),
+                onChanged: (_) {},
+                initialValue: patientInfo.firstName,
               ),
             ),
             gapW16,
@@ -91,7 +92,8 @@ class ScannedLicenseInfo extends StatelessWidget {
               child: PatientInfoTextField(
                 readOnly: true,
                 label: 'Middle Name'.hardcoded,
-                controller: TextEditingController(text: patientInfo.middleName),
+                onChanged: (_) {},
+                initialValue: patientInfo.middleName,
               ),
             ),
           ],
@@ -105,7 +107,8 @@ class ScannedLicenseInfo extends StatelessWidget {
                 child: PatientInfoTextField(
                   readOnly: true,
                   label: 'Last Name'.hardcoded,
-                  controller: TextEditingController(text: patientInfo.lastName),
+                  onChanged: (_) {},
+                  initialValue: patientInfo.lastName,
                 ),
               ),
             ),
@@ -118,8 +121,8 @@ class ScannedLicenseInfo extends StatelessWidget {
               child: PatientInfoTextField(
                 readOnly: true,
                 label: 'Date of Birth'.hardcoded,
-                controller:
-                    TextEditingController(text: birthDate?.toBirthDateString()),
+                onChanged: (_) {},
+                initialValue: birthDate?.toBirthDateString(),
               ),
             ),
             gapW32,

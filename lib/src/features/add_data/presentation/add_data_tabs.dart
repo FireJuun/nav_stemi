@@ -34,42 +34,13 @@ class AddDataTabs extends StatelessWidget {
             child: TabBarView(
               children: [
                 DataEntryView(child: TimeMetrics()),
-                DataEntryView(child: PatientInfoDataTab()),
+                DataEntryView(child: PatientInfo()),
                 DataEntryView(child: SyncNotify()),
               ],
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class PatientInfoDataTab extends ConsumerWidget {
-  const PatientInfoDataTab({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen<AsyncValue<PatientInfoModel?>>(
-      patientInfoModelProvider,
-      (_, state) => state.showAlertDialogOnError(context),
-    );
-
-    final patientInfoModelValue = ref.watch(patientInfoModelProvider);
-
-    return AsyncValueSliverWidget(
-      value: patientInfoModelValue,
-      data: (patientInfoModel) {
-        // TODO(FireJuun): reimplement handling of null patientInfoModel
-        // if (patientInfoModel == null) {
-        //   return const SliverToBoxAdapter(
-        //     child: Center(child: Text('No info available')),
-        //   );
-        // }
-        return PatientInfo(
-          patientInfoModel: patientInfoModel ?? const PatientInfoModel(),
-        );
-      },
     );
   }
 }
