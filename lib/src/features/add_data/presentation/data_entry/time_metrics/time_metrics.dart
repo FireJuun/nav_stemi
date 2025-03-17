@@ -26,10 +26,10 @@ class TimeMetrics extends ConsumerWidget {
         final timeUnitLeftScene = timeMetricsModel?.timeUnitLeftScene;
         final timeOfAspirinGivenDecision =
             timeMetricsModel?.timeOfAspirinGivenDecision;
-        final wasAspirinGiven = timeMetricsModel?.wasAspirinGiven;
+        // final wasAspirinGiven = timeMetricsModel?.wasAspirinGiven;
         final timeCathLabNotifiedDecision =
             timeMetricsModel?.timeCathLabNotifiedDecision;
-        final wasCathLabNotified = timeMetricsModel?.wasCathLabNotified;
+        // final wasCathLabNotified = timeMetricsModel?.wasCathLabNotified;
         final timePatientArrivedAtDestination =
             timeMetricsModel?.timePatientArrivedAtDestination;
 
