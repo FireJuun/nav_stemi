@@ -165,8 +165,8 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
                                     lastName: () => value,
                                   );
 
-                                  /// These are called via `Form: onChanged`, but
-                                  /// some data fields need to be updated manually
+                                  /// These are called w/ `Form: onChanged`, but
+                                  /// some data fields need to update manually
                                   // _onFormDataChanged();
                                 });
                               },

@@ -24,8 +24,8 @@ class RouteService {
   Future<NearbyHospitals> getNearbyHospitalsFromCurrentLocation() async {
     final navigationSettings = navigationSettingsRepository.navigationSettings;
     final shouldSimulateLocation = navigationSettings.shouldSimulateLocation;
-    final simulationStartingLocation =
-        navigationSettings.simulationStartingLocation;
+    // final simulationStartingLocation =
+    //     navigationSettings.simulationStartingLocation;
 
     late final AppWaypoint origin;
 
