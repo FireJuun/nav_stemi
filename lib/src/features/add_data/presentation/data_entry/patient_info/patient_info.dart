@@ -29,8 +29,15 @@ class PatientInfo extends ConsumerStatefulWidget {
 
 class _PatientInfoState extends ConsumerState<PatientInfo> {
   final _formKey = GlobalKey<FormState>();
+  final _birthDateController = TextEditingController();
 
   PatientInfoModel _patientInfoModel = const PatientInfoModel();
+
+  @override
+  void dispose() {
+    _birthDateController.dispose();
+    super.dispose();
+  }
 
   void _onFormDataChanged() {
     final isValid = _formKey.currentState?.validate() ?? false;
@@ -62,7 +69,11 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (_patientInfoModel != patientInfoModel &&
               patientInfoModel != null) {
-            setState(() => _patientInfoModel = patientInfoModel);
+            setState(() {
+              _patientInfoModel = patientInfoModel;
+              _birthDateController.text =
+                  _patientInfoModel.birthDate?.toString() ?? '';
+            });
           }
         });
 
@@ -85,8 +96,8 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
                                 setState(() {
                                   _patientInfoModel = patientInfoModel;
 
-                                  /// using this instead of _updatePatientInfo(_)
-                                  /// so that cardiologist info isn't overwritten
+                                  /// using this instead of _updatePatientInfo
+                                  /// so that cardiologist isn't overwritten
                                   _onFormDataChanged();
                                 });
                               },
@@ -169,80 +180,24 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
                       children: [
                         Expanded(
                           flex: 2,
-                          child: PatientInfoTextField(
-                            label: 'Date of Birth',
-                            initialValue:
-                                _patientInfoModel.birthDate?.toString(),
-                            hint: 'MM/DD/YYYY',
+                          child: BirthDateInfo(
+                            formKey: _formKey,
+                            controller: _birthDateController,
                             onChanged: (value) {
-                              /// For this TextField, _onFormDataChanged
-                              /// Only works if updated manually
-                              if (value == null ||
-                                  value.isEmpty ||
-                                  value.length != 10) {
-                                setState(() {
-                                  _patientInfoModel =
-                                      _patientInfoModel.copyWith(
-                                    birthDate: () => null,
-                                  );
-                                  _onFormDataChanged();
-                                });
-                              } else {
-                                // TODO(FireJuun): implement date saving, only if valid
-                                final isValidDate =
-                                    _formKey.currentState?.validate() ?? false;
-
-                                if (isValidDate && value.length == 10) {
-                                  final newBirthDate =
-                                      _birthDateToStringDTO.tryParse(
-                                    value,
-                                    formats: _dateFormats,
-                                  );
-
-                                  setState(() {
-                                    _patientInfoModel =
-                                        _patientInfoModel.copyWith(
-                                      birthDate: () => newBirthDate,
+                              final newBirthDate = (value == null)
+                                  ? null
+                                  : _birthDateToStringDTO.tryParse(
+                                      value,
+                                      formats: _dateFormats,
                                     );
 
-                                    _onFormDataChanged();
-                                  });
-                                }
-                              }
-                            },
-                            keyboardType: TextInputType.phone,
-                            formatter: _birthDateFormatter,
-                            validator: (value) {
-                              /// only accepts MM/DD/YYYY format
-                              /// 10 characters long
-                              if (value == null ||
-                                  value.isEmpty ||
-                                  value.length != 10) {
-                                return null;
-                              }
+                              setState(() {
+                                _patientInfoModel = _patientInfoModel.copyWith(
+                                  birthDate: () => newBirthDate,
+                                );
 
-                              // if (value.length != 10) {
-                              // TODO(FireJuun): only show this when you click away
-                              //   return 'Some error message';
-                              // }
-
-                              /// Date formats used to parse the birth date
-                              /// from a string entered by the user
-                              final newBirthDate = _birthDateToStringDTO
-                                  .tryParse(value, formats: _dateFormats);
-                              if (newBirthDate == null) {
-                                return 'Invalid date format';
-                              }
-
-                              if (newBirthDate.isAfter(DateTime.now())) {
-                                return "Can't be in the future";
-                              } else if (newBirthDate.isBefore(
-                                DateTime.now().subtract(_oldestAgeDuration),
-                              )) {
-                                return 'Age too old';
-                              }
-
-                              return null;
+                                _onFormDataChanged();
+                              });
                             },
                             prefixIcon: IconButton(
                               icon: const Icon(Icons.date_range),
@@ -256,12 +211,18 @@ class _PatientInfoState extends ConsumerState<PatientInfo> {
                                   initialDatePickerMode: DatePickerMode.year,
                                   lastDate: now,
                                 );
+                                if (newBirthDate == null) {
+                                  return;
+                                }
 
                                 setState(() {
                                   _patientInfoModel =
                                       _patientInfoModel.copyWith(
                                     birthDate: () => newBirthDate,
                                   );
+
+                                  _birthDateController.text =
+                                      newBirthDate.toBirthDateString();
 
                                   _onFormDataChanged();
                                 });
@@ -347,8 +308,6 @@ class PatientInfoTextField extends StatefulWidget {
     required this.initialValue,
     required this.onChanged,
     this.prefixIcon,
-    this.validator,
-    this.formatter,
     this.hint,
     this.keyboardType,
     this.readOnly = false,
@@ -359,8 +318,6 @@ class PatientInfoTextField extends StatefulWidget {
   final String? initialValue;
   final FormFieldSetter<String>? onChanged;
   final Widget? prefixIcon;
-  final MaskTextInputFormatter? formatter;
-  final FormFieldValidator<String>? validator;
   final String? hint;
   final TextInputType? keyboardType;
   final bool readOnly;
@@ -383,9 +340,7 @@ class _PatientInfoTextFieldState extends State<PatientInfoTextField> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: _textEditingController,
-      validator: widget.validator,
       onChanged: widget.onChanged,
-      inputFormatters: (widget.formatter != null) ? [widget.formatter!] : null,
       keyboardType: widget.keyboardType,
       decoration: InputDecoration(
         prefixIcon: widget.prefixIcon,
@@ -394,6 +349,91 @@ class _PatientInfoTextFieldState extends State<PatientInfoTextField> {
         label: Text(widget.label, textAlign: TextAlign.center),
       ),
       readOnly: widget.readOnly,
+      onTapOutside: (PointerDownEvent event) {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+    );
+  }
+}
+
+class BirthDateInfo extends StatelessWidget {
+  const BirthDateInfo({
+    required this.controller,
+    required this.onChanged,
+    required this.formKey,
+    this.prefixIcon,
+    this.readOnly = false,
+    super.key,
+  });
+
+  final TextEditingController controller;
+  final FormFieldSetter<String> onChanged;
+  final GlobalKey<FormState> formKey;
+  final Widget? prefixIcon;
+  final bool readOnly;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      validator: (value) {
+        /// only accepts MM/DD/YYYY format
+        /// 10 characters long
+        if (value == null || value.isEmpty || value.length != 10) {
+          return null;
+        }
+
+        // if (value.length != 10) {
+        // TODO(FireJuun): only show this when you click away
+        //   return 'Some error message';
+        // }
+
+        /// Date formats used to parse the birth date
+        /// from a string entered by the user
+        final newBirthDate =
+            _birthDateToStringDTO.tryParse(value, formats: _dateFormats);
+        if (newBirthDate == null) {
+          return 'Invalid date format';
+        }
+
+        if (newBirthDate.isAfter(DateTime.now())) {
+          return "Can't be in the future";
+        } else if (newBirthDate.isBefore(
+          DateTime.now().subtract(_oldestAgeDuration),
+        )) {
+          return 'Age too old';
+        }
+
+        return null;
+      },
+      onChanged: (value) {
+        /// For this TextField, _onFormDataChanged
+        /// Only works if updated manually
+        if (value.isEmpty || value.length != 10) {
+          onChanged(value);
+        } else if (value.length == 10) {
+          // TODO(FireJuun): implement date saving, only if valid
+          final isValidDate = formKey.currentState?.validate() ?? false;
+
+          if (isValidDate && value.length == 10) {
+            final newBirthDate = _birthDateToStringDTO.tryParse(
+              value,
+              formats: _dateFormats,
+            );
+
+            onChanged(newBirthDate?.toString() ?? '');
+          }
+        }
+      },
+      inputFormatters: [_birthDateFormatter],
+      keyboardType: TextInputType.phone,
+      decoration: InputDecoration(
+        prefixIcon: prefixIcon,
+        filled: !readOnly,
+        hintText: 'MM/DD/YYYY'.hardcoded,
+        label: Text('Date of Birth'.hardcoded, textAlign: TextAlign.center),
+      ),
+      readOnly: readOnly,
       onTapOutside: (PointerDownEvent event) {
         FocusManager.instance.primaryFocus?.unfocus();
       },

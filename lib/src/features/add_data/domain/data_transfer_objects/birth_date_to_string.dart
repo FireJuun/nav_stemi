@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-final _dateFormat = DateFormat('MM-dd-yyyy');
+final _dateFormat = DateFormat('MM/dd/yyyy');
 
 /// Note: while 'MMddyyyy' is the normal format of your drivers license,
 /// it cannot be parsed by the intl package without further string manipulation
