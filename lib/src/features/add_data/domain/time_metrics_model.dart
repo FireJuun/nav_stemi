@@ -293,6 +293,9 @@ class TimeMetricsModel extends Equatable {
     return sortedEkgs.toSet();
   }
 
+  /// Returns the time of the first EKG, if avialable
+  DateTime? timeOfFirstEkg() => timeOfEkgs.firstOrNull;
+
   /// Tri-state boolean that checks for all data to be present,
   /// then checks to see if the time metric has been met.
   ///
@@ -301,7 +304,7 @@ class TimeMetricsModel extends Equatable {
   /// false -> no data present
   bool? hasEkgByFiveMin() {
     final timeArrived = timeArrivedAtPatient;
-    final firstEkg = timeOfEkgs.firstOrNull;
+    final firstEkg = timeOfFirstEkg();
 
     if (timeArrived == null || firstEkg == null) {
       /// No data present
