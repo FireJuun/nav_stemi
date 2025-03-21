@@ -1,0 +1,99 @@
+import 'package:fhir_r4/fhir_r4.dart';
+import 'package:nav_stemi/nav_stemi.dart';
+
+extension EncounterX on Encounter {
+  /// This tracks a single instance of STEMI care from an EMS perspective.
+  /// Timestamps and their NEMSIS data connections are provided
+
+  Encounter defaultEmsEncounter() {
+    /// These fields define an EMS Encounter, in case other types
+    /// are added in the future.
+    /// R4 Spec: https://hl7.org/fhir/R4/encounter.html
+    return Encounter(
+      status: EncounterStatus.in_progress,
+
+      /// R4 Spec: https://hl7.org/fhir/R4/v3/ActEncounterCode/vs.html
+      class_: Coding(
+        system: FhirUri('http://terminology.hl7.org/CodeSystem/v3-ActCode'),
+        code: FhirCode('FLD'),
+        display: FhirString('field'),
+      ),
+
+      /// R4 Spec: https://hl7.org/fhir/R4/v3/ActPriority/vs.html
+      priority: CodeableConcept(
+        coding: [
+          Coding(
+            system:
+                FhirUri('http://terminology.hl7.org/CodeSystem/v3-ActPriority'),
+            code: FhirCode('EM'),
+            display: FhirString('emergency'),
+          ),
+        ],
+      ),
+
+      /// R4 Spec: https://hl7.org/fhir/R4/valueset-service-type.html
+      serviceType: CodeableConcept(
+        coding: [
+          Coding(
+            system:
+                FhirUri('http://terminology.hl7.org/CodeSystem/service-type'),
+            code: FhirCode('226'),
+            display: FhirString('Ambulance'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Encounter updateLocations(TimeMetricsModel timeMetrics) {
+    final arrivedAtPatient = timeMetrics.timeArrivedAtPatient;
+    final firstEkg = timeMetrics.timeOfFirstEkg();
+    final unitLeftScene = timeMetrics.timeUnitLeftScene;
+    final patientArrivedAtDestination =
+        timeMetrics.timePatientArrivedAtDestination;
+
+    final locations = [
+      if (arrivedAtPatient != null)
+        EncounterLocation(
+          location: Reference(
+            reference: FhirString('arrivedAtPatient'),
+          ),
+          period: Period(
+            start: FhirDateTime.fromDateTime(arrivedAtPatient),
+            end: FhirDateTime.fromDateTime(arrivedAtPatient),
+          ),
+        ),
+      if (firstEkg != null)
+        EncounterLocation(
+          location: Reference(
+            reference: FhirString('firstEkg'),
+          ),
+          period: Period(
+            start: FhirDateTime.fromDateTime(firstEkg),
+            end: FhirDateTime.fromDateTime(firstEkg),
+          ),
+        ),
+      if (unitLeftScene != null)
+        EncounterLocation(
+          location: Reference(
+            reference: FhirString('unitLeftScene'),
+          ),
+          period: Period(
+            start: FhirDateTime.fromDateTime(unitLeftScene),
+            end: FhirDateTime.fromDateTime(unitLeftScene),
+          ),
+        ),
+      if (patientArrivedAtDestination != null)
+        EncounterLocation(
+          location: Reference(
+            reference: FhirString('patientArrivedAtDestination'),
+          ),
+          period: Period(
+            start: FhirDateTime.fromDateTime(patientArrivedAtDestination),
+            end: FhirDateTime.fromDateTime(patientArrivedAtDestination),
+          ),
+        ),
+    ];
+    return copyWith(location: locations);
+  }
+}

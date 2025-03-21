@@ -1,5 +1,7 @@
 export 'add_data/export.dart';
+export 'auth/export.dart';
 export 'count_up_timer/export.dart';
+export 'fhir_sync/export.dart';
 export 'home/export.dart';
 export 'navigate/export.dart';
 export 'preferences/export.dart';
