@@ -23,6 +23,11 @@ class Env {
   /// Designed to only request the info that you need, saving costs
   static String get routesApi => const String.fromEnvironment('ROUTES_API');
 
+  /// Google Sign In client ID for iOS
+  /// This is used to authenticate the user with Google services
+  static String get iosGoogleClientId =>
+      const String.fromEnvironment('IOS_GOOGLE_CLIENT_ID');
+
   /// Determine which Maps API key to show based on platform
   static String mapsApi() {
     if (Platform.isAndroid) {

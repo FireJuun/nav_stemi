@@ -26,7 +26,7 @@ final patientInfoRepositoryProvider =
 // ignore: unused_element
 typedef PatientInfoRepositoryRef
     = AutoDisposeProviderRef<PatientInfoRepository>;
-String _$patientInfoModelHash() => r'46ffc1ee0ae6be26d7f8d1ee09895b55dacf7b7a';
+String _$patientInfoModelHash() => r'28f807b518bc3de1048d71d7c37fafe16ae538a0';
 
 /// See also [patientInfoModel].
 @ProviderFor(patientInfoModel)
