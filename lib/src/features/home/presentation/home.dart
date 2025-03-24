@@ -157,6 +157,25 @@ class _HomeState extends ConsumerState<Home> {
                       gapH8,
                     ],
                   ),
+
+                /// temporary button to sign in with Google, for testing
+                // TODO(FireJuun): remove this button + gapH16 below
+                OutlinedButton(
+                  onPressed: () {
+                    GoogleAuthRepository().signIn().then((_) {
+                      if (context.mounted) {
+                        debugPrint('User signed in');
+                      }
+                    });
+                  },
+                  child: Text(
+                    'Login'.hardcoded,
+                    style: textTheme.headlineMedium!.apply(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+                gapH16,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
