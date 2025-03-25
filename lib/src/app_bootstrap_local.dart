@@ -31,6 +31,10 @@ class AppBootstrapLocal extends AppBootstrap {
     final prefs = await SharedPreferences.getInstance();
     final sharedPreferencesRepository = SharedPreferencesRepository(prefs);
 
+    // TODO(FireJuun): should this be somewhere else in the app?
+    /// this will determine first login / verification of the user
+    final authRepository = GoogleAuthRepository();
+
     final lastTheme = sharedPreferencesRepository.getAppTheme();
     final themeRepository = ThemeRepository(lastTheme);
     final navigationSettings =
@@ -44,6 +48,7 @@ class AppBootstrapLocal extends AppBootstrap {
     return ProviderContainer(
       overrides: [
         // repositories
+        authRepositoryProvider.overrideWithValue(authRepository),
         sharedPreferencesRepositoryProvider
             .overrideWithValue(sharedPreferencesRepository),
         navigationSettingsRepositoryProvider

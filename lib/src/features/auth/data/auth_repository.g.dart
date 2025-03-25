@@ -6,11 +6,11 @@ part of 'auth_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authRepositoryHash() => r'710adee13d0dc38c714409ffd3c1f136f07e11f9';
+String _$authRepositoryHash() => r'ab486c409da3d55224444a678ff3012ffc7fe776';
 
 /// See also [authRepository].
 @ProviderFor(authRepository)
-final authRepositoryProvider = AutoDisposeProvider<AuthRepository>.internal(
+final authRepositoryProvider = Provider<AuthRepository>.internal(
   authRepository,
   name: r'authRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,6 +22,23 @@ final authRepositoryProvider = AutoDisposeProvider<AuthRepository>.internal(
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef AuthRepositoryRef = AutoDisposeProviderRef<AuthRepository>;
+typedef AuthRepositoryRef = ProviderRef<AuthRepository>;
+String _$authStateChangesHash() => r'18f565d4162cf9112f7c66e46095fb53b485b484';
+
+/// See also [authStateChanges].
+@ProviderFor(authStateChanges)
+final authStateChangesProvider = StreamProvider<AppUser?>.internal(
+  authStateChanges,
+  name: r'authStateChangesProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$authStateChangesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef AuthStateChangesRef = StreamProviderRef<AppUser?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

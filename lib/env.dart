@@ -28,6 +28,11 @@ class Env {
   static String get iosGoogleClientId =>
       const String.fromEnvironment('IOS_GOOGLE_CLIENT_ID');
 
+  /// Base Fhir URI
+  /// This is used to connect to the Fhir server
+  static String get fhirBaseUri =>
+      const String.fromEnvironment('FHIR_BASE_URI');
+
   /// Determine which Maps API key to show based on platform
   static String mapsApi() {
     if (Platform.isAndroid) {

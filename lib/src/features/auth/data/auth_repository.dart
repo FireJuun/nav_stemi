@@ -8,20 +8,24 @@ part 'auth_repository.g.dart';
 /// https://github.com/bizz84/complete-flutter-course
 ///
 abstract class AuthRepository {
-  AuthRepository() {
-    init();
-  }
+  const AuthRepository();
+
   Stream<AppUser?> authStateChanges() => throw UnimplementedError();
   AppUser? get currentUser => throw UnimplementedError();
 
   void init() => throw UnimplementedError();
-  void dispose() => throw UnimplementedError();
 
   Future<void> signIn() async => throw UnimplementedError();
   Future<void> signOut() async => throw UnimplementedError();
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 AuthRepository authRepository(Ref ref) {
   throw UnimplementedError();
+}
+
+@Riverpod(keepAlive: true)
+Stream<AppUser?> authStateChanges(Ref ref) {
+  final authRepo = ref.watch(authRepositoryProvider);
+  return authRepo.authStateChanges();
 }
