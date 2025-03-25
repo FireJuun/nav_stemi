@@ -6,6 +6,6 @@ sealed class AppUser {}
 class GoogleAppUser extends AppUser {
   GoogleAppUser({required this.user, required this.client});
 
-  final GoogleSignInAccount? user;
+  final GoogleSignInAccount user;
   final auth.AuthClient client;
 }
