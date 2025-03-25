@@ -44,5 +44,22 @@ final patientInfoModelProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef PatientInfoModelRef = AutoDisposeStreamProviderRef<PatientInfoModel?>;
+String _$patientBirthDateHash() => r'80e47262d8598a182684fbc8db1ea510afc5f6f3';
+
+/// See also [patientBirthDate].
+@ProviderFor(patientBirthDate)
+final patientBirthDateProvider = AutoDisposeProvider<DateTime?>.internal(
+  patientBirthDate,
+  name: r'patientBirthDateProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$patientBirthDateHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef PatientBirthDateRef = AutoDisposeProviderRef<DateTime?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

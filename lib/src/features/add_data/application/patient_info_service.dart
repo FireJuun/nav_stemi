@@ -39,6 +39,24 @@ class PatientInfoService {
     setPatientInfoModel(merged);
   }
 
+  void setFirstName(String? firstName) {
+    final merged = patientInfoModel.copyWith(firstName: () => firstName);
+
+    setPatientInfoModel(merged);
+  }
+
+  void setMiddleName(String? middleName) {
+    final merged = patientInfoModel.copyWith(middleName: () => middleName);
+
+    setPatientInfoModel(merged);
+  }
+
+  void setLastName(String? lastName) {
+    final merged = patientInfoModel.copyWith(lastName: () => lastName);
+
+    setPatientInfoModel(merged);
+  }
+
   void setSexAtBirth(SexAtBirth? sexAtBirth) {
     final merged = patientInfoModel.copyWith(sexAtBirth: () => sexAtBirth);
 
@@ -47,6 +65,12 @@ class PatientInfoService {
 
   void setBirthDate(DateTime? birthDate) {
     final merged = patientInfoModel.copyWith(birthDate: () => birthDate);
+
+    setPatientInfoModel(merged);
+  }
+
+  void setCardiologist(String? cardiologist) {
+    final merged = patientInfoModel.copyWith(cardiologist: () => cardiologist);
 
     setPatientInfoModel(merged);
   }
