@@ -80,7 +80,7 @@ class ScannedLicenseInfo extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: PatientInfoTextField(
+              child: PatientEntryText(
                 readOnly: true,
                 label: 'First Name'.hardcoded,
                 onChanged: (_) {},
@@ -89,7 +89,7 @@ class ScannedLicenseInfo extends StatelessWidget {
             ),
             gapW16,
             Expanded(
-              child: PatientInfoTextField(
+              child: PatientEntryText(
                 readOnly: true,
                 label: 'Middle Name'.hardcoded,
                 onChanged: (_) {},
@@ -104,7 +104,7 @@ class ScannedLicenseInfo extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: PatientInfoTextField(
+                child: PatientEntryText(
                   readOnly: true,
                   label: 'Last Name'.hardcoded,
                   onChanged: (_) {},
@@ -118,7 +118,7 @@ class ScannedLicenseInfo extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: PatientInfoTextField(
+              child: PatientEntryText(
                 readOnly: true,
                 label: 'Date of Birth'.hardcoded,
                 onChanged: (_) {},

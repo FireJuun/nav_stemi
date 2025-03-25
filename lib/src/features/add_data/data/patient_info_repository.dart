@@ -29,3 +29,8 @@ Stream<PatientInfoModel?> patientInfoModel(Ref ref) {
   final patientInfoRepository = ref.watch(patientInfoRepositoryProvider);
   return patientInfoRepository.watchPatientInfoModel();
 }
+
+@riverpod
+DateTime? patientBirthDate(Ref ref) => ref.watch(
+      patientInfoModelProvider.select((model) => model.value?.birthDate),
+    );
