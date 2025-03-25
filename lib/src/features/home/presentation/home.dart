@@ -160,37 +160,58 @@ class _HomeState extends ConsumerState<Home> {
 
                 /// temporary button to sign in with Google, for testing
                 // TODO(FireJuun): remove these two buttons + gapH16 below
-                OutlinedButton(
-                  onPressed: () {
-                    ref.read(authStateChangesProvider).whenData((user) async {
-                      if (user != null && user is GoogleAppUser) {
-                        final response = await user.client.get(
-                          Uri.parse('${Env.fhirBaseUri}/CapabilityStatement'),
-                        );
+                if (false)
+                  Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // OutlinedButton(
+                          //   onPressed: () =>
+                          //       ref.read(authRepositoryProvider).signIn(),
+                          //   child: Text(
+                          //     'Login'.hardcoded,
+                          //     // style: textTheme.headlineMedium!.apply(
+                          //     //   color: Theme.of(context).colorScheme.onSurface,
+                          //     // ),
+                          //   ),
+                          // ),
+                          // gapW16,
+                          FilledButton(
+                            child: Text(
+                              'FHIR Request'.hardcoded,
+                              // style: textTheme.headlineMedium!.apply(
+                              //   color: Theme.of(context).colorScheme.onSurface,
+                              // ),
+                            ),
+                            onPressed: () {
+                              ref
+                                  .read(authStateChangesProvider)
+                                  .whenData((user) async {
+                                if (user != null && user is GoogleAppUser) {
+                                  final response = await user.client.get(
+                                    Uri.parse(
+                                      '${Env.fhirBaseUri}/CapabilityStatement',
+                                    ),
+                                  );
 
-                        debugPrint('Capability Statemtent requested...');
-                      } else {
-                        debugPrint('User is null or not a GoogleAppUser');
-                      }
-                    });
-                  },
-                  child: Text(
-                    'Capability Statement'.hardcoded,
-                    style: textTheme.headlineMedium!.apply(
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
+                                  debugPrint(
+                                    'Capability Statemtent requested...',
+                                  );
+                                } else {
+                                  debugPrint(
+                                    'User is null or not a GoogleAppUser',
+                                  );
+                                }
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      gapH32,
+                    ],
                   ),
-                ),
-                OutlinedButton(
-                  onPressed: () => ref.read(authRepositoryProvider).signIn(),
-                  child: Text(
-                    'Login'.hardcoded,
-                    style: textTheme.headlineMedium!.apply(
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
-                  ),
-                ),
-                gapH16,
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
