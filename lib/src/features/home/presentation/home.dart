@@ -159,15 +159,30 @@ class _HomeState extends ConsumerState<Home> {
                   ),
 
                 /// temporary button to sign in with Google, for testing
-                // TODO(FireJuun): remove this button + gapH16 below
+                // TODO(FireJuun): remove these two buttons + gapH16 below
                 OutlinedButton(
                   onPressed: () {
-                    GoogleAuthRepository().signIn().then((_) {
-                      if (context.mounted) {
-                        debugPrint('User signed in');
+                    ref.read(authStateChangesProvider).whenData((user) async {
+                      if (user != null && user is GoogleAppUser) {
+                        final response = await user.client.get(
+                          Uri.parse('${Env.fhirBaseUri}/CapabilityStatement'),
+                        );
+
+                        debugPrint('Capability Statemtent requested...');
+                      } else {
+                        debugPrint('User is null or not a GoogleAppUser');
                       }
                     });
                   },
+                  child: Text(
+                    'Capability Statement'.hardcoded,
+                    style: textTheme.headlineMedium!.apply(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+                OutlinedButton(
+                  onPressed: () => ref.read(authRepositoryProvider).signIn(),
                   child: Text(
                     'Login'.hardcoded,
                     style: textTheme.headlineMedium!.apply(
