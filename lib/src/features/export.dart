@@ -5,4 +5,5 @@ export 'fhir_sync/export.dart';
 export 'home/export.dart';
 export 'navigate/export.dart';
 export 'preferences/export.dart';
+export 'survey/export.dart';
 export 'theme/export.dart';
