@@ -35,6 +35,9 @@ class AppBootstrapLocal extends AppBootstrap {
     /// this will determine first login / verification of the user
     final authRepository = GoogleAuthRepository();
 
+    // Initialize Firebase Auth service for anonymous authentication
+    final firebaseAuthRepository = FirebaseAuthRepository();
+
     final lastTheme = sharedPreferencesRepository.getAppTheme();
     final themeRepository = ThemeRepository(lastTheme);
     final navigationSettings =
@@ -49,6 +52,8 @@ class AppBootstrapLocal extends AppBootstrap {
       overrides: [
         // repositories
         authRepositoryProvider.overrideWithValue(authRepository),
+        firebaseAuthRepositoryProvider
+            .overrideWithValue(firebaseAuthRepository),
         sharedPreferencesRepositoryProvider
             .overrideWithValue(sharedPreferencesRepository),
         navigationSettingsRepositoryProvider

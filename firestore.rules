@@ -1,9 +1,14 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Function to check if the user is authenticated
+    // Function to check if the user is authenticated (including anonymous)
     function isSignedIn() {
       return request.auth != null;
+    }
+    
+    // Function to check if the user is anonymous
+    function isAnonymous() {
+      return request.auth != null && request.auth.token.firebase.sign_in_provider == 'anonymous';
     }
     
     // Function to check if the user is an admin
@@ -14,17 +19,20 @@ service cloud.firestore {
     
     // Survey collection rules
     match /surveys/{surveyId} {
-      // Allow users to create their own surveys
+      // Allow users to create their own surveys (including anonymous)
       allow create: if isSignedIn();
       
-      // No reading or updating of surveys by regular users
-      allow read, update, delete: if isAdmin();
+      // Allow read for anonymous users too
+      allow read: if isSignedIn();
+      
+      // Only admins can update or delete
+      allow update, delete: if isAdmin();
     }
     
     // Hospitals collection rules
     match /hospitals-rcems/{hospitalId} {
-      // Allow all users to read hospital data
-      allow read: if isSignedIn();
+      // Allow all users to read hospital data (including anonymous)
+      allow read: if true;
       
       // Only admins can modify hospital data
       allow write: if isAdmin();

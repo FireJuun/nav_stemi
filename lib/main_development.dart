@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -11,9 +12,23 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Animate.restartOnHotReload = true;
 
+  // Initialize Firebase first
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Sign in anonymously if not already signed in
+  final currentUser = FirebaseAuth.instance.currentUser;
+  if (currentUser == null) {
+    try {
+      await FirebaseAuth.instance.signInAnonymously();
+      debugPrint('Anonymous authentication successful');
+    } catch (e) {
+      debugPrint('Error signing in anonymously: $e');
+    }
+  } else {
+    debugPrint('User already signed in: ${currentUser.uid}');
+  }
 
   // turn off the # in the URLs on the web
   usePathUrlStrategy();
