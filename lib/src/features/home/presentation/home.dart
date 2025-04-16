@@ -181,7 +181,7 @@ class _HomeState extends ConsumerState<Home> {
                             child: Text(
                               'FHIR Request'.hardcoded,
                               // style: textTheme.headlineMedium!.apply(
-                              //   color: Theme.of(context).colorScheme.onSurface,
+                              // color: Theme.of(context).colorScheme.onSurface,
                               // ),
                             ),
                             onPressed: () {
@@ -189,15 +189,19 @@ class _HomeState extends ConsumerState<Home> {
                                   .read(authStateChangesProvider)
                                   .whenData((user) async {
                                 if (user != null && user is GoogleAppUser) {
+                                  debugPrint(
+                                    'Capability Statemtent requested...',
+                                  );
+
                                   final response = await user.client.get(
                                     Uri.parse(
                                       '${Env.fhirBaseUri}/CapabilityStatement',
                                     ),
                                   );
 
-                                  debugPrint(
-                                    'Capability Statemtent requested...',
-                                  );
+                                  if (response.body.isNotEmpty) {
+                                    debugPrint('response obtained!');
+                                  }
                                 } else {
                                   debugPrint(
                                     'User is null or not a GoogleAppUser',
