@@ -1,0 +1,47 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Function to check if the user is authenticated
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    // Function to check if the user is an admin
+    function isAdmin() {
+      return isSignedIn() && 
+        exists(/databases/$(database)/documents/admin-users/$(request.auth.uid));
+    }
+    
+    // Survey collection rules
+    match /surveys/{surveyId} {
+      // Allow users to create their own surveys
+      allow create: if isSignedIn();
+      
+      // No reading or updating of surveys by regular users
+      allow read, update, delete: if isAdmin();
+    }
+    
+    // Hospitals collection rules
+    match /hospitals-rcems/{hospitalId} {
+      // Allow all users to read hospital data
+      allow read: if isSignedIn();
+      
+      // Only admins can modify hospital data
+      allow write: if isAdmin();
+    }
+    
+    // Admin users collection (to store admin UIDs)
+    match /admin-users/{userId} {
+      // Only admins can read the admin list
+      allow read: if isAdmin();
+      
+      // Only admins can modify the admin list
+      allow write: if isAdmin();
+    }
+    
+    // Deny access to all other collections by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
