@@ -160,7 +160,7 @@ class _HomeState extends ConsumerState<Home> {
 
                 /// temporary button to sign in with Google, for testing
                 // TODO(FireJuun): remove these two buttons + gapH16 below
-                if (false)
+                if (true)
                   Column(
                     children: [
                       Row(
