@@ -1,26 +1,29 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'survey_controller.dart';
+part of 'firebase_auth_repository.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$surveyControllerHash() => r'206c3dbe05465aecd73a86bd0060420391be4aaa';
+String _$firebaseAuthRepositoryHash() =>
+    r'bb0b85dba80caa7fb1d8afaf50ffe3c7f7f061ca';
 
-/// See also [SurveyController].
-@ProviderFor(SurveyController)
-final surveyControllerProvider =
-    AutoDisposeAsyncNotifierProvider<SurveyController, void>.internal(
-  SurveyController.new,
-  name: r'surveyControllerProvider',
+/// See also [firebaseAuthRepository].
+@ProviderFor(firebaseAuthRepository)
+final firebaseAuthRepositoryProvider =
+    Provider<FirebaseAuthRepository>.internal(
+  firebaseAuthRepository,
+  name: r'firebaseAuthRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$surveyControllerHash,
+      : _$firebaseAuthRepositoryHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$SurveyController = AutoDisposeAsyncNotifier<void>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef FirebaseAuthRepositoryRef = ProviderRef<FirebaseAuthRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
