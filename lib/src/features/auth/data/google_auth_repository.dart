@@ -35,8 +35,7 @@ class GoogleAuthRepository implements AuthRepository {
       (GoogleSignInAccount? newUser) async => setAppUser(newUser),
     );
 
-    final user = await _googleSignIn.signInSilently();
-    await setAppUser(user);
+    await signInSilently();
   }
 
   /// spec: https://pub.dev/packages/googleapis_auth
@@ -50,6 +49,18 @@ class GoogleAuthRepository implements AuthRepository {
       await setAppUser(user);
     } catch (e) {
       debugPrint('Error signing in with Google: $e');
+    }
+  }
+
+  Future<void> signInSilently() async {
+    try {
+      final user = await _googleSignIn.signInSilently();
+      if (user == null) {
+        throw Exception('Failed to sign in silently with Google');
+      }
+      await setAppUser(user);
+    } catch (e) {
+      debugPrint('Error signing in silently with Google: $e');
     }
   }
 
