@@ -33,6 +33,16 @@ class Env {
   static String get fhirBaseUri =>
       const String.fromEnvironment('FHIR_BASE_URI');
 
+  /// Service Account Email for testing purposes
+  /// This is used instead of Google Sign In for testing
+  static String get serviceAccountEmail =>
+      const String.fromEnvironment('SERVICE_ACCOUNT_EMAIL');
+
+  /// Service Account Private Key for testing purposes
+  /// This can be a PEM format or base64-encoded key for iOS compatibility
+  static String get serviceAccountPrivateKey =>
+      const String.fromEnvironment('SERVICE_ACCOUNT_PRIVATE_KEY');
+
   /// Determine which Maps API key to show based on platform
   static String mapsApi() {
     if (Platform.isAndroid) {

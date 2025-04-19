@@ -31,9 +31,16 @@ class AppBootstrapLocal extends AppBootstrap {
     final prefs = await SharedPreferences.getInstance();
     final sharedPreferencesRepository = SharedPreferencesRepository(prefs);
 
-    // TODO(FireJuun): should this be somewhere else in the app?
-    /// this will determine first login / verification of the user
-    final authRepository = GoogleAuthRepository();
+    // Choose the appropriate authentication repository based on environment
+    // Use TestAuthRepository when service account credentials are available
+    // Otherwise fall back to GoogleAuthRepository
+    final AuthRepository authRepository;
+    if (Env.serviceAccountEmail.isNotEmpty &&
+        Env.serviceAccountPrivateKey.isNotEmpty) {
+      authRepository = TestAuthRepository();
+    } else {
+      authRepository = GoogleAuthRepository();
+    }
 
     // Initialize Firebase Auth service for anonymous authentication
     final firebaseAuthRepository = FirebaseAuthRepository();

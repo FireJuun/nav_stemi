@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
+
 import 'package:nav_stemi/nav_stemi.dart';
 
 class Home extends ConsumerStatefulWidget {
@@ -166,17 +168,17 @@ class _HomeState extends ConsumerState<Home> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // OutlinedButton(
-                          //   onPressed: () =>
-                          //       ref.read(authRepositoryProvider).signIn(),
-                          //   child: Text(
-                          //     'Login'.hardcoded,
-                          //     // style: textTheme.headlineMedium!.apply(
-                          //     //   color: Theme.of(context).colorScheme.onSurface,
-                          //     // ),
-                          //   ),
-                          // ),
-                          // gapW16,
+                          OutlinedButton(
+                            onPressed: () =>
+                                ref.read(authRepositoryProvider).signIn(),
+                            child: Text(
+                              'Login'.hardcoded,
+                              // style: textTheme.headlineMedium!.apply(
+                              //   color: Theme.of(context).colorScheme.onSurface,
+                              // ),
+                            ),
+                          ),
+                          gapW16,
                           FilledButton(
                             child: Text(
                               'FHIR Request'.hardcoded,
@@ -188,23 +190,34 @@ class _HomeState extends ConsumerState<Home> {
                               ref
                                   .read(authStateChangesProvider)
                                   .whenData((user) async {
-                                if (user != null && user is GoogleAppUser) {
+                                if (user != null) {
                                   debugPrint(
-                                    'Capability Statemtent requested...',
+                                    'Capability Statement requested...',
                                   );
 
-                                  final response = await user.client.get(
-                                    Uri.parse(
-                                      '${Env.fhirBaseUri}/CapabilityStatement',
-                                    ),
-                                  );
+                                  http.Response? response;
+
+                                  switch (user) {
+                                    case ServiceAccountUser():
+                                      response = await user.client.get(
+                                        Uri.parse(
+                                          '${Env.fhirBaseUri}/CapabilityStatement',
+                                        ),
+                                      );
+                                    case GoogleAppUser():
+                                      response = await user.client.get(
+                                        Uri.parse(
+                                          '${Env.fhirBaseUri}/CapabilityStatement',
+                                        ),
+                                      );
+                                  }
 
                                   if (response.body.isNotEmpty) {
-                                    debugPrint('response obtained!');
+                                    debugPrint('Response obtained!');
                                   }
                                 } else {
                                   debugPrint(
-                                    'User is null or not a GoogleAppUser',
+                                    'User is null - please sign in first',
                                   );
                                 }
                               });
