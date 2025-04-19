@@ -75,22 +75,6 @@ class PatientInfoService {
     setPatientInfoModel(merged);
   }
 
-  void setDidGetAspirin({required bool? didGetAspirin}) {
-    final merged = patientInfoModel.copyWith(
-      didGetAspirin: () => didGetAspirin,
-    );
-
-    setPatientInfoModel(merged);
-  }
-
-  void setIsCathLabNotified({required bool? isCathLabNotified}) {
-    final merged = patientInfoModel.copyWith(
-      isCathLabNotified: () => isCathLabNotified,
-    );
-
-    setPatientInfoModel(merged);
-  }
-
   void clearPatientInfo() {
     patientInfoRepository.clearPatientInfoModel();
   }

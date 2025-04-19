@@ -8,16 +8,27 @@ extension ConditionX on Condition {
     required Reference patientRef,
     required Reference encounterRef,
     required DateTime dateTime,
-    bool isPositive = true,
+    bool isStemiActivated = true,
   }) {
     return copyWith(
       clinicalStatus: CodeableConcept(
         coding: [
+          if (isStemiActivated)
+            Coding(
+              system: FhirUri(
+                'http://terminology.hl7.org/CodeSystem/condition-clinical',
+              ),
+              code: FhirCode('active'),
+            ),
+        ],
+      ),
+      verificationStatus: CodeableConcept(
+        coding: [
           Coding(
             system: FhirUri(
-              'http://terminology.hl7.org/CodeSystem/condition-clinical',
+              'http://terminology.hl7.org/CodeSystem/condition-ver-status',
             ),
-            code: FhirCode('active'),
+            code: FhirCode(isStemiActivated ? 'provisional' : 'refuted'),
           ),
         ],
       ),
