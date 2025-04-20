@@ -26,6 +26,7 @@ class TimeMetricsModel extends Equatable {
     this.lockTimeCathLabNotifiedDecision = false,
     this.timePatientArrivedAtDestination,
     this.lockTimePatientArrivedAtDestination = false,
+    this.isDirty = true, // Default to true, so new data is marked for syncing
   });
 
   /// KEY start time of first medical contact
@@ -83,6 +84,11 @@ class TimeMetricsModel extends Equatable {
   final DateTime? timePatientArrivedAtDestination;
   final bool lockTimePatientArrivedAtDestination;
 
+  /// Indicates whether this model has changes that need to be synced to FHIR
+  /// - true: local changes need to be synced to FHIR
+  /// - false: model is in sync with FHIR resources
+  final bool isDirty;
+
   TimeMetricsModel copyWith({
     ValueGetter<DateTime?>? timeArrivedAtPatient,
     ValueGetter<bool>? lockTimeArrivedAtPatient,
@@ -101,6 +107,7 @@ class TimeMetricsModel extends Equatable {
     ValueGetter<bool>? lockTimeCathLabNotifiedDecision,
     ValueGetter<DateTime?>? timePatientArrivedAtDestination,
     ValueGetter<bool>? lockTimePatientArrivedAtDestination,
+    ValueGetter<bool>? isDirty,
   }) {
     /// Sort EKGs by time they were performed.
     /// This is preferred when updating EKG info.
@@ -156,6 +163,8 @@ class TimeMetricsModel extends Equatable {
           lockTimePatientArrivedAtDestination != null
               ? lockTimePatientArrivedAtDestination()
               : this.lockTimePatientArrivedAtDestination,
+      isDirty:
+          isDirty != null ? isDirty() : true, // Default to dirty on changes
     );
   }
 
@@ -183,6 +192,7 @@ class TimeMetricsModel extends Equatable {
           timePatientArrivedAtDestination?.millisecondsSinceEpoch,
       'lockTimePatientArrivedAtDestination':
           lockTimePatientArrivedAtDestination,
+      'isDirty': isDirty,
     };
   }
 
@@ -243,6 +253,7 @@ class TimeMetricsModel extends Equatable {
               : null,
       lockTimePatientArrivedAtDestination:
           map['lockTimePatientArrivedAtDestination'] as bool,
+      isDirty: map['isDirty'] != null ? map['isDirty'] as bool : true,
     );
   }
 
@@ -274,6 +285,7 @@ class TimeMetricsModel extends Equatable {
       lockTimeCathLabNotifiedDecision,
       timePatientArrivedAtDestination,
       lockTimePatientArrivedAtDestination,
+      isDirty,
     ];
   }
 
@@ -369,5 +381,17 @@ class TimeMetricsModel extends Equatable {
       /// Data present, but failed to meet the 60 minute requirement
       return null;
     }
+  }
+
+  /// Creates a copy of this model with [isDirty] set to false,
+  /// indicating it has been synced with FHIR
+  TimeMetricsModel markSynced() {
+    return copyWith(isDirty: () => false);
+  }
+
+  /// Creates a copy of this model with [isDirty] set to true,
+  /// indicating it has changes that need to be synced with FHIR
+  TimeMetricsModel markDirty() {
+    return copyWith(isDirty: () => true);
   }
 }

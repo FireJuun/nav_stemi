@@ -61,7 +61,7 @@ extension EncounterX on Encounter {
     /// These fields define an EMS Encounter, in case other types
     /// are added in the future.
     /// R4 Spec: https://hl7.org/fhir/R4/encounter.html
-    return Encounter(
+    return copyWith(
       status: EncounterStatus.in_progress,
 
       /// R4 Spec: https://hl7.org/fhir/R4/v3/ActEncounterCode/vs.html

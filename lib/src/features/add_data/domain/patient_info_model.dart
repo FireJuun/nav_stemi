@@ -14,6 +14,7 @@ class PatientInfoModel extends Equatable {
     this.birthDate,
     this.sexAtBirth,
     this.cardiologist,
+    this.isDirty = true, // Default to true, so new data is marked for syncing
   });
 
   final String? lastName;
@@ -24,6 +25,11 @@ class PatientInfoModel extends Equatable {
   final SexAtBirth? sexAtBirth;
   final String? cardiologist;
 
+  /// Indicates whether this model has changes that need to be synced to FHIR
+  /// - true: local changes need to be synced to FHIR
+  /// - false: model is in sync with FHIR resources
+  final bool isDirty;
+
   /// ValueGetter used to allow null values in the copyWith method
   /// spec: https://stackoverflow.com/a/73432242
   PatientInfoModel copyWith({
@@ -33,6 +39,7 @@ class PatientInfoModel extends Equatable {
     ValueGetter<DateTime?>? birthDate,
     ValueGetter<SexAtBirth?>? sexAtBirth,
     ValueGetter<String?>? cardiologist,
+    ValueGetter<bool>? isDirty,
   }) {
     return PatientInfoModel(
       lastName: lastName != null ? lastName() : this.lastName,
@@ -41,6 +48,8 @@ class PatientInfoModel extends Equatable {
       birthDate: birthDate != null ? birthDate() : this.birthDate,
       sexAtBirth: sexAtBirth != null ? sexAtBirth() : this.sexAtBirth,
       cardiologist: cardiologist != null ? cardiologist() : this.cardiologist,
+      isDirty:
+          isDirty != null ? isDirty() : true, // Default to dirty on changes
     );
   }
 
@@ -52,6 +61,7 @@ class PatientInfoModel extends Equatable {
       'birthDate': birthDate?.millisecondsSinceEpoch,
       'sexAtBirth': sexAtBirth,
       'cardiologist': cardiologist,
+      'isDirty': isDirty,
     };
   }
 
@@ -69,6 +79,7 @@ class PatientInfoModel extends Equatable {
           : null,
       cardiologist:
           map['cardiologist'] != null ? map['cardiologist'] as String : null,
+      isDirty: map['isDirty'] != null ? map['isDirty'] as bool : true,
     );
   }
 
@@ -90,6 +101,7 @@ class PatientInfoModel extends Equatable {
       birthDate,
       sexAtBirth,
       cardiologist,
+      isDirty,
     ];
   }
 
@@ -102,4 +114,16 @@ class PatientInfoModel extends Equatable {
 
   bool cardiologistInfoChecklistState() =>
       cardiologist != null && cardiologist!.isNotEmpty;
+
+  /// Creates a copy of this model with [isDirty] set to false,
+  /// indicating it has been synced with FHIR
+  PatientInfoModel markSynced() {
+    return copyWith(isDirty: () => false);
+  }
+
+  /// Creates a copy of this model with [isDirty] set to true,
+  /// indicating it has changes that need to be synced with FHIR
+  PatientInfoModel markDirty() {
+    return copyWith(isDirty: () => true);
+  }
 }
