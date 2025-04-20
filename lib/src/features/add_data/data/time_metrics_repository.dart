@@ -32,3 +32,11 @@ Stream<TimeMetricsModel?> timeMetricsModel(Ref ref) {
   final timeMetricsRepository = ref.watch(timeMetricsRepositoryProvider);
   return timeMetricsRepository.watchTimeMetrics();
 }
+
+@riverpod
+bool timeMetricsShouldSync(Ref ref) {
+  return ref.watch(
+        timeMetricsModelProvider.select((model) => model.value?.isDirty),
+      ) ??
+      false;
+}

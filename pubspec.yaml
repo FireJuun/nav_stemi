@@ -13,6 +13,7 @@ dependencies:
   csv: ^6.0.0
   dio: ^5.4.2+1
   duration: ^3.0.13 
+  easy_debounce: ^2.0.3
   equatable: ^2.0.5
   extension_google_sign_in_as_googleapis_auth: ^2.0.12
   fhir_r4: ^0.3.0-1
