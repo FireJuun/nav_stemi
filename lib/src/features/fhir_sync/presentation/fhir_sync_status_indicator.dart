@@ -19,8 +19,8 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final syncStatus = ref.watch(fhirOverallSyncStatusProvider);
-    final errorMessage = ref.watch(fhirSyncLastErrorMessageProvider);
+    final syncStatus = ref.watch(overallSyncStatusProvider);
+    final errorMessage = ref.watch(syncLastErrorMessageProvider);
 
     return Tooltip(
       message: _getTooltipMessage(syncStatus, errorMessage),
@@ -148,13 +148,15 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
         );
       case FhirSyncStatus.error:
         // Show error details and retry option
-        final errorMessage = ref.read(fhirSyncLastErrorMessageProvider);
-        showDialog(
+        final errorMessage = ref.read(syncLastErrorMessageProvider);
+        showDialog<void>(
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Sync Error'),
-            content: Text(errorMessage ??
-                'An unknown error occurred while syncing with the FHIR server'),
+            content: Text(
+              errorMessage ??
+                  '''An unknown error occurred while syncing with the FHIR server''',
+            ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
