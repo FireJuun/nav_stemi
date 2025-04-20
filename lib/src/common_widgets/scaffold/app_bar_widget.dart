@@ -47,6 +47,9 @@ class AppBarWidget extends ConsumerWidget implements PreferredSizeWidget {
         ],
       ),
       actions: [
+        // FHIR sync status indicator
+        const FhirSyncStatusIndicator(),
+
         // Profile icon button
         Padding(
           padding: const EdgeInsets.only(right: 8),

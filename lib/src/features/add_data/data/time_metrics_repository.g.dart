@@ -45,7 +45,7 @@ final timeMetricsModelProvider =
 // ignore: unused_element
 typedef TimeMetricsModelRef = AutoDisposeStreamProviderRef<TimeMetricsModel?>;
 String _$timeMetricsShouldSyncHash() =>
-    r'f5a5279af15faf23169b58aa2981b0ebaeb41fc8';
+    r'ab9c58d0464072aec9a47754d9c41408040eabc6';
 
 /// See also [timeMetricsShouldSync].
 @ProviderFor(timeMetricsShouldSync)
