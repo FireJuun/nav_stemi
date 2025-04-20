@@ -5,24 +5,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'fhir_sync_service.g.dart';
 
-/// Status of FHIR synchronization
-enum FhirSyncStatus {
-  /// Data is synced with FHIR server
-  synced,
-
-  /// Local changes need to be synced to FHIR server
-  dirty,
-
-  /// Currently syncing with FHIR server
-  syncing,
-
-  /// Not connected to FHIR server
-  offline,
-
-  /// Error occurred during sync
-  error
-}
-
 class FhirSyncService {
   // This class is responsible for syncing FHIR resources with the server.
   // It will handle the logic for fetching, updating, and deleting resources.
@@ -33,46 +15,24 @@ class FhirSyncService {
 
   final Ref ref;
 
-  // Track the current sync status
-  FhirSyncStatus _patientInfoSyncStatus = FhirSyncStatus.synced;
-  FhirSyncStatus _timeMetricsSyncStatus = FhirSyncStatus.synced;
-  String? _lastErrorMessage;
-
-  FhirSyncStatus get patientInfoSyncStatus => _patientInfoSyncStatus;
-  FhirSyncStatus get timeMetricsSyncStatus => _timeMetricsSyncStatus;
-  String? get lastErrorMessage => _lastErrorMessage;
-
-  /// Updates the patient info sync status and notifies listeners
+  /// Updates the patient info sync status
   void _updatePatientInfoSyncStatus(
     FhirSyncStatus status, [
     String? errorMessage,
   ]) {
-    _patientInfoSyncStatus = status;
-    if (errorMessage != null) {
-      _lastErrorMessage = errorMessage;
-    }
-    // Notify that patientInfoSyncStatus has changed
-    ref.invalidate(fhirPatientInfoSyncStatusProvider);
+    ref
+        .read(patientInfoSyncStatusRepositoryProvider)
+        .setStatus(status, errorMessage);
   }
 
-  /// Updates the time metrics sync status and notifies listeners
+  /// Updates the time metrics sync status
   void _updateTimeMetricsSyncStatus(
     FhirSyncStatus status, [
     String? errorMessage,
   ]) {
-    _timeMetricsSyncStatus = status;
-    if (errorMessage != null) {
-      _lastErrorMessage = errorMessage;
-    }
-    // Notify that timeMetricsSyncStatus has changed
-    ref.invalidate(fhirTimeMetricsSyncStatusProvider);
-  }
-
-  /// Updates the overall sync status and notifies listeners
-  void _updateOverallSyncStatus() {
-    // Overall status is the "worst" status between patient info and time metrics
-    // Invalidate to trigger a rebuild with the new status
-    ref.invalidate(fhirOverallSyncStatusProvider);
+    ref
+        .read(timeMetricsSyncStatusRepositoryProvider)
+        .setStatus(status, errorMessage);
   }
 
   void _init() {
@@ -86,7 +46,6 @@ class FhirSyncService {
             final model = ref.read(patientInfoModelProvider).value;
             if (model != null) {
               _updatePatientInfoSyncStatus(FhirSyncStatus.dirty);
-              _updateOverallSyncStatus();
 
               // Sync the patient info with FHIR with debouncing
               localDebouncer(
@@ -104,7 +63,6 @@ class FhirSyncService {
             final model = ref.read(timeMetricsModelProvider).value;
             if (model != null) {
               _updateTimeMetricsSyncStatus(FhirSyncStatus.dirty);
-              _updateOverallSyncStatus();
 
               // Sync the time metrics with FHIR with debouncing
               localDebouncer(
@@ -147,7 +105,6 @@ class FhirSyncService {
   Future<void> _syncPatientInfo(PatientInfoModel patientInfo) async {
     if (!patientInfo.isDirty) {
       _updatePatientInfoSyncStatus(FhirSyncStatus.synced);
-      _updateOverallSyncStatus();
       return;
     }
 
@@ -156,13 +113,11 @@ class FhirSyncService {
       final isConnected = await _isConnectedToFhirServer();
       if (!isConnected) {
         _updatePatientInfoSyncStatus(FhirSyncStatus.offline);
-        _updateOverallSyncStatus();
         return;
       }
 
       // Update sync status to syncing
       _updatePatientInfoSyncStatus(FhirSyncStatus.syncing);
-      _updateOverallSyncStatus();
 
       // Get the current FHIR resource references
       final refs = ref.read(fhirResourceReferencesNotifierProvider);
@@ -244,11 +199,9 @@ class FhirSyncService {
 
       // Update sync status to synced
       _updatePatientInfoSyncStatus(FhirSyncStatus.synced);
-      _updateOverallSyncStatus();
     } catch (e) {
       // Update sync status to error
       _updatePatientInfoSyncStatus(FhirSyncStatus.error, e.toString());
-      _updateOverallSyncStatus();
     }
   }
 
@@ -256,7 +209,6 @@ class FhirSyncService {
   Future<void> _syncTimeMetrics(TimeMetricsModel timeMetrics) async {
     if (!timeMetrics.isDirty) {
       _updateTimeMetricsSyncStatus(FhirSyncStatus.synced);
-      _updateOverallSyncStatus();
       return;
     }
 
@@ -265,13 +217,11 @@ class FhirSyncService {
       final isConnected = await _isConnectedToFhirServer();
       if (!isConnected) {
         _updateTimeMetricsSyncStatus(FhirSyncStatus.offline);
-        _updateOverallSyncStatus();
         return;
       }
 
       // Update sync status to syncing
       _updateTimeMetricsSyncStatus(FhirSyncStatus.syncing);
-      _updateOverallSyncStatus();
 
       // Get the current FHIR resource references
       final refs = ref.read(fhirResourceReferencesNotifierProvider);
@@ -286,7 +236,8 @@ class FhirSyncService {
       if (!refs.hasPatientReference) {
         await _syncPatientInfo(patientInfo);
         // Refresh references after patient sync
-        ref.refresh(fhirResourceReferencesNotifierProvider);
+        // TODO(FireJuun): should this be refresh or invalidate?
+        ref.invalidate(fhirResourceReferencesNotifierProvider);
       }
 
       // Use the TimeMetricsFhirDTO to convert and sync data
@@ -498,11 +449,9 @@ class FhirSyncService {
 
       // Update sync status to synced
       _updateTimeMetricsSyncStatus(FhirSyncStatus.synced);
-      _updateOverallSyncStatus();
     } catch (e) {
       // Update sync status to error
       _updateTimeMetricsSyncStatus(FhirSyncStatus.error, e.toString());
-      _updateOverallSyncStatus();
     }
   }
 
@@ -615,48 +564,4 @@ class FhirSyncService {
 @Riverpod(keepAlive: true)
 FhirSyncService fhirSyncService(Ref ref) {
   return FhirSyncService(ref);
-}
-
-/// Provides the status of patient info sync
-@Riverpod(keepAlive: true)
-FhirSyncStatus fhirPatientInfoSyncStatus(Ref ref) {
-  return ref.watch(fhirSyncServiceProvider).patientInfoSyncStatus;
-}
-
-/// Provides the status of time metrics sync
-@Riverpod(keepAlive: true)
-FhirSyncStatus fhirTimeMetricsSyncStatus(Ref ref) {
-  return ref.watch(fhirSyncServiceProvider).timeMetricsSyncStatus;
-}
-
-/// Provides the overall sync status (combined from patient info and time metrics)
-@Riverpod(keepAlive: true)
-FhirSyncStatus fhirOverallSyncStatus(Ref ref) {
-  final patientStatus = ref.watch(fhirPatientInfoSyncStatusProvider);
-  final timeMetricsStatus = ref.watch(fhirTimeMetricsSyncStatusProvider);
-
-  // Return the "worst" status between patient info and time metrics
-  if (patientStatus == FhirSyncStatus.error ||
-      timeMetricsStatus == FhirSyncStatus.error) {
-    return FhirSyncStatus.error;
-  }
-  if (patientStatus == FhirSyncStatus.offline ||
-      timeMetricsStatus == FhirSyncStatus.offline) {
-    return FhirSyncStatus.offline;
-  }
-  if (patientStatus == FhirSyncStatus.syncing ||
-      timeMetricsStatus == FhirSyncStatus.syncing) {
-    return FhirSyncStatus.syncing;
-  }
-  if (patientStatus == FhirSyncStatus.dirty ||
-      timeMetricsStatus == FhirSyncStatus.dirty) {
-    return FhirSyncStatus.dirty;
-  }
-  return FhirSyncStatus.synced;
-}
-
-/// Provides the last error message from sync operations
-@Riverpod(keepAlive: true)
-String? fhirSyncLastErrorMessage(Ref ref) {
-  return ref.watch(fhirSyncServiceProvider).lastErrorMessage;
 }
