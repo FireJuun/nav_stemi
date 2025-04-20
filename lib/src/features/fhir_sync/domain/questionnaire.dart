@@ -30,5 +30,15 @@ final encounterQuestionnaire = Questionnaire(
       text: FhirString('Timestamp of cath lab notification decision'),
       type: QuestionnaireItemType.dateTime,
     ),
+    QuestionnaireItem(
+      linkId: FhirString('wasAspirinGiven'),
+      text: FhirString('Was aspirin given?'),
+      type: QuestionnaireItemType.boolean,
+    ),
+    QuestionnaireItem(
+      linkId: FhirString('aspirinGivenDecisionTimestamp'),
+      text: FhirString('Timestamp of aspirin given decision'),
+      type: QuestionnaireItemType.dateTime,
+    ),
   ],
 );
