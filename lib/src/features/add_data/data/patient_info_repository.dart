@@ -34,3 +34,11 @@ Stream<PatientInfoModel?> patientInfoModel(Ref ref) {
 DateTime? patientBirthDate(Ref ref) => ref.watch(
       patientInfoModelProvider.select((model) => model.value?.birthDate),
     );
+
+@riverpod
+bool patientInfoShouldSync(Ref ref) {
+  return ref.watch(
+        patientInfoModelProvider.select((model) => model.value?.isDirty),
+      ) ??
+      false;
+}
