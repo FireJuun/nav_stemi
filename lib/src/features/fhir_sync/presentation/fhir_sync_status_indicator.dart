@@ -13,7 +13,7 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
 
   /// Whether to show a text label alongside the icon
   final bool showLabel;
-  
+
   /// Size of the icon
   final double size;
 
@@ -21,14 +21,14 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final syncStatus = ref.watch(fhirOverallSyncStatusProvider);
     final errorMessage = ref.watch(fhirSyncLastErrorMessageProvider);
-    
+
     return Tooltip(
       message: _getTooltipMessage(syncStatus, errorMessage),
       child: InkWell(
         onTap: () => _handleTap(context, ref, syncStatus),
         borderRadius: BorderRadius.circular(16),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -52,7 +52,7 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
       ),
     );
   }
-  
+
   /// Returns the appropriate icon for the current sync status
   IconData _getIconData(FhirSyncStatus status) {
     switch (status) {
@@ -68,11 +68,11 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
         return Icons.error_outline;
     }
   }
-  
+
   /// Returns the appropriate color for the current sync status
   Color _getIconColor(BuildContext context, FhirSyncStatus status) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     switch (status) {
       case FhirSyncStatus.synced:
         return colorScheme.primary;
@@ -86,7 +86,7 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
         return colorScheme.error;
     }
   }
-  
+
   /// Returns a user-friendly label for the current sync status
   String _getStatusLabel(FhirSyncStatus status) {
     switch (status) {
@@ -102,23 +102,24 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
         return 'Sync Error';
     }
   }
-  
+
   /// Returns an appropriate tooltip message for the current sync status
   String _getTooltipMessage(FhirSyncStatus status, String? errorMessage) {
     final baseMessage = switch (status) {
       FhirSyncStatus.synced => 'All data is synced with the FHIR server',
       FhirSyncStatus.dirty => 'You have unsaved changes that need to be synced',
       FhirSyncStatus.syncing => 'Currently syncing data with the FHIR server',
-      FhirSyncStatus.offline => 'You are currently offline. Changes will be synced when online',
+      FhirSyncStatus.offline =>
+        'You are currently offline. Changes will be synced when online',
       FhirSyncStatus.error => 'Error syncing with FHIR server',
     };
-    
+
     if (status == FhirSyncStatus.error && errorMessage != null) {
       return '$baseMessage: $errorMessage';
     }
     return baseMessage;
   }
-  
+
   /// Handles tap on the indicator
   void _handleTap(BuildContext context, WidgetRef ref, FhirSyncStatus status) {
     switch (status) {
@@ -128,7 +129,6 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
       case FhirSyncStatus.dirty:
         // Manually trigger sync
         ref.read(fhirSyncServiceProvider).manuallySyncAllData();
-        break;
       case FhirSyncStatus.syncing:
         // Show a message that sync is in progress
         ScaffoldMessenger.of(context).showSnackBar(
@@ -137,16 +137,15 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
             duration: Duration(seconds: 2),
           ),
         );
-        break;
       case FhirSyncStatus.offline:
         // Show a message about being offline
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('You are offline. Please connect to the internet to sync'),
+            content:
+                Text('You are offline. Please connect to the internet to sync'),
             duration: Duration(seconds: 3),
           ),
         );
-        break;
       case FhirSyncStatus.error:
         // Show error details and retry option
         final errorMessage = ref.read(fhirSyncLastErrorMessageProvider);
@@ -154,7 +153,8 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Sync Error'),
-            content: Text(errorMessage ?? 'An unknown error occurred while syncing with the FHIR server'),
+            content: Text(errorMessage ??
+                'An unknown error occurred while syncing with the FHIR server'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
@@ -170,7 +170,6 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
             ],
           ),
         );
-        break;
     }
   }
 }

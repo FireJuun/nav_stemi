@@ -1,6 +1,7 @@
 export 'composition.dart';
 export 'condition.dart';
 export 'encounter.dart';
+export 'fhir_resource_references.dart';
 export 'medication_administration.dart';
 export 'observation.dart';
 export 'patient.dart';
