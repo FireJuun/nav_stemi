@@ -55,7 +55,10 @@ class _HomeState extends ConsumerState<Home> {
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(homeControllerProvider);
+    ref.listen(
+      homeControllerProvider,
+      (_, state) => state.showAlertDialogOnError(context),
+    );
 
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
