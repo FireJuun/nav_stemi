@@ -14,7 +14,9 @@ class PatientInfoRepository {
 
   PatientInfoModel? get patientInfoModel => _store.value;
   set patientInfoModel(PatientInfoModel? patientInfo) =>
-      _store.value = patientInfo;
+      _store.value = patientInfo?.copyWith(
+        isDirty: () => true,
+      );
 
   void clearPatientInfoModel() => _store.value = null;
 }
