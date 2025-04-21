@@ -67,7 +67,7 @@ class FhirInitService {
         BundleEntry(
           resource: patient,
           request: BundleRequest(
-            method: HTTPVerb.POST,
+            method: HTTPVerb.pOST,
             url: FhirUri('Patient'),
           ),
         ),
@@ -110,7 +110,7 @@ class FhirInitService {
 
     // Create an Encounter with required fields for US Core
     final encounter = Encounter(
-      status: EncounterStatus.in_progress,
+      status: EncounterStatus.inProgress,
       class_: Coding(
         system: FhirUri('http://terminology.hl7.org/CodeSystem/v3-ActCode'),
         code: FhirCode('FLD'),
@@ -144,7 +144,7 @@ class FhirInitService {
         BundleEntry(
           resource: encounter,
           request: BundleRequest(
-            method: HTTPVerb.POST,
+            method: HTTPVerb.pOST,
             url: FhirUri('Encounter'),
           ),
         ),

@@ -63,13 +63,38 @@ class FhirSyncService {
             final model = ref.read(timeMetricsModelProvider).value;
             if (model != null) {
               _updateTimeMetricsSyncStatus(FhirSyncStatus.dirty);
+              print('TimeMetricsModel marked as dirty, scheduling sync');
 
               // Sync the time metrics with FHIR with debouncing
               localDebouncer(
                 'syncTimeMetrics',
-                () => _syncTimeMetrics(model),
+                () {
+                  print('Executing timeMetrics sync');
+                  _syncTimeMetrics(model);
+                },
               );
             }
+          }
+        },
+      )
+      // Also listen directly to the TimeMetricsModel to catch manual updates
+      ..listen<AsyncValue<TimeMetricsModel?>>(
+        timeMetricsModelProvider,
+        (previous, current) {
+          if (current.hasValue &&
+              current.value != null &&
+              current.value!.isDirty) {
+            print('TimeMetricsModel changed and is dirty, scheduling sync');
+            _updateTimeMetricsSyncStatus(FhirSyncStatus.dirty);
+
+            // Sync with debouncing
+            localDebouncer(
+              'syncTimeMetrics',
+              () {
+                print('Executing timeMetrics sync from model listener');
+                _syncTimeMetrics(current.value!);
+              },
+            );
           }
         },
       );
@@ -96,7 +121,7 @@ class FhirSyncService {
 
   /// Checks if the user is connected to the FHIR server
   Future<bool> _isConnectedToFhirServer() async {
-    return await ref.read(fhirServiceProvider).isConnected();
+    return ref.read(fhirServiceProvider).isConnected();
   }
 
   /// Sync patient info with FHIR server
@@ -158,7 +183,7 @@ class FhirSyncService {
           BundleEntry(
             resource: patient,
             request: BundleRequest(
-              method: refs.hasPatientReference ? HTTPVerb.PUT : HTTPVerb.POST,
+              method: refs.hasPatientReference ? HTTPVerb.pUT : HTTPVerb.pOST,
               url: FhirUri(
                 refs.hasPatientReference
                     ? 'Patient/${refs.patientId}'
@@ -171,8 +196,8 @@ class FhirSyncService {
               resource: practitioner,
               request: BundleRequest(
                 method: refs.hasPractitionerReference
-                    ? HTTPVerb.PUT
-                    : HTTPVerb.POST,
+                    ? HTTPVerb.pUT
+                    : HTTPVerb.pOST,
                 url: FhirUri(
                   refs.hasPractitionerReference
                       ? 'Practitioner/${refs.practitionerId}'
@@ -263,7 +288,7 @@ class FhirSyncService {
           BundleEntry(
             resource: encounter,
             request: BundleRequest(
-              method: HTTPVerb.PUT,
+              method: HTTPVerb.pUT,
               url: FhirUri('Encounter/${refs.encounterId}'),
             ),
           ),
@@ -276,7 +301,7 @@ class FhirSyncService {
           BundleEntry(
             resource: encounter,
             request: BundleRequest(
-              method: HTTPVerb.POST,
+              method: HTTPVerb.pOST,
               url: FhirUri('Encounter'),
             ),
           ),
@@ -306,7 +331,7 @@ class FhirSyncService {
             BundleEntry(
               resource: aspirinAdmin,
               request: BundleRequest(
-                method: HTTPVerb.PUT,
+                method: HTTPVerb.pUT,
                 url: FhirUri(
                   'MedicationAdministration/${refs.aspirinAdministrationId}',
                 ),
@@ -323,7 +348,7 @@ class FhirSyncService {
             BundleEntry(
               resource: aspirinAdmin,
               request: BundleRequest(
-                method: HTTPVerb.POST,
+                method: HTTPVerb.pOST,
                 url: FhirUri('MedicationAdministration'),
               ),
             ),
@@ -355,7 +380,7 @@ class FhirSyncService {
             BundleEntry(
               resource: stemiCondition,
               request: BundleRequest(
-                method: HTTPVerb.PUT,
+                method: HTTPVerb.pUT,
                 url: FhirUri('Condition/${refs.stemiConditionId}'),
               ),
             ),
@@ -371,7 +396,7 @@ class FhirSyncService {
             BundleEntry(
               resource: stemiCondition,
               request: BundleRequest(
-                method: HTTPVerb.POST,
+                method: HTTPVerb.pOST,
                 url: FhirUri('Condition'),
               ),
             ),
@@ -402,7 +427,7 @@ class FhirSyncService {
             BundleEntry(
               resource: questionnaire,
               request: BundleRequest(
-                method: HTTPVerb.PUT,
+                method: HTTPVerb.pUT,
                 url: FhirUri(
                   'QuestionnaireResponse/${refs.questionnaireResponseId}',
                 ),
@@ -419,7 +444,7 @@ class FhirSyncService {
             BundleEntry(
               resource: questionnaire,
               request: BundleRequest(
-                method: HTTPVerb.POST,
+                method: HTTPVerb.pOST,
                 url: FhirUri('QuestionnaireResponse'),
               ),
             ),
@@ -519,7 +544,7 @@ class FhirSyncService {
     } catch (e) {
       print('Error retrieving Encounter $id: $e');
       // Fallback to simulated response for demo mode
-      final empty = Encounter.empty();
+      final empty = defaultEmsEncounter;
       return empty.copyWith(id: FhirString(id));
     }
   }
@@ -538,8 +563,9 @@ class FhirSyncService {
     } catch (e) {
       print('Error retrieving MedicationAdministration $id: $e');
       // Fallback to simulated response for demo mode
-      final empty = MedicationAdministration.empty();
-      return empty.copyWith(id: FhirString(id));
+      // final empty = MedicationAdministration.empty();
+      // return empty.copyWith(id: FhirString(id));
+      rethrow;
     }
   }
 
@@ -555,8 +581,9 @@ class FhirSyncService {
     } catch (e) {
       print('Error retrieving Condition $id: $e');
       // Fallback to simulated response for demo mode
-      final empty = Condition.empty();
-      return empty.copyWith(id: FhirString(id));
+      // final empty = Condition.empty();
+      // return empty.copyWith(id: FhirString(id));
+      rethrow;
     }
   }
 
@@ -574,8 +601,9 @@ class FhirSyncService {
     } catch (e) {
       print('Error retrieving QuestionnaireResponse $id: $e');
       // Fallback to simulated response for demo mode
-      final empty = QuestionnaireResponse.empty();
-      return empty.copyWith(id: FhirString(id));
+      // final empty = QuestionnaireResponse.empty();
+      // return empty.copyWith(id: FhirString(id));
+      rethrow;
     }
   }
 }

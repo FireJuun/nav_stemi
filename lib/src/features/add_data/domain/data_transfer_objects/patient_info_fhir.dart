@@ -32,8 +32,8 @@ class PatientInfoFhirDTO {
 
     // Create PatientInfoModel with dirty flag set to false
     return PatientInfoModel(
-      lastName: lastName?.value,
-      firstName: firstName?.value,
+      lastName: lastName?.valueString,
+      firstName: firstName?.valueString,
       middleName: middleNames,
       birthDate: birthDate,
       sexAtBirth: sex,
@@ -98,11 +98,11 @@ class PatientInfoFhirDTO {
     final name = practitioner.name?.firstOrNull;
     final nameText = name?.text;
     if (nameText != null) {
-      return nameText.value;
+      return nameText.valueString;
     }
 
     // Otherwise, try to construct a name from family and given parts
-    final family = name?.family?.value;
+    final family = name?.family?.valueString;
     final given = name?.given?.join(' ');
 
     if (family != null || given != null) {

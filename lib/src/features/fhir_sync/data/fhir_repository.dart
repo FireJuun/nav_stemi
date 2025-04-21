@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:fhir_r4/fhir_r4.dart';
+import 'package:fhir_r4_at_rest/fhir_r4_at_rest.dart';
 import 'package:http/http.dart' as http;
 
 /// Repository for making FHIR API requests
@@ -21,15 +22,30 @@ class FhirRepository {
   /// Sends a transaction bundle to the FHIR server
   Future<Bundle> postTransactionBundle(Bundle bundle) async {
     try {
-      final response = await FhirTransactionRequest(
-        base: baseUri,
-        bundle: bundle.toJson(),
-        client: client,
-      ).sendRequest();
+      // Instead of using FhirTransactionRequest directly, we'll create a custom request
+      // that doesn't include the problematic _format parameter
+      final url = Uri.parse('$baseUri/');
+
+      // Prepare headers and body
+      final headers = <String, String>{
+        'Content-Type': 'application/fhir+json',
+        'Accept': 'application/fhir+json',
+        'Prefer': 'return=representation',
+      };
+
+      final requestBody = jsonEncode(bundle.toJson());
+
+      // Send the request
+      final response = await client.post(
+        url,
+        headers: headers,
+        body: requestBody,
+      );
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         return Bundle.fromJson(
-            jsonDecode(response.body) as Map<String, dynamic>);
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
       } else {
         throw FhirRequestException(
           'Failed to post transaction bundle: ${response.statusCode}',
@@ -55,16 +71,22 @@ class FhirRepository {
     required String id,
   }) async {
     try {
-      final response = await FhirReadRequest(
-        base: baseUri,
-        resourceType: resourceType,
-        id: id,
-        client: client,
-      ).sendRequest();
+      // Create a custom request instead of using FhirReadRequest
+      // to avoid the problematic _format parameter
+      final url = Uri.parse('$baseUri/$resourceType/$id');
+
+      // Prepare headers
+      final headers = <String, String>{
+        'Accept': 'application/fhir+json',
+      };
+
+      // Send the request
+      final response = await client.get(url, headers: headers);
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         return Resource.fromJson(
-            jsonDecode(response.body) as Map<String, dynamic>);
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
       } else {
         throw FhirRequestException(
           'Failed to read $resourceType/$id: ${response.statusCode}',
@@ -99,7 +121,8 @@ class FhirRepository {
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         return Resource.fromJson(
-            jsonDecode(response.body) as Map<String, dynamic>);
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
       } else {
         throw FhirRequestException(
           'Failed to create $resourceType: ${response.statusCode}',
@@ -136,7 +159,8 @@ class FhirRepository {
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         return Resource.fromJson(
-            jsonDecode(response.body) as Map<String, dynamic>);
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
       } else {
         throw FhirRequestException(
           'Failed to update $resourceType/$id: ${response.statusCode}',
@@ -179,7 +203,8 @@ class FhirRepository {
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         return Bundle.fromJson(
-            jsonDecode(response.body) as Map<String, dynamic>);
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
       } else {
         throw FhirRequestException(
           'Failed to search $resourceType: ${response.statusCode}',
@@ -202,14 +227,22 @@ class FhirRepository {
   /// Get the capability statement from the server
   Future<CapabilityStatement> getCapabilities() async {
     try {
-      final response = await FhirCapabilitiesRequest(
-        base: baseUri,
-        client: client,
-      ).sendRequest();
+      // Create a custom request instead of using FhirCapabilitiesRequest
+      // to avoid the problematic _format parameter
+      final url = Uri.parse('$baseUri/metadata');
+
+      // Prepare headers
+      final headers = <String, String>{
+        'Accept': 'application/fhir+json',
+      };
+
+      // Send the request
+      final response = await client.get(url, headers: headers);
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         return CapabilityStatement.fromJson(
-            jsonDecode(response.body) as Map<String, dynamic>);
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
       } else {
         throw FhirRequestException(
           'Failed to get capabilities: ${response.statusCode}',

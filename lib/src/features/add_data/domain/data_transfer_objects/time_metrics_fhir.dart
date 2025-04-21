@@ -34,7 +34,7 @@ class TimeMetricsFhirDTO {
 
     // Extract all time information from location resources
     for (final location in locations) {
-      final ref = location.location.reference?.value;
+      final ref = location.location.reference?.valueString;
       final startTime = location.period?.start != null
           ? DateTime.parse(location.period!.start.toString())
           : null;
@@ -101,12 +101,12 @@ class TimeMetricsFhirDTO {
       final items = stemiQuestionnaire.item ?? [];
       for (final item in items) {
         if (item.linkId == FhirString('wasCathLabNotified')) {
-          wasCathLabNotified = item.answer?.firstOrNull?.valueBoolean?.value;
+          wasCathLabNotified =
+              item.answer?.firstOrNull?.valueBoolean?.valueBoolean;
         }
         if (item.linkId == FhirString('cathLabNotificationDecisionTimestamp')) {
-          timeCathLabNotifiedDecision = DateTime.parse(
-            item.answer?.firstOrNull?.valueDateTime?.value ?? '',
-          );
+          timeCathLabNotifiedDecision =
+              item.answer?.firstOrNull?.valueDateTime?.valueDateTime;
         }
       }
     }
@@ -148,12 +148,12 @@ class TimeMetricsFhirDTO {
 
         /// blank encounter, with status, class, priority, and
         /// serviceType to be overridden via .asEmsEncounter()
-        Encounter.empty().asEmsEncounter();
+        defaultEmsEncounter;
 
     // Update encounter status based on locks
     final status = _areAllFieldsLocked(model)
         ? EncounterStatus.finished
-        : EncounterStatus.in_progress;
+        : EncounterStatus.inProgress;
 
     // Update locations using the existing extension
     return encounter.updateLocations(model).copyWith(status: status);
@@ -165,13 +165,13 @@ class TimeMetricsFhirDTO {
     QuestionnaireResponse? existingResponse,
   }) {
     // Create a new QuestionnaireResponse or use an existing one
-    final response = existingResponse ?? QuestionnaireResponse.empty();
+    final response = existingResponse ?? defaultQuestionnaireResponse;
 
     // Update the response with time metrics
     return response.updateTimeMetricAnswers(model).copyWith(
           status: _areAllFieldsLocked(model)
               ? QuestionnaireResponseStatus.completed
-              : QuestionnaireResponseStatus.in_progress,
+              : QuestionnaireResponseStatus.inProgress,
           encounter: encounter.thisReference,
         );
   }
@@ -190,15 +190,15 @@ class TimeMetricsFhirDTO {
     }
 
     // Create a new Administration or use an existing one
-    final administration =
-        existingAdministration ?? MedicationAdministration.empty();
+    final administration = existingAdministration ??
+        defaultMedicationAdministration(
+          patientId: patient.thisReference,
+          dateTime: model.timeOfAspirinGivenDecision!,
+          wasGiven: model.wasAspirinGiven!,
+        );
 
     // Use the existing extension to create an aspirin administration
-    return administration.aspirinGiven(
-      patient: patient,
-      dateTime: model.timeOfAspirinGivenDecision!,
-      wasGiven: model.wasAspirinGiven!,
-    );
+    return administration;
   }
 
   /// Converts TimeMetricsModel to a Condition for STEMI activation
@@ -216,7 +216,8 @@ class TimeMetricsFhirDTO {
     }
 
     // Create a new Condition or use an existing one
-    final condition = existingCondition ?? Condition.empty();
+    final condition =
+        existingCondition ?? Condition(subject: patient.thisReference);
 
     // Use the existing extension to create a STEMI observation
     return condition.stemiObservation(
