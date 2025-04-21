@@ -46,7 +46,8 @@ extension ObservationX on Observation {
   Observation ekgObservation({
     required Patient patient,
     required DateTime dateTime,
-    String? interpretation,
+    // TODO(FireJuun): accept interpretation inputs
+    // String? interpretation,
     String? notes,
     // Could include binary data for the actual EKG trace in the future
     Attachment? ekgData,
@@ -78,7 +79,6 @@ extension ObservationX on Observation {
       ),
       subject: Reference(reference: patient.id),
       effectiveX: FhirDateTime.fromDateTime(dateTime),
-      valueX: interpretation != null ? FhirString(interpretation) : null,
       note: notes != null ? [Annotation(text: FhirMarkdown(notes))] : null,
       // If we have binary EKG data in the future
       contained: ekgData != null

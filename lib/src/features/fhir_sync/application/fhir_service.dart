@@ -189,8 +189,8 @@ class FhirService {
       if (resource == null) continue;
 
       // Simulate the server assigning an ID if it's a POST
-      final isPost = entry.request?.method == HTTPVerb.POST;
-      final existingId = resource.id?.value;
+      final isPost = entry.request?.method == HTTPVerb.pOST;
+      final existingId = resource.id?.valueString;
       final id = isPost
           ? 'generated-${DateTime.now().millisecondsSinceEpoch}-${resource.resourceType}'
           : existingId;
@@ -214,7 +214,7 @@ class FhirService {
 
     // Create response bundle
     final responseBundle = Bundle(
-      type: BundleType.transaction_response,
+      type: BundleType.transactionResponse,
       entry: responseEntries,
     );
 

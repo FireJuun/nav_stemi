@@ -16,7 +16,8 @@ dependencies:
   easy_debounce: ^2.0.3
   equatable: ^2.0.5
   extension_google_sign_in_as_googleapis_auth: ^2.0.12
-  fhir_r4: ^0.3.0-1
+  fhir_r4: ^0.4.1
+  fhir_r4_at_rest: ^0.4.0
   file_picker: ^8.3.1
   firebase_auth: ^5.4.2
   firebase_core: ^3.11.0

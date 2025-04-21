@@ -7,7 +7,7 @@ extension QuestionnaireResponseX on QuestionnaireResponse {
     required Reference encounter,
   }) {
     return copyWith(
-      status: QuestionnaireResponseStatus.in_progress,
+      status: QuestionnaireResponseStatus.inProgress,
       authored: FhirDateTime.fromDateTime(DateTime.now()),
       subject: patient,
       encounter: encounter,
@@ -25,7 +25,7 @@ extension QuestionnaireResponseX on QuestionnaireResponse {
     final timeofAspirinGivenDecision = timeMetrics?.timeOfAspirinGivenDecision;
 
     return copyWith(
-      status: QuestionnaireResponseStatus.in_progress,
+      status: QuestionnaireResponseStatus.inProgress,
       authored: FhirDateTime.fromDateTime(DateTime.now()),
       item: [
         if (wasCathLabNotified != null)

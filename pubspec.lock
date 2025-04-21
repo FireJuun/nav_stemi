@@ -370,10 +370,18 @@ packages:
     dependency: "direct main"
     description:
       name: fhir_r4
-      sha256: "031d179d2fb56f2de975ac0c780325ce9223c3a0400ba8d1f7df4c99081238f8"
+      sha256: "2dff38ed8dbdce26d7cf64f32ce64364b7434830c1c7eda9fe676de3b1f438bf"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.0-1"
+    version: "0.4.1"
+  fhir_r4_at_rest:
+    dependency: "direct main"
+    description:
+      name: fhir_r4_at_rest
+      sha256: e53604e2289ffd9e04ffec7a8093fdf14f7c087655937549167ce039ec532e01
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.0"
   file:
     dependency: transitive
     description:
@@ -746,14 +754,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
-  hive_ce:
-    dependency: transitive
-    description:
-      name: hive_ce
-      sha256: ac66daee46ad46486a1ed12cf91e9d7479c875fb46889be8d2c96b557406647f
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.10.1"
   html:
     dependency: transitive
     description:
@@ -1367,14 +1367,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
-  ucum:
-    dependency: transitive
-    description:
-      name: ucum
-      sha256: e92bcd575e1ac33f0eb68d9f371625365f362083d0d20873b7a6850ee81cfb8b
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.6.0"
   units_converter:
     dependency: "direct main"
     description:
