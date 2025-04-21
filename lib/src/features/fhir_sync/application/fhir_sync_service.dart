@@ -186,7 +186,7 @@ class FhirSyncService {
       );
 
       // Send the bundle to the FHIR server
-      final responseBundle = await _sendFhirBundle(bundle);
+      final responseBundle = await sendFhirBundle(bundle);
 
       // Update our resource references with the server-assigned IDs
       ref
@@ -194,14 +194,14 @@ class FhirSyncService {
           .updateFromBundle(responseBundle);
 
       // Mark the model as synced in local storage
-      final repository = ref.read(patientInfoRepositoryProvider);
-      repository.patientInfoModel = patientInfo.markSynced();
+      ref.read(patientInfoRepositoryProvider).patientInfoModel?.markSynced();
 
       // Update sync status to synced
       _updatePatientInfoSyncStatus(FhirSyncStatus.synced);
     } catch (e) {
       // Update sync status to error
       _updatePatientInfoSyncStatus(FhirSyncStatus.error, e.toString());
+      rethrow;
     }
   }
 
@@ -436,7 +436,7 @@ class FhirSyncService {
       );
 
       // Send the bundle to the FHIR server
-      final responseBundle = await _sendFhirBundle(bundle);
+      final responseBundle = await sendFhirBundle(bundle);
 
       // Update our resource references with the server-assigned IDs
       ref
@@ -444,21 +444,24 @@ class FhirSyncService {
           .updateFromBundle(responseBundle);
 
       // Mark the model as synced in local storage
-      final repository = ref.read(timeMetricsRepositoryProvider);
-      repository.setTimeMetrics(timeMetrics.markSynced());
+      ref
+          .read(timeMetricsRepositoryProvider)
+          .setTimeMetrics(timeMetrics.markSynced());
 
       // Update sync status to synced
       _updateTimeMetricsSyncStatus(FhirSyncStatus.synced);
     } catch (e) {
       // Update sync status to error
       _updateTimeMetricsSyncStatus(FhirSyncStatus.error, e.toString());
+
+      rethrow;
     }
   }
 
   // Helper methods for FHIR resource manipulation
 
   /// Sends a FHIR transaction bundle to the server and returns the response
-  Future<Bundle> _sendFhirBundle(Bundle bundle) async {
+  Future<Bundle> sendFhirBundle(Bundle bundle) async {
     // TODO: Implement actual API call to FHIR server
     // For now, we'll simulate a response with generated IDs
 

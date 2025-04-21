@@ -54,30 +54,33 @@ extension PatientX on Patient {
 
   Patient updatePatientInfo(PatientInfoModel patientInfo) {
     final birthdate = patientInfo.birthDate;
-    assert(
-      birthdate != null,
-      'Patient birthdate cannot be null',
-    );
+    // Remove assertion that was causing the exception
 
     final birthGender = switch (patientInfo.sexAtBirth) {
       SexAtBirth.male => AdministrativeGender.male,
       SexAtBirth.female => AdministrativeGender.female,
       SexAtBirth.other => AdministrativeGender.other,
       SexAtBirth.unknown => AdministrativeGender.unknown,
-      null => AdministrativeGender.empty()
+      null => null
     };
 
     return copyWith(
       name: [
         HumanName(
-          family: FhirString(patientInfo.lastName),
+          family: (patientInfo.lastName != null)
+              ? FhirString(patientInfo.lastName)
+              : null,
           given: [
-            FhirString(patientInfo.firstName),
-            FhirString(patientInfo.middleName),
+            if (patientInfo.firstName != null)
+              FhirString(patientInfo.firstName),
+            if (patientInfo.middleName != null)
+              FhirString(patientInfo.middleName),
           ],
         ),
       ],
-      birthDate: FhirDate.fromDateTime(birthdate!),
+      // Handle null birthdate by not updating it
+      birthDate:
+          birthdate != null ? FhirDate.fromDateTime(birthdate) : birthDate,
       gender: birthGender,
     );
   }
