@@ -1,4 +1,6 @@
 import 'package:fhir_r4/fhir_r4.dart';
+import 'package:flutter/foundation.dart';
+import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'fhir_resource_references.g.dart';
@@ -161,41 +163,90 @@ class FhirResourceReferencesNotifier extends _$FhirResourceReferencesNotifier {
   void updateFromBundle(Bundle responseBundle) {
     if (responseBundle.entry == null) return;
 
+    // Add debug logging to help troubleshoot
+    debugPrint(
+      'Processing response bundle with ${responseBundle.entry!.length} entries',
+    );
+
     for (final entry in responseBundle.entry!) {
-      final resource = entry.resource;
-      final id = resource?.id?.value;
+      // Extract resource type and ID from the location field
+      // Location format is: BaseUri/ResourceType/id/_history/version
+      String? resourceType;
+      String? id;
 
-      if (id == null || id.isEmpty) continue;
+      // Try to extract from response.location
+      if (entry.response?.location != null) {
+        final location = entry.response!.location!.value.toString();
+        debugPrint('Parsing location: $location');
 
-      if (resource is Patient) {
+        // Remove the base URI from the location
+        final baseUri = Env.fhirBaseUri;
+        var path = location;
+
+        if (location.startsWith(baseUri)) {
+          path = location.substring(baseUri.length);
+          // Remove leading slash if present
+          if (path.startsWith('/')) {
+            path = path.substring(1);
+          }
+        }
+
+        // Split the path to extract resource type and ID
+        // Format should be: ResourceType/id/_history/version
+        final pathParts = path.split('/');
+
+        if (pathParts.length >= 2) {
+          resourceType = pathParts[0];
+          id = pathParts[1];
+          debugPrint(
+              'Extracted from location: resourceType=$resourceType, id=$id');
+        }
+      }
+      // Fallback to entry.resource if available
+      else if (entry.resource != null && entry.resource!.id != null) {
+        resourceType = entry.resource!.resourceType.toString();
+        id = entry.resource!.id!.value;
+        debugPrint(
+            'Extracted from resource: resourceType=$resourceType, id=$id');
+      }
+
+      if (id == null || id.isEmpty) {
+        debugPrint('No ID found in bundle entry, skipping');
+        continue;
+      }
+
+      if (resourceType == null) {
+        debugPrint('No resource type found for ID: $id, skipping');
+        continue;
+      }
+
+      debugPrint('Processing resource of type: $resourceType with ID: $id');
+
+      // Update the appropriate reference based on resource type
+      if (resourceType == 'Patient') {
+        debugPrint('Updating Patient ID to: $id');
         updatePatientId(id);
-      } else if (resource is Practitioner) {
+      } else if (resourceType == 'Practitioner') {
         updatePractitionerId(id);
-      } else if (resource is Encounter) {
+      } else if (resourceType == 'Encounter') {
         updateEncounterId(id);
-      } else if (resource is Condition) {
-        // Check if this is the STEMI condition
-        final coding = resource.code?.coding?.firstOrNull;
-        final isStemiCondition = coding?.code?.value == '401303003' ||
-            coding?.display?.value?.contains('STEMI') == true;
-        if (isStemiCondition) {
-          updateStemiConditionId(id);
-        }
-      } else if (resource is MedicationAdministration) {
-        final medicationX = resource.medicationX;
-        // Check if this is the aspirin administration
-        final coding = medicationX is CodeableConcept
-            ? medicationX.coding?.firstOrNull
-            : null;
-        final isAspirinAdmin = coding?.code?.value == '317300' ||
-            coding?.display?.value?.contains('Aspirin') == true;
-        if (isAspirinAdmin) {
-          updateAspirinAdministrationId(id);
-        }
-      } else if (resource is QuestionnaireResponse) {
+      } else if (resourceType == 'Condition') {
+        // For conditions we need to check if it's STEMI, but we may not have
+        // the full resource available in the response
+        // Store it for now, the actual validation can happen when we fetch the full resource
+        updateStemiConditionId(id);
+      } else if (resourceType == 'MedicationAdministration') {
+        // For medication administration, similar to conditions
+        updateAspirinAdministrationId(id);
+      } else if (resourceType == 'QuestionnaireResponse') {
         updateQuestionnaireResponseId(id);
       }
     }
+
+    // Print the final state for debugging
+    debugPrint(
+      'Updated references: Patient=${state.patientId}, Encounter=${state.encounterId}',
+    );
   }
 
   /// Resets all references (e.g., when starting a new encounter)

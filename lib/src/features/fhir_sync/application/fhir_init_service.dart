@@ -2,6 +2,7 @@ import 'package:fhir_r4/fhir_r4.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 part 'fhir_init_service.g.dart';
 
@@ -32,8 +33,32 @@ class FhirInitService {
 
   /// Create a blank Patient resource and store its ID
   Future<void> _createBlankPatient() async {
-    // Create a minimal Patient resource
-    final patient = Patient.empty();
+    // First check again if we already have a patient reference
+    // This prevents duplicate creation in race conditions
+    final currentRefs = ref.read(fhirResourceReferencesNotifierProvider);
+    if (currentRefs.hasPatientReference) {
+      // Patient already exists, no need to create another one
+      return;
+    }
+
+    // Create a Patient resource directly with the required fields
+    final patient = Patient(
+      identifier: [
+        Identifier(
+          system: FhirUri('https://navstemi.org/patient'),
+          value: FhirString(const Uuid().v4()),
+          use: IdentifierUse.official,
+        ),
+      ],
+      name: [
+        HumanName(
+          family: FhirString('Temporary'),
+          given: [FhirString('Patient')],
+          use: NameUse.temp,
+        ),
+      ],
+      gender: AdministrativeGender.unknown,
+    );
 
     // Create a transaction bundle with the patient
     final bundle = Bundle(
@@ -61,26 +86,63 @@ class FhirInitService {
 
   /// Create a blank Encounter resource and store its ID
   Future<void> _createBlankEncounter() async {
-    // Get the patient reference
-    final refs = ref.read(fhirResourceReferencesNotifierProvider);
-    if (!refs.hasPatientReference) {
-      // This shouldn't happen because we're checking before calling,
-      // but just in case
-      await _createBlankPatient();
+    // First check again if we already have an encounter reference
+    // This prevents duplicate creation in race conditions
+    final currentRefs = ref.read(fhirResourceReferencesNotifierProvider);
+    if (currentRefs.hasEncounterReference) {
+      // Encounter already exists, no need to create another one
+      return;
     }
 
-    // Create a minimal Encounter resource linked to the patient
-    final encounter = Encounter.empty();
-    final patientRef =
-        ref.read(fhirResourceReferencesNotifierProvider).patientReference;
-    final encounterWithPatient = encounter.copyWith(subject: patientRef);
+    // Ensure we have a patient reference before creating an encounter
+    if (!currentRefs.hasPatientReference) {
+      await _createBlankPatient();
+      // Read the references again after patient creation
+    }
+
+    // Get the updated patient reference
+    final updatedRefs = ref.read(fhirResourceReferencesNotifierProvider);
+    final patient = updatedRefs.patientReference;
+
+    if (patient == null) {
+      throw Exception('Cannot create Encounter: Patient reference is null');
+    }
+
+    // Create an Encounter with required fields for US Core
+    final encounter = Encounter(
+      status: EncounterStatus.in_progress,
+      class_: Coding(
+        system: FhirUri('http://terminology.hl7.org/CodeSystem/v3-ActCode'),
+        code: FhirCode('FLD'),
+        display: FhirString('field'),
+      ),
+      // Add the required 'type' for US Core compliance
+      type: [
+        CodeableConcept(
+          coding: [
+            Coding(
+              system:
+                  FhirUri('http://terminology.hl7.org/CodeSystem/v3-ActCode'),
+              code: FhirCode('AMB'),
+              display: FhirString('ambulatory'),
+            ),
+          ],
+          text: FhirString('Ambulatory encounter'),
+        ),
+      ],
+      // Ensure subject is correctly set to the patient reference
+      subject: patient,
+      period: Period(
+        start: FhirDateTime.fromDateTime(DateTime.now()),
+      ),
+    );
 
     // Create a transaction bundle with the encounter
     final bundle = Bundle(
       type: BundleType.transaction,
       entry: [
         BundleEntry(
-          resource: encounterWithPatient,
+          resource: encounter,
           request: BundleRequest(
             method: HTTPVerb.POST,
             url: FhirUri('Encounter'),
