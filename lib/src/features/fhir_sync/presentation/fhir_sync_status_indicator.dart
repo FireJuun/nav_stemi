@@ -21,9 +21,10 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final syncStatus = ref.watch(overallSyncStatusProvider);
     final errorMessage = ref.watch(syncLastErrorMessageProvider);
+    final isSyncPaused = ref.watch(fhirSyncServiceProvider).isSyncPaused;
 
     return Tooltip(
-      message: _getTooltipMessage(syncStatus, errorMessage),
+      message: _getTooltipMessage(syncStatus, errorMessage, isSyncPaused),
       child: InkWell(
         onTap: () => _handleTap(context, ref, syncStatus),
         borderRadius: BorderRadius.circular(16),
@@ -32,17 +33,41 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                _getIconData(syncStatus),
-                color: _getIconColor(context, syncStatus),
-                size: size,
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Icon(
+                    _getIconData(syncStatus, isSyncPaused),
+                    color: _getIconColor(context, syncStatus, isSyncPaused),
+                    size: size,
+                  ),
+                  if (isSyncPaused)
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surface,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Theme.of(context).colorScheme.surface,
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.pause,
+                          color: Theme.of(context).colorScheme.error,
+                          size: size / 2,
+                        ),
+                      ),
+                    ),
+                ],
               ),
               if (showLabel) ...[
                 const SizedBox(width: 8),
                 Text(
-                  _getStatusLabel(syncStatus),
+                  _getStatusLabel(syncStatus, isSyncPaused),
                   style: TextStyle(
-                    color: _getIconColor(context, syncStatus),
+                    color: _getIconColor(context, syncStatus, isSyncPaused),
                   ),
                 ),
               ],
@@ -54,7 +79,11 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
   }
 
   /// Returns the appropriate icon for the current sync status
-  IconData _getIconData(FhirSyncStatus status) {
+  IconData _getIconData(FhirSyncStatus status, bool isSyncPaused) {
+    if (isSyncPaused) {
+      return Icons.cloud_off;
+    }
+
     switch (status) {
       case FhirSyncStatus.synced:
         return Icons.cloud_done;
@@ -70,7 +99,12 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
   }
 
   /// Returns the appropriate color for the current sync status
-  Color _getIconColor(BuildContext context, FhirSyncStatus status) {
+  Color _getIconColor(
+      BuildContext context, FhirSyncStatus status, bool isSyncPaused) {
+    if (isSyncPaused) {
+      return Colors.grey;
+    }
+
     final colorScheme = Theme.of(context).colorScheme;
 
     switch (status) {
@@ -88,7 +122,11 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
   }
 
   /// Returns a user-friendly label for the current sync status
-  String _getStatusLabel(FhirSyncStatus status) {
+  String _getStatusLabel(FhirSyncStatus status, bool isSyncPaused) {
+    if (isSyncPaused) {
+      return 'Sync Paused';
+    }
+
     switch (status) {
       case FhirSyncStatus.synced:
         return 'Synced';
@@ -104,7 +142,12 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
   }
 
   /// Returns an appropriate tooltip message for the current sync status
-  String _getTooltipMessage(FhirSyncStatus status, String? errorMessage) {
+  String _getTooltipMessage(
+      FhirSyncStatus status, String? errorMessage, bool isSyncPaused) {
+    if (isSyncPaused) {
+      return 'Synchronization is paused. Click to resume or manage sync.';
+    }
+
     final baseMessage = switch (status) {
       FhirSyncStatus.synced => 'All data is synced with the FHIR server',
       FhirSyncStatus.dirty => 'You have unsaved changes that need to be synced',
@@ -122,56 +165,78 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
 
   /// Handles tap on the indicator
   void _handleTap(BuildContext context, WidgetRef ref, FhirSyncStatus status) {
-    switch (status) {
-      case FhirSyncStatus.synced:
-        // Already synced, nothing to do
-        break;
-      case FhirSyncStatus.dirty:
-        // Manually trigger sync
-        ref.read(fhirSyncServiceProvider).manuallySyncAllData();
-      case FhirSyncStatus.syncing:
-        // Show a message that sync is in progress
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Sync is already in progress'),
-            duration: Duration(seconds: 2),
+    final syncService = ref.read(fhirSyncServiceProvider);
+    final isSyncPaused = syncService.isSyncPaused;
+
+    // Show dialog with sync options
+    showDialog<void>(
+      context: context,
+      builder: (context) =>
+          _buildSyncDialog(context, ref, status, isSyncPaused),
+    );
+  }
+
+  /// Builds a dialog with sync management options
+  Widget _buildSyncDialog(BuildContext context, WidgetRef ref,
+      FhirSyncStatus status, bool isSyncPaused) {
+    final syncService = ref.read(fhirSyncServiceProvider);
+    final errorMessage = ref.read(syncLastErrorMessageProvider);
+
+    return AlertDialog(
+      title: Text(isSyncPaused ? 'Sync Paused' : 'Sync Management'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            isSyncPaused
+                ? 'FHIR synchronization is currently paused.'
+                : 'Current status: ${_getStatusLabel(status, false)}',
           ),
-        );
-      case FhirSyncStatus.offline:
-        // Show a message about being offline
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content:
-                Text('You are offline. Please connect to the internet to sync'),
-            duration: Duration(seconds: 3),
-          ),
-        );
-      case FhirSyncStatus.error:
-        // Show error details and retry option
-        final errorMessage = ref.read(syncLastErrorMessageProvider);
-        showDialog<void>(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Sync Error'),
-            content: Text(
-              errorMessage ??
-                  '''An unknown error occurred while syncing with the FHIR server''',
+          const SizedBox(height: 8),
+          if (status == FhirSyncStatus.error && errorMessage != null) ...[
+            const SizedBox(height: 8),
+            Text(
+              'Error: $errorMessage',
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
             ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('DISMISS'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  ref.read(fhirSyncServiceProvider).manuallySyncAllData();
-                },
-                child: const Text('RETRY'),
-              ),
-            ],
+          ],
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('DISMISS'),
+        ),
+        if (status == FhirSyncStatus.error || status == FhirSyncStatus.dirty)
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              syncService.manuallySyncAllData();
+            },
+            child: const Text('RETRY SYNC'),
           ),
-        );
-    }
+        if (isSyncPaused)
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              syncService.resumeSyncing();
+            },
+            child: const Text('RESUME SYNC'),
+          )
+        else
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              syncService.pauseSyncing();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: Theme.of(context).colorScheme.onError,
+            ),
+            child: const Text('PAUSE SYNC'),
+          ),
+      ],
+    );
   }
 }

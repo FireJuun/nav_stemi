@@ -13,8 +13,9 @@ extension EncounterX on Encounter {
       if (arrivedAtPatient != null)
         EncounterLocation(
           location: Reference(
-            reference: FhirString('arrivedAtPatient'),
+            display: FhirString('arrivedAtPatient'),
           ),
+          status: EncounterLocationStatus.active,
           period: Period(
             start: FhirDateTime.fromDateTime(arrivedAtPatient),
             end: FhirDateTime.fromDateTime(arrivedAtPatient),
@@ -23,8 +24,9 @@ extension EncounterX on Encounter {
       if (firstEkg != null)
         EncounterLocation(
           location: Reference(
-            reference: FhirString('firstEkg'),
+            display: FhirString('firstEkg'),
           ),
+          status: EncounterLocationStatus.active,
           period: Period(
             start: FhirDateTime.fromDateTime(firstEkg),
             end: FhirDateTime.fromDateTime(firstEkg),
@@ -33,8 +35,9 @@ extension EncounterX on Encounter {
       if (unitLeftScene != null)
         EncounterLocation(
           location: Reference(
-            reference: FhirString('unitLeftScene'),
+            display: FhirString('unitLeftScene'),
           ),
+          status: EncounterLocationStatus.active,
           period: Period(
             start: FhirDateTime.fromDateTime(unitLeftScene),
             end: FhirDateTime.fromDateTime(unitLeftScene),
@@ -43,8 +46,9 @@ extension EncounterX on Encounter {
       if (patientArrivedAtDestination != null)
         EncounterLocation(
           location: Reference(
-            reference: FhirString('patientArrivedAtDestination'),
+            display: FhirString('patientArrivedAtDestination'),
           ),
+          status: EncounterLocationStatus.active,
           period: Period(
             start: FhirDateTime.fromDateTime(patientArrivedAtDestination),
             end: FhirDateTime.fromDateTime(patientArrivedAtDestination),

@@ -13,10 +13,9 @@ class TimeMetricsRepository {
 
   TimeMetricsModel? getTimeMetrics() => _store.value;
 
-  void setTimeMetrics(TimeMetricsModel timeMetrics) {
-    _store.value = timeMetrics.copyWith(
-      isDirty: () => true,
-    );
+  void setTimeMetrics(TimeMetricsModel timeMetrics, {bool markAsDirty = true}) {
+    _store.value =
+        markAsDirty ? timeMetrics.copyWith(isDirty: () => true) : timeMetrics;
   }
 
   void clearTimeMetrics() {
