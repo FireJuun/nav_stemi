@@ -18,6 +18,11 @@ class FhirService {
   /// Base URI for the FHIR server from environment
   final Uri baseUri = Uri.parse(Env.fhirBaseUri);
 
+  /// Cache for connectivity status
+  DateTime? _lastConnectivityCheck;
+  bool? _lastConnectivityResult;
+  final _connectivityCacheDuration = const Duration(seconds: 10);
+
   /// Get a repository with an authenticated client
   FhirRepository _getAuthenticatedRepository() {
     final currentUser = ref.read(authRepositoryProvider).currentUser;
@@ -154,12 +159,27 @@ class FhirService {
 
   /// Check if we can connect to the FHIR server
   Future<bool> isConnected() async {
+    // Use cached result if available and recent
+    final now = DateTime.now();
+    if (_lastConnectivityCheck != null &&
+        _lastConnectivityResult != null &&
+        now.difference(_lastConnectivityCheck!) < _connectivityCacheDuration) {
+      debugPrint('Using cached connectivity result: $_lastConnectivityResult');
+      return _lastConnectivityResult!;
+    }
+
     try {
       // Try to get capabilities as a basic connectivity test
       await getCapabilities();
+      // Cache the successful result
+      _lastConnectivityCheck = now;
+      _lastConnectivityResult = true;
       return true;
     } catch (e) {
       debugPrint('FHIR connectivity check failed: $e');
+      // Cache the failed result
+      _lastConnectivityCheck = now;
+      _lastConnectivityResult = false;
       return false;
     }
   }

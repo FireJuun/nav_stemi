@@ -34,13 +34,13 @@ class TimeMetricsFhirDTO {
 
     // Extract all time information from location resources
     for (final location in locations) {
-      final ref = location.location.reference?.valueString;
+      final displayName = location.location.display?.valueString;
       final startTime = location.period?.start != null
           ? DateTime.parse(location.period!.start.toString())
           : null;
 
-      if (startTime != null) {
-        switch (ref) {
+      if (startTime != null && displayName != null) {
+        switch (displayName) {
           case 'arrivedAtPatient':
             timeArrivedAtPatient = startTime;
           case 'firstEkg':

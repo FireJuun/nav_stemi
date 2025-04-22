@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:fhir_r4/fhir_r4.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,7 +7,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'fhir_sync_service.g.dart';
 
-const _debounceDuration = Duration(seconds: 2);
+// Increase debounce duration to reduce sync frequency
+const _debounceDuration = Duration(seconds: 5);
 
 class FhirSyncService {
   // This class is responsible for syncing FHIR resources with the server.
@@ -14,9 +16,15 @@ class FhirSyncService {
 
   FhirSyncService(this.ref) {
     _init();
+    _retryManager = RetryManager();
   }
 
   final Ref ref;
+  late final RetryManager _retryManager;
+
+  // Flags to control sync behavior
+  bool _isSyncPaused = false;
+  final Map<String, Timer?> _pendingRetries = {};
 
   /// Updates the patient info sync status
   void _updatePatientInfoSyncStatus(
@@ -105,13 +113,43 @@ class FhirSyncService {
       );
   }
 
-  void cancelPatientInfoSync() => cancelLocalDebouncer('syncPatientInfo');
+  void cancelPatientInfoSync() {
+    cancelLocalDebouncer('syncPatientInfo');
+    _cancelRetry('patientInfo');
+    _retryManager.resetRetries('patientInfo');
+  }
 
-  void cancelTimeMetricsSync() => cancelLocalDebouncer('syncTimeMetrics');
+  void cancelTimeMetricsSync() {
+    cancelLocalDebouncer('syncTimeMetrics');
+    _cancelRetry('timeMetrics');
+    _retryManager.resetRetries('timeMetrics');
+  }
 
-  Future<void> manuallySyncAllData() async {
+  void pauseSyncing() {
+    _isSyncPaused = true;
     cancelPatientInfoSync();
     cancelTimeMetricsSync();
+  }
+
+  void resumeSyncing() {
+    _isSyncPaused = false;
+    manuallySyncAllData();
+  }
+
+  bool get isSyncPaused => _isSyncPaused;
+
+  Future<void> manuallySyncAllData() async {
+    if (_isSyncPaused) {
+      print('Sync is paused, not performing manual sync');
+      return;
+    }
+
+    cancelPatientInfoSync();
+    cancelTimeMetricsSync();
+
+    // Reset retry counts when manually syncing
+    _retryManager.resetRetries('patientInfo');
+    _retryManager.resetRetries('timeMetrics');
 
     final patientInfo = ref.read(patientInfoModelProvider).value;
     final timeMetrics = ref.read(timeMetricsModelProvider).value;
@@ -121,6 +159,54 @@ class FhirSyncService {
     }
     if (timeMetrics != null) {
       await _syncTimeMetrics(timeMetrics);
+    }
+  }
+
+  /// Cancels a pending retry
+  void _cancelRetry(String operationId) {
+    final timer = _pendingRetries[operationId];
+    if (timer != null && timer.isActive) {
+      timer.cancel();
+      _pendingRetries[operationId] = null;
+    }
+  }
+
+  /// Schedules a retry with exponential backoff
+  void _scheduleRetry(String operationId, Function() retryFunction) {
+    if (_isSyncPaused) {
+      print('Sync is paused, not scheduling retry for $operationId');
+      return;
+    }
+
+    _retryManager.incrementRetryCount(operationId);
+
+    if (_retryManager.shouldRetry(operationId)) {
+      final delayMs = _retryManager.getNextRetryDelayMs(operationId);
+      print('Scheduling retry #${_retryManager.getRetryCount(operationId)} '
+          'for $operationId in $delayMs ms');
+
+      // Cancel any existing retry timer
+      _cancelRetry(operationId);
+
+      // Schedule new retry
+      _pendingRetries[operationId] = Timer(
+        Duration(milliseconds: delayMs),
+        retryFunction,
+      );
+    } else {
+      print('Max retries reached for $operationId, giving up');
+      // Update appropriate status depending on the operation
+      if (operationId == 'patientInfo') {
+        _updatePatientInfoSyncStatus(
+          FhirSyncStatus.error,
+          'Max retries reached (${_retryManager.maxRetries})',
+        );
+      } else if (operationId == 'timeMetrics') {
+        _updateTimeMetricsSyncStatus(
+          FhirSyncStatus.error,
+          'Max retries reached (${_retryManager.maxRetries})',
+        );
+      }
     }
   }
 
@@ -136,10 +222,16 @@ class FhirSyncService {
 
   // Track in-progress sync operations to prevent race conditions
   bool _patientSyncInProgress = false;
-  final bool _timeMetricsSyncInProgress = false;
+  bool _timeMetricsSyncInProgress = false;
 
   /// Sync patient info with FHIR server
   Future<void> _syncPatientInfo(PatientInfoModel patientInfo) async {
+    // Don't sync if paused
+    if (_isSyncPaused) {
+      print('Sync is paused, not syncing patient info');
+      return;
+    }
+
     // Prevent concurrent syncs
     if (_patientSyncInProgress) {
       debugPrint('Patient sync already in progress, skipping');
@@ -242,12 +334,19 @@ class FhirSyncService {
       // Mark the model as synced in local storage
       ref.read(patientInfoRepositoryProvider).patientInfoModel?.markSynced();
 
+      // Reset retry count on successful sync
+      _retryManager.resetRetries('patientInfo');
+
       // Update sync status to synced
       _updatePatientInfoSyncStatus(FhirSyncStatus.synced);
     } catch (e) {
       // Update sync status to error
       _updatePatientInfoSyncStatus(FhirSyncStatus.error, e.toString());
-      rethrow;
+
+      // Schedule a retry with exponential backoff
+      _scheduleRetry('patientInfo', () => _syncPatientInfo(patientInfo));
+
+      debugPrint('Error syncing patient info: $e');
     } finally {
       _patientSyncInProgress = false;
     }
@@ -255,12 +354,26 @@ class FhirSyncService {
 
   /// Sync time metrics with FHIR server
   Future<void> _syncTimeMetrics(TimeMetricsModel timeMetrics) async {
+    // Don't sync if paused
+    if (_isSyncPaused) {
+      print('Sync is paused, not syncing time metrics');
+      return;
+    }
+
+    // Prevent concurrent syncs
+    if (_timeMetricsSyncInProgress) {
+      debugPrint('Time metrics sync already in progress, skipping');
+      return;
+    }
+
     if (!timeMetrics.isDirty) {
       _updateTimeMetricsSyncStatus(FhirSyncStatus.synced);
       return;
     }
 
     try {
+      _timeMetricsSyncInProgress = true;
+
       // Check if connected to FHIR server
       final isConnected = await _isConnectedToFhirServer();
       if (!isConnected) {
@@ -492,9 +605,14 @@ class FhirSyncService {
           .updateFromBundle(responseBundle);
 
       // Mark the model as synced in local storage
+      // Use the markAsDirty=false parameter to avoid setting isDirty=true right after sync
+      final syncedModel = timeMetrics.markSynced();
       ref
           .read(timeMetricsRepositoryProvider)
-          .setTimeMetrics(timeMetrics.markSynced());
+          .setTimeMetrics(syncedModel, markAsDirty: false);
+
+      // Reset retry count on successful sync
+      _retryManager.resetRetries('timeMetrics');
 
       // Update sync status to synced
       _updateTimeMetricsSyncStatus(FhirSyncStatus.synced);
@@ -502,7 +620,12 @@ class FhirSyncService {
       // Update sync status to error
       _updateTimeMetricsSyncStatus(FhirSyncStatus.error, e.toString());
 
-      rethrow;
+      // Schedule a retry with exponential backoff
+      _scheduleRetry('timeMetrics', () => _syncTimeMetrics(timeMetrics));
+
+      debugPrint('Error syncing time metrics: $e');
+    } finally {
+      _timeMetricsSyncInProgress = false;
     }
   }
 

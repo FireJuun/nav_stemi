@@ -23,7 +23,7 @@ class PriorEncountersDialog extends StatelessWidget {
 }
 
 class _EncountersList extends ConsumerWidget {
-  const _EncountersList({super.key});
+  const _EncountersList();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -62,7 +62,6 @@ class _PlaceholderEncounterItem extends StatelessWidget {
   const _PlaceholderEncounterItem({
     required this.date,
     required this.index,
-    super.key,
   });
 
   final String date;
