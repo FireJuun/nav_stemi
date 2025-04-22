@@ -131,7 +131,7 @@ class AuthDialog extends ConsumerWidget {
                     ref.read(authRepositoryProvider).signIn();
                     Navigator.of(context).pop();
                   },
-                  child: Text('Sign In with Google'.hardcoded),
+                  child: Text('Sign In'.hardcoded),
                 ),
               ],
             );
