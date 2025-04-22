@@ -53,6 +53,20 @@ class _HomeState extends ConsumerState<Home> {
     }
   }
 
+  void _showAuthDialog(BuildContext context, WidgetRef ref) {
+    showDialog<void>(
+      context: context,
+      builder: (context) => const AuthDialog(),
+    );
+  }
+
+  void _showEncountersDialog(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (context) => const PriorEncountersDialog(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     ref.listen(
@@ -60,219 +74,265 @@ class _HomeState extends ConsumerState<Home> {
       (_, state) => state.showAlertDialogOnError(context),
     );
 
+    final authState = ref.watch(authStateChangesProvider);
     final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    final isUserLoggedIn = authState.whenOrNull(
+          data: (user) => user != null,
+        ) ??
+        false;
+
     return Scaffold(
       appBar: AppBar(
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () => Scaffold.of(context).openEndDrawer(),
+            tooltip: 'Open menu',
+          ),
+        ),
         title: Text('nav - STEMI'.hardcoded),
         centerTitle: true,
-      ),
-      endDrawer: const RightNavDrawer(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Column(
-              children: [
-                // TODO(FireJuun): move this to admin UI, to add/update hospitals list
-                // FilledButton(
-                //   onPressed: selectAndUploadCSV,
-                //   child: Text('Upload CSV'.hardcoded),
-                // ),
-                Text(
-                  'Click `Go` to begin'.hardcoded,
-                  style:
-                      textTheme.titleLarge!.apply(fontStyle: FontStyle.italic),
+        actions: [
+          // Profile icon button - same as in AppBarWidget
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: IconButton(
+              icon: authState.when(
+                data: (user) => user != null
+                    ? const Icon(Icons.account_circle)
+                    : const Icon(Icons.account_circle_outlined),
+                loading: () => const SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(strokeWidth: 2),
                 ),
-                gapH24,
-                Text(
-                  'Click `Add Data`\nto pre-enter info'.hardcoded,
-                  style:
-                      textTheme.titleLarge!.apply(fontStyle: FontStyle.italic),
-                ),
-              ],
-            ),
-            Text.rich(
-              textAlign: TextAlign.center,
-              TextSpan(
-                style: textTheme.bodyLarge,
-                children: [
-                  TextSpan(
-                    text: 'FYI',
-                    style: textTheme.bodyLarge?.apply(
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                  TextSpan(text: ': '.hardcoded),
-                  TextSpan(text: 'You can modify info at anytime'.hardcoded),
-                ],
+                error: (_, __) => const Icon(Icons.error_outline),
               ),
+              onPressed: () => _showAuthDialog(context, ref),
             ),
-            Column(
+          ),
+        ],
+      ),
+      drawer: const NavDrawer(),
+      body: Stack(
+        children: [
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                if (permissionsMissing())
-                  Column(
+                gapH24,
+                Column(
+                  children: [
+                    Text(
+                      'Click `Go` to begin'.hardcoded,
+                      style: textTheme.titleLarge!
+                          .apply(fontStyle: FontStyle.italic),
+                    ),
+                    gapH24,
+                    Text(
+                      'Click `Add Data`\nto pre-enter info'.hardcoded,
+                      style: textTheme.titleLarge!
+                          .apply(fontStyle: FontStyle.italic),
+                    ),
+                  ],
+                ),
+                Text.rich(
+                  textAlign: TextAlign.center,
+                  TextSpan(
+                    style: textTheme.bodyLarge,
                     children: [
-                      Text.rich(
-                        textAlign: TextAlign.center,
-                        TextSpan(
-                          style: textTheme.bodyLarge?.apply(
-                            color: Theme.of(context).colorScheme.error,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: 'Error',
-                              style: textTheme.bodyLarge?.apply(
-                                decoration: TextDecoration.underline,
-                                color: Theme.of(context).colorScheme.error,
-                              ),
-                            ),
-                            TextSpan(text: ': '.hardcoded),
-                            TextSpan(
-                              text: 'Missing the following permissions:'
-                                  .hardcoded,
-                            ),
-                          ],
+                      TextSpan(
+                        text: 'FYI',
+                        style: textTheme.bodyLarge?.apply(
+                          decoration: TextDecoration.underline,
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          if (!_locationPermitted)
-                            Text(
-                              '• Location'.hardcoded,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.apply(
-                                    color: Theme.of(context).colorScheme.error,
-                                  ),
-                            ),
-                          if (!_notificationsPermitted)
-                            Text(
-                              '• Notifications'.hardcoded,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.apply(
-                                    color: Theme.of(context).colorScheme.error,
-                                  ),
-                            ),
-                        ],
+                      TextSpan(text: ': '.hardcoded),
+                      TextSpan(
+                        text: 'You can modify info at anytime'.hardcoded,
                       ),
-                      gapH8,
                     ],
                   ),
-
-                /// temporary button to sign in with Google, for testing
-                // TODO(FireJuun): remove these two buttons + gapH16 below
-                if (true)
-                  Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          OutlinedButton(
-                            onPressed: () =>
-                                ref.read(authRepositoryProvider).signIn(),
-                            child: Text(
-                              'Login'.hardcoded,
-                              // style: textTheme.headlineMedium!.apply(
-                              //   color: Theme.of(context).colorScheme.onSurface,
-                              // ),
-                            ),
-                          ),
-                          gapW16,
-                          FilledButton(
-                            child: Text(
-                              'FHIR Request'.hardcoded,
-                              // style: textTheme.headlineMedium!.apply(
-                              // color: Theme.of(context).colorScheme.onSurface,
-                              // ),
-                            ),
-                            onPressed: () {
-                              ref
-                                  .read(authStateChangesProvider)
-                                  .whenData((user) async {
-                                if (user != null) {
-                                  debugPrint(
-                                    'Capability Statement requested...',
-                                  );
-
-                                  http.Response? response;
-
-                                  switch (user) {
-                                    case ServiceAccountUser():
-                                      response = await user.client.get(
-                                        Uri.parse(
-                                          '${Env.fhirBaseUri}/CapabilityStatement',
-                                        ),
-                                      );
-                                    case GoogleAppUser():
-                                      response = await user.client.get(
-                                        Uri.parse(
-                                          '${Env.fhirBaseUri}/CapabilityStatement',
-                                        ),
-                                      );
-                                  }
-
-                                  if (response.body.isNotEmpty) {
-                                    debugPrint('Response obtained!');
-                                  }
-                                } else {
-                                  debugPrint(
-                                    'User is null - please sign in first',
-                                  );
-                                }
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                      gapH32,
-                    ],
-                  ),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                ),
+                Column(
                   children: [
                     if (permissionsMissing())
-                      FilledButton(
-                        onPressed: notifier.openAppSettingsPage,
-                        child: Text(
-                          'Open App\nSettings'.hardcoded,
-                          textAlign: TextAlign.center,
-                          style: textTheme.headlineSmall!.apply(
-                            color: Theme.of(context).colorScheme.onPrimary,
+                      Column(
+                        children: [
+                          Text.rich(
+                            textAlign: TextAlign.center,
+                            TextSpan(
+                              style: textTheme.bodyLarge?.apply(
+                                color: Theme.of(context).colorScheme.error,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: 'Error',
+                                  style: textTheme.bodyLarge?.apply(
+                                    decoration: TextDecoration.underline,
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                                ),
+                                TextSpan(text: ': '.hardcoded),
+                                TextSpan(
+                                  text: 'Missing the following permissions:'
+                                      .hardcoded,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              if (!_locationPermitted)
+                                Text(
+                                  '• Location'.hardcoded,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.apply(
+                                        color:
+                                            Theme.of(context).colorScheme.error,
+                                      ),
+                                ),
+                              if (!_notificationsPermitted)
+                                Text(
+                                  '• Notifications'.hardcoded,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.apply(
+                                        color:
+                                            Theme.of(context).colorScheme.error,
+                                      ),
+                                ),
+                            ],
+                          ),
+                          gapH8,
+                        ],
+                      ),
+
+                    // Testing buttons - keeping as requested
+                    // if (false)
+                    //   Column(
+                    //     children: [
+                    //       Row(
+                    //         mainAxisAlignment: MainAxisAlignment.center,
+                    //         children: [
+                    //           OutlinedButton(
+                    //             onPressed: () =>
+                    //                 ref.read(authRepositoryProvider).signIn(),
+                    //             child: Text(
+                    //               'Login'.hardcoded,
+                    //             ),
+                    //           ),
+                    //           gapW16,
+                    //           FilledButton(
+                    //             child: Text(
+                    //               'FHIR Request'.hardcoded,
+                    //             ),
+                    //             onPressed: () {
+                    //               ref
+                    //                   .read(authStateChangesProvider)
+                    //                   .whenData((user) async {
+                    //                 if (user != null) {
+                    //                   debugPrint(
+                    //                     'Capability Statement requested...',
+                    //                   );
+
+                    //                   http.Response? response;
+
+                    //                   switch (user) {
+                    //                     case ServiceAccountUser():
+                    //                       response = await user.client.get(
+                    //                         Uri.parse(
+                    //                           '${Env.fhirBaseUri}/CapabilityStatement',
+                    //                         ),
+                    //                       );
+                    //                     case GoogleAppUser():
+                    //                       response = await user.client.get(
+                    //                         Uri.parse(
+                    //                           '${Env.fhirBaseUri}/CapabilityStatement',
+                    //                         ),
+                    //                       );
+                    //                   }
+
+                    //                   if (response.body.isNotEmpty) {
+                    //                     debugPrint('Response obtained!');
+                    //                   }
+                    //                 } else {
+                    //                   debugPrint(
+                    //                     'User is null - please sign in first',
+                    //                   );
+                    //                 }
+                    //               });
+                    //             },
+                    //           ),
+                    //         ],
+                    //       ),
+                    //       gapH32,
+                    //     ],
+                    //   ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        if (permissionsMissing())
+                          FilledButton(
+                            onPressed: notifier.openAppSettingsPage,
+                            child: Text(
+                              'Open App\nSettings'.hardcoded,
+                              textAlign: TextAlign.center,
+                              style: textTheme.headlineSmall!.apply(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              ),
+                            ),
+                          ),
+                        FilledButton(
+                          onPressed: permissionsMissing()
+                              ? null
+                              : () {
+                                  // If user is logged in, initialize FHIR resources before navigating
+                                  if (isUserLoggedIn) {
+                                    ref
+                                        .read(fhirInitServiceProvider)
+                                        .initializeBlankResources();
+                                  }
+                                  context.goNamed(AppRoute.goTo.name);
+                                },
+                          child: Text(
+                            '+ GO'.hardcoded,
+                            style: textTheme.headlineMedium!.apply(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
                           ),
                         ),
-                      ),
-                    FilledButton(
-                      onPressed: permissionsMissing()
-                          ? null
-                          : () => context.goNamed(AppRoute.goTo.name),
+                      ],
+                    ),
+                    gapH16,
+                    OutlinedButton(
+                      onPressed: () =>
+                          context.goNamed(AppRoute.navAddData.name),
                       child: Text(
-                        '+ GO'.hardcoded,
+                        'Add Data'.hardcoded,
                         style: textTheme.headlineMedium!.apply(
-                          color: Theme.of(context).colorScheme.onPrimary,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                     ),
                   ],
                 ),
-                gapH16,
-                OutlinedButton(
-                  onPressed: () => context.goNamed(AppRoute.navAddData.name),
-                  child: Text(
-                    'Add Data'.hardcoded,
-                    style: textTheme.headlineMedium!.apply(
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
-                  ),
-                ),
               ],
             ),
-          ],
-        ),
+          ),
+
+          // Add the login status indicator at the top right
+          LoginStatusIndicator(
+            onShowEncountersPressed: () => _showEncountersDialog(context),
+          ),
+        ],
       ),
     );
   }

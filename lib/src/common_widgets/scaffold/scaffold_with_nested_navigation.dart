@@ -58,7 +58,7 @@ class _ScaffoldWithNestedNavigationState
       },
       child: Scaffold(
         appBar: const AppBarWidget(),
-        endDrawer: const RightNavDrawer(),
+        endDrawer: const NavDrawer(),
         body: AnimatedContainer(
           duration: 300.ms,
           color: isNavPage
