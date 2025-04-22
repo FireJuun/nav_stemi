@@ -176,7 +176,7 @@ class FhirResourceReferencesNotifier extends _$FhirResourceReferencesNotifier {
 
       // Try to extract from response.location
       if (entry.response?.location != null) {
-        final location = entry.response!.location.toString();
+        final location = entry.response!.location!.toString();
         debugPrint('Parsing location: $location');
 
         // Remove the base URI from the location
@@ -197,7 +197,8 @@ class FhirResourceReferencesNotifier extends _$FhirResourceReferencesNotifier {
 
         if (pathParts.length >= 2) {
           resourceType = pathParts[0];
-          id = pathParts[1];
+          // Remove any trailing parenthesis from the ID
+          id = pathParts[1].replaceAll(')', '');
           debugPrint(
             'Extracted from location: resourceType=$resourceType, id=$id',
           );
@@ -206,7 +207,9 @@ class FhirResourceReferencesNotifier extends _$FhirResourceReferencesNotifier {
       // Fallback to entry.resource if available
       else if (entry.resource != null && entry.resource!.id != null) {
         resourceType = entry.resource!.resourceType.toString();
-        id = entry.resource!.id!.valueString;
+        id = entry.resource!.id!.valueString.toString();
+        // Remove any trailing parenthesis from the ID
+        id = id.replaceAll(')', '');
         debugPrint(
           'Extracted from resource: resourceType=$resourceType, id=$id',
         );
