@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
 
 import 'package:nav_stemi/nav_stemi.dart';
 
@@ -76,7 +75,6 @@ class _HomeState extends ConsumerState<Home> {
 
     final authState = ref.watch(authStateChangesProvider);
     final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
 
     final isUserLoggedIn = authState.whenOrNull(
           data: (user) => user != null,
@@ -85,13 +83,6 @@ class _HomeState extends ConsumerState<Home> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () => Scaffold.of(context).openEndDrawer(),
-            tooltip: 'Open menu',
-          ),
-        ),
         title: Text('nav - STEMI'.hardcoded),
         centerTitle: true,
         actions: [
@@ -213,69 +204,6 @@ class _HomeState extends ConsumerState<Home> {
                           gapH8,
                         ],
                       ),
-
-                    // Testing buttons - keeping as requested
-                    // if (false)
-                    //   Column(
-                    //     children: [
-                    //       Row(
-                    //         mainAxisAlignment: MainAxisAlignment.center,
-                    //         children: [
-                    //           OutlinedButton(
-                    //             onPressed: () =>
-                    //                 ref.read(authRepositoryProvider).signIn(),
-                    //             child: Text(
-                    //               'Login'.hardcoded,
-                    //             ),
-                    //           ),
-                    //           gapW16,
-                    //           FilledButton(
-                    //             child: Text(
-                    //               'FHIR Request'.hardcoded,
-                    //             ),
-                    //             onPressed: () {
-                    //               ref
-                    //                   .read(authStateChangesProvider)
-                    //                   .whenData((user) async {
-                    //                 if (user != null) {
-                    //                   debugPrint(
-                    //                     'Capability Statement requested...',
-                    //                   );
-
-                    //                   http.Response? response;
-
-                    //                   switch (user) {
-                    //                     case ServiceAccountUser():
-                    //                       response = await user.client.get(
-                    //                         Uri.parse(
-                    //                           '${Env.fhirBaseUri}/CapabilityStatement',
-                    //                         ),
-                    //                       );
-                    //                     case GoogleAppUser():
-                    //                       response = await user.client.get(
-                    //                         Uri.parse(
-                    //                           '${Env.fhirBaseUri}/CapabilityStatement',
-                    //                         ),
-                    //                       );
-                    //                   }
-
-                    //                   if (response.body.isNotEmpty) {
-                    //                     debugPrint('Response obtained!');
-                    //                   }
-                    //                 } else {
-                    //                   debugPrint(
-                    //                     'User is null - please sign in first',
-                    //                   );
-                    //                 }
-                    //               });
-                    //             },
-                    //           ),
-                    //         ],
-                    //       ),
-                    //       gapH32,
-                    //     ],
-                    //   ),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [

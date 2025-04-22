@@ -1,9 +1,12 @@
 import 'package:fhir_r4/fhir_r4.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'fhir_sync_service.g.dart';
+
+const _debounceDuration = Duration(seconds: 2);
 
 class FhirSyncService {
   // This class is responsible for syncing FHIR resources with the server.
@@ -51,6 +54,7 @@ class FhirSyncService {
               localDebouncer(
                 'syncPatientInfo',
                 () => _syncPatientInfo(model),
+                _debounceDuration,
               );
             }
           }
@@ -72,6 +76,7 @@ class FhirSyncService {
                   print('Executing timeMetrics sync');
                   _syncTimeMetrics(model);
                 },
+                _debounceDuration,
               );
             }
           }
@@ -121,20 +126,38 @@ class FhirSyncService {
 
   /// Checks if the user is connected to the FHIR server
   Future<bool> _isConnectedToFhirServer() async {
-    return ref.read(fhirServiceProvider).isConnected();
+    try {
+      return await ref.read(fhirServiceProvider).isConnected();
+    } catch (e) {
+      debugPrint('Error checking FHIR server connection: $e');
+      return false;
+    }
   }
+
+  // Track in-progress sync operations to prevent race conditions
+  bool _patientSyncInProgress = false;
+  final bool _timeMetricsSyncInProgress = false;
 
   /// Sync patient info with FHIR server
   Future<void> _syncPatientInfo(PatientInfoModel patientInfo) async {
+    // Prevent concurrent syncs
+    if (_patientSyncInProgress) {
+      debugPrint('Patient sync already in progress, skipping');
+      return;
+    }
+
     if (!patientInfo.isDirty) {
       _updatePatientInfoSyncStatus(FhirSyncStatus.synced);
       return;
     }
 
     try {
+      _patientSyncInProgress = true;
+
       // Check if connected to FHIR server
       final isConnected = await _isConnectedToFhirServer();
       if (!isConnected) {
+        debugPrint('Not connected to FHIR server, marking as offline');
         _updatePatientInfoSyncStatus(FhirSyncStatus.offline);
         return;
       }
@@ -225,6 +248,8 @@ class FhirSyncService {
       // Update sync status to error
       _updatePatientInfoSyncStatus(FhirSyncStatus.error, e.toString());
       rethrow;
+    } finally {
+      _patientSyncInProgress = false;
     }
   }
 
