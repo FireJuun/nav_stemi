@@ -77,7 +77,7 @@ class NearestHospitalButtons extends ConsumerWidget {
             if (isCurrentRoutePCI) ...[
               FilledButton(
                 onPressed: () {},
-                child: const Text('PCI (active)'),
+                child: Text('PCI (active)'.hardcoded),
               ),
               OutlinedButton(
                 onPressed: () => ref
@@ -99,11 +99,11 @@ class NearestHospitalButtons extends ConsumerWidget {
                       activeHospital: nextClosestRoute,
                       nearbyHospitals: nearbyHospitals,
                     ),
-                child: Text('PCI $durationMin'),
+                child: Text('PCI $durationMin'.hardcoded),
               ),
               FilledButton(
                 onPressed: () {},
-                child: const Text('ED (active)'),
+                child: Text('ED (active)'.hardcoded),
               ),
             ],
 

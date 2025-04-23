@@ -45,7 +45,8 @@ class NearbyHospitals extends Equatable {
   List<Object> get props => [items];
 }
 
-/// Helper extension to sort the [NearbyHospitals] by distance from current location.
+/// Helper extension to sort the [NearbyHospitals]
+/// by distance from current location.
 extension NearbyHospitalsX on NearbyHospitals {
   NearbyHospitals get sortedByDistance {
     final sorted = items.values.toList()

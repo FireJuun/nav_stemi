@@ -80,18 +80,20 @@ class ScannedLicenseInfo extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: PatientInfoTextField(
+              child: PatientEntryText(
                 readOnly: true,
                 label: 'First Name'.hardcoded,
-                controller: TextEditingController(text: patientInfo.firstName),
+                onChanged: (_) {},
+                initialValue: patientInfo.firstName,
               ),
             ),
             gapW16,
             Expanded(
-              child: PatientInfoTextField(
+              child: PatientEntryText(
                 readOnly: true,
                 label: 'Middle Name'.hardcoded,
-                controller: TextEditingController(text: patientInfo.middleName),
+                onChanged: (_) {},
+                initialValue: patientInfo.middleName,
               ),
             ),
           ],
@@ -102,10 +104,11 @@ class ScannedLicenseInfo extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: PatientInfoTextField(
+                child: PatientEntryText(
                   readOnly: true,
                   label: 'Last Name'.hardcoded,
-                  controller: TextEditingController(text: patientInfo.lastName),
+                  onChanged: (_) {},
+                  initialValue: patientInfo.lastName,
                 ),
               ),
             ),
@@ -115,11 +118,11 @@ class ScannedLicenseInfo extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: PatientInfoTextField(
+              child: PatientEntryText(
                 readOnly: true,
                 label: 'Date of Birth'.hardcoded,
-                controller:
-                    TextEditingController(text: birthDate?.toBirthDateString()),
+                onChanged: (_) {},
+                initialValue: birthDate?.toBirthDateString(),
               ),
             ),
             gapW32,
@@ -139,6 +142,7 @@ class ScannedLicenseInfo extends StatelessWidget {
         SegmentedButton<SexAtBirth?>(
           selected: {sexAtBirth},
           emptySelectionAllowed: true,
+          showSelectedIcon: false,
           segments: SexAtBirth.values
               .map(
                 (sexAtBirth) => ButtonSegment<SexAtBirth?>(

@@ -35,12 +35,25 @@ class PatientInfoController extends _$PatientInfoController
     return success;
   }
 
-  void setPatientInfo(PatientInfoModel patientInfo) =>
-      ref.read(patientInfoServiceProvider).setPatientInfo(patientInfo);
+  void setPatientInfoModel(PatientInfoModel patientInfoModel) => ref
+      .read(patientInfoServiceProvider)
+      .setPatientInfoModel(patientInfoModel);
+
+  void setFirstName(String? firstName) =>
+      ref.read(patientInfoServiceProvider).setFirstName(firstName);
+
+  void setMiddleName(String? middleName) =>
+      ref.read(patientInfoServiceProvider).setMiddleName(middleName);
+
+  void setLastName(String? lastName) =>
+      ref.read(patientInfoServiceProvider).setLastName(lastName);
 
   void setSexAtBirth(SexAtBirth? sexAtBirth) =>
       ref.read(patientInfoServiceProvider).setSexAtBirth(sexAtBirth);
 
   void setBirthDate(DateTime? birthDate) =>
       ref.read(patientInfoServiceProvider).setBirthDate(birthDate);
+
+  void setCardiologist(String? cardiologist) =>
+      ref.read(patientInfoServiceProvider).setCardiologist(cardiologist);
 }

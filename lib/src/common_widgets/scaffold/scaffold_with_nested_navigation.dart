@@ -46,15 +46,19 @@ class _ScaffoldWithNestedNavigationState
             ) ??
             false;
 
-        setState(() => _canPop = shouldPop);
-
         if (shouldPop && context.mounted) {
-          context.goNamed(AppRoute.home.name);
+          // Show survey dialog before exit
+          await SurveyDialog.show(context);
+
+          setState(() => _canPop = shouldPop);
+          if (context.mounted) {
+            context.goNamed(AppRoute.home.name);
+          }
         }
       },
       child: Scaffold(
         appBar: const AppBarWidget(),
-        endDrawer: const RightNavDrawer(),
+        endDrawer: const NavDrawer(),
         body: AnimatedContainer(
           duration: 300.ms,
           color: isNavPage
