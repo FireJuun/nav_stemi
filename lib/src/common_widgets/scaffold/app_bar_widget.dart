@@ -48,7 +48,18 @@ class AppBarWidget extends ConsumerWidget implements PreferredSizeWidget {
       ),
       actions: [
         // FHIR sync status indicator
-        const FhirSyncStatusIndicator(),
+        authState.when(
+          data: (user) {
+            if (user != null) {
+              return const FhirSyncStatusIndicator();
+            } else {
+              return const SizedBox.shrink();
+            }
+          },
+          loading: () => const SizedBox.shrink(),
+          error: (_, __) => const SizedBox.shrink(),
+        ),
+        // const FhirSyncStatusIndicator(),
 
         // Profile icon button
         Padding(
@@ -85,7 +96,10 @@ class AppBarWidget extends ConsumerWidget implements PreferredSizeWidget {
 
 /// Dialog for authentication actions (login/logout)
 class AuthDialog extends ConsumerWidget {
-  const AuthDialog({super.key});
+  const AuthDialog({this.onClose, super.key});
+
+  /// Optional callback when the dialog is closed
+  final VoidCallback? onClose;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -115,6 +129,7 @@ class AuthDialog extends ConsumerWidget {
                   onPressed: () {
                     ref.read(authRepositoryProvider).signOut();
                     Navigator.of(context).pop();
+                    onClose?.call();
                   },
                   child: Text('Sign Out'.hardcoded),
                 ),
@@ -142,7 +157,10 @@ class AuthDialog extends ConsumerWidget {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            Navigator.of(context).pop();
+            onClose?.call();
+          },
           child: Text('Close'.hardcoded),
         ),
       ],
