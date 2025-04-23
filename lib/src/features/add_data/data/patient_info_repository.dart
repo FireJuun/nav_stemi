@@ -13,10 +13,28 @@ class PatientInfoRepository {
   }
 
   PatientInfoModel? get patientInfoModel => _store.value;
+
+  /// Sets the patient info model and marks it as dirty by default
+  /// This is used for local updates that need to be synced to FHIR
   set patientInfoModel(PatientInfoModel? patientInfo) =>
       _store.value = patientInfo?.copyWith(
         isDirty: () => true,
       );
+
+  /// Updates the patient info model with control over the dirty flag
+  /// This is useful for when we're syncing from FHIR (markAsDirty=false)
+  void updatePatientInfoModel(
+    PatientInfoModel? patientInfo, {
+    bool markAsDirty = true,
+  }) {
+    final newValue = patientInfo == null
+        ? null
+        : markAsDirty
+            ? patientInfo.copyWith(isDirty: () => true)
+            : patientInfo;
+
+    _store.value = newValue;
+  }
 
   void clearPatientInfoModel() => _store.value = null;
 }
@@ -39,8 +57,11 @@ DateTime? patientBirthDate(Ref ref) => ref.watch(
 
 @riverpod
 bool patientInfoShouldSync(Ref ref) {
-  return ref.watch(
-        patientInfoModelProvider.select((model) => model.value?.isDirty),
-      ) ??
-      false;
+  final modelValue = ref.watch(patientInfoModelProvider);
+
+  if (modelValue.isLoading || modelValue.hasError || modelValue.value == null) {
+    return false;
+  }
+
+  return modelValue.value!.isDirty;
 }

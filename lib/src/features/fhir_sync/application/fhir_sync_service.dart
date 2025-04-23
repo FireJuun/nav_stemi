@@ -332,7 +332,10 @@ class FhirSyncService {
           .updateFromBundle(responseBundle);
 
       // Mark the model as synced in local storage
-      ref.read(patientInfoRepositoryProvider).patientInfoModel?.markSynced();
+      final syncedModel = patientInfo.markSynced();
+      ref
+          .read(patientInfoRepositoryProvider)
+          .updatePatientInfoModel(syncedModel, markAsDirty: false);
 
       // Reset retry count on successful sync
       _retryManager.resetRetries('patientInfo');

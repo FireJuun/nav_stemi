@@ -19,7 +19,7 @@ class PatientInfoService {
   // TODO(FireJuun): find cleaner way to update the model
   /// That, or add logic to ensure things are working as intended
   void setPatientInfoModel(PatientInfoModel newModel) {
-    patientInfoRepository.patientInfoModel = newModel;
+    patientInfoRepository.updatePatientInfoModel(newModel);
   }
 
   Future<void> setPatientInfoFromScannedLicense(
