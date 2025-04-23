@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 /// Can create a setting to show or hide this, based on user preference.
@@ -82,7 +83,8 @@ class AddDataLoginPrompt extends ConsumerWidget {
           gapH16,
           OutlinedButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              // Navigator.of(context).pop();
+              context.goNamed(AppRoute.home.name);
             },
             child: Text('Go Back'.hardcoded),
           ),
