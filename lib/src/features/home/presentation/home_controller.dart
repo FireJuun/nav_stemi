@@ -4,11 +4,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'home_controller.g.dart';
 
 @riverpod
-class HomeController extends _$HomeController {
+class HomeController extends _$HomeController with NotifierMounted {
   @override
-  void build() {
+  FutureOr<void> build() {
     /// nothing to do
-    return;
+    state = const AsyncData(null);
+    ref.onDispose(setUnmounted);
   }
 
   PermissionsService get _permissionsServiceProvider =>

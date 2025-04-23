@@ -14,7 +14,9 @@ class PatientInfoRepository {
 
   PatientInfoModel? get patientInfoModel => _store.value;
   set patientInfoModel(PatientInfoModel? patientInfo) =>
-      _store.value = patientInfo;
+      _store.value = patientInfo?.copyWith(
+        isDirty: () => true,
+      );
 
   void clearPatientInfoModel() => _store.value = null;
 }
@@ -28,4 +30,17 @@ PatientInfoRepository patientInfoRepository(Ref ref) {
 Stream<PatientInfoModel?> patientInfoModel(Ref ref) {
   final patientInfoRepository = ref.watch(patientInfoRepositoryProvider);
   return patientInfoRepository.watchPatientInfoModel();
+}
+
+@riverpod
+DateTime? patientBirthDate(Ref ref) => ref.watch(
+      patientInfoModelProvider.select((model) => model.value?.birthDate),
+    );
+
+@riverpod
+bool patientInfoShouldSync(Ref ref) {
+  return ref.watch(
+        patientInfoModelProvider.select((model) => model.value?.isDirty),
+      ) ??
+      false;
 }

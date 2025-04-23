@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
-class RightNavDrawer extends StatelessWidget {
-  const RightNavDrawer({super.key});
+class NavDrawer extends StatelessWidget {
+  const NavDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
