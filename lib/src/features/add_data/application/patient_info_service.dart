@@ -39,6 +39,24 @@ class PatientInfoService {
     setPatientInfoModel(merged);
   }
 
+  void setFirstName(String? firstName) {
+    final merged = patientInfoModel.copyWith(firstName: () => firstName);
+
+    setPatientInfoModel(merged);
+  }
+
+  void setMiddleName(String? middleName) {
+    final merged = patientInfoModel.copyWith(middleName: () => middleName);
+
+    setPatientInfoModel(merged);
+  }
+
+  void setLastName(String? lastName) {
+    final merged = patientInfoModel.copyWith(lastName: () => lastName);
+
+    setPatientInfoModel(merged);
+  }
+
   void setSexAtBirth(SexAtBirth? sexAtBirth) {
     final merged = patientInfoModel.copyWith(sexAtBirth: () => sexAtBirth);
 
@@ -51,18 +69,8 @@ class PatientInfoService {
     setPatientInfoModel(merged);
   }
 
-  void setDidGetAspirin({required bool? didGetAspirin}) {
-    final merged = patientInfoModel.copyWith(
-      didGetAspirin: () => didGetAspirin,
-    );
-
-    setPatientInfoModel(merged);
-  }
-
-  void setIsCathLabNotified({required bool? isCathLabNotified}) {
-    final merged = patientInfoModel.copyWith(
-      isCathLabNotified: () => isCathLabNotified,
-    );
+  void setCardiologist(String? cardiologist) {
+    final merged = patientInfoModel.copyWith(cardiologist: () => cardiologist);
 
     setPatientInfoModel(merged);
   }
