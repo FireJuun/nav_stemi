@@ -1,5 +1,6 @@
 import 'package:fhir_r4/fhir_r4.dart';
 import 'package:nav_stemi/nav_stemi.dart';
+import 'package:uuid/uuid.dart';
 
 /// Data Transfer Object to convert between PatientInfoModel and FHIR resources
 /// This handles conversion to/from Patient and Practitioner resources
@@ -13,19 +14,31 @@ class PatientInfoFhirDTO {
     required Patient patient,
     Practitioner? cardiologist,
   }) {
-    // Extract name components from FHIR Patient
+    // Check if this is a temporary patient (not active or has temp name)
+    final isTemporary = patient.active?.valueBoolean == false ||
+        patient.name?.firstOrNull?.use == NameUse.temp;
+
+    // Extract name components from FHIR Patient, but not if they're temporary
     final humanName = patient.name?.firstOrNull;
-    final lastName = humanName?.family;
-    final firstName = humanName?.given?.firstOrNull;
-    final middleNames = humanName?.given?.skip(1).join(' ');
+    final isTemporaryName = humanName?.use == NameUse.temp ||
+        (humanName?.family?.valueString == 'Temporary' &&
+            humanName?.given?.firstOrNull?.valueString == 'Patient');
+
+    // Only use name fields if they're not temporary placeholders
+    final lastName = isTemporaryName ? null : humanName?.family;
+    final firstName = isTemporaryName ? null : humanName?.given?.firstOrNull;
+    final middleNames =
+        isTemporaryName ? null : humanName?.given?.skip(1).join(' ');
 
     // Extract birthDate from FHIR Patient
-    final birthDate = patient.birthDate != null
+    final birthDate = patient.birthDate != null && !isTemporary
         ? DateTime.parse(patient.birthDate!.toString())
         : null;
 
-    // Extract sex from FHIR Patient
-    final sex = _extractSexAtBirthFromFhir(patient);
+    // Extract sex from FHIR Patient, but not if temporary or unknown
+    final sex = isTemporary || patient.gender == AdministrativeGender.unknown
+        ? null
+        : _extractSexAtBirthFromFhir(patient);
 
     // Extract cardiologist name from FHIR Practitioner
     final cardiologistName = _extractCardiologistName(cardiologist);
@@ -48,8 +61,66 @@ class PatientInfoFhirDTO {
     // Create a new Patient or use an existing one
     final patient = existingPatient ?? const Patient();
 
-    // Use the existing extension to update patient information
-    return patient.updatePatientInfo(model);
+    // Determine if this is real patient data or just temporary data
+    final hasRealData = model.lastName != null ||
+        model.firstName != null ||
+        model.birthDate != null ||
+        (model.sexAtBirth != null && model.sexAtBirth != SexAtBirth.unknown);
+
+    // Set active status based on whether we have real data
+    final isActive = FhirBoolean(hasRealData);
+
+    // First update with model data
+    final updatedPatient = patient.updatePatientInfo(model);
+
+    // Then ensure required fields are present - if they were removed or weren't set
+    HumanName? tempName;
+
+    // Check if name is missing or empty after update
+    final needsDefaultName = updatedPatient.name == null ||
+        updatedPatient.name!.isEmpty ||
+        (updatedPatient.name![0].family == null &&
+            (updatedPatient.name![0].given == null ||
+                updatedPatient.name![0].given!.isEmpty));
+
+    if (needsDefaultName) {
+      tempName = HumanName(
+        family: FhirString('Temporary'),
+        given: [FhirString('Patient')],
+        use: NameUse.temp,
+      );
+    }
+
+    // Ensure gender is present
+    final gender = updatedPatient.gender ?? AdministrativeGender.unknown;
+
+    // Ensure we have an identifier
+    final identifiers = updatedPatient.identifier ?? [];
+    Identifier? navStemiIdentifier;
+
+    // Look for our specific identifier
+    final navStemiUri = Uri.parse('https://navstemi.org/patient');
+    final hasNavStemiId = identifiers.any(
+      (i) => i.system?.valueUri == navStemiUri,
+    );
+
+    if (!hasNavStemiId) {
+      navStemiIdentifier = Identifier(
+        system: FhirUri(navStemiUri),
+        value: FhirString(const Uuid().v4()),
+        use: IdentifierUse.official,
+      );
+    }
+
+    // Apply all the required field fixes
+    return updatedPatient.copyWith(
+      active: isActive,
+      name: needsDefaultName ? [tempName!] : updatedPatient.name,
+      gender: gender,
+      identifier: hasNavStemiId
+          ? updatedPatient.identifier
+          : [...(updatedPatient.identifier ?? []), navStemiIdentifier!],
+    );
   }
 
   /// Converts from PatientInfoModel to FHIR Practitioner (cardiologist)

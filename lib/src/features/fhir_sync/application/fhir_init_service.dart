@@ -50,6 +50,7 @@ class FhirInitService {
           use: IdentifierUse.official,
         ),
       ],
+      active: FhirBoolean(false),
       name: [
         HumanName(
           family: FhirString('Temporary'),

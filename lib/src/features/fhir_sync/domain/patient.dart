@@ -79,8 +79,12 @@ extension PatientX on Patient {
         ),
       ],
       // Handle null birthdate by not updating it
-      birthDate:
-          birthdate != null ? FhirDate.fromDateTime(birthdate) : birthDate,
+      // Format birthdate as YYYY-MM-DD string to ensure no time components
+      birthDate: birthdate != null
+          ? FhirDate.fromString(
+              '''${birthdate.year}-${birthdate.month.toString().padLeft(2, '0')}-${birthdate.day.toString().padLeft(2, '0')}''',
+            )
+          : birthDate,
       gender: birthGender,
     );
   }
