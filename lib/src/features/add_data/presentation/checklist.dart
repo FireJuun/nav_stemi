@@ -57,34 +57,6 @@ class Checklist extends StatelessWidget {
                               label: 'Leave by 10 min'.hardcoded,
                               isSelected: hasLeftByTenMin,
                             ),
-                            const Divider(thickness: 2),
-                            Consumer(
-                              builder: (context, ref, child) {
-                                final patientInfoModelValue =
-                                    ref.watch(patientInfoModelProvider);
-
-                                return AsyncValueWidget(
-                                  value: patientInfoModelValue,
-                                  data: (patientInfoModel) {
-                                    final hasAspirinInfo = patientInfoModel
-                                        ?.aspirinInfoChecklistState();
-
-                                    return ChecklistItem(
-                                      label: 'Give Aspirin 325'.hardcoded,
-                                      isSelected: () => hasAspirinInfo,
-                                      onChanged: (checklist) => ref
-                                          .read(
-                                            checklistControllerProvider
-                                                .notifier,
-                                          )
-                                          .setDidGetAspirinFromChecklist(
-                                            checklist: checklist,
-                                          ),
-                                    );
-                                  },
-                                );
-                              },
-                            ),
                           ],
                         ),
                       );
@@ -104,8 +76,6 @@ class Checklist extends StatelessWidget {
                           patientInfoModel?.patientInfoChecklistState();
                       final hasCardiologist =
                           patientInfoModel?.cardiologistInfoChecklistState();
-                      final hasCathLabInfo =
-                          patientInfoModel?.cathLabInfoChecklistState();
 
                       return SliverCrossAxisExpanded(
                         flex: 1,
@@ -118,16 +88,6 @@ class Checklist extends StatelessWidget {
                             ChecklistItem(
                               label: 'Pt Cardiologist'.hardcoded,
                               isSelected: () => hasCardiologist,
-                            ),
-                            const Divider(thickness: 2),
-                            ChecklistItem(
-                              label: 'Notify Cath Lab'.hardcoded,
-                              isSelected: () => hasCathLabInfo,
-                              onChanged: (checklist) => ref
-                                  .read(checklistControllerProvider.notifier)
-                                  .setIsCathLabNotifiedFromChecklist(
-                                    checklist: checklist,
-                                  ),
                             ),
                           ],
                         ),

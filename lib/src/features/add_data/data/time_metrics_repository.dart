@@ -13,8 +13,9 @@ class TimeMetricsRepository {
 
   TimeMetricsModel? getTimeMetrics() => _store.value;
 
-  void setTimeMetrics(TimeMetricsModel timeMetrics) {
-    _store.value = timeMetrics;
+  void setTimeMetrics(TimeMetricsModel timeMetrics, {bool markAsDirty = true}) {
+    _store.value =
+        markAsDirty ? timeMetrics.copyWith(isDirty: () => true) : timeMetrics;
   }
 
   void clearTimeMetrics() {
@@ -31,4 +32,12 @@ TimeMetricsRepository timeMetricsRepository(Ref ref) {
 Stream<TimeMetricsModel?> timeMetricsModel(Ref ref) {
   final timeMetricsRepository = ref.watch(timeMetricsRepositoryProvider);
   return timeMetricsRepository.watchTimeMetrics();
+}
+
+@riverpod
+bool timeMetricsShouldSync(Ref ref) {
+  return ref.watch(
+        timeMetricsModelProvider.select((model) => model.value?.isDirty),
+      ) ??
+      false;
 }

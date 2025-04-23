@@ -81,7 +81,11 @@ GoRouter goRouter(Ref ref) {
 
                 /// ensure google nav providers are available
                 ..watch(googleNavigationServiceProvider)
-                ..watch(googleNavigationRepositoryProvider);
+                ..watch(googleNavigationRepositoryProvider)
+
+                /// Initialize blank FHIR resources when first navigating
+                /// to the Nav or Add Data screens
+                ..read(fhirInitServiceProvider).initializeBlankResources();
 
               /// The UI shell
               return ScaffoldWithNestedNavigation(
