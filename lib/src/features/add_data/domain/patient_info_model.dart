@@ -14,7 +14,7 @@ class PatientInfoModel extends Equatable {
     this.birthDate,
     this.sexAtBirth,
     this.cardiologist,
-    this.isDirty = true, // Default to true, so new data is marked for syncing
+    this.isDirty = false, // Default to true, so new data is marked for syncing
   });
 
   final String? lastName;
