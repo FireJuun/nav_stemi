@@ -1,6 +1,7 @@
 {
   "projects": {
-    "dev": "nav-stemi"
+    "dev": "nav-stemi",
+    "staging": "nav-stemi-stg"
   },
   "targets": {},
   "etags": {},
