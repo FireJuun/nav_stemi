@@ -1,6 +1,7 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:nav_stemi/nav_stemi.dart';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'geolocator_repository.g.dart';
@@ -27,7 +28,7 @@ class GeolocatorRepository {
   /// Get the current position of the device.
   ///
   Future<Position> getCurrentPosition() async {
-    await checkPermissions();
+    await checkLocationEnabled();
 
     return Geolocator.getCurrentPosition();
   }
@@ -39,14 +40,14 @@ class GeolocatorRepository {
   /// If no position is available, the `Future` will return `null`.
   ///
   Future<Position?> getLastKnownPosition() async {
-    await checkPermissions();
+    await checkLocationEnabled();
 
     return Geolocator.getLastKnownPosition();
   }
 
   double getDistanceBetween(
-    Position currentLocation,
-    LatLng destination,
+    AppWaypoint currentLocation,
+    AppWaypoint destination,
   ) =>
       Geolocator.distanceBetween(
         currentLocation.latitude,
@@ -58,12 +59,14 @@ class GeolocatorRepository {
   /// Check location permissions and services.
   /// If the user has not granted location permission, the app will request it.
   /// If the user has denied location permission, the app will return an error.
-  /// If the user has permanently denied location permission, the app will return an error.
+  /// If the user has permanently denied location permission,
+  /// the app will return an error.
   /// If the location services are disabled, the app will return an error.
   ///
   /// source: https://pub.dev/packages/geolocator
-  @visibleForTesting
-  Future<bool> checkPermissions() async {
+  Future<bool> checkLocationEnabled() async {
+    // TODO(FireJuun): should we use this package or permissions package for this?
+    /// likely, either one can work...
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -101,25 +104,27 @@ class GeolocatorRepository {
   }
 }
 
-@Riverpod(keepAlive: true)
-GeolocatorRepository geolocatorRepository(GeolocatorRepositoryRef ref) {
+@riverpod
+GeolocatorRepository geolocatorRepository(Ref ref) {
   return GeolocatorRepository();
 }
 
 @riverpod
-Stream<Position?> watchPosition(WatchPositionRef ref) {
+Stream<Position?> watchPosition(Ref ref) {
   final geolocatorRepository = ref.watch(geolocatorRepositoryProvider);
-  return geolocatorRepository.watchPosition();
+  final stream = geolocatorRepository.watchPosition();
+  ref.onDispose(() => stream.listen(null).cancel());
+  return stream;
 }
 
 @riverpod
-Future<Position> getCurrentPosition(GetCurrentPositionRef ref) {
+Future<Position> getCurrentPosition(Ref ref) {
   final geolocatorRepository = ref.watch(geolocatorRepositoryProvider);
   return geolocatorRepository.getCurrentPosition();
 }
 
 @riverpod
-Future<Position?> getLastKnownPosition(GetLastKnownPositionRef ref) {
+Future<Position?> getLastKnownPosition(Ref ref) {
   final geolocatorRepository = ref.watch(geolocatorRepositoryProvider);
   return geolocatorRepository.getLastKnownPosition();
 }
@@ -129,9 +134,7 @@ Future<Position?> getLastKnownPosition(GetLastKnownPositionRef ref) {
 /// forces the device to get the current location and may take
 /// longer to return a result.
 @riverpod
-Future<Position> getLastKnownOrCurrentPosition(
-  GetLastKnownOrCurrentPositionRef ref,
-) async {
+Future<Position> getLastKnownOrCurrentPosition(Ref ref) async {
   final lastKnownPosition =
       await ref.watch(getLastKnownPositionProvider.future);
 

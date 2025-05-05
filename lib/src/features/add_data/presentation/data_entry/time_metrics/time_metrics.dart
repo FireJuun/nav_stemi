@@ -21,20 +21,43 @@ class TimeMetrics extends ConsumerWidget {
       data: (timeMetricsModel) {
         final timeArrivedAtPatient = timeMetricsModel?.timeArrivedAtPatient;
         final timeOfFirstEkg = timeMetricsModel?.timeOfEkgs.firstOrNull;
-        final timeOfStemiActivation = timeMetricsModel?.timeOfStemiActivation;
+        final timeOfStemiActivationDecision =
+            timeMetricsModel?.timeOfStemiActivationDecision;
         final timeUnitLeftScene = timeMetricsModel?.timeUnitLeftScene;
+        final timeOfAspirinGivenDecision =
+            timeMetricsModel?.timeOfAspirinGivenDecision;
+        // final wasAspirinGiven = timeMetricsModel?.wasAspirinGiven;
+        final timeCathLabNotifiedDecision =
+            timeMetricsModel?.timeCathLabNotifiedDecision;
+        // final wasCathLabNotified = timeMetricsModel?.wasCathLabNotified;
         final timePatientArrivedAtDestination =
             timeMetricsModel?.timePatientArrivedAtDestination;
 
         final isLockedArrivedAtPatient =
             timeMetricsModel?.lockTimeArrivedAtPatient ?? false;
         final isLockedFirstEkg = timeMetricsModel?.lockTimeOfEkgs ?? false;
-        final isLockedStemiActivation =
-            timeMetricsModel?.lockTimeOfStemiActivation ?? false;
+        final isLockedStemiActivationDecision =
+            timeMetricsModel?.lockTimeOfStemiActivationDecision ?? false;
         final isLockedUnitLeftScene =
             timeMetricsModel?.lockTimeUnitLeftScene ?? false;
+        final isLockedAspirinGivenDecision =
+            timeMetricsModel?.lockTimeOfAspirinGivenDecision ?? false;
+        final isLockedCathLabNotifiedDecision =
+            timeMetricsModel?.lockTimeCathLabNotifiedDecision ?? false;
         final isLockedPatientArrivedAtDestination =
             timeMetricsModel?.lockTimePatientArrivedAtDestination ?? false;
+
+        final hasEkgByFiveMin = timeMetricsModel == null
+            ? () => false
+            : timeMetricsModel.hasEkgByFiveMin;
+
+        final hasLeftByTenMin = timeMetricsModel == null
+            ? () => false
+            : timeMetricsModel.hasLeftByTenMin;
+
+        final hasArrivedBySixtyMin = timeMetricsModel == null
+            ? () => false
+            : timeMetricsModel.hasArrivedBySixtyMin;
 
         return SliverMainAxisGroup(
           slivers: [
@@ -43,7 +66,7 @@ class TimeMetrics extends ConsumerWidget {
               sliver: SliverList.list(
                 children: [
                   TimeMetric(
-                    label: 'Arrived at Patient',
+                    label: 'Arrived at Patient'.hardcoded,
                     timeOccurred: timeArrivedAtPatient,
                     onNewTimeSaved: (newTime) => ref
                         .read(timeMetricsControllerProvider.notifier)
@@ -54,7 +77,7 @@ class TimeMetrics extends ConsumerWidget {
                         .toggleTimeArrivedAtPatientLock(),
                   ),
                   TimeMetric(
-                    label: 'First EKG',
+                    label: 'First EKG'.hardcoded,
                     timeOccurred: timeOfFirstEkg,
                     onNewTimeSaved: (newTime) => ref
                         .read(timeMetricsControllerProvider.notifier)
@@ -64,19 +87,23 @@ class TimeMetrics extends ConsumerWidget {
                         .read(timeMetricsControllerProvider.notifier)
                         .toggleTimeOfFirstEkgLock(),
                   ),
-                  TimeMetric(
-                    label: 'STEMI Activation',
-                    timeOccurred: timeOfStemiActivation,
-                    onNewTimeSaved: (newTime) => ref
-                        .read(timeMetricsControllerProvider.notifier)
-                        .setTimeOfStemiActivation(newTime),
-                    isLocked: isLockedStemiActivation,
-                    onToggleLocked: () => ref
-                        .read(timeMetricsControllerProvider.notifier)
-                        .toggleTimeOfStemiActivationLock(),
+                  TimeMetricDivider(
+                    'Goal: 5 min'.hardcoded,
+                    isGoalReached: hasEkgByFiveMin,
                   ),
                   TimeMetric(
-                    label: 'Unit Left Scene',
+                    label: 'STEMI Activation'.hardcoded,
+                    timeOccurred: timeOfStemiActivationDecision,
+                    onNewTimeSaved: (newTime) => ref
+                        .read(timeMetricsControllerProvider.notifier)
+                        .setTimeOfStemiActivationDecision(newTime),
+                    isLocked: isLockedStemiActivationDecision,
+                    onToggleLocked: () => ref
+                        .read(timeMetricsControllerProvider.notifier)
+                        .toggleTimeOfStemiActivationDecisionLock(),
+                  ),
+                  TimeMetric(
+                    label: 'Unit Left Scene'.hardcoded,
                     timeOccurred: timeUnitLeftScene,
                     onNewTimeSaved: (newTime) => ref
                         .read(timeMetricsControllerProvider.notifier)
@@ -86,8 +113,36 @@ class TimeMetrics extends ConsumerWidget {
                         .read(timeMetricsControllerProvider.notifier)
                         .toggleTimeUnitLeftSceneLock(),
                   ),
+                  TimeMetricDivider(
+                    'Goal: 10 min'.hardcoded,
+                    isGoalReached: hasLeftByTenMin,
+                  ),
                   TimeMetric(
-                    label: 'Patient at Destination',
+                    label: 'Give ASA 325 mg'.hardcoded,
+                    timeOccurred: timeOfAspirinGivenDecision,
+                    onNewTimeSaved: (newTime) => ref
+                        .read(
+                          timeMetricsControllerProvider.notifier,
+                        )
+                        .setTimeOfAspirinGivenDecision(newTime),
+                    isLocked: isLockedAspirinGivenDecision,
+                    onToggleLocked: () => ref
+                        .read(timeMetricsControllerProvider.notifier)
+                        .toggleTimeOfAspirinGivenDecisionLock(),
+                  ),
+                  TimeMetric(
+                    label: 'Notify Cath Lab'.hardcoded,
+                    timeOccurred: timeCathLabNotifiedDecision,
+                    onNewTimeSaved: (newTime) => ref
+                        .read(timeMetricsControllerProvider.notifier)
+                        .setTimeCathLabNotifiedDecision(newTime),
+                    isLocked: isLockedCathLabNotifiedDecision,
+                    onToggleLocked: () => ref
+                        .read(timeMetricsControllerProvider.notifier)
+                        .toggleTimeCathLabNotifiedDecisionLock(),
+                  ),
+                  TimeMetric(
+                    label: 'Patient at Destination'.hardcoded,
                     timeOccurred: timePatientArrivedAtDestination,
                     onNewTimeSaved: (newTime) => ref
                         .read(timeMetricsControllerProvider.notifier)
@@ -97,12 +152,68 @@ class TimeMetrics extends ConsumerWidget {
                         .read(timeMetricsControllerProvider.notifier)
                         .toggleTimePatientArrivedAtDestinationLock(),
                   ),
+                  TimeMetricDivider(
+                    'Goal: 60 min'.hardcoded,
+                    isGoalReached: hasArrivedBySixtyMin,
+                  ),
                 ],
               ),
             ),
           ],
         );
       },
+    );
+  }
+}
+
+class TimeMetricDivider extends StatelessWidget {
+  const TimeMetricDivider(this.data, {required this.isGoalReached, super.key});
+
+  final String data;
+  final ValueGetter<bool?>? isGoalReached;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    final isGoalReachedValue = isGoalReached?.call();
+
+    final color = switch (isGoalReachedValue) {
+      true => colorScheme.tertiary,
+      false => colorScheme.primary,
+      null => colorScheme.error,
+    };
+
+    return Row(
+      children: [
+        const Expanded(child: Divider(thickness: 2)),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Row(
+            children: [
+              if (isGoalReachedValue ?? true)
+                Icon(
+                  switch (isGoalReachedValue) {
+                    true => Icons.check_circle,
+                    false => null,
+                    null => Icons.error,
+                  },
+                  color: color,
+                ),
+              if (isGoalReachedValue ?? true) gapW4,
+              Text(
+                data,
+                style: textTheme.bodySmall?.apply(
+                  color: color,
+                  fontWeightDelta: 1,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const Expanded(child: Divider(thickness: 2)),
+      ],
     );
   }
 }
@@ -172,30 +283,10 @@ class TimeMetric extends StatelessWidget {
     return Padding(
       padding: const EdgeInsetsDirectional.only(bottom: 4),
       child: ListTile(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Text(
-                  label,
-                  style: textTheme.bodyLarge?.apply(fontWeightDelta: 1),
-                ),
-                if (timeOccurred != null)
-                  IconButton(
-                    onPressed: onToggleLocked,
-                    icon: isLocked
-                        ? const Icon(Icons.lock)
-                        : const Icon(Icons.lock_open),
-                  ),
-              ],
-            ),
-            if (timeOccurred == null)
-              IconButton(
-                onPressed: isLocked ? null : selectDateTime,
-                icon: const Icon(Icons.schedule),
-              ),
-          ],
+        title: Text(
+          label,
+          softWrap: true,
+          style: textTheme.bodyLarge?.apply(fontWeightDelta: 1),
         ),
         subtitle: (timeOccurred == null)
             ? null
@@ -237,16 +328,33 @@ class TimeMetric extends StatelessWidget {
                   ],
                 ),
               ),
-        trailing: (timeOccurred == null)
-            ? FilledButton(
-                onPressed: () => onNewTimeSaved(DateTime.now()),
-                child: const Text('Now'),
-              )
-            : TimeMetricsMenu(
-                onSelectDateTime: selectDateTime,
-                onClearDateTime: clearDateTime,
-                isLocked: isLocked,
-              ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: timeOccurred == null
+              ? [
+                  FilledButton(
+                    onPressed: () => onNewTimeSaved(DateTime.now()),
+                    child: Text('Now'.hardcoded),
+                  ),
+                  IconButton(
+                    onPressed: isLocked ? null : selectDateTime,
+                    icon: const Icon(Icons.edit_calendar_outlined),
+                  ),
+                ]
+              : [
+                  // IconButton(
+                  //   onPressed: onToggleLocked,
+                  //   icon: isLocked
+                  //       ? const Icon(Icons.lock)
+                  //       : const Icon(Icons.lock_open),
+                  // ),
+                  TimeMetricsMenu(
+                    onSelectDateTime: selectDateTime,
+                    onClearDateTime: clearDateTime,
+                    isLocked: isLocked,
+                  ),
+                ],
+        ),
       ),
     );
   }
@@ -285,7 +393,7 @@ class _TimeMetricsMenuState extends State<TimeMetricsMenu> {
       menuChildren: <Widget>[
         MenuItemButton(
           onPressed: widget.onSelectDateTime,
-          child: const Text('Change Time'),
+          child: Text('Change Time'.hardcoded),
         ),
         MenuItemButton(
           onPressed: () async {
@@ -293,18 +401,18 @@ class _TimeMetricsMenuState extends State<TimeMetricsMenu> {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: const Text('Clear Time'),
-                      content: const Text(
-                        'Are you sure you want to clear the time?',
+                      title: Text('Clear Time'.hardcoded),
+                      content: Text(
+                        'Are you sure you want to clear the time?'.hardcoded,
                       ),
                       actions: <Widget>[
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(false),
-                          child: const Text('Cancel'),
+                          child: Text('Cancel'.hardcoded),
                         ),
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(true),
-                          child: const Text('CLEAR TIME'),
+                          child: Text('CLEAR TIME'.hardcoded),
                         ),
                       ],
                     );
@@ -316,7 +424,7 @@ class _TimeMetricsMenuState extends State<TimeMetricsMenu> {
               widget.onClearDateTime();
             }
           },
-          child: const Text('Clear Time'),
+          child: Text('Clear Time'.hardcoded),
         ),
       ],
       builder: (_, MenuController controller, Widget? child) {

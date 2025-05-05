@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'count_up_timer_repository.g.dart';
@@ -98,13 +99,13 @@ class CountUpTimerRepository {
 }
 
 @riverpod
-CountUpTimerRepository countUpTimerRepository(CountUpTimerRepositoryRef ref) {
+CountUpTimerRepository countUpTimerRepository(Ref ref) {
   final repository = CountUpTimerRepository();
   ref.onDispose(repository.dispose);
   return repository;
 }
 
 @riverpod
-Stream<int> countUpTimer(CountUpTimerRef ref) {
+Stream<int> countUpTimer(Ref ref) {
   return ref.watch(countUpTimerRepositoryProvider).timerStream;
 }

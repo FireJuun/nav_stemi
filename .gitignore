@@ -5,9 +5,11 @@
 *.swp
 .DS_Store
 .atom/
+.build/
 .buildlog/
 .history
 .svn/
+.swiftpm/
 migrate_working_dir/
 
 # IntelliJ related
@@ -74,6 +76,8 @@ unlinked_spec.ds
 **/ios/Flutter/App.framework
 **/ios/Flutter/Flutter.framework
 **/ios/Flutter/Flutter.podspec
+# Dart Defines, for different app environments
+**/ios/Flutter/Dart-Defines.xcconfig
 **/ios/Flutter/Generated.xcconfig
 **/ios/Flutter/app.flx
 **/ios/Flutter/app.zip
@@ -99,8 +103,16 @@ app.*.symbols
 app.*.map.json
 
 # Custom
-*.env
+*.env*
 */env.g.dart
+
+# Ignore FlutterFire CLI generated API keys and IDs
+**GoogleService-Info*.plist
+**google-services*.json
+**firebase*.json
+**firebase_app_id_file*.json
+**firebase_options*.json
+**firebase_options*.dart
 
 # Exceptions to the above rules.
 !**/ios/**/default.mode1v3

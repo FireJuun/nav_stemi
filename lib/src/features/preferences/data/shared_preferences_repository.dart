@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,6 +9,7 @@ part 'shared_preferences_repository.g.dart';
 
 enum _StoredValues {
   appTheme,
+  navigationSettings,
 }
 
 class SharedPreferencesRepository {
@@ -33,12 +35,31 @@ class SharedPreferencesRepository {
       return kFirstAppTheme;
     }
   }
+
+  void saveNavigationSettings(NavigationSettings? navigationSettings) {
+    if (navigationSettings == null) {
+      _prefs.remove(_StoredValues.navigationSettings.name);
+    } else {
+      _prefs.setString(
+        _StoredValues.navigationSettings.name,
+        navigationSettings.toJson(),
+      );
+    }
+  }
+
+  NavigationSettings getNavigationSettings() {
+    final navigationSettingsString =
+        _prefs.getString(_StoredValues.navigationSettings.name);
+    if (navigationSettingsString != null) {
+      return NavigationSettings.fromJson(navigationSettingsString);
+    } else {
+      return kDefaultNavigationSettings;
+    }
+  }
 }
 
 @Riverpod(keepAlive: true)
-SharedPreferencesRepository sharedPreferencesRepository(
-  SharedPreferencesRepositoryRef ref,
-) {
+SharedPreferencesRepository sharedPreferencesRepository(Ref ref) {
   // needs to be set in bootstrap
   throw UnimplementedError();
 }

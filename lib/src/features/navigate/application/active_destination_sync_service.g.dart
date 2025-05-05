@@ -1,0 +1,30 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'active_destination_sync_service.dart';
+
+// **************************************************************************
+// RiverpodGenerator
+// **************************************************************************
+
+String _$activeDestinationSyncServiceHash() =>
+    r'1e683f687dd47ba1e544febae826e43430e2884f';
+
+/// See also [activeDestinationSyncService].
+@ProviderFor(activeDestinationSyncService)
+final activeDestinationSyncServiceProvider =
+    AutoDisposeProvider<ActiveDestinationSyncService>.internal(
+  activeDestinationSyncService,
+  name: r'activeDestinationSyncServiceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$activeDestinationSyncServiceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef ActiveDestinationSyncServiceRef
+    = AutoDisposeProviderRef<ActiveDestinationSyncService>;
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

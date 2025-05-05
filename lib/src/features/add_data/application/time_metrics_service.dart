@@ -93,18 +93,28 @@ class TimeMetricsService {
     setTimeMetrics(updated);
   }
 
-  void setTimeOfStemiActivation(DateTime? timeOfStemiActivation) {
+  void setTimeOfStemiActivationDecision(
+    DateTime? timeOfStemiActivationDecision,
+  ) {
     final updated = _timeMetrics().copyWith(
-      timeOfStemiActivation: () => timeOfStemiActivation,
+      timeOfStemiActivationDecision: () => timeOfStemiActivationDecision,
     );
 
     setTimeMetrics(updated);
   }
 
-  void toggleTimeOfStemiActivationLock() {
-    final lastValue = _timeMetrics().lockTimeOfStemiActivation;
+  void setWasStemiActivated(bool? wasStemiActivated) {
     final updated = _timeMetrics().copyWith(
-      lockTimeOfStemiActivation: () => !lastValue,
+      wasStemiActivated: () => wasStemiActivated,
+    );
+
+    setTimeMetrics(updated);
+  }
+
+  void toggleTimeOfStemiActivationDecisionLock() {
+    final lastValue = _timeMetrics().lockTimeOfStemiActivationDecision;
+    final updated = _timeMetrics().copyWith(
+      lockTimeOfStemiActivationDecision: () => !lastValue,
     );
 
     setTimeMetrics(updated);
@@ -121,6 +131,55 @@ class TimeMetricsService {
     final lastValue = _timeMetrics().lockTimeUnitLeftScene;
     final updated = _timeMetrics().copyWith(
       lockTimeUnitLeftScene: () => !lastValue,
+    );
+
+    setTimeMetrics(updated);
+  }
+
+  void setTimeOfAspirinGivenDecision(DateTime? timeOfAspirinGivenDecision) {
+    final updated = _timeMetrics().copyWith(
+      timeOfAspirinGivenDecision: () => timeOfAspirinGivenDecision,
+    );
+
+    setTimeMetrics(updated);
+  }
+
+  void setWasAspirinGiven(bool? wasAspirinGiven) {
+    final updated = _timeMetrics().copyWith(
+      wasAspirinGiven: () => wasAspirinGiven,
+    );
+
+    setTimeMetrics(updated);
+  }
+
+  void toggleTimeOfAspirinGivenDecisionLock() {
+    final lastValue = _timeMetrics().lockTimeOfAspirinGivenDecision;
+    final updated = _timeMetrics().copyWith(
+      lockTimeOfAspirinGivenDecision: () => !lastValue,
+    );
+    setTimeMetrics(updated);
+  }
+
+  void setTimeCathLabNotifiedDecision(DateTime? timeCathLabNotifiedDecision) {
+    final updated = _timeMetrics().copyWith(
+      timeCathLabNotifiedDecision: () => timeCathLabNotifiedDecision,
+    );
+
+    setTimeMetrics(updated);
+  }
+
+  void setWasCathLabNotified(bool? wasCathLabNotified) {
+    final updated = _timeMetrics().copyWith(
+      wasCathLabNotified: () => wasCathLabNotified,
+    );
+
+    setTimeMetrics(updated);
+  }
+
+  void toggleTimeCathLabNotifiedDecisionLock() {
+    final lastValue = _timeMetrics().lockTimeCathLabNotifiedDecision;
+    final updated = _timeMetrics().copyWith(
+      lockTimeCathLabNotifiedDecision: () => !lastValue,
     );
 
     setTimeMetrics(updated);
@@ -147,6 +206,6 @@ class TimeMetricsService {
 }
 
 @riverpod
-TimeMetricsService timeMetricsService(TimeMetricsServiceRef ref) {
+TimeMetricsService timeMetricsService(Ref ref) {
   return TimeMetricsService(ref);
 }

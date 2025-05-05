@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:nav_stemi/src/export.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -5,7 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'available_routes_repository.g.dart';
 
 /// Data on the maps will be displayed here.
-/// This is stored in memory when [NavScreen] is initialized.
+/// This is stored in memory when [NavScreenGoogle] is initialized.
 /// It is updated when the user selects a new destination or
 /// when the user updates the info on nearby ED distances.
 ///
@@ -29,15 +30,13 @@ class AvailableRoutesRepository {
   }
 }
 
-@Riverpod(keepAlive: true)
-AvailableRoutesRepository availableRoutesRepository(
-  AvailableRoutesRepositoryRef ref,
-) {
+@riverpod
+AvailableRoutesRepository availableRoutesRepository(Ref ref) {
   return AvailableRoutesRepository();
 }
 
 @riverpod
-Stream<AvailableRoutes?> availableRoutes(AvailableRoutesRef ref) {
+Stream<AvailableRoutes?> availableRoutes(Ref ref) {
   final availableRoutesRepository =
       ref.watch(availableRoutesRepositoryProvider);
   return availableRoutesRepository.watchAvailableRoutes();

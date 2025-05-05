@@ -5,8 +5,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
-const _boolDataToChecklist = BoolDataToChecklistDTO();
-
 @immutable
 class PatientInfoModel extends Equatable {
   const PatientInfoModel({
@@ -16,8 +14,7 @@ class PatientInfoModel extends Equatable {
     this.birthDate,
     this.sexAtBirth,
     this.cardiologist,
-    this.didGetAspirin,
-    this.isCathLabNotified,
+    this.isDirty = false, // Default to true, so new data is marked for syncing
   });
 
   final String? lastName;
@@ -28,8 +25,10 @@ class PatientInfoModel extends Equatable {
   final SexAtBirth? sexAtBirth;
   final String? cardiologist;
 
-  final bool? didGetAspirin;
-  final bool? isCathLabNotified;
+  /// Indicates whether this model has changes that need to be synced to FHIR
+  /// - true: local changes need to be synced to FHIR
+  /// - false: model is in sync with FHIR resources
+  final bool isDirty;
 
   /// ValueGetter used to allow null values in the copyWith method
   /// spec: https://stackoverflow.com/a/73432242
@@ -40,8 +39,7 @@ class PatientInfoModel extends Equatable {
     ValueGetter<DateTime?>? birthDate,
     ValueGetter<SexAtBirth?>? sexAtBirth,
     ValueGetter<String?>? cardiologist,
-    ValueGetter<bool?>? didGetAspirin,
-    ValueGetter<bool?>? isCathLabNotified,
+    ValueGetter<bool>? isDirty,
   }) {
     return PatientInfoModel(
       lastName: lastName != null ? lastName() : this.lastName,
@@ -50,11 +48,8 @@ class PatientInfoModel extends Equatable {
       birthDate: birthDate != null ? birthDate() : this.birthDate,
       sexAtBirth: sexAtBirth != null ? sexAtBirth() : this.sexAtBirth,
       cardiologist: cardiologist != null ? cardiologist() : this.cardiologist,
-      didGetAspirin:
-          didGetAspirin != null ? didGetAspirin() : this.didGetAspirin,
-      isCathLabNotified: isCathLabNotified != null
-          ? isCathLabNotified()
-          : this.isCathLabNotified,
+      isDirty:
+          isDirty != null ? isDirty() : true, // Default to dirty on changes
     );
   }
 
@@ -66,8 +61,7 @@ class PatientInfoModel extends Equatable {
       'birthDate': birthDate?.millisecondsSinceEpoch,
       'sexAtBirth': sexAtBirth,
       'cardiologist': cardiologist,
-      'didGetAspirin': didGetAspirin,
-      'isCathLabNotified': isCathLabNotified,
+      'isDirty': isDirty,
     };
   }
 
@@ -85,8 +79,7 @@ class PatientInfoModel extends Equatable {
           : null,
       cardiologist:
           map['cardiologist'] != null ? map['cardiologist'] as String : null,
-      didGetAspirin: map['didGetAspirin'] as bool?,
-      isCathLabNotified: map['isCathLabNotified'] as bool?,
+      isDirty: map['isDirty'] != null ? map['isDirty'] as bool : true,
     );
   }
 
@@ -108,8 +101,7 @@ class PatientInfoModel extends Equatable {
       birthDate,
       sexAtBirth,
       cardiologist,
-      didGetAspirin,
-      isCathLabNotified,
+      isDirty,
     ];
   }
 
@@ -123,10 +115,15 @@ class PatientInfoModel extends Equatable {
   bool cardiologistInfoChecklistState() =>
       cardiologist != null && cardiologist!.isNotEmpty;
 
-  /// converts this to something useful for the checklist
-  bool? aspirinInfoChecklistState() =>
-      _boolDataToChecklist.convertBoolDataToChecklist(boolData: didGetAspirin);
+  /// Creates a copy of this model with [isDirty] set to false,
+  /// indicating it has been synced with FHIR
+  PatientInfoModel markSynced() {
+    return copyWith(isDirty: () => false);
+  }
 
-  bool? cathLabInfoChecklistState() => _boolDataToChecklist
-      .convertBoolDataToChecklist(boolData: isCathLabNotified);
+  /// Creates a copy of this model with [isDirty] set to true,
+  /// indicating it has changes that need to be synced with FHIR
+  PatientInfoModel markDirty() {
+    return copyWith(isDirty: () => true);
+  }
 }

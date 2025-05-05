@@ -7,7 +7,7 @@ part of 'patient_info_controller.dart';
 // **************************************************************************
 
 String _$patientInfoControllerHash() =>
-    r'48b7a3cee2ba24cd76b9d2822f1daaf08e48115b';
+    r'09adf41778a2043f7d5640cdfb2259b997c6bb94';
 
 /// See also [PatientInfoController].
 @ProviderFor(PatientInfoController)
@@ -24,4 +24,4 @@ final patientInfoControllerProvider =
 
 typedef _$PatientInfoController = AutoDisposeAsyncNotifier<void>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

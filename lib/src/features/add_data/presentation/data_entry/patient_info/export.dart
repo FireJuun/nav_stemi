@@ -1,3 +1,8 @@
+export 'patient_entry_birthdate.dart';
+export 'patient_entry_cardiologist.dart';
+export 'patient_entry_gender.dart';
+export 'patient_entry_name.dart';
+export 'patient_entry_text.dart';
 export 'patient_info.dart';
 export 'patient_info_controller.dart';
 export 'scan_qr_accept_data.dart';

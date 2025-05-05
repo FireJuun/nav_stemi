@@ -1,4 +1,4 @@
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -19,24 +19,42 @@ class SharedPreferencesSyncService {
   void _init() {
     /// Listen for changes to the current app theme,
     /// then save a reference in local storage
-    ref.listen<AsyncValue<AppTheme>>(appThemeChangesProvider, (previous, next) {
-      final appTheme = next.value;
-      if (previous is AsyncLoading) {
-        // do nothing
-      } else {
-        _saveAppThemeLocally(appTheme);
-      }
-    });
+    ref
+      ..listen<AsyncValue<AppTheme>>(appThemeChangesProvider, (previous, next) {
+        final appTheme = next.value;
+        if (previous is AsyncLoading) {
+          // do nothing
+        } else {
+          _saveAppThemeLocally(appTheme);
+        }
+      })
+      ..listen<AsyncValue<NavigationSettings>>(
+        navigationSettingsChangesProvider,
+        (previous, next) {
+          final navigationSettings = next.value;
+          if (previous is AsyncLoading) {
+            // do nothing
+          } else {
+            _saveNavigationSettingsLocally(navigationSettings);
+          }
+        },
+      );
   }
 
   Future<void> _saveAppThemeLocally(AppTheme? appTheme) async {
     ref.read(sharedPreferencesRepositoryProvider).saveAppTheme(appTheme);
   }
+
+  Future<void> _saveNavigationSettingsLocally(
+    NavigationSettings? navigationSettings,
+  ) async {
+    ref
+        .read(sharedPreferencesRepositoryProvider)
+        .saveNavigationSettings(navigationSettings);
+  }
 }
 
 @Riverpod(keepAlive: true)
-SharedPreferencesSyncService sharedPreferencesSyncService(
-  SharedPreferencesSyncServiceRef ref,
-) {
+SharedPreferencesSyncService sharedPreferencesSyncService(Ref ref) {
   return SharedPreferencesSyncService(ref);
 }
