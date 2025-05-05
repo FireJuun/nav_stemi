@@ -8,7 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'fhir_sync_service.g.dart';
 
 // Increase debounce duration to reduce sync frequency
-const _debounceDuration = Duration(seconds: 5);
+const _debounceDuration = Duration(seconds: 2);
 
 class FhirSyncService {
   // This class is responsible for syncing FHIR resources with the server.
@@ -48,65 +48,44 @@ class FhirSyncService {
 
   void _init() {
     // Initialize the service and set up listeners for changes in the app state.
-    // Listen for changes in patient info and time metrics
+    // Listen directly to the models instead of the sync providers
     ref
-      ..listen<bool>(
-        patientInfoShouldSyncProvider,
+      ..listen<AsyncValue<PatientInfoModel?>>(
+        patientInfoModelProvider,
         (previous, current) {
-          if (current) {
-            final model = ref.read(patientInfoModelProvider).value;
-            if (model != null) {
-              _updatePatientInfoSyncStatus(FhirSyncStatus.dirty);
+          if (current.hasValue &&
+              current.value != null &&
+              current.value!.isDirty) {
+            _updatePatientInfoSyncStatus(FhirSyncStatus.dirty);
 
-              // Sync the patient info with FHIR with debouncing
-              localDebouncer(
-                'syncPatientInfo',
-                () => _syncPatientInfo(model),
-                _debounceDuration,
-              );
-            }
+            // Sync the patient info with FHIR with debouncing
+            localDebouncer(
+              'syncPatientInfo',
+              () => _syncPatientInfo(current.value!),
+              _debounceDuration,
+            );
           }
         },
       )
-      ..listen<bool>(
-        timeMetricsShouldSyncProvider,
-        (previous, current) {
-          if (current) {
-            final model = ref.read(timeMetricsModelProvider).value;
-            if (model != null) {
-              _updateTimeMetricsSyncStatus(FhirSyncStatus.dirty);
-              print('TimeMetricsModel marked as dirty, scheduling sync');
-
-              // Sync the time metrics with FHIR with debouncing
-              localDebouncer(
-                'syncTimeMetrics',
-                () {
-                  print('Executing timeMetrics sync');
-                  _syncTimeMetrics(model);
-                },
-                _debounceDuration,
-              );
-            }
-          }
-        },
-      )
-      // Also listen directly to the TimeMetricsModel to catch manual updates
       ..listen<AsyncValue<TimeMetricsModel?>>(
         timeMetricsModelProvider,
         (previous, current) {
           if (current.hasValue &&
               current.value != null &&
               current.value!.isDirty) {
-            print('TimeMetricsModel changed and is dirty, scheduling sync');
             _updateTimeMetricsSyncStatus(FhirSyncStatus.dirty);
+            debugPrint(
+              'TimeMetricsModel changed and is dirty, scheduling sync',
+            );
 
-            // Sync with debouncing
+            // Sync the time metrics with FHIR with debouncing
             localDebouncer(
               'syncTimeMetrics',
               () {
-                print('Executing timeMetrics sync from model listener');
+                debugPrint('Executing timeMetrics sync from model listener');
                 _syncTimeMetrics(current.value!);
               },
+              _debounceDuration,
             );
           }
         },
@@ -140,7 +119,7 @@ class FhirSyncService {
 
   Future<void> manuallySyncAllData() async {
     if (_isSyncPaused) {
-      print('Sync is paused, not performing manual sync');
+      debugPrint('Sync is paused, not performing manual sync');
       return;
     }
 
@@ -148,8 +127,9 @@ class FhirSyncService {
     cancelTimeMetricsSync();
 
     // Reset retry counts when manually syncing
-    _retryManager.resetRetries('patientInfo');
-    _retryManager.resetRetries('timeMetrics');
+    _retryManager
+      ..resetRetries('patientInfo')
+      ..resetRetries('timeMetrics');
 
     final patientInfo = ref.read(patientInfoModelProvider).value;
     final timeMetrics = ref.read(timeMetricsModelProvider).value;
@@ -172,9 +152,9 @@ class FhirSyncService {
   }
 
   /// Schedules a retry with exponential backoff
-  void _scheduleRetry(String operationId, Function() retryFunction) {
+  void _scheduleRetry(String operationId, void Function() retryFunction) {
     if (_isSyncPaused) {
-      print('Sync is paused, not scheduling retry for $operationId');
+      debugPrint('Sync is paused, not scheduling retry for $operationId');
       return;
     }
 
@@ -182,7 +162,8 @@ class FhirSyncService {
 
     if (_retryManager.shouldRetry(operationId)) {
       final delayMs = _retryManager.getNextRetryDelayMs(operationId);
-      print('Scheduling retry #${_retryManager.getRetryCount(operationId)} '
+      debugPrint(
+          'Scheduling retry #${_retryManager.getRetryCount(operationId)} '
           'for $operationId in $delayMs ms');
 
       // Cancel any existing retry timer
@@ -194,7 +175,7 @@ class FhirSyncService {
         retryFunction,
       );
     } else {
-      print('Max retries reached for $operationId, giving up');
+      debugPrint('Max retries reached for $operationId, giving up');
       // Update appropriate status depending on the operation
       if (operationId == 'patientInfo') {
         _updatePatientInfoSyncStatus(
@@ -228,7 +209,7 @@ class FhirSyncService {
   Future<void> _syncPatientInfo(PatientInfoModel patientInfo) async {
     // Don't sync if paused
     if (_isSyncPaused) {
-      print('Sync is paused, not syncing patient info');
+      debugPrint('Sync is paused, not syncing patient info');
       return;
     }
 
@@ -332,7 +313,10 @@ class FhirSyncService {
           .updateFromBundle(responseBundle);
 
       // Mark the model as synced in local storage
-      ref.read(patientInfoRepositoryProvider).patientInfoModel?.markSynced();
+      final syncedModel = patientInfo.markSynced();
+      ref
+          .read(patientInfoRepositoryProvider)
+          .updatePatientInfoModel(syncedModel, markAsDirty: false);
 
       // Reset retry count on successful sync
       _retryManager.resetRetries('patientInfo');
@@ -356,7 +340,7 @@ class FhirSyncService {
   Future<void> _syncTimeMetrics(TimeMetricsModel timeMetrics) async {
     // Don't sync if paused
     if (_isSyncPaused) {
-      print('Sync is paused, not syncing time metrics');
+      debugPrint('Sync is paused, not syncing time metrics');
       return;
     }
 
@@ -641,7 +625,7 @@ class FhirSyncService {
           .postTransactionBundleWithFallback(bundle);
     } catch (e) {
       // Log the error for debugging
-      print('Error sending FHIR bundle: $e');
+      debugPrint('Error sending FHIR bundle: $e');
 
       // Rethrow to let the calling code handle the error
       rethrow;
@@ -658,7 +642,7 @@ class FhirSyncService {
           );
       return resource as Patient;
     } catch (e) {
-      print('Error retrieving Patient $id: $e');
+      debugPrint('Error retrieving Patient $id: $e');
       // Fallback to simulated response for demo mode
       return Patient(id: FhirString(id));
     }
@@ -674,7 +658,7 @@ class FhirSyncService {
           );
       return resource as Practitioner;
     } catch (e) {
-      print('Error retrieving Practitioner $id: $e');
+      debugPrint('Error retrieving Practitioner $id: $e');
       // Fallback to simulated response for demo mode
       return Practitioner(id: FhirString(id));
     }
@@ -690,7 +674,7 @@ class FhirSyncService {
           );
       return resource as Encounter;
     } catch (e) {
-      print('Error retrieving Encounter $id: $e');
+      debugPrint('Error retrieving Encounter $id: $e');
       // Fallback to simulated response for demo mode
       final empty = defaultEmsEncounter;
       return empty.copyWith(id: FhirString(id));
@@ -709,7 +693,7 @@ class FhirSyncService {
           );
       return resource as MedicationAdministration;
     } catch (e) {
-      print('Error retrieving MedicationAdministration $id: $e');
+      debugPrint('Error retrieving MedicationAdministration $id: $e');
       // Fallback to simulated response for demo mode
       // final empty = MedicationAdministration.empty();
       // return empty.copyWith(id: FhirString(id));
@@ -727,7 +711,7 @@ class FhirSyncService {
           );
       return resource as Condition;
     } catch (e) {
-      print('Error retrieving Condition $id: $e');
+      debugPrint('Error retrieving Condition $id: $e');
       // Fallback to simulated response for demo mode
       // final empty = Condition.empty();
       // return empty.copyWith(id: FhirString(id));
@@ -747,7 +731,7 @@ class FhirSyncService {
           );
       return resource as QuestionnaireResponse;
     } catch (e) {
-      print('Error retrieving QuestionnaireResponse $id: $e');
+      debugPrint('Error retrieving QuestionnaireResponse $id: $e');
       // Fallback to simulated response for demo mode
       // final empty = QuestionnaireResponse.empty();
       // return empty.copyWith(id: FhirString(id));
