@@ -1,22 +1,17 @@
-// ignore_for_file: lines_longer_than_80_chars
-
-import 'package:google_maps_flutter/google_maps_flutter.dart' as maps;
 import 'package:google_routes_flutter/google_routes_flutter.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 class RemoteRoutesGoogleRepository implements RemoteRoutesRepository {
-  final _mapsToRoutesDTO = const MapsToRoutesDTO();
-
   @override
-  Future<NearbyEds> getDistanceInfoFromEdList({
-    required maps.LatLng origin,
-    required Map<EdInfo, double> edListAndDistances,
+  Future<NearbyHospitals> getDistanceInfoFromHospitalList({
+    required AppWaypoint origin,
+    required Map<Hospital, double> hospitalListAndDistances,
   }) async {
     assert(
-      edListAndDistances.isNotEmpty,
+      hospitalListAndDistances.isNotEmpty,
       'At least one destination is required',
     );
-    assert(edListAndDistances.length <= 10, 'Maximum destinations is 10');
+    assert(hospitalListAndDistances.length <= 10, 'Maximum destinations is 10');
 
     // final requestedTime = DateTime.now();
     final routeMatrixes = await computeRouteMatrix(
@@ -24,18 +19,17 @@ class RemoteRoutesGoogleRepository implements RemoteRoutesRepository {
         RouteMatrixOrigin(
           waypoint: Waypoint(
             location: Location(
-              latLng: _mapsToRoutesDTO.mapsToRoutes(origin),
+              latLng: origin.toGoogleRoutes(),
             ),
           ),
         ),
       ],
       destinations: [
-        for (final emergencyDepartment in edListAndDistances.keys)
+        for (final hospital in hospitalListAndDistances.keys)
           RouteMatrixDestination(
             waypoint: Waypoint(
               location: Location(
-                latLng:
-                    _mapsToRoutesDTO.mapsToRoutes(emergencyDepartment.location),
+                latLng: hospital.location().toGoogleRoutes(),
               ),
             ),
           ),
@@ -45,11 +39,11 @@ class RemoteRoutesGoogleRepository implements RemoteRoutesRepository {
       apiKey: Env.routesApi,
     );
 
-    final items = <maps.LatLng, NearbyEd>{};
+    final items = <AppWaypoint, NearbyHospital>{};
 
     assert(routeMatrixes.isNotEmpty, 'No routes found');
     assert(
-      routeMatrixes.length == edListAndDistances.length,
+      routeMatrixes.length == hospitalListAndDistances.length,
       'Routes length mismatch',
     );
 
@@ -57,38 +51,38 @@ class RemoteRoutesGoogleRepository implements RemoteRoutesRepository {
       final routeEntry =
           routeMatrixes.firstWhere((e) => e.destinationIndex == i);
       assert(i == routeEntry.destinationIndex, 'Index mismatch');
-      final destination = edListAndDistances.entries.elementAt(i);
-      final edInfo = destination.key;
+      final destination = hospitalListAndDistances.entries.elementAt(i);
+      final hospitalInfo = destination.key;
       final distanceBetween = destination.value;
 
-      items[edInfo.location] = NearbyEd(
+      items[hospitalInfo.location()] = NearbyHospital(
         distanceBetween: distanceBetween,
         routeDistance: routeEntry.distanceMeters,
         routeDuration: routeEntry.duration,
-        edInfo: edInfo,
+        hospitalInfo: hospitalInfo,
       );
     }
 
-    return NearbyEds(items: items);
+    return NearbyHospitals(items: items);
   }
 
   @override
-  Future<AvailableRoutes> getAvailableRoutesForSingleED({
-    required maps.LatLng origin,
-    required maps.LatLng destination,
-    required EdInfo destinationInfo,
+  Future<AvailableRoutes> getAvailableRoutesForSingleHospital({
+    required AppWaypoint origin,
+    required AppWaypoint destination,
+    required Hospital destinationInfo,
   }) async {
     final requestedTime = DateTime.now();
 
     final routes = await computeRoute(
       origin: Waypoint(
         location: Location(
-          latLng: _mapsToRoutesDTO.mapsToRoutes(origin),
+          latLng: origin.toGoogleRoutes(),
         ),
       ),
       destination: Waypoint(
         location: Location(
-          latLng: _mapsToRoutesDTO.mapsToRoutes(destination),
+          latLng: destination.toGoogleRoutes(),
         ),
       ),
       xGoogFieldMask:

@@ -1,13 +1,34 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 // ignore:depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:go_router/go_router.dart';
+import 'package:nav_stemi/firebase_options_dev.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Animate.restartOnHotReload = true;
+
+  // Initialize Firebase first
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // Sign in anonymously if not already signed in
+  final currentUser = FirebaseAuth.instance.currentUser;
+  if (currentUser == null) {
+    try {
+      await FirebaseAuth.instance.signInAnonymously();
+      debugPrint('Anonymous authentication successful');
+    } catch (e) {
+      debugPrint('Error signing in anonymously: $e');
+    }
+  } else {
+    debugPrint('User already signed in: ${currentUser.uid}');
+  }
 
   // turn off the # in the URLs on the web
   usePathUrlStrategy();

@@ -7,11 +7,12 @@ part of 'time_metrics_repository.dart';
 // **************************************************************************
 
 String _$timeMetricsRepositoryHash() =>
-    r'5ad41b815839ec39c4e3845b825be13c010dd3bb';
+    r'857c9533ee2aa4868648832bd6729764beb74676';
 
 /// See also [timeMetricsRepository].
 @ProviderFor(timeMetricsRepository)
-final timeMetricsRepositoryProvider = Provider<TimeMetricsRepository>.internal(
+final timeMetricsRepositoryProvider =
+    AutoDisposeProvider<TimeMetricsRepository>.internal(
   timeMetricsRepository,
   name: r'timeMetricsRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -21,12 +22,16 @@ final timeMetricsRepositoryProvider = Provider<TimeMetricsRepository>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef TimeMetricsRepositoryRef = ProviderRef<TimeMetricsRepository>;
-String _$timeMetricsModelHash() => r'6ec99ef78b214c2f79275595bdd9018f4c302914';
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef TimeMetricsRepositoryRef
+    = AutoDisposeProviderRef<TimeMetricsRepository>;
+String _$timeMetricsModelHash() => r'9a4da78b29c377d5e339172b3f5ad04207456b70';
 
 /// See also [timeMetricsModel].
 @ProviderFor(timeMetricsModel)
-final timeMetricsModelProvider = StreamProvider<TimeMetricsModel?>.internal(
+final timeMetricsModelProvider =
+    AutoDisposeStreamProvider<TimeMetricsModel?>.internal(
   timeMetricsModel,
   name: r'timeMetricsModelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -36,6 +41,26 @@ final timeMetricsModelProvider = StreamProvider<TimeMetricsModel?>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef TimeMetricsModelRef = StreamProviderRef<TimeMetricsModel?>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef TimeMetricsModelRef = AutoDisposeStreamProviderRef<TimeMetricsModel?>;
+String _$timeMetricsShouldSyncHash() =>
+    r'ab9c58d0464072aec9a47754d9c41408040eabc6';
+
+/// See also [timeMetricsShouldSync].
+@ProviderFor(timeMetricsShouldSync)
+final timeMetricsShouldSyncProvider = AutoDisposeProvider<bool>.internal(
+  timeMetricsShouldSync,
+  name: r'timeMetricsShouldSyncProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$timeMetricsShouldSyncHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef TimeMetricsShouldSyncRef = AutoDisposeProviderRef<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

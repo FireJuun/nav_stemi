@@ -1,4 +1,4 @@
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,16 +31,40 @@ class AppBootstrapLocal extends AppBootstrap {
     final prefs = await SharedPreferences.getInstance();
     final sharedPreferencesRepository = SharedPreferencesRepository(prefs);
 
+    // Choose the appropriate authentication repository based on environment
+    // Use TestAuthRepository when service account credentials are available
+    // Otherwise fall back to GoogleAuthRepository
+    final AuthRepository authRepository;
+    if (Env.serviceAccountEmail.isNotEmpty &&
+        Env.serviceAccountPrivateKey.isNotEmpty) {
+      authRepository = TestAuthRepository();
+    } else {
+      authRepository = GoogleAuthRepository();
+    }
+
+    // Initialize Firebase Auth service for anonymous authentication
+    final firebaseAuthRepository = FirebaseAuthRepository();
+
     final lastTheme = sharedPreferencesRepository.getAppTheme();
     final themeRepository = ThemeRepository(lastTheme);
+    final navigationSettings =
+        sharedPreferencesRepository.getNavigationSettings();
+    final navigationSettingsRepository =
+        NavigationSettingsRepository(navigationSettings);
 
+    /// Swap between Mapbox <-> Google for app routing
     final remoteRoutes = RemoteRoutesGoogleRepository();
 
     return ProviderContainer(
       overrides: [
         // repositories
+        authRepositoryProvider.overrideWithValue(authRepository),
+        firebaseAuthRepositoryProvider
+            .overrideWithValue(firebaseAuthRepository),
         sharedPreferencesRepositoryProvider
             .overrideWithValue(sharedPreferencesRepository),
+        navigationSettingsRepositoryProvider
+            .overrideWithValue(navigationSettingsRepository),
         themeRepositoryProvider.overrideWithValue(themeRepository),
         remoteRoutesRepositoryProvider.overrideWithValue(remoteRoutes),
       ],

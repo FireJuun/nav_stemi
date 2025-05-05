@@ -9,3 +9,5 @@ const kFirstAppTheme = AppTheme(
   tertiarySeedColor: Color(0xFF21962D),
   themeMode: ThemeMode.light,
 );
+
+const kDefaultNavigationSettings = NavigationSettings();

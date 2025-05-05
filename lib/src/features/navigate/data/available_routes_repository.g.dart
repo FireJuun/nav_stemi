@@ -7,12 +7,12 @@ part of 'available_routes_repository.dart';
 // **************************************************************************
 
 String _$availableRoutesRepositoryHash() =>
-    r'77844a96363b568b5b9dfd7da129a21d1131f1e7';
+    r'f4e8d712f1b78130f309597958f79f396ed031ac';
 
 /// See also [availableRoutesRepository].
 @ProviderFor(availableRoutesRepository)
 final availableRoutesRepositoryProvider =
-    Provider<AvailableRoutesRepository>.internal(
+    AutoDisposeProvider<AvailableRoutesRepository>.internal(
   availableRoutesRepository,
   name: r'availableRoutesRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,8 +22,11 @@ final availableRoutesRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
-typedef AvailableRoutesRepositoryRef = ProviderRef<AvailableRoutesRepository>;
-String _$availableRoutesHash() => r'43ef06037e8384f33ad31363f319ffaea2379b07';
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef AvailableRoutesRepositoryRef
+    = AutoDisposeProviderRef<AvailableRoutesRepository>;
+String _$availableRoutesHash() => r'c7152ee6991de1018fcb7cdd5249493bf710a175';
 
 /// See also [availableRoutes].
 @ProviderFor(availableRoutes)
@@ -38,6 +41,8 @@ final availableRoutesProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef AvailableRoutesRef = AutoDisposeStreamProviderRef<AvailableRoutes?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

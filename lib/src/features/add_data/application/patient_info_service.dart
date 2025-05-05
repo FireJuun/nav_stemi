@@ -13,67 +13,74 @@ class PatientInfoService {
   PatientInfoRepository get patientInfoRepository =>
       ref.read(patientInfoRepositoryProvider);
 
-  PatientInfoModel _patientInfo() =>
-      patientInfoRepository.getPatientInfo() ?? const PatientInfoModel();
+  PatientInfoModel get patientInfoModel =>
+      patientInfoRepository.patientInfoModel ?? const PatientInfoModel();
 
-  void setPatientInfo(PatientInfoModel patientInfo) {
-    patientInfoRepository.setPatientInfo(patientInfo);
-  }
-
-  void setSexAtBirth(SexAtBirth? sexAtBirth) {
-    final updated = _patientInfo().copyWith(sexAtBirth: () => sexAtBirth);
-    setPatientInfo(updated);
-  }
-
-  void setBirthDate(DateTime? birthDate) {
-    final updated = _patientInfo().copyWith(birthDate: () => birthDate);
-
-    setPatientInfo(updated);
-  }
-
-  void setCardiologist(String? cardiologist) {
-    final updated = _patientInfo().copyWith(cardiologist: () => cardiologist);
-
-    setPatientInfo(updated);
-  }
-
-  void setDidGetAspirin({required bool? didGetAspirin}) {
-    final updated = _patientInfo().copyWith(didGetAspirin: () => didGetAspirin);
-
-    setPatientInfo(updated);
-  }
-
-  void setIsCathLabNotified({required bool? isCathLabNotified}) {
-    final updated =
-        _patientInfo().copyWith(isCathLabNotified: () => isCathLabNotified);
-
-    setPatientInfo(updated);
+  // TODO(FireJuun): find cleaner way to update the model
+  /// That, or add logic to ensure things are working as intended
+  void setPatientInfoModel(PatientInfoModel newModel) {
+    patientInfoRepository.updatePatientInfoModel(newModel);
   }
 
   Future<void> setPatientInfoFromScannedLicense(
     DriverLicense driverLicense,
   ) async {
-    final oldInfo = _patientInfo();
-
+    final oldInfo = patientInfoModel;
     final newInfo = driverLicense.toPatientInfo();
 
     final merged = oldInfo.copyWith(
-      lastName: () => newInfo.lastName ?? oldInfo.lastName,
-      firstName: () => newInfo.firstName ?? oldInfo.firstName,
-      middleName: () => newInfo.middleName ?? oldInfo.middleName,
-      birthDate: () => newInfo.birthDate ?? oldInfo.birthDate,
-      sexAtBirth: () => newInfo.sexAtBirth ?? oldInfo.sexAtBirth,
+      lastName: () => newInfo.lastName,
+      firstName: () => newInfo.firstName,
+      middleName: () => newInfo.middleName,
+      birthDate: () => newInfo.birthDate,
+      sexAtBirth: () => newInfo.sexAtBirth,
     );
 
-    patientInfoRepository.setPatientInfo(merged);
+    setPatientInfoModel(merged);
+  }
+
+  void setFirstName(String? firstName) {
+    final merged = patientInfoModel.copyWith(firstName: () => firstName);
+
+    setPatientInfoModel(merged);
+  }
+
+  void setMiddleName(String? middleName) {
+    final merged = patientInfoModel.copyWith(middleName: () => middleName);
+
+    setPatientInfoModel(merged);
+  }
+
+  void setLastName(String? lastName) {
+    final merged = patientInfoModel.copyWith(lastName: () => lastName);
+
+    setPatientInfoModel(merged);
+  }
+
+  void setSexAtBirth(SexAtBirth? sexAtBirth) {
+    final merged = patientInfoModel.copyWith(sexAtBirth: () => sexAtBirth);
+
+    setPatientInfoModel(merged);
+  }
+
+  void setBirthDate(DateTime? birthDate) {
+    final merged = patientInfoModel.copyWith(birthDate: () => birthDate);
+
+    setPatientInfoModel(merged);
+  }
+
+  void setCardiologist(String? cardiologist) {
+    final merged = patientInfoModel.copyWith(cardiologist: () => cardiologist);
+
+    setPatientInfoModel(merged);
   }
 
   void clearPatientInfo() {
-    patientInfoRepository.clearPatientInfo();
+    patientInfoRepository.clearPatientInfoModel();
   }
 }
 
 @riverpod
-PatientInfoService patientInfoService(PatientInfoServiceRef ref) {
+PatientInfoService patientInfoService(Ref ref) {
   return PatientInfoService(ref);
 }

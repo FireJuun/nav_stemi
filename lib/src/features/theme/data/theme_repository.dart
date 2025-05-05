@@ -1,5 +1,6 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -77,13 +78,13 @@ class ThemeRepository {
       filledButtonTheme: FilledButtonThemeData(
         style: ButtonStyle(
           padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
-            const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
           ),
           shape: WidgetStateProperty.all<OutlinedBorder>(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
           textStyle: WidgetStateProperty.all<TextStyle>(
-            textTheme.titleMedium!,
+            textTheme.labelMedium!,
           ),
         ),
       ),
@@ -95,7 +96,7 @@ class ThemeRepository {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: ButtonStyle(
           padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
-            const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
           ),
           shape: WidgetStateProperty.all<OutlinedBorder>(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -108,7 +109,7 @@ class ThemeRepository {
       segmentedButtonTheme: SegmentedButtonThemeData(
         style: ButtonStyle(
           padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
-            const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+            const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
           ),
           shape: WidgetStateProperty.all<OutlinedBorder>(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -118,7 +119,7 @@ class ThemeRepository {
               if (states.any(activeStates.contains)) {
                 return colorScheme.primary;
               } else if (states.any(interactiveStates.contains)) {
-                return colorScheme.primary.withOpacity(0.5);
+                return colorScheme.primary.withValues(alpha: 0.5);
               } else if (states.any(disabledStates.contains)) {
                 return Colors.transparent;
               }
@@ -130,7 +131,7 @@ class ThemeRepository {
               if (states.any(activeStates.contains)) {
                 return colorScheme.onPrimary;
               } else if (states.any(interactiveStates.contains)) {
-                return colorScheme.onPrimary.withOpacity(0.5);
+                return colorScheme.onPrimary.withValues(alpha: 0.5);
               } else if (states.any(disabledStates.contains)) {
                 return colorScheme.outline;
               }
@@ -168,6 +169,7 @@ TextTheme _buildTextTheme() {
     displayLarge: _style(60, FontWeight.normal),
     displayMedium: _style(44, FontWeight.bold),
     displaySmall: _style(40, FontWeight.w600),
+    headlineLarge: _style(36, FontWeight.w600),
     headlineMedium: _style(32, FontWeight.w400),
     headlineSmall: _style(22, FontWeight.w500),
     titleLarge: _style(24, FontWeight.w500),
@@ -177,6 +179,7 @@ TextTheme _buildTextTheme() {
     bodyMedium: _style(18, FontWeight.normal),
     bodySmall: _style(16, FontWeight.normal),
     labelLarge: _style(18, FontWeight.normal),
+    labelMedium: _style(16, FontWeight.normal),
     labelSmall: _style(14, FontWeight.normal),
   );
 }
@@ -185,13 +188,13 @@ TextStyle _style(double s, FontWeight w) =>
     TextStyle(fontSize: s, fontWeight: w);
 
 @Riverpod(keepAlive: true)
-ThemeRepository themeRepository(ThemeRepositoryRef ref) {
+ThemeRepository themeRepository(Ref ref) {
   // set this in the app bootstrap section
   throw UnimplementedError();
 }
 
 @Riverpod(keepAlive: true)
-Stream<AppTheme> appThemeChanges(AppThemeChangesRef ref) {
+Stream<AppTheme> appThemeChanges(Ref ref) {
   final themeRepository = ref.watch(themeRepositoryProvider);
   return themeRepository.appThemeChanges;
 }

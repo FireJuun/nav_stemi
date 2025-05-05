@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 /// Original source: Andrea Bizzotto
@@ -12,7 +12,9 @@ abstract class AppBootstrap {
     // * Initialize listeners & services here via container.read(_)
     // container
     //   ..read(___);
-    container.read(startStopTimerServiceProvider);
+    container
+      ..read(sharedPreferencesSyncServiceProvider)
+      ..read(fhirSyncServiceProvider);
 
     // * Register error handlers. For more info, see:
     // * https://docs.flutter.dev/testing/errors

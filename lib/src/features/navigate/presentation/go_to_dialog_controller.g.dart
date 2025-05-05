@@ -7,7 +7,7 @@ part of 'go_to_dialog_controller.dart';
 // **************************************************************************
 
 String _$goToDialogControllerHash() =>
-    r'217550c5030788b089e861b54e6abe3cf0f80149';
+    r'0eb7147dad2e1abc75af9421c6be484d6da85e4a';
 
 /// See also [GoToDialogController].
 @ProviderFor(GoToDialogController)
@@ -24,4 +24,4 @@ final goToDialogControllerProvider =
 
 typedef _$GoToDialogController = AutoDisposeAsyncNotifier<void>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

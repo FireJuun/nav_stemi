@@ -1,5 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.atriumhealth.nav_stemi">
+    package="com.firejuun.navstemi">
+    <queries>
+        <!-- spec: https://github.com/flutter/packages/blob/main/packages/url_launcher/url_launcher/example/android/app/src/main/AndroidManifest.xml -->
+        <!-- If your app checks for call support -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="tel" />
+        </intent>
+    </queries>
    <application
         android:label="${appName}"
         android:name="${applicationName}"
@@ -27,15 +35,18 @@
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
+        <!-- spec: https://medium.com/@nayanbabariya/set-up-environment-variables-in-flutter-for-secure-and-scalable-apps-7409ae0c383e -->
+        <!-- another option: https://github.com/googlemaps/flutter-navigation-sdk/blob/main/example/android/app/src/main/AndroidManifest.xml -->
         <meta-data 
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBUlWJ7KOliE8z1EbbJXvz-e8ov5hHfhFo"/>
+            android:value="@string/maps_api_key"/>
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- May enable this if we want background updates for location -->
     <!-- <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> -->
 

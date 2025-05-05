@@ -7,7 +7,7 @@ part of 'time_metrics_controller.dart';
 // **************************************************************************
 
 String _$timeMetricsControllerHash() =>
-    r'665f3aa3903942c117a78836d9e6c675669627d1';
+    r'aac226c74d3a47bbaa1751481b8c062e571220ed';
 
 /// See also [TimeMetricsController].
 @ProviderFor(TimeMetricsController)
@@ -24,4 +24,4 @@ final timeMetricsControllerProvider =
 
 typedef _$TimeMetricsController = AutoDisposeAsyncNotifier<void>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
