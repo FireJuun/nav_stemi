@@ -76,6 +76,23 @@ class _HomeState extends ConsumerState<Home> {
     final authState = ref.watch(authStateChangesProvider);
     final textTheme = Theme.of(context).textTheme;
 
+    // Watch environment configuration with Riverpod
+    final environmentConfig = ref.watch(appEnvironmentConfigProvider);
+
+    final backgroundColor = environmentConfig.when(
+      data: (config) => config.getAppBarColor(),
+      loading: () => Colors.transparent,
+      error: (_, __) => Colors.transparent,
+    );
+
+    final foregroundColor = environmentConfig.when(
+      data: (config) => config.environment != AppEnvironment.production
+          ? Theme.of(context).colorScheme.onPrimary
+          : null,
+      loading: () => Colors.transparent,
+      error: (_, __) => Colors.transparent,
+    );
+
     final isUserLoggedIn = authState.whenOrNull(
           data: (user) => user != null,
         ) ??
@@ -83,13 +100,42 @@ class _HomeState extends ConsumerState<Home> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('nav - STEMI'.hardcoded),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              'nav - STEMI'.hardcoded,
+              style: textTheme.titleLarge?.apply(color: foregroundColor),
+            ),
+            // Display version number in dev and staging environments
+            environmentConfig.when(
+              data: (config) {
+                if (config.environment != AppEnvironment.production) {
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Text(
+                      '''v${config.version}.${config.environment == AppEnvironment.development ? 'dev' : 'stg'}''',
+                      style:
+                          textTheme.titleSmall?.apply(color: foregroundColor),
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+              loading: () => const SizedBox.shrink(),
+              error: (_, __) => const SizedBox.shrink(),
+            ),
+          ],
+        ),
+        backgroundColor: backgroundColor,
         centerTitle: true,
         actions: [
           // Profile icon button - same as in AppBarWidget
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: IconButton(
+              color: foregroundColor,
               icon: authState.when(
                 data: (user) => user != null
                     ? const Icon(Icons.account_circle)

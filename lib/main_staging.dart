@@ -30,6 +30,7 @@ void main() async {
 
   // turn off the # in the URLs on the web
   usePathUrlStrategy();
+
   // ensure URL changes in the address bar when using push / pushNamed
   // more info here: https://docs.google.com/document/d/1VCuB85D5kYxPR3qYOjVmw8boAGKb7k62heFyfFHTOvw/edit
   GoRouter.optionURLReflectsImperativeAPIs = true;
@@ -38,7 +39,7 @@ void main() async {
   // * Create ProviderContainer with any required overrides
   final container = await appBootstrap.createLocalProviderContainer();
 
-// use the container above to create the root widget
+  // use the container above to create the root widget
   final root = appBootstrap.createRootWidget(container: container);
   // start the app
   runApp(root);

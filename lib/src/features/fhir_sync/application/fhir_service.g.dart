@@ -6,7 +6,7 @@ part of 'fhir_service.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fhirServiceHash() => r'0922a0032c5c4c22990a5b01973138c8e05adb9f';
+String _$fhirServiceHash() => r'4e5250e415e4ef89126adb51fe08a30f162dc960';
 
 /// Provider for the FhirService
 ///
