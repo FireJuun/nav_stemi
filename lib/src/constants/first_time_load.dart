@@ -6,7 +6,7 @@ import 'package:nav_stemi/nav_stemi.dart';
 const kFirstAppTheme = AppTheme(
   seedColor: Color(0xFF6076B4),
   secondarySeedColor: Color(0xFF999999),
-  tertiarySeedColor: Color(0xFF21962D),
+  tertiarySeedColor: Color(0xFF36B042),
   themeMode: ThemeMode.light,
 );
 

@@ -95,12 +95,17 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
         return Icons.cloud_off;
       case FhirSyncStatus.error:
         return Icons.error_outline;
+      case FhirSyncStatus.fake:
+        return Icons.mobiledata_off;
     }
   }
 
   /// Returns the appropriate color for the current sync status
   Color _getIconColor(
-      BuildContext context, FhirSyncStatus status, bool isSyncPaused) {
+    BuildContext context,
+    FhirSyncStatus status,
+    bool isSyncPaused,
+  ) {
     if (isSyncPaused) {
       return Colors.grey;
     }
@@ -109,15 +114,17 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
 
     switch (status) {
       case FhirSyncStatus.synced:
-        return colorScheme.primary;
+        return colorScheme.secondary;
       case FhirSyncStatus.dirty:
         return Colors.orange;
       case FhirSyncStatus.syncing:
-        return colorScheme.primary;
+        return colorScheme.secondary;
       case FhirSyncStatus.offline:
         return Colors.grey;
       case FhirSyncStatus.error:
-        return colorScheme.error;
+        return colorScheme.errorContainer;
+      case FhirSyncStatus.fake:
+        return const Color(0xFFEDA4F9); // Purple for fake/staging mode
     }
   }
 
@@ -138,12 +145,18 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
         return 'Offline';
       case FhirSyncStatus.error:
         return 'Sync Error';
+      case FhirSyncStatus.fake:
+        // Clearly indicate demo mode
+        return 'DEMO mode\nData will NOT sync to the cloud';
     }
   }
 
   /// Returns an appropriate tooltip message for the current sync status
   String _getTooltipMessage(
-      FhirSyncStatus status, String? errorMessage, bool isSyncPaused) {
+    FhirSyncStatus status,
+    String? errorMessage,
+    bool isSyncPaused,
+  ) {
     if (isSyncPaused) {
       return 'Synchronization is paused. Click to resume or manage sync.';
     }
@@ -155,6 +168,8 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
       FhirSyncStatus.offline =>
         'You are currently offline. Changes will be synced when online',
       FhirSyncStatus.error => 'Error syncing with FHIR server',
+      FhirSyncStatus.fake =>
+        'Running in staging mode with fake FHIR synchronization',
     };
 
     if (status == FhirSyncStatus.error && errorMessage != null) {
@@ -177,8 +192,12 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
   }
 
   /// Builds a dialog with sync management options
-  Widget _buildSyncDialog(BuildContext context, WidgetRef ref,
-      FhirSyncStatus status, bool isSyncPaused) {
+  Widget _buildSyncDialog(
+    BuildContext context,
+    WidgetRef ref,
+    FhirSyncStatus status,
+    bool isSyncPaused,
+  ) {
     final syncService = ref.read(fhirSyncServiceProvider);
     final errorMessage = ref.read(syncLastErrorMessageProvider);
 
@@ -216,26 +235,27 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
             },
             child: const Text('RETRY SYNC'),
           ),
-        if (isSyncPaused)
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              syncService.resumeSyncing();
-            },
-            child: const Text('RESUME SYNC'),
-          )
-        else
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              syncService.pauseSyncing();
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.error,
-              foregroundColor: Theme.of(context).colorScheme.onError,
+        if (status != FhirSyncStatus.fake)
+          if (isSyncPaused)
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                syncService.resumeSyncing();
+              },
+              child: const Text('RESUME SYNC'),
+            )
+          else
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                syncService.pauseSyncing();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.error,
+                foregroundColor: Theme.of(context).colorScheme.onError,
+              ),
+              child: const Text('PAUSE SYNC'),
             ),
-            child: const Text('PAUSE SYNC'),
-          ),
       ],
     );
   }

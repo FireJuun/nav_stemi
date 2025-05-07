@@ -7,7 +7,7 @@ part of 'fhir_resource_references.dart';
 // **************************************************************************
 
 String _$fhirResourceReferencesNotifierHash() =>
-    r'9d007c25d983bcd951bd8c0e5929ecc1e0a99873';
+    r'36a55dbc46f19b521801b3c73732f82669d2c9b5';
 
 /// Provider for FHIR resource references
 ///

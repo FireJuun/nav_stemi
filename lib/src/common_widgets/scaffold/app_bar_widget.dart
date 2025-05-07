@@ -12,12 +12,20 @@ class AppBarWidget extends ConsumerWidget implements PreferredSizeWidget {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
 
+    // Watch environment configuration
+    final environmentConfig = ref.watch(appEnvironmentConfigProvider);
+
     // Watch authentication state changes to update UI based on login status
     final authState = ref.watch(authStateChangesProvider);
 
     return AppBar(
       toolbarHeight: _toolbarHeight,
       automaticallyImplyLeading: false,
+      backgroundColor: environmentConfig.when(
+        data: (config) => config.getAppBarColor(),
+        loading: () => Colors.transparent,
+        error: (_, __) => Colors.transparent,
+      ),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -28,12 +36,14 @@ class AppBarWidget extends ConsumerWidget implements PreferredSizeWidget {
                 children: [
                   Icon(
                     Icons.close,
-                    color: colorScheme.onSurface,
+                    // TODO(FireJuun): Incorporate into app theme
+                    color: colorScheme.onPrimary,
                   ),
                   Text(
                     'Exit'.hardcoded,
                     style: textTheme.titleMedium
-                        ?.apply(color: colorScheme.onSurface),
+                        // TODO(FireJuun): Incorporate into app theme
+                        ?.apply(color: colorScheme.onPrimary),
                   ),
                 ],
               ),
@@ -59,8 +69,6 @@ class AppBarWidget extends ConsumerWidget implements PreferredSizeWidget {
           loading: () => const SizedBox.shrink(),
           error: (_, __) => const SizedBox.shrink(),
         ),
-        // const FhirSyncStatusIndicator(),
-
         // Profile icon button
         Padding(
           padding: const EdgeInsets.only(right: 8),

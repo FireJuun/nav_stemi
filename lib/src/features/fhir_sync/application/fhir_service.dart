@@ -39,6 +39,7 @@ class FhirService {
     final client = switch (currentUser) {
       GoogleAppUser() => currentUser.client,
       ServiceAccountUser() => currentUser.client,
+      FakeAppUser() => throw UnimplementedError(),
     };
 
     // Create and return a repository with the authenticated client

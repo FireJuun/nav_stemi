@@ -62,7 +62,7 @@ final patientBirthDateProvider = AutoDisposeProvider<DateTime?>.internal(
 // ignore: unused_element
 typedef PatientBirthDateRef = AutoDisposeProviderRef<DateTime?>;
 String _$patientInfoShouldSyncHash() =>
-    r'8561ae3cd34f0d29002b3c088f62c857563272d7';
+    r'8d5f968b2a5992b5e12be276dd545b8a96301d3f';
 
 /// See also [patientInfoShouldSync].
 @ProviderFor(patientInfoShouldSync)
