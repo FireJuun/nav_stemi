@@ -14,18 +14,18 @@ case $1 in
       --project=nav-stemi \
       --out=lib/firebase_options_dev.dart \
       --ios-bundle-id=com.firejuun.nav-stemi.dev \
-      --ios-out=ios/flavors/dev/GoogleService-Info.plist \
+      --ios-out=ios/flavors/development/GoogleService-Info.plist \
       --android-package-name=com.firejuun.navstemi.dev \
-      --android-out=android/app/src/dev/google-services.json
+      --android-out=android/app/src/development/google-services.json
     ;;
   stg)
     flutterfire config \
       --project=nav-stemi-stg \
       --out=lib/firebase_options_stg.dart \
       --ios-bundle-id=com.firejuun.nav-stemi.stg \
-      --ios-out=ios/flavors/stg/GoogleService-Info.plist \
+      --ios-out=ios/flavors/staging/GoogleService-Info.plist \
       --android-package-name=com.firejuun.navstemi.stg \
-      --android-out=android/app/src/stg/google-services.json
+      --android-out=android/app/src/staging/google-services.json
     ;;
   prod)
     # Do nothing
