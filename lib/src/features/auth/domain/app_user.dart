@@ -20,3 +20,15 @@ class ServiceAccountUser extends AppUser {
   final String email;
   final http.Client client;
 }
+
+/// Fake app user for staging environment
+///
+/// This user implementation doesn't communicate with any real services
+/// and is used only for testing and demo purposes
+class FakeAppUser extends AppUser {
+  FakeAppUser({
+    required this.email,
+  });
+
+  final String email;
+}

@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Original source: Andrea Bizzotto
@@ -31,14 +32,22 @@ class AppBootstrapLocal extends AppBootstrap {
     final prefs = await SharedPreferences.getInstance();
     final sharedPreferencesRepository = SharedPreferencesRepository(prefs);
 
+    // Get package info to detect environment
+    final packageInfo = await PackageInfo.fromPlatform();
+    final packageName = packageInfo.packageName;
+    final isStaging = packageName.endsWith('.stg');
+
     // Choose the appropriate authentication repository based on environment
-    // Use TestAuthRepository when service account credentials are available
-    // Otherwise fall back to GoogleAuthRepository
     final AuthRepository authRepository;
-    if (Env.serviceAccountEmail.isNotEmpty &&
+    if (isStaging) {
+      // Use fake auth for staging
+      authRepository = FakeAuthRepository();
+    } else if (Env.serviceAccountEmail.isNotEmpty &&
         Env.serviceAccountPrivateKey.isNotEmpty) {
+      // Use service account when credentials are available
       authRepository = TestAuthRepository();
     } else {
+      // Otherwise use Google auth
       authRepository = GoogleAuthRepository();
     }
 
@@ -55,19 +64,40 @@ class AppBootstrapLocal extends AppBootstrap {
     /// Swap between Mapbox <-> Google for app routing
     final remoteRoutes = RemoteRoutesGoogleRepository();
 
+    // Create list of provider overrides
+    final overrides = [
+      // repositories
+      authRepositoryProvider.overrideWithValue(authRepository),
+      firebaseAuthRepositoryProvider.overrideWithValue(firebaseAuthRepository),
+      sharedPreferencesRepositoryProvider
+          .overrideWithValue(sharedPreferencesRepository),
+      navigationSettingsRepositoryProvider
+          .overrideWithValue(navigationSettingsRepository),
+      themeRepositoryProvider.overrideWithValue(themeRepository),
+      remoteRoutesRepositoryProvider.overrideWithValue(remoteRoutes),
+    ];
+
+    // For staging environment, use fake FHIR services
+    if (isStaging) {
+      overrides.addAll([
+        // Use fake FHIR service
+        fhirServiceProvider.overrideWith(fakeFhirService),
+        // Use fake FHIR sync service
+        fhirSyncServiceProvider.overrideWith(fakeFhirSyncService),
+        // Use fake FHIR sync status providers
+        patientInfoSyncStatusRepositoryProvider
+            .overrideWith(fakePatientInfoSyncStatusRepository),
+        timeMetricsSyncStatusRepositoryProvider
+            .overrideWith(fakeTimeMetricsSyncStatusRepository),
+        patientInfoSyncStatusProvider.overrideWith(fakePatientInfoSyncStatus),
+        timeMetricsSyncStatusProvider.overrideWith(fakeTimeMetricsSyncStatus),
+        overallSyncStatusProvider.overrideWith(fakeOverallSyncStatus),
+        syncLastErrorMessageProvider.overrideWith(fakeSyncLastErrorMessage),
+      ]);
+    }
+
     return ProviderContainer(
-      overrides: [
-        // repositories
-        authRepositoryProvider.overrideWithValue(authRepository),
-        firebaseAuthRepositoryProvider
-            .overrideWithValue(firebaseAuthRepository),
-        sharedPreferencesRepositoryProvider
-            .overrideWithValue(sharedPreferencesRepository),
-        navigationSettingsRepositoryProvider
-            .overrideWithValue(navigationSettingsRepository),
-        themeRepositoryProvider.overrideWithValue(themeRepository),
-        remoteRoutesRepositoryProvider.overrideWithValue(remoteRoutes),
-      ],
+      overrides: overrides,
       observers: [
         AsyncErrorLogger(),
       ],
