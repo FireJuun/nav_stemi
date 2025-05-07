@@ -44,8 +44,7 @@ class CountUpTimerView extends ConsumerWidget {
 
     final containerColor = switch (timerDurationState) {
       TimerDurationState.unknown => Colors.transparent,
-      TimerDurationState.running =>
-        colorScheme.tertiary.lighten().withAlpha(110),
+      TimerDurationState.running => colorScheme.tertiary.lighten(20),
       TimerDurationState.warning => Colors.yellow[700],
       TimerDurationState.error => colorScheme.error,
       TimerDurationState.pastError => Colors.black,
