@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class PatientEntryText extends StatefulWidget {
   const PatientEntryText({
@@ -8,6 +9,8 @@ class PatientEntryText extends StatefulWidget {
     this.prefixIcon,
     this.hint,
     this.keyboardType,
+    this.inputFormatters,
+    this.validator,
     this.readOnly = false,
     super.key,
   });
@@ -18,6 +21,8 @@ class PatientEntryText extends StatefulWidget {
   final Widget? prefixIcon;
   final String? hint;
   final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
+  final String? Function(String?)? validator;
   final bool readOnly;
 
   @override
@@ -25,8 +30,30 @@ class PatientEntryText extends StatefulWidget {
 }
 
 class _PatientEntryTextState extends State<PatientEntryText> {
-  late final TextEditingController _textEditingController =
-      TextEditingController(text: widget.initialValue);
+  late TextEditingController _textEditingController;
+
+  @override
+  void initState() {
+    super.initState();
+    _textEditingController = TextEditingController(text: widget.initialValue);
+  }
+
+  @override
+  void didUpdateWidget(PatientEntryText oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Only update the controller if the initialValue has changed
+    if (widget.initialValue != oldWidget.initialValue) {
+      // Schedule the update for the next frame to avoid
+      // updating during build
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        // Check if the widget is still mounted before updating
+        if (mounted && _textEditingController.text != widget.initialValue) {
+          _textEditingController.text = widget.initialValue ?? '';
+        }
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -46,6 +73,8 @@ class _PatientEntryTextState extends State<PatientEntryText> {
         hintText: widget.hint,
         label: Text(widget.label, textAlign: TextAlign.center),
       ),
+      inputFormatters: widget.inputFormatters,
+      validator: widget.validator,
       readOnly: widget.readOnly,
       onTapOutside: (PointerDownEvent event) {
         FocusManager.instance.primaryFocus?.unfocus();

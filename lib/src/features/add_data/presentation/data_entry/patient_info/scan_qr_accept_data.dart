@@ -48,11 +48,20 @@ class ScanQrAcceptData extends StatelessWidget {
           builder: (context, ref, child) {
             return ResponsiveDialogFooter(
               includeAccept: true,
-              onAccept: () {
-                ref
+              onAccept: () async {
+                // First save the license data to update the patient info model
+                final success = await ref
                     .read(patientInfoControllerProvider.notifier)
                     .saveLicenseAsPatientInfo(scannedLicense!);
-                onDataSubmitted(scannedLicense!.toPatientInfo());
+
+                // Only call onDataSubmitted if the save was successful
+                if (success) {
+                  // Get the updated model from the repository instead of creating a new one
+                  final updatedModel =
+                      ref.read(patientInfoRepositoryProvider).patientInfoModel!;
+                  onDataSubmitted(updatedModel);
+                }
+
                 Navigator.of(context).pop();
               },
             );
