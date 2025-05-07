@@ -31,7 +31,7 @@ class BirthDateToStringDTO {
 
   String _formatDateWithSeparators(String date) {
     assert(date.length == 8, 'Date must be 8 characters long');
-    return '${date.substring(0, 2)}-${date.substring(2, 4)}-${date.substring(4)}';
+    return '${date.substring(0, 2)}/${date.substring(2, 4)}/${date.substring(4)}';
   }
 
   String _removeSeparatorHyphens(String date) => date.replaceAll('-', '');
