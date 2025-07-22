@@ -56,7 +56,7 @@ class ThemeRepository {
           color: colorScheme.onSurface,
         ),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: colorScheme.primaryContainer,
         // elevation: 2,
       ),
@@ -156,7 +156,7 @@ class ThemeRepository {
         trackVisibility: WidgetStateProperty.all(true),
         thickness: WidgetStateProperty.all(8),
       ),
-      tabBarTheme: TabBarTheme(
+      tabBarTheme: TabBarThemeData(
         labelStyle: textTheme.titleMedium,
         unselectedLabelStyle: textTheme.titleMedium,
       ),
