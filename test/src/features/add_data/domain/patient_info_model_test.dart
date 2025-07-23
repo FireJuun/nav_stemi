@@ -7,7 +7,7 @@ void main() {
     const testFirstName = 'John';
     const testLastName = 'Doe';
     const testMiddleName = 'William';
-    final testBirthDate = DateTime(1990, 1, 1);
+    final testBirthDate = DateTime(1990);
     const testSexAtBirth = SexAtBirth.male;
     const testCardiologist = 'Dr. Smith';
 
@@ -203,7 +203,6 @@ void main() {
       test('should mark as dirty', () {
         const model = PatientInfoModel(
           firstName: testFirstName,
-          isDirty: false,
         );
 
         final dirty = model.markDirty();
