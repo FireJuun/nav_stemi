@@ -83,7 +83,7 @@ class TimeMetricsFhirDTO {
     bool? wasAspirinGiven;
     if (aspirinAdministration != null) {
       // Extract time
-      if (aspirinAdministration.effectiveX is DateTime) {
+      if (aspirinAdministration.effectiveX is FhirDateTime) {
         timeOfAspirinGivenDecision = DateTime.parse(
           aspirinAdministration.effectiveX.primitiveValue ?? '',
         );
@@ -197,8 +197,12 @@ class TimeMetricsFhirDTO {
           wasGiven: model.wasAspirinGiven!,
         );
 
-    // Use the existing extension to create an aspirin administration
-    return administration;
+    // Update status based on whether aspirin was given
+    return administration.copyWith(
+      status: model.wasAspirinGiven!
+          ? MedicationAdministrationStatusCodes.completed
+          : MedicationAdministrationStatusCodes.notDone,
+    );
   }
 
   /// Converts TimeMetricsModel to a Condition for STEMI activation
