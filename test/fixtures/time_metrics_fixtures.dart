@@ -28,7 +28,7 @@ const testTimeMetricsIncomplete = TimeMetricsModel();
 final testTimeMetricsJson = {
   'timeArrivedAtPatient': testDateTime.millisecondsSinceEpoch,
   'lockTimeArrivedAtPatient': false,
-  'timeOfEkgs': testEkgTimes.map((e) => e?.millisecondsSinceEpoch).toList(),
+  'timeOfEkgs': testEkgTimes.map((e) => e.millisecondsSinceEpoch).toList(),
   'lockTimeOfEkgs': false,
   'timeOfStemiActivationDecision':
       testDateTime.add(const Duration(minutes: 15)).millisecondsSinceEpoch,
