@@ -20,6 +20,11 @@ extension PractitionerX on Practitioner {
   /// https://hl7.org/fhir/R4/valueset-c80-practice-codes.html
   Practitioner asCardiologist(String cardiologist) {
     return copyWith(
+      name: [
+        HumanName(
+          text: FhirString(cardiologist),
+        ),
+      ],
       qualification: [
         PractitionerQualification(
           code: CodeableConcept(
