@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
-import 'package:nav_stemi/src/features/add_data/presentation/data_entry/sync_notify/sync_notify.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 // TODO(FireJuun): should this be modifiable via settings?
