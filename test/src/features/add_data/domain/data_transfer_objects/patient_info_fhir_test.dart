@@ -269,7 +269,7 @@ void main() {
             ),
           ],
           meta: FhirMeta(
-            lastUpdated: FhirInstant.fromDateTime(DateTime(2023, 1, 1)),
+            lastUpdated: FhirInstant.fromDateTime(DateTime(2023)),
           ),
         );
 
@@ -349,7 +349,7 @@ void main() {
 
       test('should handle null/empty cardiologist name', () {
         // Test null
-        var model = const PatientInfoModel(cardiologist: null);
+        var model = const PatientInfoModel();
         var result = dto.toFhirCardiologist(model);
         expect(result, isNull);
 
