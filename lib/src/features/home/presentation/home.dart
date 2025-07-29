@@ -9,6 +9,8 @@ import 'package:nav_stemi/nav_stemi.dart';
 class Home extends ConsumerStatefulWidget {
   const Home({super.key});
 
+  static const Key profileIconButtonKey = Key('profile_icon_button');
+
   @override
   ConsumerState<Home> createState() => _HomeState();
 }
@@ -90,6 +92,7 @@ class _HomeState extends ConsumerState<Home> {
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: IconButton(
+              key: const Key('profile_icon_button'),
               icon: authState.when(
                 data: (user) => user != null
                     ? const Icon(Icons.account_circle)
