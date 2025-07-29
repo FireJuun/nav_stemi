@@ -234,7 +234,7 @@ void main() {
         expect(
           map['timeOfEkgs'],
           equals(
-            testEkgTimes.map((e) => e?.millisecondsSinceEpoch).toList(),
+            testEkgTimes.map((e) => e.millisecondsSinceEpoch).toList(),
           ),
         );
         expect(map['wasStemiActivated'], isTrue);
