@@ -734,7 +734,6 @@ void main() {
           wasCathLabNotified: true,
           timePatientArrivedAtDestination:
               DateTime.now().subtract(const Duration(hours: 1)),
-          isDirty: true,
         );
 
         final patient = Patient(id: FhirString('patient-123'));
