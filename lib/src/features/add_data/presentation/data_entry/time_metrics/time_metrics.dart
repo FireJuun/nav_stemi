@@ -234,6 +234,8 @@ class TimeMetric extends StatelessWidget {
   final bool isLocked;
   final VoidCallback onToggleLocked;
 
+  static const Key calendarButtonKey = Key('calendar_button');
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -337,6 +339,7 @@ class TimeMetric extends StatelessWidget {
                     child: Text('Now'.hardcoded),
                   ),
                   IconButton(
+                    key: calendarButtonKey,
                     onPressed: isLocked ? null : selectDateTime,
                     icon: const Icon(Icons.edit_calendar_outlined),
                   ),
@@ -372,6 +375,8 @@ class TimeMetricsMenu extends StatefulWidget {
   final VoidCallback onSelectDateTime;
   final VoidCallback onClearDateTime;
   final bool isLocked;
+
+  static const Key timeMetricsMenuButtonKey = Key('time_metrics_menu_button');
 
   @override
   State<TimeMetricsMenu> createState() => _TimeMetricsMenuState();
@@ -429,6 +434,7 @@ class _TimeMetricsMenuState extends State<TimeMetricsMenu> {
       ],
       builder: (_, MenuController controller, Widget? child) {
         return IconButton(
+          key: TimeMetricsMenu.timeMetricsMenuButtonKey,
           focusNode: _buttonFocusNode,
           onPressed: widget.isLocked
               ? null
