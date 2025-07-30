@@ -7,6 +7,8 @@ const _toolbarHeight = 76.0;
 class AppBarWidget extends ConsumerWidget implements PreferredSizeWidget {
   const AppBarWidget({super.key});
 
+  static const Key profileIconButtonKey = Key('profile_icon_button');
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
@@ -65,6 +67,7 @@ class AppBarWidget extends ConsumerWidget implements PreferredSizeWidget {
         Padding(
           padding: const EdgeInsets.only(right: 8),
           child: IconButton(
+            key: AppBarWidget.profileIconButtonKey,
             icon: authState.when(
               data: (user) => user != null
                   ? const Icon(Icons.account_circle)
