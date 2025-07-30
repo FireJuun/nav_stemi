@@ -53,9 +53,9 @@ class MapsInfo extends Equatable {
           ? AppWaypoint.fromMap(map['destination'] as Map<String, dynamic>)
           : null,
       markers:
-          Map<MarkerId, Marker>.from(map['markers'] as Map<MarkerId, Marker>),
+          Map<MarkerId, Marker>.from(map['markers'] as Map<MarkerId, dynamic>),
       polylines: Map<PolylineId, Polyline>.from(
-        map['polylines'] as Map<PolylineId, Polyline>,
+        map['polylines'] as Map<PolylineId, dynamic>,
       ),
     );
   }
