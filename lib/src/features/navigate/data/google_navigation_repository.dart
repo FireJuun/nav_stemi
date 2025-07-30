@@ -15,6 +15,8 @@ typedef SessionInitialized = bool;
 typedef RouteCalculated = bool;
 typedef GuidanceRunning = bool;
 
+/// QUESTION: should this use GoogleNavigationService instead
+/// of the google_navigation_flutter dependency directly?
 class GoogleNavigationRepository {
   /// Various listeners, used to update the UI with the latest information.
   /// Each listener uses an InMemoryStore, so that the latest value can be
