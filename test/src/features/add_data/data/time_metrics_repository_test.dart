@@ -112,7 +112,7 @@ void main() {
       for (var i = 0; i < 5; i++) {
         final metrics = TimeMetricsModel(
           timeArrivedAtPatient: DateTime(2024, 1, 1, 10, i),
-          wasStemiActivated: i % 2 == 0,
+          wasStemiActivated: i.isEven,
         );
         repository.setTimeMetrics(metrics);
       }

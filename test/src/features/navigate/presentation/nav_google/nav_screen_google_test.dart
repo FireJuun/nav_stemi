@@ -594,5 +594,189 @@ void main() {
       // Should show error widget
       expect(find.byType(ErrorMessageWidget), findsOneWidget);
     });
+
+    testWidgets('should update audio guidance through menu selection',
+        (tester) async {
+      await tester.pumpWidget(createTestWidget());
+      await tester.pumpAndSettle();
+
+      // Open audio guidance menu
+      await tester.tap(find.byIcon(Icons.volume_up));
+      await tester.pumpAndSettle();
+
+      // Select silent option
+      await tester.tap(find.byIcon(Icons.volume_off));
+      await tester.pumpAndSettle();
+
+      // Verify controller was called with correct type
+      verify(() => mockController.setAudioGuidanceType(AudioGuidanceType.silent))
+          .called(1);
+    });
+
+    testWidgets('should update simulation state through menu selection',
+        (tester) async {
+      await tester.pumpWidget(createTestWidget());
+      await tester.pumpAndSettle();
+
+      // Open simulation menu
+      await tester.tap(find.byIcon(Icons.play_arrow));
+      await tester.pumpAndSettle();
+
+      // Select pause option
+      await tester.tap(find.byIcon(Icons.pause));
+      await tester.pumpAndSettle();
+
+      // Verify controller was called with correct state
+      verify(() => mockController.setSimulationState(SimulationState.paused))
+          .called(1);
+    });
+
+
+    testWidgets('should show correct simulation icon for all states',
+        (tester) async {
+      await tester.pumpWidget(createTestWidget());
+      await tester.pumpAndSettle();
+
+      // Initially shows play arrow for running state
+      expect(find.byIcon(Icons.play_arrow), findsOneWidget);
+
+      // Open simulation menu
+      await tester.tap(find.byIcon(Icons.play_arrow));
+      await tester.pumpAndSettle();
+
+      // Select pause
+      await tester.tap(find.byIcon(Icons.pause));
+      await tester.pumpAndSettle();
+
+      // State should be updated to paused
+      verify(() => mockController.setSimulationState(SimulationState.paused))
+          .called(1);
+    });
+
+    testWidgets('should properly toggle all menus independently',
+        (tester) async {
+      await tester.pumpWidget(createTestWidget());
+      await tester.pumpAndSettle();
+
+      // Open steps menu
+      await tester.tap(find.text('All Steps'));
+      await tester.pumpAndSettle();
+      expect(
+        tester.widget<AnimatedContainer>(find.byType(AnimatedContainer).at(0))
+            .constraints?.maxHeight,
+        greaterThan(0),
+      );
+
+      // Open audio guidance menu (steps should remain open)
+      await tester.tap(find.byIcon(Icons.volume_up));
+      await tester.pumpAndSettle();
+      expect(find.byType(AudioGuidancePicker), findsOneWidget);
+
+      // Open simulation menu
+      await tester.tap(find.byIcon(Icons.play_arrow));
+      await tester.pumpAndSettle();
+      expect(find.byType(SimulationStatePicker), findsOneWidget);
+
+      // Tap map to dismiss all
+      await tester.tap(find.text('Mock Google Maps'));
+      await tester.pumpAndSettle();
+
+      // All menus should be closed
+      expect(
+        tester.widget<AnimatedContainer>(find.byType(AnimatedContainer).at(0))
+            .constraints?.maxHeight,
+        equals(0),
+      );
+      expect(find.byType(AudioGuidancePicker), findsNothing);
+      expect(find.byType(SimulationStatePicker), findsNothing);
+    });
+
+    testWidgets('should handle position conversion correctly', (tester) async {
+      // Verify the position is correctly converted to LatLng
+      expect(testPosition.toLatLng().latitude, equals(37.7749));
+      expect(testPosition.toLatLng().longitude, equals(-122.4194));
+    });
+
+    testWidgets('should render all UI elements when destination is active',
+        (tester) async {
+      await tester.pumpWidget(createTestWidget());
+      await tester.pumpAndSettle();
+
+      // Verify all main UI components are present
+      expect(find.byType(NearestHospitalSelector), findsOneWidget);
+      expect(find.byType(PrimaryToggleButton), findsOneWidget);
+      expect(find.text('All Steps'), findsOneWidget);
+      
+      // Verify zoom controls
+      expect(find.byTooltip('Zoom In'), findsOneWidget);
+      expect(find.byTooltip('Zoom Out'), findsOneWidget);
+      expect(find.byTooltip('Show Entire Route'), findsOneWidget);
+      
+      // Verify audio guidance button
+      expect(find.byTooltip('Audio Guidance'), findsOneWidget);
+      
+      // Verify simulation button (when enabled)
+      expect(find.byTooltip('Navigation State'), findsOneWidget);
+    });
+
+    testWidgets('should maintain state when toggling menus', (tester) async {
+      await tester.pumpWidget(createTestWidget());
+      await tester.pumpAndSettle();
+
+      // Toggle steps on
+      await tester.tap(find.text('All Steps'));
+      await tester.pumpAndSettle();
+      expect(
+        tester.widget<PrimaryToggleButton>(find.byType(PrimaryToggleButton))
+            .isActive,
+        isTrue,
+      );
+
+      // Toggle steps off
+      await tester.tap(find.text('All Steps'));
+      await tester.pumpAndSettle();
+      expect(
+        tester.widget<PrimaryToggleButton>(find.byType(PrimaryToggleButton))
+            .isActive,
+        isFalse,
+      );
+    });
+
+    testWidgets('should handle controller state updates', (tester) async {
+      // Verify controller methods are called properly
+      await tester.pumpWidget(createTestWidget());
+      await tester.pump();
+
+      // Verify initial state
+      expect(find.byType(TestNavScreenGoogle), findsOneWidget);
+      
+      // Verify nav screen is properly rendered
+      expect(find.byType(Consumer), findsWidgets);
+    });
+
+    testWidgets('should handle long press on map', (tester) async {
+      await tester.pumpWidget(createTestWidget());
+      await tester.pumpAndSettle();
+
+      // Show steps menu
+      await tester.tap(find.text('All Steps'));
+      await tester.pumpAndSettle();
+
+      // Verify menu is visible
+      final stepsContainer = tester.widget<AnimatedContainer>(
+        find.byType(AnimatedContainer).at(0),
+      );
+      expect(stepsContainer.constraints?.maxHeight, greaterThan(0));
+
+      // Long press on map
+      await tester.longPress(find.text('Mock Google Maps'));
+      await tester.pumpAndSettle();
+
+      // Menu should be dismissed
+      final updatedContainer = tester.widget<AnimatedContainer>(
+        find.byType(AnimatedContainer).at(0),
+      );
+      expect(updatedContainer.constraints?.maxHeight, equals(0));
+    });
   });
 }

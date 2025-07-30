@@ -1,3 +1,5 @@
+// ignore_for_file: use_setters_to_change_properties
+
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -116,7 +118,7 @@ class TestPosition extends Position {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  
+
   group('GeolocatorRepository', () {
     late GeolocatorRepository repository;
     late TestGeolocatorPlatform testPlatform;
@@ -126,7 +128,7 @@ void main() {
       repository = GeolocatorRepository();
       testPlatform = TestGeolocatorPlatform();
       GeolocatorPlatform.instance = testPlatform;
-      
+
       testPosition = TestPosition(
         latitude: 35.7796,
         longitude: -78.6382,
@@ -156,29 +158,37 @@ void main() {
         },
       );
 
-      test('should throw error when location services are disabled', () async {
-        testPlatform.setLocationServiceEnabled(false);
+      test(
+        'should throw error when location services are disabled',
+        () async {
+          testPlatform.setLocationServiceEnabled(false);
 
-        expect(
-          () => repository.checkLocationEnabled(),
-          throwsA(
-            predicate((e) => e.toString().contains('Location services are disabled')),
-          ),
+          expect(
+            () => repository.checkLocationEnabled(),
+            throwsA(
+              predicate(
+                (e) => e.toString().contains('Location services are disabled'),
+              ),
+            ),
           );
         },
       );
 
-      test('should request permission when initially denied', () async {
-        testPlatform
-          ..setLocationServiceEnabled(true)
-          ..setPermission(LocationPermission.denied);
+      test(
+        'should request permission when initially denied',
+        () async {
+          testPlatform
+            ..setLocationServiceEnabled(true)
+            ..setPermission(LocationPermission.denied);
 
-        // The test platform returns denied even after request for testing
-        expect(
-          () => repository.checkLocationEnabled(),
-          throwsA(
-            predicate((e) => e.toString().contains('Location permissions are denied')),
-          ),
+          // The test platform returns denied even after request for testing
+          expect(
+            () => repository.checkLocationEnabled(),
+            throwsA(
+              predicate(
+                (e) => e.toString().contains('Location permissions are denied'),
+              ),
+            ),
           );
         },
       );
@@ -190,18 +200,19 @@ void main() {
             ..setLocationServiceEnabled(true)
             ..setPermission(LocationPermission.deniedForever);
 
-        expect(
-          () => repository.checkLocationEnabled(),
-          throwsA(
-            predicate((e) => e.toString().contains('permanently denied')),
-          ),
+          expect(
+            () => repository.checkLocationEnabled(),
+            throwsA(
+              predicate((e) => e.toString().contains('permanently denied')),
+            ),
           );
         },
       );
     });
 
     group('getCurrentPosition', () {
-      test('should return current position when permissions are granted', () async {
+      test('should return current position when permissions are granted',
+          () async {
         testPlatform
           ..setLocationServiceEnabled(true)
           ..setPermission(LocationPermission.always)
@@ -214,14 +225,18 @@ void main() {
         expect(position.accuracy, equals(5));
       });
 
-      test('should throw error when location services are disabled', () async {
-        testPlatform.setLocationServiceEnabled(false);
+      test(
+        'should throw error when location services are disabled',
+        () async {
+          testPlatform.setLocationServiceEnabled(false);
 
-        expect(
-          () => repository.getCurrentPosition(),
-          throwsA(
-            predicate((e) => e.toString().contains('Location services are disabled')),
-          ),
+          expect(
+            () => repository.getCurrentPosition(),
+            throwsA(
+              predicate(
+                (e) => e.toString().contains('Location services are disabled'),
+              ),
+            ),
           );
         },
       );
@@ -280,7 +295,7 @@ void main() {
         // We can't easily verify the location settings are passed correctly
         // with this test approach, but we can verify the stream works
         final subscription = repository.watchPosition().listen((_) {});
-        
+
         expect(subscription, isNotNull);
         subscription.cancel();
       });
@@ -295,14 +310,15 @@ void main() {
           longitude: -78.6382,
           label: 'Current Location',
         );
-        
+
         const destination = AppWaypoint(
           latitude: 35.8801,
           longitude: -78.8784,
           label: 'Destination',
         );
 
-        final distance = repository.getDistanceBetween(currentLocation, destination);
+        final distance =
+            repository.getDistanceBetween(currentLocation, destination);
 
         expect(distance, equals(1500));
       });
