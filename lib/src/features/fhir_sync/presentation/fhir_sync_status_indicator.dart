@@ -100,7 +100,7 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
 
   /// Returns the appropriate color for the current sync status
   Color _getIconColor(
-      BuildContext context, FhirSyncStatus status, bool isSyncPaused) {
+      BuildContext context, FhirSyncStatus status, bool isSyncPaused,) {
     if (isSyncPaused) {
       return Colors.grey;
     }
@@ -143,7 +143,7 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
 
   /// Returns an appropriate tooltip message for the current sync status
   String _getTooltipMessage(
-      FhirSyncStatus status, String? errorMessage, bool isSyncPaused) {
+      FhirSyncStatus status, String? errorMessage, bool isSyncPaused,) {
     if (isSyncPaused) {
       return 'Synchronization is paused. Click to resume or manage sync.';
     }
@@ -178,7 +178,7 @@ class FhirSyncStatusIndicator extends ConsumerWidget {
 
   /// Builds a dialog with sync management options
   Widget _buildSyncDialog(BuildContext context, WidgetRef ref,
-      FhirSyncStatus status, bool isSyncPaused) {
+      FhirSyncStatus status, bool isSyncPaused,) {
     final syncService = ref.read(fhirSyncServiceProvider);
     final errorMessage = ref.read(syncLastErrorMessageProvider);
 

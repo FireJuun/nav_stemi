@@ -1,35 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
-class ScanQrWidget extends StatefulWidget {
+class ScanQrWidget extends ConsumerWidget {
   const ScanQrWidget({required this.onItemDetected, super.key});
 
   final void Function(BarcodeCapture) onItemDetected;
 
   @override
-  State<ScanQrWidget> createState() => _ScanQrWidgetState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cameraController = ref.watch(mobileScannerControllerProvider);
 
-class _ScanQrWidgetState extends State<ScanQrWidget> {
-  final cameraController = MobileScannerController(
-    torchEnabled: true,
-    detectionSpeed: DetectionSpeed.noDuplicates,
-    // TODO(FireJuun): Compare newer barcode formats for licenses
-    /// Previously, pdf417 was sufficient
-    /// However, newer barcode formats seem to exist in addition to pdf417.
-    /// Need to review and re-implement format restrictions.
-    // formats: [BarcodeFormat.pdf417],
-  );
-
-  @override
-  void dispose() {
-    cameraController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Column(
       children: [
         ResponsiveDialogHeader(label: "Scan Driver's License".hardcoded),
@@ -74,7 +56,7 @@ class _ScanQrWidgetState extends State<ScanQrWidget> {
         Expanded(
           child: MobileScanner(
             controller: cameraController,
-            onDetect: widget.onItemDetected,
+            onDetect: onItemDetected,
           ),
         ),
         // TODO(FireJuun): add remove
@@ -86,3 +68,11 @@ class _ScanQrWidgetState extends State<ScanQrWidget> {
     );
   }
 }
+
+final mobileScannerControllerProvider =
+    ChangeNotifierProvider.autoDispose<MobileScannerController>((ref) {
+  return MobileScannerController(
+    torchEnabled: true,
+    detectionSpeed: DetectionSpeed.noDuplicates,
+  );
+});

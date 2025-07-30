@@ -1,6 +1,5 @@
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:nav_stemi/nav_stemi.dart';
-import 'package:nav_stemi/src/features/add_data/application/patient_info_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'patient_info_controller.g.dart';

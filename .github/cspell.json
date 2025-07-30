@@ -15,11 +15,21 @@
     }
   ],
   "useGitignore": true,
+  "ignoreWords": ["open-source"],
   "words": [
     "Contador",
     "localizable",
     "mostrado",
     "página",
-    "Texto"
+    "Texto",
+    "fhir",
+    "Riverpod",
+    "STEMI",
+    "stemi",
+    "CCPA",
+    "Mapbox",
+    "Bizzotto",
+    "barcodes",
+    "open-source"
   ]
 }
