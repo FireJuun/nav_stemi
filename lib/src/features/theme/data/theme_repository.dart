@@ -51,9 +51,10 @@ class ThemeRepository {
       colorScheme: colorScheme,
       useMaterial3: true,
       appBarTheme: AppBarTheme(
-        iconTheme: IconThemeData(size: 40, color: colorScheme.onSurface),
+        // TODO(FireJuun): change to dynamic by AppEnvironment
+        iconTheme: IconThemeData(size: 40, color: colorScheme.onPrimary),
         titleTextStyle: textTheme.displaySmall?.apply(
-          color: colorScheme.onSurface,
+          color: colorScheme.onPrimary,
         ),
       ),
       cardTheme: CardThemeData(

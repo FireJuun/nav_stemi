@@ -5,4 +5,4 @@ flutter_launcher_icons:
   ios: true
   remove_alpha_ios: true
   adaptive_icon_foreground: 'assets/icons/nav_stemi_android_stg.png'
-  adaptive_icon_background: '#1C4294'
+  adaptive_icon_background: '#941C1C'

@@ -19,7 +19,10 @@ enum FhirSyncStatus {
   offline,
 
   /// Error occurred during sync
-  error
+  error,
+
+  /// Using fake sync mode (for staging/demo)
+  fake
 }
 
 /// Repository for managing patient info sync status

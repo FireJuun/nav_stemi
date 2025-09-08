@@ -20,7 +20,7 @@ class BirthDateToStringDTO {
   }
 
   String convertDriversLicense(DateTime birthDate) {
-    return _removeSeparatorHyphens(_dateFormat.format(birthDate));
+    return _removeSeparators(_dateFormat.format(birthDate));
   }
 
   DateTime? convertDriversLicenseBack(String birthDate) {
@@ -31,10 +31,10 @@ class BirthDateToStringDTO {
 
   String _formatDateWithSeparators(String date) {
     assert(date.length == 8, 'Date must be 8 characters long');
-    return '${date.substring(0, 2)}-${date.substring(2, 4)}-${date.substring(4)}';
+    return '${date.substring(0, 2)}/${date.substring(2, 4)}/${date.substring(4)}';
   }
 
-  String _removeSeparatorHyphens(String date) => date.replaceAll('-', '');
+  String _removeSeparators(String date) => date.replaceAll('/', '');
 
   /// Attempts to parse a [String] to a [DateTime].
   ///
