@@ -18,6 +18,7 @@ You'll need to create an `.env` folder, with three files `.env/development.env`,
 
 ```text
 MAPS_API_KEY={your_google_navigation_api_token_here}
+FIREBASE_APP_ID={your_firebase_app_id}
 DIRECTIONS_API={your_directions_api_token_here}
 DISTANCE_MATRIX_API={your_distance_matrix_api_token_here}
 ROUTES_API={your_routes_api_token_here}
