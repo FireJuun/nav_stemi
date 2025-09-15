@@ -389,7 +389,7 @@ void main() {
         );
         expect(
           kFirstAppTheme.tertiarySeedColor,
-          equals(const Color(0xFF21962D)),
+          equals(const Color(0xFF36B042)),
         );
       });
     });
