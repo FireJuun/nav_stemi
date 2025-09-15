@@ -2,52 +2,48 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nav_stemi/src/features/auth/data/auth_repository.dart';
+import 'package:nav_stemi/src/features/auth/domain/app_user.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'firebase_auth_repository.g.dart';
 
 /// Service for handling Firebase authentication
 /// This is separate from the AppUser domain which handles FHIR data access
-class FirebaseAuthRepository {
-  FirebaseAuthRepository() {
-    _initializeAnonymousAuth();
-  }
+class FirebaseAuthRepository implements AuthRepository {
+  FirebaseAuthRepository();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   /// Check if current user is anonymous
   bool get isAnonymous => _auth.currentUser?.isAnonymous ?? false;
 
+  /// Check if current user signed in with phone
+  bool get isPhoneUser =>
+      _auth.currentUser?.providerData
+          .any((info) => info.providerId == 'phone') ??
+      false;
+
   /// Get current user's UID (null if not authenticated)
   String? get uid => _auth.currentUser?.uid;
 
   /// Stream of Firebase auth state changes
-  Stream<User?> authStateChanges() => _auth.authStateChanges();
-
-  /// Initialize anonymous authentication when service is created
-  void _initializeAnonymousAuth() {
-    if (_auth.currentUser == null) {
-      signInAnonymously();
-    }
-  }
-
-  /// Sign in anonymously
-  Future<User?> signInAnonymously() async {
-    try {
-      final userCredential = await _auth.signInAnonymously();
-      debugPrint('Signed in anonymously: ${userCredential.user?.uid}');
-      return userCredential.user;
-    } catch (e) {
-      debugPrint('Error signing in anonymously: $e');
-      return null;
-    }
-  }
+  @override
+  Stream<AppUser?> authStateChanges() => _auth.authStateChanges().map(
+        (user) => user == null
+            ? null
+            : FirebaseAppUser(
+                uid: user.uid,
+                // Use phone number as display name if displayName is null
+                displayName: user.displayName ?? user.phoneNumber,
+              ),
+      );
 
   /// Sign out the current user
+  @override
   Future<void> signOut() async {
     try {
       await _auth.signOut();
-      await signInAnonymously(); // Sign back in anonymously after sign out
     } catch (e) {
       debugPrint('Error signing out: $e');
     }
@@ -70,6 +66,26 @@ class FirebaseAuthRepository {
       debugPrint('Error checking admin status: $e');
       return false;
     }
+  }
+
+  @override
+  AppUser? get currentUser {
+    final user = _auth.currentUser;
+    if (user == null) return null;
+
+    return FirebaseAppUser(
+      uid: user.uid,
+      displayName: user.displayName ?? user.phoneNumber,
+    );
+  }
+
+  @override
+  void init() {}
+
+  @override
+  Future<void> signIn() async {
+    // firebase_ui_auth handles phone sign-in, so this can be empty
+    // or redirect to the sign-in page
   }
 }
 
