@@ -1,3 +1,4 @@
+import 'package:firebase_ui_auth/firebase_ui_auth.dart' show AuthAction;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -21,6 +22,9 @@ enum AppRoute {
   navGoTo,
   navInfo,
   navAddData,
+  signIn,
+  phoneInput,
+  smsCodeInput,
 }
 
 /// returns the GoRouter instance that defines all the routes in the app
@@ -32,12 +36,55 @@ GoRouter goRouter(Ref ref) {
   final shellAddDataNavigatorKey =
       GlobalKey<NavigatorState>(debugLabel: 'shellAddData');
 
-  // final authRepository = ref.watch(authRepositoryProvider);
   return GoRouter(
     initialLocation: '/',
     debugLogDiagnostics: true,
     navigatorKey: rootNavigatorKey,
+    // Add redirect logic for phone authentication
+    redirect: (context, state) async {
+      final user = ref.read(authRepositoryProvider).currentUser;
+
+      final isAuthRoute = state.matchedLocation == '/auth' ||
+          state.matchedLocation == '/auth/phone-input' ||
+          state.matchedLocation == '/auth/sms-code-input';
+
+      // Redirect to phone input if not authenticated and not on auth routes
+      if (user == null && !isAuthRoute) {
+        return '/auth';
+      }
+
+      // Redirect away from auth routes if already authenticated
+      if (user != null && isAuthRoute) {
+        return '/';
+      }
+
+      return null; // No redirect needed
+    },
+    // Add refreshListenable for reactive updates
+    refreshListenable: GoRouterRefreshStream(
+      ref.watch(authRepositoryProvider).authStateChanges(),
+    ),
     routes: [
+      GoRoute(
+          path: '/auth',
+          builder: (context, state) => const PhoneSignInScreen(),
+          routes: [
+            GoRoute(
+              path: 'phone-input',
+              name: AppRoute.phoneInput.name,
+              builder: (context, state) =>
+                  PhoneLoginScreen(action: state.extra as AuthAction?),
+            ),
+            GoRoute(
+              path: 'sms-code-input',
+              name: AppRoute.smsCodeInput.name,
+              builder: (context, state) {
+                final extra = state.extra as (AuthAction?, Object);
+                // final flowKey = state.uri.queryParameters['flowKey'] ?? '';
+                return SMSInputScreen(flowKey: extra.$2, action: extra.$1);
+              },
+            ),
+          ]),
       GoRoute(
         path: '/',
         name: AppRoute.home.name,
