@@ -53,10 +53,19 @@ class _HomeState extends ConsumerState<Home> {
   }
 
   void _showAuthDialog(BuildContext context, WidgetRef ref) {
-    showDialog<void>(
-      context: context,
-      builder: (context) => const AuthDialog(),
-    );
+    final authState = ref.read(authStateChangesProvider);
+    final user = authState.valueOrNull;
+
+    if (user == null) {
+      // Navigate to phone input page instead of showing dialog
+      context.goNamed(AppRoute.phoneInput.name);
+    } else {
+      // Show profile/logout dialog for authenticated users
+      showDialog<void>(
+        context: context,
+        builder: (context) => const AuthDialog(),
+      );
+    }
   }
 
   void _showEncountersDialog(BuildContext context) {
