@@ -75,7 +75,7 @@ class AddDataLoginPrompt extends ConsumerWidget {
           gapH32,
           FilledButton.icon(
             onPressed: () {
-              ref.read(authRepositoryProvider).signIn();
+              context.goNamed(AppRoute.phoneInput.name);
             },
             icon: const Icon(Icons.login),
             label: Text('Sign In'.hardcoded),
