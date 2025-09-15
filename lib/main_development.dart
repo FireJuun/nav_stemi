@@ -1,5 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 // ignore:depend_on_referenced_packages
@@ -17,18 +17,9 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Sign in anonymously if not already signed in
-  final currentUser = FirebaseAuth.instance.currentUser;
-  if (currentUser == null) {
-    try {
-      await FirebaseAuth.instance.signInAnonymously();
-      debugPrint('Anonymous authentication successful');
-    } catch (e) {
-      debugPrint('Error signing in anonymously: $e');
-    }
-  } else {
-    debugPrint('User already signed in: ${currentUser.uid}');
-  }
+  FirebaseUIAuth.configureProviders([
+    PhoneAuthProvider(),
+  ]);
 
   // turn off the # in the URLs on the web
   usePathUrlStrategy();
