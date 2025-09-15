@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 const _toolbarHeight = 76.0;
@@ -92,10 +93,19 @@ class AppBarWidget extends ConsumerWidget implements PreferredSizeWidget {
   }
 
   void _showAuthDialog(BuildContext context, WidgetRef ref) {
-    showDialog<void>(
-      context: context,
-      builder: (context) => const AuthDialog(),
-    );
+    final authState = ref.read(authStateChangesProvider);
+    final user = authState.valueOrNull;
+
+    if (user == null) {
+      // Navigate to phone input page instead of showing dialog
+      context.goNamed(AppRoute.phoneInput.name);
+    } else {
+      // Show profile/logout dialog for authenticated users
+      showDialog<void>(
+        context: context,
+        builder: (context) => const AuthDialog(),
+      );
+    }
   }
 
   @override
@@ -122,6 +132,8 @@ class AuthDialog extends ConsumerWidget {
             var displayName = 'User';
             if (user is GoogleAppUser) {
               displayName = user.user.displayName ?? 'Google User';
+            } else if (user is FirebaseAppUser) {
+              displayName = user.displayName ?? 'Phone User';
             }
 
             return Column(
@@ -151,8 +163,8 @@ class AuthDialog extends ConsumerWidget {
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
-                    ref.read(authRepositoryProvider).signIn();
                     Navigator.of(context).pop();
+                    context.goNamed(AppRoute.phoneInput.name);
                   },
                   child: Text('Sign In'.hardcoded),
                 ),
