@@ -27,10 +27,6 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
-	<!-- Put me in the [my_project]/ios/Runner/Info.plist file -->
-	<!-- Google Sign-in Section -->
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -38,12 +34,12 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<!-- Use Environment variables for REVERSED_CLIENT_ID -->
 				<string>$(IOS_GOOGLE_CLIENT_ID_REVERSED)</string>
 			</array>
 		</dict>
 	</array>
-	<!-- End of the Google Sign-in Section -->
+	<key>CFBundleVersion</key>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>tel</string>
@@ -54,10 +50,10 @@
 	<string>$(MAPS_API_KEY)</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This app needs camera access to scan QR codes</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>For driving directions to work correctly, this app needs access to location when in the background.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>For driving directions to work correctly, this app needs access to location when the app is open and in the background.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>For driving directions to work correctly, this app needs access to location when in the background.</string>
 	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
 	<dict>
 		<key>NavStemiLocationKey</key>
@@ -73,6 +69,8 @@
 	<array>
 		<string>audio</string>
 		<string>location</string>
+		<string>remote-notification</string>
+		<string>fetch</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
