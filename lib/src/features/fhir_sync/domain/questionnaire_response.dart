@@ -28,7 +28,7 @@ extension QuestionnaireResponseX on QuestionnaireResponse {
       status: QuestionnaireResponseStatus.inProgress,
       authored: FhirDateTime.fromDateTime(DateTime.now()),
       item: [
-        if (wasCathLabNotified != null)
+        if (wasStemiActivated != null)
           QuestionnaireResponseItem(
             linkId: FhirString('wasStemiActivated'),
             text: FhirString('Was STEMI activated?'),

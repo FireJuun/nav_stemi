@@ -12,7 +12,7 @@ class InMemoryStore<T> {
   final BehaviorSubject<T> _subject;
 
   /// The output stream that can be used to listen to the data
-  Stream<T> get stream => _subject.stream;
+  Stream<T> get stream => _subject.stream.distinct();
 
   /// A synchronous getter for the current value
   T get value => _subject.value;

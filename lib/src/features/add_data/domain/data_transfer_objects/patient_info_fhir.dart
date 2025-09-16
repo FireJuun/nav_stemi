@@ -51,7 +51,6 @@ class PatientInfoFhirDTO {
       birthDate: birthDate,
       sexAtBirth: sex,
       cardiologist: cardiologistName,
-      isDirty: false, // Data is synced with FHIR
     );
   }
 

@@ -13,6 +13,11 @@ class LoginStatusIndicator extends ConsumerWidget {
 
   final VoidCallback onShowEncountersPressed;
 
+  static const Key viewPriorEncountersButtonKey =
+      Key('view_prior_encounters_button');
+
+  static const Key loginActionsKey = Key('login_actions');
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authStateChangesProvider);
@@ -29,11 +34,13 @@ class LoginStatusIndicator extends ConsumerWidget {
         padding: const EdgeInsets.only(top: 16, right: 16),
         child: isUserLoggedIn
             ? FilledButton.icon(
+                key: viewPriorEncountersButtonKey,
                 onPressed: onShowEncountersPressed,
                 icon: const Icon(Icons.history),
                 label: Text('View Prior Encounters'.hardcoded),
               )
             : Column(
+                key: loginActionsKey,
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [

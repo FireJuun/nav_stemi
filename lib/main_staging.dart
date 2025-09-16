@@ -12,6 +12,7 @@ void main() async {
 
   // Initialize Firebase with staging configuration
   await Firebase.initializeApp(
+    name: 'nav_stemi_stg',
     options: DefaultFirebaseOptions.currentPlatform,
   );
 

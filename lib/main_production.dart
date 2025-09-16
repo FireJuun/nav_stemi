@@ -12,6 +12,7 @@ void main() async {
 
   // Initialize Firebase first
   await Firebase.initializeApp(
+    name: 'nav_stemi_prod',
     options: DefaultFirebaseOptions.currentPlatform,
   );
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:nav_stemi/nav_stemi.dart';
-import 'package:nav_stemi/src/features/add_data/presentation/data_entry/sync_notify/sync_notify.dart';
 
 class AddDataTabs extends StatelessWidget {
   const AddDataTabs({super.key});
