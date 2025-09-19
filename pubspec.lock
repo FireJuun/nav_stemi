@@ -137,6 +137,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
+  bridgefy:
+    dependency: "direct main"
+    description:
+      name: bridgefy
+      sha256: "0fe77fbde2b1c1fa4b4ea4c0d3359005ccc0451b857767fd7c8b7ea4f85f230a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.9"
   build:
     dependency: transitive
     description:
