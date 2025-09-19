@@ -1,14 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
+import 'package:nav_stemi/src/features/add_data/data/sync_notify_controller.dart';
 
-class SyncNotify extends ConsumerWidget {
+class SyncNotify extends ConsumerStatefulWidget {
   const SyncNotify({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _SyncNotifyState();
+}
+
+class _SyncNotifyState extends ConsumerState<SyncNotify> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final stateAsync = ref.watch(SyncNotifyController.provider);
+
+    return stateAsync.when(
+      data: (state) => SyncNotifyData(state: state),
+      error: (error, stackTrace) => const SyncNotifyError(),
+      loading: () => const SyncNotifierLoading(),
+    );
+  }
+}
+
+class SyncNotifyData extends ConsumerWidget {
+  const SyncNotifyData({required this.state, super.key});
+
+  final SyncNotifyState state;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SliverMainAxisGroup(
       slivers: [
+        SliverList.builder(
+          itemBuilder: (context, index) {
+            return ListTile(title: Text(state.connectedPeers[index]));
+          },
+          itemCount: state.connectedPeers.length,
+        ),
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           sliver: SliverList.list(
@@ -18,8 +52,9 @@ class SyncNotify extends ConsumerWidget {
               Center(
                 child: Consumer(
                   builder: (context, ref, child) {
-                    final destinationValue =
-                        ref.watch(activeDestinationProvider);
+                    final destinationValue = ref.watch(
+                      activeDestinationProvider,
+                    );
 
                     return AsyncValueWidget<ActiveDestination?>(
                       value: destinationValue,
@@ -77,6 +112,24 @@ class SyncNotify extends ConsumerWidget {
         ),
       ],
     );
+  }
+}
+
+class SyncNotifyError extends StatelessWidget {
+  const SyncNotifyError({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(child: const Placeholder());
+  }
+}
+
+class SyncNotifierLoading extends StatelessWidget {
+  const SyncNotifierLoading({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(child: const Placeholder());
   }
 }
 
