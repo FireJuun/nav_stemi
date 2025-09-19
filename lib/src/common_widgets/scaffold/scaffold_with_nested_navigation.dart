@@ -3,33 +3,43 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nav_stemi/nav_stemi.dart';
+import 'package:nav_stemi/src/common_widgets/lifecycle_listener.dart';
+import 'package:nav_stemi/src/data/services/bridgefy_service.dart';
+import 'package:uuid/uuid.dart';
 
 /// Excellent article showing how to do this:
 /// https://codewithandrea.com/articles/flutter-bottom-navigation-bar-nested-routes-gorouter/
 /// based on:
 /// https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart
 ///
-class ScaffoldWithNestedNavigation extends StatefulWidget {
-  const ScaffoldWithNestedNavigation({
-    required this.navigationShell,
-    Key? key,
-  }) : super(key: key ?? const ValueKey('ScaffoldWithNestedNavigation'));
+class ScaffoldWithNestedNavigation extends ConsumerStatefulWidget {
+  const ScaffoldWithNestedNavigation({required this.navigationShell, Key? key})
+    : super(key: key ?? const ValueKey('ScaffoldWithNestedNavigation'));
 
   final StatefulNavigationShell navigationShell;
 
   @override
-  State<ScaffoldWithNestedNavigation> createState() =>
+  ConsumerState<ScaffoldWithNestedNavigation> createState() =>
       _ScaffoldWithNestedNavigationState();
 }
 
 class _ScaffoldWithNestedNavigationState
-    extends State<ScaffoldWithNestedNavigation> {
+    extends ConsumerState<ScaffoldWithNestedNavigation> {
   bool _canPop = false;
 
   void _onTap(int index) => widget.navigationShell.goBranch(
-        index,
-        initialLocation: index == widget.navigationShell.currentIndex,
-      );
+    index,
+    initialLocation: index == widget.navigationShell.currentIndex,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startSyncService();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,55 +48,101 @@ class _ScaffoldWithNestedNavigationState
 
     return Consumer(
       builder: (context, ref, child) {
-        return PopScope(
-          canPop: _canPop,
-          onPopInvokedWithResult: (didPop, _) async {
-            final shouldPop = await showAlertDialog(
-                  context: context,
-                  title: 'Exit Navigation?'.hardcoded,
-                  cancelActionText: 'Go back'.hardcoded,
-                  defaultActionText: 'EXIT'.hardcoded,
-                ) ??
-                false;
+        return LifecycleListener(
+          onHide: () {
+            debugPrint('User hid the app');
 
-            if (shouldPop && context.mounted) {
-              // Show survey dialog before exit
-              await SurveyDialog.show(context);
-
-              // Reset TimerModel and Patient Info Model
-              ref
-                ..invalidate(fhirInitServiceProvider)
-                ..invalidate(fhirResourceReferencesNotifierProvider);
-
-              ref
-                  .read(timeMetricsControllerProvider.notifier)
-                  .clearTimeMetrics();
-              ref.read(patientInfoServiceProvider).clearPatientInfo();
-              await ref.read(countUpTimerRepositoryProvider).reset();
-
-              setState(() => _canPop = shouldPop);
-              if (context.mounted) {
-                context.goNamed(AppRoute.home.name);
-              }
-            }
+            ref.read(BridgefyService.provider).stopService();
           },
-          child: Scaffold(
-            appBar: const AppBarWidget(),
-            endDrawer: const NavDrawer(),
-            body: AnimatedContainer(
-              duration: 300.ms,
-              color: isNavPage
-                  ? colorScheme.primaryContainer
-                  : colorScheme.secondaryContainer,
-              child: widget.navigationShell,
-            ),
-            bottomNavigationBar: BottomNavBar(
-              selectedIndex: widget.navigationShell.currentIndex,
-              onDestinationSelected: _onTap,
+          onInactive: () {
+            debugPrint('User inactive');
+
+            ref.read(BridgefyService.provider).stopService();
+          },
+          onPause: () {
+            debugPrint('User paused the app ');
+            ref.read(BridgefyService.provider).stopService();
+          },
+          onDetach: () {
+            debugPrint('User exited the app ');
+            ref.read(BridgefyService.provider).stopService();
+          },
+          onRestart: () {
+            debugPrint('User restarted the app ');
+            _startSyncService();
+          },
+          onResume: () {
+            debugPrint('User resumed the app ');
+            _startSyncService();
+          },
+          onShow: () {
+            debugPrint('User showed the app ');
+
+            _startSyncService();
+          },
+          child: PopScope(
+            canPop: _canPop,
+            onPopInvokedWithResult: (didPop, _) async {
+              final shouldPop =
+                  await showAlertDialog(
+                    context: context,
+                    title: 'Exit Navigation?'.hardcoded,
+                    cancelActionText: 'Go back'.hardcoded,
+                    defaultActionText: 'EXIT'.hardcoded,
+                  ) ??
+                  false;
+
+              if (shouldPop && context.mounted) {
+                // Show survey dialog before exit
+                await SurveyDialog.show(context);
+
+                // Reset TimerModel and Patient Info Model
+                ref
+                  ..invalidate(fhirInitServiceProvider)
+                  ..invalidate(fhirResourceReferencesNotifierProvider);
+
+                ref
+                    .read(timeMetricsControllerProvider.notifier)
+                    .clearTimeMetrics();
+                ref.read(patientInfoServiceProvider).clearPatientInfo();
+                await ref.read(countUpTimerRepositoryProvider).reset();
+
+                setState(() => _canPop = shouldPop);
+                if (context.mounted) {
+                  context.goNamed(AppRoute.home.name);
+                }
+              }
+            },
+            child: Scaffold(
+              appBar: const AppBarWidget(),
+              endDrawer: const NavDrawer(),
+              body: AnimatedContainer(
+                duration: 300.ms,
+                color: isNavPage
+                    ? colorScheme.primaryContainer
+                    : colorScheme.secondaryContainer,
+                child: widget.navigationShell,
+              ),
+              bottomNavigationBar: BottomNavBar(
+                selectedIndex: widget.navigationShell.currentIndex,
+                onDestinationSelected: _onTap,
+              ),
             ),
           ),
         );
       },
     );
   }
+
+  Future<void> _startSyncService() async {
+    try {
+      debugPrint('Starting Bridgefy service with userId: $uuid');
+
+      await ref.read(BridgefyService.provider).startService(userId: uuid);
+    } catch (e) {
+      debugPrint('Failed to start Bridgefy service: $e');
+    }
+  }
 }
+
+final uuid = const Uuid().v4();
