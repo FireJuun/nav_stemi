@@ -56,9 +56,7 @@ GoRouter goRouter(Ref ref) {
         return null;
       }
 
-      final isAuthRoute = state.matchedLocation == '/auth' ||
-          state.matchedLocation == '/auth/phone-input' ||
-          state.matchedLocation == '/auth/sms-code-input';
+      final isAuthRoute = state.matchedLocation.contains('/auth');
 
       // Redirect to phone input if not authenticated and not on auth routes
       if (user == null && !isAuthRoute) {
@@ -88,20 +86,21 @@ GoRouter goRouter(Ref ref) {
         builder: (context, state) => const PhoneSignInScreen(),
         routes: [
           GoRoute(
-            path: 'phone-input',
-            name: AppRoute.phoneInput.name,
-            builder: (context, state) =>
-                PhoneLoginScreen(action: state.extra as AuthAction?),
-          ),
-          GoRoute(
-            path: 'sms-code-input',
-            name: AppRoute.smsCodeInput.name,
-            builder: (context, state) {
-              final extra = state.extra as (AuthAction?, Object);
+              path: 'phone-input',
+              name: AppRoute.phoneInput.name,
+              builder: (context, state) =>
+                  PhoneLoginScreen(action: state.extra as AuthAction?),
+              routes: [
+                GoRoute(
+                  path: 'sms-code-input',
+                  name: AppRoute.smsCodeInput.name,
+                  builder: (context, state) {
+                    final extra = state.extra as (AuthAction?, Object);
 
-              return SMSInputScreen(flowKey: extra.$2, action: extra.$1);
-            },
-          ),
+                    return SMSInputScreen(flowKey: extra.$2, action: extra.$1);
+                  },
+                ),
+              ]),
         ],
       ),
       GoRoute(
