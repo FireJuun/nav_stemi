@@ -44,13 +44,8 @@ class AppBootstrapLocal extends AppBootstrap {
       authRepository = FakeAuthRepository();
 
       /// QUESTION: Should we remove these keys.
-    } else if (Env.serviceAccountEmail.isNotEmpty &&
-        Env.serviceAccountPrivateKey.isNotEmpty) {
-      // Use service account when credentials are available
-      authRepository = FirebaseAuthRepository();
     } else {
-      // Otherwise use Google auth
-      authRepository = GoogleAuthRepository();
+      authRepository = FirebaseAuthRepository();
     }
 
     // Initialize Firebase Auth service for anonymous authentication

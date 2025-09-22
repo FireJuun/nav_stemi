@@ -40,13 +40,23 @@ GoRouter goRouter(Ref ref) {
     initialLocation: '/',
     debugLogDiagnostics: true,
     navigatorKey: rootNavigatorKey,
+    onException: (_, GoRouterState state, GoRouter router) {
+      // If handling a link from Firebase authentication, exit early.
+      if (state.matchedLocation == '/link') {
+        return;
+      }
+
+      router.go('/404', extra: state.uri.toString());
+    },
     // Add redirect logic for phone authentication
     redirect: (context, state) async {
       final user = ref.read(authRepositoryProvider).currentUser;
 
-      final isAuthRoute = state.matchedLocation == '/auth' ||
-          state.matchedLocation == '/auth/phone-input' ||
-          state.matchedLocation == '/auth/sms-code-input';
+      if (state.matchedLocation == '/link') {
+        return null;
+      }
+
+      final isAuthRoute = state.matchedLocation.contains('/auth');
 
       // Redirect to phone input if not authenticated and not on auth routes
       if (user == null && !isAuthRoute) {
@@ -66,25 +76,34 @@ GoRouter goRouter(Ref ref) {
     ),
     routes: [
       GoRoute(
-          path: '/auth',
-          builder: (context, state) => const PhoneSignInScreen(),
-          routes: [
-            GoRoute(
-              path: 'phone-input',
-              name: AppRoute.phoneInput.name,
-              builder: (context, state) =>
-                  PhoneLoginScreen(action: state.extra as AuthAction?),
-            ),
-            GoRoute(
-              path: 'sms-code-input',
-              name: AppRoute.smsCodeInput.name,
-              builder: (context, state) {
-                final extra = state.extra as (AuthAction?, Object);
-                // final flowKey = state.uri.queryParameters['flowKey'] ?? '';
-                return SMSInputScreen(flowKey: extra.$2, action: extra.$1);
-              },
-            ),
-          ]),
+        path: '/404',
+        builder: (BuildContext context, GoRouterState state) {
+          return const NotFoundScreen();
+        },
+      ),
+      GoRoute(
+        path: '/auth',
+        builder: (context, state) => const PhoneSignInScreen(),
+        routes: [
+          GoRoute(
+            path: 'phone-input',
+            name: AppRoute.phoneInput.name,
+            builder: (context, state) =>
+                PhoneLoginScreen(action: state.extra as AuthAction?),
+            routes: [
+              GoRoute(
+                path: 'sms-code-input',
+                name: AppRoute.smsCodeInput.name,
+                builder: (context, state) {
+                  final extra = state.extra! as (AuthAction?, Object);
+
+                  return SMSInputScreen(flowKey: extra.$2, action: extra.$1);
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
       GoRoute(
         path: '/',
         name: AppRoute.home.name,
@@ -202,7 +221,6 @@ GoRouter goRouter(Ref ref) {
         ],
       ),
     ],
-    errorBuilder: (context, state) => const NotFoundScreen(),
   );
 }
 
