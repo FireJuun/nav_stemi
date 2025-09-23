@@ -32,7 +32,9 @@ target 'Runner' do
   use_frameworks! :linkage => :static
   use_modular_headers!
 
-  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '11.15.0'
+  pod 'FirebaseFirestore',
+    :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git',
+    :tag => '11.15.0'
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
   target 'RunnerTests' do
@@ -47,7 +49,7 @@ post_install do |installer|
     target.build_configurations.each do |config|
 
       # Ensure all pods use iOS 13.0 minimum (or 15.0)
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.6'
+      # config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.6'
 
       # You can remove unused permissions here
       # for more information: https://github.com/BaseflowIT/flutter-permission-handler/blob/master/permission_handler/ios/Classes/PermissionHandlerEnums.h

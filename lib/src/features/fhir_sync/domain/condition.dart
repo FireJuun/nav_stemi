@@ -13,13 +13,12 @@ extension ConditionX on Condition {
     return copyWith(
       clinicalStatus: CodeableConcept(
         coding: [
-          if (isStemiActivated)
-            Coding(
-              system: FhirUri(
-                'http://terminology.hl7.org/CodeSystem/condition-clinical',
-              ),
-              code: FhirCode('active'),
+          Coding(
+            system: FhirUri(
+              'http://terminology.hl7.org/CodeSystem/condition-clinical',
             ),
+            code: FhirCode(isStemiActivated ? 'active' : 'inactive'),
+          ),
         ],
       ),
       verificationStatus: CodeableConcept(
