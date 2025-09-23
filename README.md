@@ -20,6 +20,14 @@ For the app to run, you'll need to update the `flutterfire-config.sh` script to 
 ./flutterfire-config.sh prod # currently unset
 ```
 
+For each, it will ask:
+
+* Which platforms should your configuration support (use arrow keys & space to select)? `android, ios`
+* You have to choose a configuration type. Either build configuration (most likely choice) or a target set up. `Build configuration`
+* Please choose one of the following build configurations.
+  * Always select the development / stage / production option that matches dev / stg / prod from your shell script.
+  * `Debug-___` if testing, otherwise `Release-___` if ready for deployment.
+
 There are three reasons for this:
 
 1. This customization makes it much less likely to accidentally point Android (`google-services.json`) and iOS (`GoogleServiceInfo.plist`) configuration files from one environment (e.g. dev) to another (e.g. stg). This forces each flavor of the app to only look for the Android (`google-services.json`) and iOS (`GoogleServiceInfo.plist`) files that are linked to that specific flavor.
@@ -46,9 +54,9 @@ If you don't have an access token established yet -- such as for Google Maps API
 
 This project contains 3 flavors:
 
-- development
-- staging
-- production
+* development
+* staging
+* production
 
 To run the desired flavor either use the launch configuration in VSCode/Android Studio or use the following commands:
 
