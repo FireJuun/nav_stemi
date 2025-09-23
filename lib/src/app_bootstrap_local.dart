@@ -42,13 +42,10 @@ class AppBootstrapLocal extends AppBootstrap {
     if (isStaging) {
       // Use fake auth for staging
       authRepository = FakeAuthRepository();
-    } else if (Env.serviceAccountEmail.isNotEmpty &&
-        Env.serviceAccountPrivateKey.isNotEmpty) {
-      // Use service account when credentials are available
-      authRepository = TestAuthRepository();
+
+      /// QUESTION: Should we remove these keys.
     } else {
-      // Otherwise use Google auth
-      authRepository = GoogleAuthRepository();
+      authRepository = FirebaseAuthRepository();
     }
 
     // Initialize Firebase Auth service for anonymous authentication

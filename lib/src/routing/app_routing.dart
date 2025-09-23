@@ -1,3 +1,4 @@
+import 'package:firebase_ui_auth/firebase_ui_auth.dart' show AuthAction;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -21,6 +22,9 @@ enum AppRoute {
   navGoTo,
   navInfo,
   navAddData,
+  signIn,
+  phoneInput,
+  smsCodeInput,
 }
 
 /// returns the GoRouter instance that defines all the routes in the app
@@ -32,12 +36,102 @@ GoRouter goRouter(Ref ref) {
   final shellAddDataNavigatorKey =
       GlobalKey<NavigatorState>(debugLabel: 'shellAddData');
 
-  // final authRepository = ref.watch(authRepositoryProvider);
   return GoRouter(
     initialLocation: '/',
     debugLogDiagnostics: true,
     navigatorKey: rootNavigatorKey,
+    onException: (_, GoRouterState state, GoRouter router) {
+      // If handling a link from Firebase authentication, exit early.
+      if (state.matchedLocation == '/link') {
+        return;
+      }
+
+      router.go('/404', extra: state.uri.toString());
+    },
+    // Add redirect logic for phone authentication
+    redirect: (context, state) async {
+      final user = ref.read(authRepositoryProvider).currentUser;
+
+      if (state.matchedLocation == '/link') {
+        return null;
+      }
+
+      final isAuthRoute = state.matchedLocation.contains('/auth');
+
+      // Redirect to phone input if not authenticated and not on auth routes
+      if (user == null && !isAuthRoute) {
+        return '/auth';
+      }
+
+      // Redirect away from auth routes if already authenticated
+      if (user != null && isAuthRoute) {
+        return '/';
+      }
+
+      return null; // No redirect needed
+    },
+    // Add refreshListenable for reactive updates
+    refreshListenable: GoRouterRefreshStream(
+      ref.watch(authRepositoryProvider).authStateChanges(),
+    ),
     routes: [
+      GoRoute(
+        path: '/404',
+        builder: (BuildContext context, GoRouterState state) {
+          return const NotFoundScreen();
+        },
+      ),
+      ShellRoute(
+        builder: (context, state, child) {
+          /// currently matches logo backgrounds
+          final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+          final scaffoldBackgroundColor =
+              isDarkMode ? null : const Color(0xFFE3E2E2);
+
+          return Theme(
+            data: Theme.of(context).copyWith(
+              scaffoldBackgroundColor: scaffoldBackgroundColor,
+              textButtonTheme: const TextButtonThemeData(style: ButtonStyle()),
+            ),
+            child: child,
+          );
+        },
+        routes: [
+          GoRoute(
+            path: '/auth',
+            builder: (context, state) => const PhoneSignInScreen(),
+            routes: [
+              GoRoute(
+                path: 'phone-input',
+                name: AppRoute.phoneInput.name,
+                builder: (context, state) {
+                  final extra = state.extra;
+                  final action = extra is (AuthAction?, Object)
+                      ? extra.$1
+                      : extra as AuthAction?;
+
+                  return PhoneLoginScreen(action: action);
+                },
+                routes: [
+                  GoRoute(
+                    path: 'sms-code-input',
+                    name: AppRoute.smsCodeInput.name,
+                    builder: (context, state) {
+                      final extra = state.extra! as (AuthAction?, Object);
+
+                      return SMSInputScreen(
+                        flowKey: extra.$2,
+                        action: extra.$1,
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+
       GoRoute(
         path: '/',
         name: AppRoute.home.name,
@@ -155,7 +249,6 @@ GoRouter goRouter(Ref ref) {
         ],
       ),
     ],
-    errorBuilder: (context, state) => const NotFoundScreen(),
   );
 }
 

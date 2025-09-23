@@ -35,6 +35,15 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>$(IOS_GOOGLE_CLIENT_ID_REVERSED)</string>
+				<string>$(FIREBASE_APP_ID)</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>$(FIREBASE_APP_ID_IOS)</string>
 			</array>
 		</dict>
 	</array>
@@ -45,6 +54,8 @@
 		<string>tel</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>FlutterDeepLinkingEnabled</key>
 	<true/>
 	<key>MapsApiKey</key>
 	<string>$(MAPS_API_KEY)</string>

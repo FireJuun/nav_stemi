@@ -46,43 +46,47 @@ class _PatientInfoDataState extends State<PatientInfoData> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: SliverList.list(
-        children: [
-          Center(
-            child: Consumer(
-              builder: (context, ref, child) {
-                return FilledButton(
-                  onPressed: () {
-                    showDialog<bool>(
-                      context: context,
-                      builder: (context) => ScanQrLicenseDialog(
-                        onDataSubmitted: (patientInfoModel) => ref
-                            .read(patientInfoControllerProvider.notifier)
-                            .setPatientInfoModel(patientInfoModel),
-                      ),
+    return SliverList.list(
+      children: [
+        Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              Center(
+                child: Consumer(
+                  builder: (context, ref, child) {
+                    return FilledButton(
+                      onPressed: () {
+                        showDialog<bool>(
+                          context: context,
+                          builder: (context) => ScanQrLicenseDialog(
+                            onDataSubmitted: (patientInfoModel) => ref
+                                .read(patientInfoControllerProvider.notifier)
+                                .setPatientInfoModel(patientInfoModel),
+                          ),
+                        );
+                      },
+                      child: Text("Scan Driver's License".hardcoded),
                     );
                   },
-                  child: Text("Scan Driver's License".hardcoded),
-                );
-              },
-            ),
+                ),
+              ),
+              gapH8,
+              const Divider(thickness: 4),
+              gapH16,
+              const PatientEntryName(),
+              gapH32,
+              const PatientEntryBirthdate(),
+              gapH16,
+              const PatientEntryGender(),
+              gapH16,
+              const Divider(thickness: 4),
+              gapH16,
+              const PatientEntryCardiologist(),
+            ],
           ),
-          gapH8,
-          const Divider(thickness: 4),
-          gapH16,
-          const PatientEntryName(),
-          gapH32,
-          const PatientEntryBirthdate(),
-          gapH16,
-          const PatientEntryGender(),
-          gapH16,
-          const Divider(thickness: 4),
-          gapH16,
-          const PatientEntryCardiologist(),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
