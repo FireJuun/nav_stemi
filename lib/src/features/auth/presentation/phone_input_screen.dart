@@ -1,7 +1,7 @@
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:nav_stemi/src/routing/export.dart';
+import 'package:nav_stemi/nav_stemi.dart';
 
 /// Screen for phone number input using firebase_ui_auth
 class PhoneLoginScreen extends StatefulWidget {
@@ -17,6 +17,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
   @override
   Widget build(BuildContext context) {
     return PhoneInputScreen(
+      headerBuilder: (context, constraints, shrinkOffset) => const AuthLogo(),
       action: widget.action ?? AuthAction.signIn,
       actions: [
         SMSCodeRequestedAction((context, action, flowKey, phone) {

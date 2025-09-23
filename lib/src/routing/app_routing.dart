@@ -81,35 +81,57 @@ GoRouter goRouter(Ref ref) {
           return const NotFoundScreen();
         },
       ),
-      GoRoute(
-        path: '/auth',
-        builder: (context, state) => const PhoneSignInScreen(),
+      ShellRoute(
+        builder: (context, state, child) {
+          /// currently matches logo backgrounds
+          final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+          final scaffoldBackgroundColor =
+              isDarkMode ? null : const Color(0xFFE3E2E2);
+
+          return Theme(
+            data: Theme.of(context).copyWith(
+              scaffoldBackgroundColor: scaffoldBackgroundColor,
+              textButtonTheme: const TextButtonThemeData(style: ButtonStyle()),
+            ),
+            child: child,
+          );
+        },
         routes: [
           GoRoute(
-            path: 'phone-input',
-            name: AppRoute.phoneInput.name,
-            builder: (context, state) {
-              final extra = state.extra;
-              final action = extra is (AuthAction?, Object)
-                  ? extra.$1
-                  : extra as AuthAction?;
-
-              return PhoneLoginScreen(action: action);
-            },
+            path: '/auth',
+            builder: (context, state) => const PhoneSignInScreen(),
             routes: [
               GoRoute(
-                path: 'sms-code-input',
-                name: AppRoute.smsCodeInput.name,
+                path: 'phone-input',
+                name: AppRoute.phoneInput.name,
                 builder: (context, state) {
-                  final extra = state.extra! as (AuthAction?, Object);
+                  final extra = state.extra;
+                  final action = extra is (AuthAction?, Object)
+                      ? extra.$1
+                      : extra as AuthAction?;
 
-                  return SMSInputScreen(flowKey: extra.$2, action: extra.$1);
+                  return PhoneLoginScreen(action: action);
                 },
+                routes: [
+                  GoRoute(
+                    path: 'sms-code-input',
+                    name: AppRoute.smsCodeInput.name,
+                    builder: (context, state) {
+                      final extra = state.extra! as (AuthAction?, Object);
+
+                      return SMSInputScreen(
+                        flowKey: extra.$2,
+                        action: extra.$1,
+                      );
+                    },
+                  ),
+                ],
               ),
             ],
           ),
         ],
       ),
+
       GoRoute(
         path: '/',
         name: AppRoute.home.name,

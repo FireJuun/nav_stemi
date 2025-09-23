@@ -1,5 +1,6 @@
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:nav_stemi/nav_stemi.dart';
 
 /// Screen for SMS code input using firebase_ui_auth
 class SMSInputScreen extends StatefulWidget {
@@ -20,6 +21,7 @@ class _SMSInputScreenState extends State<SMSInputScreen> {
   @override
   Widget build(BuildContext context) {
     return SMSCodeInputScreen(
+      headerBuilder: (context, constraints, shrinkOffset) => const AuthLogo(),
       actions: [
         AuthStateChangeAction<SignedIn>((context, state) {
           debugPrint('User signed in: ${state.user?.uid}');

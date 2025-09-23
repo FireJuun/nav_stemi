@@ -1,7 +1,7 @@
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:nav_stemi/src/routing/export.dart';
+import 'package:nav_stemi/nav_stemi.dart';
 
 /// Dedicated phone authentication screen using firebase_ui_auth
 class PhoneSignInScreen extends StatelessWidget {
@@ -10,6 +10,26 @@ class PhoneSignInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SignInScreen(
+      // TODO(FireJuun): re-implement 'register' if email/pw auth is enabled
+      showAuthActionSwitch: false,
+      headerBuilder: (context, constraints, shrinkOffset) => const AuthLogo(),
+      subtitleBuilder: (context, action) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Your phone number is used only for authentication '
+            'and will not be shared.',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
+                ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+        ],
+      ),
       actions: [
         VerifyPhoneAction((context, action) {
           context.goNamed(AppRoute.phoneInput.name, extra: action);
@@ -26,38 +46,8 @@ class PhoneSignInScreen extends StatelessWidget {
         }),
       ],
       sideBuilder: (context, shrinkOffset) {
-        // For wider screens (web/desktop)
-        return Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.security,
-                size: 120,
-                color: Theme.of(context).primaryColor.withValues(alpha: 0.7),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Secure Phone Authentication',
-                style: Theme.of(context).textTheme.headlineMedium,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Your phone number is used only for authentication '
-                'and will not be shared.',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.7),
-                    ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        );
+        // For wider screens (landscape)
+        return const Center(child: AuthLogo(width: 256));
       },
     );
   }
