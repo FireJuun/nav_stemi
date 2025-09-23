@@ -12,7 +12,13 @@ class PhoneSignInScreen extends StatelessWidget {
     return SignInScreen(
       // TODO(FireJuun): re-implement 'register' if email/pw auth is enabled
       showAuthActionSwitch: false,
-      headerBuilder: (context, constraints, shrinkOffset) => const AuthLogo(),
+      headerMaxExtent: 256,
+      headerBuilder: (context, constraints, shrinkOffset) => const Column(
+        children: [
+          Expanded(child: AuthLogo()),
+          AuthLogoSubtitle(),
+        ],
+      ),
       subtitleBuilder: (context, action) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -47,7 +53,15 @@ class PhoneSignInScreen extends StatelessWidget {
       ],
       sideBuilder: (context, shrinkOffset) {
         // For wider screens (landscape)
-        return const Center(child: AuthLogo(width: 256));
+        return const Padding(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            children: [
+              AuthLogo(),
+              AuthLogoSubtitle(),
+            ],
+          ),
+        );
       },
     );
   }

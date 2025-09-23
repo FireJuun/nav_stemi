@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AuthLogo extends StatelessWidget {
-  const AuthLogo({this.width = 128, super.key});
+  const AuthLogo({this.width = 256, super.key});
 
   final double width;
 
@@ -17,6 +17,22 @@ class AuthLogo extends StatelessWidget {
       child: Center(
         child: Image.asset(logo),
       ),
+    );
+  }
+}
+
+class AuthLogoSubtitle extends StatelessWidget {
+  const AuthLogoSubtitle({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      'Status: Beta Testing +\n'
+      'Seeking Feedback',
+      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+      textAlign: TextAlign.center,
     );
   }
 }
