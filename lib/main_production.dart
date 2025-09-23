@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 // ignore:depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:go_router/go_router.dart';
-import 'package:nav_stemi/firebase_options.dart';
+import 'package:nav_stemi/firebase_options_prod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 void main() async {

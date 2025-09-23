@@ -18,6 +18,7 @@ case $1 in
       --android-package-name=com.firejuun.navstemi.dev \
       --android-out=android/app/src/development/google-services.json
     ;;
+
   stg)
     flutterfire config \
       --project=nav-stemi-stg \
@@ -27,10 +28,20 @@ case $1 in
       --android-package-name=com.firejuun.navstemi.stg \
       --android-out=android/app/src/staging/google-services.json
     ;;
+
   prod)
     # Do nothing
     # Currently unset
+
+    # flutterfire config \
+    #   --project=nav-stemi-prod \
+    #   --out=lib/firebase_options_prod.dart \
+    #   --ios-bundle-id=com.firejuun.nav-stemi.prod \
+    #   --ios-out=ios/flavors/production/GoogleService-Info.plist \
+    #   --android-package-name=com.firejuun.nav-stemi.prod \
+    #   --android-out=android/app/src/production/google-services.json
     ;;
+    
   *)
     echo "Error: Invalid environment specified. Use 'dev', 'stg', or 'prod'."
     exit 1
