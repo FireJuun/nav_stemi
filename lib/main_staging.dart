@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart' hide PhoneAuthProvider;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/widgets.dart';
@@ -13,6 +12,7 @@ void main() async {
 
   // Initialize Firebase with staging configuration
   await Firebase.initializeApp(
+    name: 'nav_stemi_stg',
     options: DefaultFirebaseOptions.currentPlatform,
   );
 

@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/widgets.dart';
@@ -13,6 +13,7 @@ void main() async {
 
   // Initialize Firebase first
   await Firebase.initializeApp(
+    name: 'nav_stemi_prod',
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
@@ -20,21 +21,9 @@ void main() async {
     PhoneAuthProvider(),
   ]);
 
-  // Sign in anonymously if not already signed in
-  final currentUser = FirebaseAuth.instance.currentUser;
-  if (currentUser == null) {
-    try {
-      await FirebaseAuth.instance.signInAnonymously();
-      debugPrint('Anonymous authentication successful');
-    } catch (e) {
-      debugPrint('Error signing in anonymously: $e');
-    }
-  } else {
-    debugPrint('User already signed in: ${currentUser.uid}');
-  }
-
   // turn off the # in the URLs on the web
   usePathUrlStrategy();
+
   // ensure URL changes in the address bar when using push / pushNamed
   // more info here: https://docs.google.com/document/d/1VCuB85D5kYxPR3qYOjVmw8boAGKb7k62heFyfFHTOvw/edit
   GoRouter.optionURLReflectsImperativeAPIs = true;
