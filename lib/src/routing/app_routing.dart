@@ -88,8 +88,14 @@ GoRouter goRouter(Ref ref) {
           GoRoute(
             path: 'phone-input',
             name: AppRoute.phoneInput.name,
-            builder: (context, state) =>
-                PhoneLoginScreen(action: state.extra as AuthAction?),
+            builder: (context, state) {
+              final extra = state.extra;
+              final action = extra is (AuthAction?, Object)
+                  ? extra.$1
+                  : extra as AuthAction?;
+
+              return PhoneLoginScreen(action: action);
+            },
             routes: [
               GoRoute(
                 path: 'sms-code-input',
