@@ -14,7 +14,7 @@ service cloud.firestore {
     // Function to check if the user is an admin
     function isAdmin() {
       return isSignedIn() && 
-        exists(/databases/$(database)/documents/admin-users/$(request.auth.uid));
+        exists(/databases/$(database)/documents/users-admin/$(request.auth.uid));
     }
     
     // Survey collection rules
@@ -39,12 +39,20 @@ service cloud.firestore {
     }
     
     // Admin users collection (to store admin UIDs)
-    match /admin-users/{userId} {
+    match /users-admin/{userId} {
       // Only admins can read the admin list
       allow read: if isAdmin();
       
       // Only admins can modify the admin list
       allow write: if isAdmin();
+    }
+
+    // Users collection rules
+    match /users/{userId} {
+      // Allow users to read and write their own data
+      allow read, write: if request.auth.uid == userId;
+      // Allow admins to read all user data
+      allow list: if isAdmin();
     }
     
     // Deny access to all other collections by default
