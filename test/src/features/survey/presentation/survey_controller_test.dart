@@ -9,6 +9,7 @@ void main() {
   setUpAll(() {
     registerFallbackValue(
       const SurveyResponseModel(
+        uid: 'uid',
         appHelpfulness: 0,
         appDifficulty: 0,
         improvementSuggestion: '',
@@ -64,6 +65,7 @@ void main() {
           () => mockSurveyRepository.submitSurvey(captureAny()),
         ).captured.single as SurveyResponseModel;
 
+        expect(capturedSurvey.uid, equals('uid'));
         expect(capturedSurvey.appHelpfulness, equals(4));
         expect(capturedSurvey.appDifficulty, equals(1));
         expect(capturedSurvey.improvementSuggestion, equals('Great app!'));
