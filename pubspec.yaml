@@ -31,7 +31,7 @@ dependencies:
     sdk: flutter
   flutter_riverpod: ^2.6.1
   geolocator: ^13.0.2
-  go_router: ^13.2.3
+  go_router: ^16.2.4
   google_navigation_flutter: ^0.4.0
   google_routes_flutter: ^1.0.0+1
   google_sign_in: ^6.3.0
