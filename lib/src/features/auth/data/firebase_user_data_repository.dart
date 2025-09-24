@@ -32,7 +32,6 @@ class FirebaseUserDataRepository {
           appUser: appUser,
           firstName: data['firstName'] as String?,
           lastName: data['lastName'] as String?,
-          phoneNumber: data['phoneNumber'] as String?,
         );
       }
       return null;
@@ -56,7 +55,6 @@ class FirebaseUserDataRepository {
         appUser: appUser,
         firstName: data['firstName'] as String?,
         lastName: data['lastName'] as String?,
-        phoneNumber: data['phoneNumber'] as String?,
         isAdmin: data['isAdmin'] as bool? ?? false,
       );
     }
@@ -69,13 +67,24 @@ FirebaseUserDataRepository firebaseUserDataRepository(Ref ref) {
   return FirebaseUserDataRepository(FirebaseFirestore.instance);
 }
 
-@Riverpod(keepAlive: true)
-Stream<FirebaseUserData?> watchFirebaseUserData(Ref ref) {
-  final activeUser = ref.watch(authStateChangesProvider).value;
-  final repository = ref.watch(firebaseUserDataRepositoryProvider);
+@riverpod
+Future<FirebaseUserData?> fetchFirebaseUserData(Ref ref) async {
+  final activeUser = ref.read(authStateChangesProvider).value;
+  final repository = ref.read(firebaseUserDataRepositoryProvider);
 
   if (activeUser is FirebaseAppUser) {
-    return repository.watchUserData(activeUser);
+    final cloudData = await repository.fetchUserData(activeUser);
+
+    if (cloudData != null) {
+      /// data already present
+      return cloudData;
+    } else {
+      final newData = FirebaseUserData(appUser: activeUser);
+
+      /// push this data to cloud
+      await repository.createUserData(newData);
+      return newData;
+    }
   }
-  return Stream.value(null);
+  throw AssertionError('Not signed in with Firebase');
 }

@@ -74,18 +74,16 @@ class AppBarWidget extends ConsumerWidget implements PreferredSizeWidget {
           padding: const EdgeInsets.only(right: 8),
           child: Consumer(
             builder: (context, ref, child) {
-              final userData = ref.watch(watchFirebaseUserDataProvider).value;
+              final authState = ref.watch(authStateChangesProvider).value;
 
               return IconButton(
-                icon: userData != null
+                icon: authState != null
                     ? const Icon(Icons.account_circle)
                     : const Icon(Icons.account_circle_outlined),
-                onPressed: userData != null
+                onPressed: authState != null
                     ? () => showDialog<void>(
                           context: context,
-                          builder: (context) {
-                            return UserProfileDialog(userData: userData);
-                          },
+                          builder: (context) => const UserProfileDialog(),
                         )
                     : null,
               );

@@ -25,24 +25,25 @@ final firebaseUserDataRepositoryProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef FirebaseUserDataRepositoryRef = ProviderRef<FirebaseUserDataRepository>;
-String _$watchFirebaseUserDataHash() =>
-    r'b71a44e2d3c377687f0ee5a8075500d96e150f60';
+String _$fetchFirebaseUserDataHash() =>
+    r'a341e783a010ae49432cf744e18f394c8be57fbf';
 
-/// See also [watchFirebaseUserData].
-@ProviderFor(watchFirebaseUserData)
-final watchFirebaseUserDataProvider =
-    StreamProvider<FirebaseUserData?>.internal(
-  watchFirebaseUserData,
-  name: r'watchFirebaseUserDataProvider',
+/// See also [fetchFirebaseUserData].
+@ProviderFor(fetchFirebaseUserData)
+final fetchFirebaseUserDataProvider =
+    AutoDisposeFutureProvider<FirebaseUserData?>.internal(
+  fetchFirebaseUserData,
+  name: r'fetchFirebaseUserDataProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$watchFirebaseUserDataHash,
+      : _$fetchFirebaseUserDataHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef WatchFirebaseUserDataRef = StreamProviderRef<FirebaseUserData?>;
+typedef FetchFirebaseUserDataRef
+    = AutoDisposeFutureProviderRef<FirebaseUserData?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

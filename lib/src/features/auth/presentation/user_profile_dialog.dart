@@ -3,22 +3,51 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:nav_stemi/src/features/auth/presentation/user_profile_dialog_controller.dart';
 
-class UserProfileDialog extends StatefulWidget {
-  const UserProfileDialog({
-    required this.userData,
-    this.onClose,
-    super.key,
-  });
-
-  final FirebaseUserData userData;
+class UserProfileDialog extends ConsumerWidget {
+  const UserProfileDialog({this.onClose, super.key});
 
   final VoidCallback? onClose;
 
   @override
-  State<UserProfileDialog> createState() => _UserProfileDialogState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userDataValue = ref.watch(fetchFirebaseUserDataProvider);
+
+    return AsyncValueWidget(
+      value: userDataValue,
+      data: (userData) {
+        if (userData == null) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Error: no data to modify'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  onClose?.call();
+                },
+                child: Text('Close'.hardcoded),
+              ),
+            ],
+          );
+        } else {
+          return _UserProfileHasData(userData: userData, onClose: onClose);
+        }
+      },
+    );
+  }
 }
 
-class _UserProfileDialogState extends State<UserProfileDialog> {
+class _UserProfileHasData extends StatefulWidget {
+  const _UserProfileHasData({required this.userData, this.onClose});
+
+  final FirebaseUserData userData;
+  final VoidCallback? onClose;
+
+  @override
+  State<_UserProfileHasData> createState() => __UserProfileHasData();
+}
+
+class __UserProfileHasData extends State<_UserProfileHasData> {
   bool _isEditing = false;
 
   late final firstNameController =
@@ -127,6 +156,9 @@ class _UserProfileDialogState extends State<UserProfileDialog> {
                       onPressed: userProfileState.isLoading
                           ? null
                           : () async {
+                              final scaffoldMessenger =
+                                  ScaffoldMessenger.of(context);
+
                               final success = await ref
                                   .read(
                                     userProfileDialogControllerProvider
@@ -138,10 +170,30 @@ class _UserProfileDialogState extends State<UserProfileDialog> {
                                     lastName: lastNameController.text,
                                     phoneNumber: phoneNumberController.text,
                                   );
-                              if (success) {
-                                setState(() {
-                                  _isEditing = false;
-                                });
+
+                              if (mounted) {
+                                if (success) {
+                                  scaffoldMessenger.showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Account name updated.'.hardcoded,
+                                      ),
+                                    ),
+                                  );
+                                  setState(() {
+                                    _isEditing = false;
+                                  });
+                                } else {
+                                  scaffoldMessenger.showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Failed to update account name. '
+                                                'Please try again.'
+                                            .hardcoded,
+                                      ),
+                                    ),
+                                  );
+                                }
                               }
                             },
                       child: userProfileState.isLoading

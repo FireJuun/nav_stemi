@@ -7,7 +7,7 @@ part of 'user_profile_dialog_controller.dart';
 // **************************************************************************
 
 String _$userProfileDialogControllerHash() =>
-    r'495f4b4f959550132b0fff8cef726a7b98d8e311';
+    r'4752c43089bcac72281b56601ef30c87d4b30180';
 
 /// See also [UserProfileDialogController].
 @ProviderFor(UserProfileDialogController)

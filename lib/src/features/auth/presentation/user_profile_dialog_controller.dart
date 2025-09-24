@@ -25,7 +25,6 @@ class UserProfileDialogController extends _$UserProfileDialogController {
       appUser: appUser,
       firstName: firstName,
       lastName: lastName,
-      phoneNumber: phoneNumber,
     );
     state = const AsyncLoading();
     state = await AsyncValue.guard(

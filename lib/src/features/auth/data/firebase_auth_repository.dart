@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/src/features/auth/data/auth_repository.dart';
 import 'package:nav_stemi/src/features/auth/domain/app_user.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 /// Service for handling Firebase authentication
 /// This is separate from the AppUser domain which handles FHIR data access
@@ -28,7 +26,8 @@ class FirebaseAuthRepository implements AuthRepository {
   /// Stream of Firebase auth state changes
   @override
   Stream<AppUser?> authStateChanges() => _auth.authStateChanges().map(
-        (user) => user == null ? null : FirebaseAppUser(uid: user.uid),
+        (user) =>
+            user == null ? null : FirebaseAppUser(user: user, uid: user.uid),
       );
 
   /// Sign out the current user
@@ -61,11 +60,11 @@ class FirebaseAuthRepository implements AuthRepository {
   }
 
   @override
-  AppUser? get currentUser {
+  FirebaseAppUser? get currentUser {
     final user = _auth.currentUser;
     if (user == null) return null;
 
-    return FirebaseAppUser(uid: user.uid);
+    return FirebaseAppUser(user: user, uid: user.uid);
   }
 
   @override
@@ -76,9 +75,4 @@ class FirebaseAuthRepository implements AuthRepository {
     // firebase_ui_auth handles phone sign-in, so this can be empty
     // or redirect to the sign-in page
   }
-}
-
-@Riverpod(keepAlive: true)
-FirebaseAuthRepository firebaseAuthRepository(Ref ref) {
-  return FirebaseAuthRepository();
 }
