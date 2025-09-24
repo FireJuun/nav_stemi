@@ -74,9 +74,15 @@ esac
 if [[ "$ENV" == "prod" ]]; then
   echo "# Prod environment configuration is commented out by default."
   echo "# To enable, comment the `CMD_PREFIX=` line below and run the script again."
-  ### *********** Comment below for prod to work ***********
+
+  # ********************************************************
+  ### *********** COMMENT BELOW FOR PROD TO WORK ***********
+  # ******************************************************** 
+
   CMD_PREFIX="# "
-  # ************************************************** 
+
+  # ******************************************************** 
+  # ********************************************************  
 fi
 
 # Delete existing file to ensure a fresh generation
@@ -91,12 +97,17 @@ BASE_CMD="flutterfire config -y --project=$PROJECT --out=$OUT_FILE --ios-bundle-
 # iOS build configs
 IOS_BUILD_CONFIGS=("Debug" "Profile" "Release")
 
+# iOS needs to run 3x to work (Debug, Profile, Release)
+# android only needs to run once to work
+# Thus, we run ios only for Debug + Profile setup...
+# Then, we run ios + android for Release setup
 for config in "${IOS_BUILD_CONFIGS[@]}"; do
   ios_build_config_name="$config-$FLAVOR"
   
   platforms="ios"
   android_args=""
   if [[ "$config" == "Release" ]]; then
+    # Release + android
     platforms="android,ios"
     android_args="--android-package-name=$ANDROID_PACKAGE_NAME --android-out=$ANDROID_OUT"
   fi
@@ -114,6 +125,13 @@ done
 echo "Firebase configuration for $ENV environment has been generated/updated."
 
 # Create placeholder files for other environments to avoid build errors
+# You can still click "Debug Anyways" if the app fails to load.
+# Note that you'll need to manually delete this `firebase_options_***.dart` file
+# if you want to run `flutterfire config` on your own, otherwise it'll fail.
+#
+# Since `flutterfire config` needs a lot of extra args above for this project,
+# it's probably worth the tradeoff.
+#
 PLACEHOLDER_CONTENT="// Temporary file to avoid Flutter run errors
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 
