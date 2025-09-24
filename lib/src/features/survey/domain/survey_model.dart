@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 /// Model for the exit survey data
 class SurveyResponseModel extends Equatable {
   const SurveyResponseModel({
+    required this.uid,
     required this.appHelpfulness,
     required this.appDifficulty,
     required this.improvementSuggestion,
@@ -13,6 +14,7 @@ class SurveyResponseModel extends Equatable {
 
   factory SurveyResponseModel.fromMap(Map<String, dynamic> map) {
     return SurveyResponseModel(
+      uid: map['uid'] as String,
       appHelpfulness: map['appHelpfulness'] as int,
       appDifficulty: map['appDifficulty'] as int,
       improvementSuggestion: map['improvementSuggestion'] as String,
@@ -22,6 +24,9 @@ class SurveyResponseModel extends Equatable {
 
   factory SurveyResponseModel.fromJson(String source) =>
       SurveyResponseModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  /// User ID
+  final String uid;
 
   /// How helpful was the app in managing this case?
   /// 1: Not helpful at all
@@ -44,12 +49,14 @@ class SurveyResponseModel extends Equatable {
   final Timestamp? surveySubmittedOn;
 
   SurveyResponseModel copyWith({
+    String? uid,
     int? appHelpfulness,
     int? appDifficulty,
     String? improvementSuggestion,
     Timestamp? surveySubmittedOn,
   }) {
     return SurveyResponseModel(
+      uid: uid ?? this.uid,
       appHelpfulness: appHelpfulness ?? this.appHelpfulness,
       appDifficulty: appDifficulty ?? this.appDifficulty,
       improvementSuggestion:
@@ -60,6 +67,7 @@ class SurveyResponseModel extends Equatable {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'uid': uid,
       'appHelpfulness': appHelpfulness,
       'appDifficulty': appDifficulty,
       'improvementSuggestion': improvementSuggestion,
@@ -73,6 +81,5 @@ class SurveyResponseModel extends Equatable {
   bool get stringify => true;
 
   @override
-  List<Object?> get props =>
-      [appHelpfulness, appDifficulty, improvementSuggestion, surveySubmittedOn];
+  List<Object?> get props => [uid, appHelpfulness, appDifficulty, improvementSuggestion, surveySubmittedOn];
 }

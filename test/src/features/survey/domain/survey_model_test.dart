@@ -5,14 +5,17 @@ import 'package:nav_stemi/src/features/survey/domain/survey_model.dart';
 void main() {
   group('SurveyResponseModel', () {
     final testTimestamp = Timestamp.fromDate(DateTime(2024, 1, 15, 10, 30));
-    
+    const testUid = 'test_uid';
+
     const testSurveyResponse = SurveyResponseModel(
+      uid: testUid,
       appHelpfulness: 3,
       appDifficulty: 2,
       improvementSuggestion: 'Add more features',
     );
 
     final testSurveyResponseWithTimestamp = SurveyResponseModel(
+      uid: testUid,
       appHelpfulness: 4,
       appDifficulty: 1,
       improvementSuggestion: 'Great app!',
@@ -20,6 +23,7 @@ void main() {
     );
 
     test('should create instance with required fields', () {
+      expect(testSurveyResponse.uid, testUid);
       expect(testSurveyResponse.appHelpfulness, equals(3));
       expect(testSurveyResponse.appDifficulty, equals(2));
       expect(
@@ -30,6 +34,7 @@ void main() {
     });
 
     test('should create instance with all fields including timestamp', () {
+      expect(testSurveyResponseWithTimestamp.uid, testUid);
       expect(testSurveyResponseWithTimestamp.appHelpfulness, equals(4));
       expect(testSurveyResponseWithTimestamp.appDifficulty, equals(1));
       expect(testSurveyResponseWithTimestamp.improvementSuggestion, equals('Great app!'));
@@ -39,6 +44,7 @@ void main() {
     group('appHelpfulness values', () {
       test('should accept valid helpfulness rating of 1 (Not helpful at all)', () {
         const survey = SurveyResponseModel(
+          uid: testUid,
           appHelpfulness: 1,
           appDifficulty: 2,
           improvementSuggestion: 'Needs work',
@@ -48,6 +54,7 @@ void main() {
 
       test('should accept valid helpfulness rating of 4 (Very helpful)', () {
         const survey = SurveyResponseModel(
+          uid: testUid,
           appHelpfulness: 4,
           appDifficulty: 2,
           improvementSuggestion: 'Excellent',
@@ -59,6 +66,7 @@ void main() {
     group('appDifficulty values', () {
       test('should accept valid difficulty rating of 1 (Very easy)', () {
         const survey = SurveyResponseModel(
+          uid: testUid,
           appHelpfulness: 3,
           appDifficulty: 1,
           improvementSuggestion: 'Simple to use',
@@ -68,6 +76,7 @@ void main() {
 
       test('should accept valid difficulty rating of 4 (Very difficult)', () {
         const survey = SurveyResponseModel(
+          uid: testUid,
           appHelpfulness: 3,
           appDifficulty: 4,
           improvementSuggestion: 'Too complex',
@@ -79,6 +88,7 @@ void main() {
     group('fromMap', () {
       test('should create instance from map without timestamp', () {
         final map = {
+          'uid': testUid,
           'appHelpfulness': 3,
           'appDifficulty': 2,
           'improvementSuggestion': 'Add more features',
@@ -86,6 +96,7 @@ void main() {
 
         final survey = SurveyResponseModel.fromMap(map);
 
+        expect(survey.uid, testUid);
         expect(survey.appHelpfulness, equals(3));
         expect(survey.appDifficulty, equals(2));
         expect(survey.improvementSuggestion, equals('Add more features'));
@@ -94,6 +105,7 @@ void main() {
 
       test('should create instance from map with timestamp', () {
         final map = {
+          'uid': testUid,
           'appHelpfulness': 4,
           'appDifficulty': 1,
           'improvementSuggestion': 'Great app!',
@@ -102,6 +114,7 @@ void main() {
 
         final survey = SurveyResponseModel.fromMap(map);
 
+        expect(survey.uid, testUid);
         expect(survey.appHelpfulness, equals(4));
         expect(survey.appDifficulty, equals(1));
         expect(survey.improvementSuggestion, equals('Great app!'));
@@ -110,6 +123,7 @@ void main() {
 
       test('should handle null timestamp in map', () {
         final map = {
+          'uid': testUid,
           'appHelpfulness': 3,
           'appDifficulty': 2,
           'improvementSuggestion': 'Good app',
@@ -126,6 +140,7 @@ void main() {
       test('should create instance from JSON string', () {
         const jsonString = '''
         {
+          "uid": "test_uid",
           "appHelpfulness": 3,
           "appDifficulty": 2,
           "improvementSuggestion": "Add more features"
@@ -134,6 +149,7 @@ void main() {
 
         final survey = SurveyResponseModel.fromJson(jsonString);
 
+        expect(survey.uid, testUid);
         expect(survey.appHelpfulness, equals(3));
         expect(survey.appDifficulty, equals(2));
         expect(survey.improvementSuggestion, equals('Add more features'));
@@ -145,6 +161,7 @@ void main() {
       test('should convert to map without timestamp', () {
         final map = testSurveyResponse.toMap();
 
+        expect(map['uid'], testUid);
         expect(map['appHelpfulness'], equals(3));
         expect(map['appDifficulty'], equals(2));
         expect(map['improvementSuggestion'], equals('Add more features'));
@@ -154,6 +171,7 @@ void main() {
       test('should convert to map with timestamp', () {
         final map = testSurveyResponseWithTimestamp.toMap();
 
+        expect(map['uid'], testUid);
         expect(map['appHelpfulness'], equals(4));
         expect(map['appDifficulty'], equals(1));
         expect(map['improvementSuggestion'], equals('Great app!'));
@@ -214,12 +232,14 @@ void main() {
 
       test('should copy with all fields changed', () {
         final copy = testSurveyResponse.copyWith(
+          uid: 'new_uid',
           appHelpfulness: 1,
           appDifficulty: 4,
           improvementSuggestion: 'Everything changed',
           surveySubmittedOn: testTimestamp,
         );
 
+        expect(copy.uid, 'new_uid');
         expect(copy.appHelpfulness, equals(1));
         expect(copy.appDifficulty, equals(4));
         expect(copy.improvementSuggestion, equals('Everything changed'));
@@ -230,12 +250,14 @@ void main() {
     group('Equatable', () {
       test('should support value equality', () {
         const survey1 = SurveyResponseModel(
+          uid: testUid,
           appHelpfulness: 3,
           appDifficulty: 2,
           improvementSuggestion: 'Add more features',
         );
 
         const survey2 = SurveyResponseModel(
+          uid: testUid,
           appHelpfulness: 3,
           appDifficulty: 2,
           improvementSuggestion: 'Add more features',
@@ -246,13 +268,15 @@ void main() {
 
       test('should not be equal when fields differ', () {
         const survey1 = SurveyResponseModel(
+          uid: testUid,
           appHelpfulness: 3,
           appDifficulty: 2,
           improvementSuggestion: 'Add more features',
         );
 
         const survey2 = SurveyResponseModel(
-          appHelpfulness: 4,
+          uid: 'other_uid',
+          appHelpfulness: 3,
           appDifficulty: 2,
           improvementSuggestion: 'Add more features',
         );
@@ -262,6 +286,7 @@ void main() {
 
       test('should include timestamp in equality check', () {
         final survey1 = SurveyResponseModel(
+          uid: testUid,
           appHelpfulness: 3,
           appDifficulty: 2,
           improvementSuggestion: 'Same text',
@@ -269,6 +294,7 @@ void main() {
         );
 
         final survey2 = SurveyResponseModel(
+          uid: testUid,
           appHelpfulness: 3,
           appDifficulty: 2,
           improvementSuggestion: 'Same text',
@@ -286,11 +312,12 @@ void main() {
     test('should provide props for equality comparison', () {
       final props = testSurveyResponseWithTimestamp.props;
 
-      expect(props.length, equals(4));
-      expect(props[0], equals(4)); // appHelpfulness
-      expect(props[1], equals(1)); // appDifficulty
-      expect(props[2], equals('Great app!')); // improvementSuggestion
-      expect(props[3], equals(testTimestamp)); // surveySubmittedOn
+      expect(props.length, equals(5));
+      expect(props[0], equals(testUid)); // uid
+      expect(props[1], equals(4)); // appHelpfulness
+      expect(props[2], equals(1)); // appDifficulty
+      expect(props[3], equals('Great app!')); // improvementSuggestion
+      expect(props[4], equals(testTimestamp)); // surveySubmittedOn
     });
   });
 }

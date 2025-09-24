@@ -20,7 +20,13 @@ class SurveyController extends _$SurveyController with NotifierMounted {
     state = const AsyncLoading();
 
     final surveyRepository = ref.read(surveyRepositoryProvider);
+    final user = ref.read(authRepositoryProvider).currentUser;
+    if (user == null) {
+      state = AsyncError('User not logged in', StackTrace.current);
+      return false;
+    }
     final survey = SurveyResponseModel(
+      uid: user.uid,
       appHelpfulness: appHelpfulness,
       appDifficulty: appDifficulty,
       improvementSuggestion: improvementSuggestion,
