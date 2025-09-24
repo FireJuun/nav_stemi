@@ -1,29 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'firebase_auth_repository.dart';
+part of 'user_profile_dialog_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$firebaseAuthRepositoryHash() =>
-    r'bb0b85dba80caa7fb1d8afaf50ffe3c7f7f061ca';
+String _$userProfileDialogControllerHash() =>
+    r'495f4b4f959550132b0fff8cef726a7b98d8e311';
 
-/// See also [firebaseAuthRepository].
-@ProviderFor(firebaseAuthRepository)
-final firebaseAuthRepositoryProvider =
-    Provider<FirebaseAuthRepository>.internal(
-  firebaseAuthRepository,
-  name: r'firebaseAuthRepositoryProvider',
+/// See also [UserProfileDialogController].
+@ProviderFor(UserProfileDialogController)
+final userProfileDialogControllerProvider = AutoDisposeAsyncNotifierProvider<
+    UserProfileDialogController, void>.internal(
+  UserProfileDialogController.new,
+  name: r'userProfileDialogControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$firebaseAuthRepositoryHash,
+      : _$userProfileDialogControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef FirebaseAuthRepositoryRef = ProviderRef<FirebaseAuthRepository>;
+typedef _$UserProfileDialogController = AutoDisposeAsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

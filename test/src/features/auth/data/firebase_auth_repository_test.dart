@@ -35,13 +35,13 @@ void main() {
 
       // Add admin user to Firestore
       await fakeFirestore
-          .collection('admin-users')
+          .collection('users-admin')
           .doc(testUid)
           .set({'role': 'admin'});
 
       // Check if document exists
       final adminDoc =
-          await fakeFirestore.collection('admin-users').doc(testUid).get();
+          await fakeFirestore.collection('users-admin').doc(testUid).get();
 
       expect(adminDoc.exists, isTrue);
     });
@@ -52,7 +52,7 @@ void main() {
 
       // Check if document exists (should not exist)
       final adminDoc =
-          await fakeFirestore.collection('admin-users').doc(testUid).get();
+          await fakeFirestore.collection('users-admin').doc(testUid).get();
 
       expect(adminDoc.exists, isFalse);
     });

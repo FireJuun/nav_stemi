@@ -6,8 +6,6 @@ import 'package:nav_stemi/src/features/auth/data/auth_repository.dart';
 import 'package:nav_stemi/src/features/auth/domain/app_user.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'firebase_auth_repository.g.dart';
-
 /// Service for handling Firebase authentication
 /// This is separate from the AppUser domain which handles FHIR data access
 class FirebaseAuthRepository implements AuthRepository {
@@ -30,13 +28,7 @@ class FirebaseAuthRepository implements AuthRepository {
   /// Stream of Firebase auth state changes
   @override
   Stream<AppUser?> authStateChanges() => _auth.authStateChanges().map(
-        (user) => user == null
-            ? null
-            : FirebaseAppUser(
-                uid: user.uid,
-                // Use phone number as display name if displayName is null
-                displayName: user.displayName ?? user.phoneNumber,
-              ),
+        (user) => user == null ? null : FirebaseAppUser(uid: user.uid),
       );
 
   /// Sign out the current user
@@ -55,9 +47,9 @@ class FirebaseAuthRepository implements AuthRepository {
     if (user == null) return false;
 
     try {
-      // Check if the user's UID exists in the admin-users collection
+      // Check if the user's UID exists in the users-admin collection
       final adminDoc = await FirebaseFirestore.instance
-          .collection('admin-users')
+          .collection('users-admin')
           .doc(user.uid)
           .get();
 
@@ -73,10 +65,7 @@ class FirebaseAuthRepository implements AuthRepository {
     final user = _auth.currentUser;
     if (user == null) return null;
 
-    return FirebaseAppUser(
-      uid: user.uid,
-      displayName: user.displayName ?? user.phoneNumber,
-    );
+    return FirebaseAppUser(uid: user.uid);
   }
 
   @override

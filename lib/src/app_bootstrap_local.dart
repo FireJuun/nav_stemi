@@ -38,18 +38,7 @@ class AppBootstrapLocal extends AppBootstrap {
     final isStaging = packageName.endsWith('.stg');
 
     // Choose the appropriate authentication repository based on environment
-    final AuthRepository authRepository;
-    if (isStaging) {
-      // Use fake auth for staging
-      authRepository = FakeAuthRepository();
-
-      /// QUESTION: Should we remove these keys.
-    } else {
-      authRepository = FirebaseAuthRepository();
-    }
-
-    // Initialize Firebase Auth service for anonymous authentication
-    final firebaseAuthRepository = FirebaseAuthRepository();
+    final AuthRepository authRepository = FirebaseAuthRepository();
 
     final lastTheme = sharedPreferencesRepository.getAppTheme();
     final themeRepository = ThemeRepository(lastTheme);
@@ -65,7 +54,6 @@ class AppBootstrapLocal extends AppBootstrap {
     final overrides = [
       // repositories
       authRepositoryProvider.overrideWithValue(authRepository),
-      firebaseAuthRepositoryProvider.overrideWithValue(firebaseAuthRepository),
       sharedPreferencesRepositoryProvider
           .overrideWithValue(sharedPreferencesRepository),
       navigationSettingsRepositoryProvider
