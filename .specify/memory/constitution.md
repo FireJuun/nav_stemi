@@ -1,50 +1,71 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+---
+Sync Impact Report
+---
+Version: 0.0.0 → 1.0.0
+Modified Principles:
+- PRINCIPLE_1_NAME → I. Clean Architecture
+- PRINCIPLE_2_NAME → II. State Management
+- PRINCIPLE_3_NAME → III. Testing Philosophy
+- PRINCIPLE_4_NAME → IV. Coding Style & Quality
+- PRINCIPLE_5_NAME → V. Navigation
+Added Sections:
+- Asynchronous Operations
+- Immutability & Data Modeling
+- Governance
+Templates requiring updates:
+- ✅ .specify/templates/plan-template.md
+- ✅ .specify/templates/spec-template.md
+- ✅ .specify/templates/tasks-template.md
+- ✅ .specify/templates/commands/clarify.toml
+- ✅ .specify/templates/commands/implement.toml
+- ✅ .specify/templates/commands/plan.toml
+- ✅ .specify/templates/commands/specify.toml
+- ✅ .specify/templates/commands/tasks.toml
+- ✅ README.md
+Follow-up TODOs:
+- TODO(RATIFICATION_DATE): Determine the original adoption date of these principles.
+-->
+# Nav STEMI Constitution
+
+This document outlines the non-negotiable principles and standards for the Nav STEMI Flutter application. It serves as the source of truth for architectural decisions, coding practices, and quality assurance.
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Clean Architecture
+All features MUST be structured using a layered architecture, strictly separating concerns into four distinct layers:
+- **Domain:** Contains the core business logic, entities (plain Dart objects with `equatable`), and abstract repository interfaces. It must have no dependencies on any other layer.
+- **Application:** Orchestrates data flow from the data layer to the domain and presentation layers. It contains application-specific business logic and services. It depends only on the Domain layer.
+- **Data:** Implements the repository interfaces defined in the Domain layer. It is responsible for all data retrieval and storage, whether from remote sources (Firebase, APIs) or local sources (device storage). It depends on the Domain layer.
+- **Presentation:** Contains all UI components (Widgets) and state management logic (Riverpod providers). It depends on the Application and Domain layers.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. State Management
+State management MUST be implemented using the **Riverpod** package with its code generation capabilities (`riverpod_generator`). This ensures that state is managed in a predictable, testable, and scalable manner. Providers should be scoped as narrowly as possible and defined within the feature's presentation or application layer.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Testing Philosophy
+A comprehensive testing strategy is NON-NEGOTIABLE. The project MUST maintain a high level of test coverage, following a Test-Driven Development (TDD) or Behavior-Driven Development (BDD) approach where practical.
+- **Unit Tests:** Every function, class, and Riverpod provider in the domain and application layers MUST have corresponding unit tests.
+- **Widget Tests:** All UI components (widgets) in the presentation layer MUST be verified with widget tests to ensure they render correctly under various states.
+- **Integration Tests:** End-to-end user flows and interactions with services like Firebase MUST be covered by integration tests. Mocks (`mockito`, `mocktail`) and fakes (`fake_cloud_firestore`) are required to isolate dependencies.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Coding Style & Quality
+The project MUST adhere to the strict linting rules defined in the `very_good_analysis` package. All code must be formatted using `dart format`. No exceptions to these rules are permitted without a formal amendment to this constitution. Public APIs should be documented, but boilerplate `public_member_api_docs` are disabled to encourage meaningful documentation where it matters.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Navigation
+Navigation throughout the application MUST be handled declaratively using the **GoRouter** package. All routes must be defined in a centralized routing configuration, ensuring a single source of truth for navigation logic and deep linking.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Additional Standards
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### Asynchronous Operations
+Asynchronous operations MUST be handled using `Future` and `Stream` from the Dart standard library. For more complex reactive programming scenarios, **RxDart** should be utilized to manage and compose streams of data, particularly for real-time data feeds.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
-
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### Immutability & Data Modeling
+All data models and entities MUST be immutable. The **Equatable** package MUST be used to override `==` and `hashCode` for value-based equality, preventing common bugs related to object comparison.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This Constitution is the supreme governing document for the Nav STEMI project. It supersedes all other conventions, practices, or individual preferences.
+- **Amendment Process:** Any proposed changes to this constitution require a formal review and approval process. A pull request must be submitted with the proposed amendments and a clear rationale.
+- **Compliance:** All code reviews MUST verify that contributions are in full compliance with the principles outlined in this document. Any deviation must be justified and may require a constitutional amendment.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: TODO(RATIFICATION_DATE) | **Last Amended**: 2025-09-25

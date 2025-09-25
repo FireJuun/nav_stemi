@@ -1,0 +1,4 @@
+/constitution
+This is an Android/iOS Flutter application designed for emergency medical services (EMS) personnel to help care for patients who are suffering massive heart attacks (STEMI). Please review the [AHRQ publication](https://digital.ahrq.gov/program-overview/research-stories/app-help-rural-paramedics-improve-timeliness-deliver-life-saving) that discusses this project, review the code, and retrospectively generate a new constitution based on ongoing efforts.
+
+The application has already been developed in part and is currently in testing. Act as a senior Flutter architect. Analyze my project's structure to help suggest state management, project structure, coding style, and testing philosophy to the constitution. The `src/features/count_up_timer` and `src/features/fhir_sync` folders should help with this.
