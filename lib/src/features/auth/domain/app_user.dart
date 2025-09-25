@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis_auth/googleapis_auth.dart' as auth show AuthClient;
 import 'package:http/http.dart' as http;
@@ -6,17 +7,12 @@ sealed class AppUser {
   const AppUser({required this.uid});
 
   final String uid;
-
-  List<Object?> get props => [uid, uid];
 }
 
 final class FirebaseAppUser extends AppUser {
-  const FirebaseAppUser({required super.uid, this.displayName});
+  const FirebaseAppUser({required this.user, required super.uid});
 
-  final String? displayName;
-
-  @override
-  List<Object?> get props => [uid, displayName];
+  final User user;
 }
 
 class GoogleAppUser extends AppUser {

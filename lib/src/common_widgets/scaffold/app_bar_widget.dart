@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 
 const _toolbarHeight = 76.0;
@@ -73,117 +72,28 @@ class AppBarWidget extends ConsumerWidget implements PreferredSizeWidget {
         // Profile icon button
         Padding(
           padding: const EdgeInsets.only(right: 8),
-          child: IconButton(
-            icon: authState.when(
-              data: (user) => user != null
-                  ? const Icon(Icons.account_circle)
-                  : const Icon(Icons.account_circle_outlined),
-              loading: () => const SizedBox(
-                width: 24,
-                height: 24,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-              error: (_, __) => const Icon(Icons.error_outline),
-            ),
-            onPressed: () => _showAuthDialog(context, ref),
+          child: Consumer(
+            builder: (context, ref, child) {
+              final authState = ref.watch(authStateChangesProvider).value;
+
+              return IconButton(
+                icon: authState != null
+                    ? const Icon(Icons.account_circle)
+                    : const Icon(Icons.account_circle_outlined),
+                onPressed: authState != null
+                    ? () => showDialog<void>(
+                          context: context,
+                          builder: (context) => const UserProfileDialog(),
+                        )
+                    : null,
+              );
+            },
           ),
         ),
       ],
     );
   }
 
-  void _showAuthDialog(BuildContext context, WidgetRef ref) {
-    final authState = ref.read(authStateChangesProvider);
-    final user = authState.valueOrNull;
-
-    if (user == null) {
-      // Navigate to phone input page instead of showing dialog
-      context.goNamed(AppRoute.phoneInput.name);
-    } else {
-      // Show profile/logout dialog for authenticated users
-      showDialog<void>(
-        context: context,
-        builder: (context) => const AuthDialog(),
-      );
-    }
-  }
-
   @override
   Size get preferredSize => const Size.fromHeight(_toolbarHeight);
-}
-
-/// Dialog for authentication actions (login/logout)
-class AuthDialog extends ConsumerWidget {
-  const AuthDialog({this.onClose, super.key});
-
-  /// Optional callback when the dialog is closed
-  final VoidCallback? onClose;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authStateChangesProvider);
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return AlertDialog(
-      title: Text('Account'.hardcoded),
-      content: authState.when(
-        data: (user) {
-          if (user != null) {
-            var displayName = 'User';
-            if (user is GoogleAppUser) {
-              displayName = user.user.displayName ?? 'Google User';
-            } else if (user is FirebaseAppUser) {
-              displayName = user.displayName ?? 'Phone User';
-            }
-
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Signed in as: $displayName'.hardcoded),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: colorScheme.error,
-                    foregroundColor: colorScheme.onError,
-                  ),
-                  onPressed: () {
-                    ref.read(authRepositoryProvider).signOut();
-                    Navigator.of(context).pop();
-                    onClose?.call();
-                  },
-                  child: Text('Sign Out'.hardcoded),
-                ),
-              ],
-            );
-          } else {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('You are not signed in'.hardcoded),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    context.goNamed(AppRoute.phoneInput.name);
-                  },
-                  child: Text('Sign In'.hardcoded),
-                ),
-              ],
-            );
-          }
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => Text('Error: $error'),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-            onClose?.call();
-          },
-          child: Text('Close'.hardcoded),
-        ),
-      ],
-    );
-  }
 }

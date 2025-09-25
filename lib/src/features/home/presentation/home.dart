@@ -54,22 +54,6 @@ class _HomeState extends ConsumerState<Home> {
     }
   }
 
-  void _showAuthDialog(BuildContext context, WidgetRef ref) {
-    final authState = ref.read(authStateChangesProvider);
-    final user = authState.valueOrNull;
-
-    if (user == null) {
-      // Navigate to phone input page instead of showing dialog
-      context.goNamed(AppRoute.phoneInput.name);
-    } else {
-      // Show profile/logout dialog for authenticated users
-      showDialog<void>(
-        context: context,
-        builder: (context) => const AuthDialog(),
-      );
-    }
-  }
-
   void _showEncountersDialog(BuildContext context) {
     showDialog<void>(
       context: context,
@@ -143,23 +127,27 @@ class _HomeState extends ConsumerState<Home> {
         centerTitle: true,
         actions: [
           // Profile icon button - same as in AppBarWidget
+
           Padding(
             padding: const EdgeInsets.only(right: 8),
-            child: IconButton(
-              color: foregroundColor,
-              key: const Key('profile_icon_button'),
-              icon: authState.when(
-                data: (user) => user != null
-                    ? const Icon(Icons.account_circle)
-                    : const Icon(Icons.account_circle_outlined),
-                loading: () => const SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                ),
-                error: (_, __) => const Icon(Icons.error_outline),
-              ),
-              onPressed: () => _showAuthDialog(context, ref),
+            child: Consumer(
+              builder: (context, ref, child) {
+                final authState = ref.watch(authStateChangesProvider).value;
+
+                return IconButton(
+                  key: const Key('profile_icon_button'),
+                  icon: authState != null
+                      ? const Icon(Icons.account_circle)
+                      : const Icon(Icons.account_circle_outlined),
+                  // onPressed: () {},
+                  onPressed: authState != null
+                      ? () => showDialog<void>(
+                            context: context,
+                            builder: (context) => const UserProfileDialog(),
+                          )
+                      : null,
+                );
+              },
             ),
           ),
         ],

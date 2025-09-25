@@ -12,7 +12,9 @@ EMS Navigation App for critical scenarios
 
 ## Important
 
-For the app to run, you'll need to update the `flutterfire-config.sh` script to match your android/iOS package names for the dev, stage, and/or prod flavors of your app. Then run:
+For the app to run, you'll need to run `flutterfire-config.sh ***`  where `***` is the app flavor, chosing from dev, stage, or prod.
+
+Each would look like:
 
 ```sh
 ./flutterfire-config.sh dev
@@ -20,7 +22,7 @@ For the app to run, you'll need to update the `flutterfire-config.sh` script to 
 ./flutterfire-config.sh prod # currently unset
 ```
 
-For each, it will ask:
+For each, it will ask (and auto-fill out):
 
 * Which platforms should your configuration support (use arrow keys & space to select)? `android, ios`
 * You have to choose a configuration type. Either build configuration (most likely choice) or a target set up. `Build configuration`
@@ -28,11 +30,13 @@ For each, it will ask:
   * Always select the development / stage / production option that matches dev / stg / prod from your shell script.
   * `Debug-___` if testing, otherwise `Release-___` if ready for deployment.
 
+### Why set things up this way?
+
 There are three reasons for this:
 
-1. This customization makes it much less likely to accidentally point Android (`google-services.json`) and iOS (`GoogleServiceInfo.plist`) configuration files from one environment (e.g. dev) to another (e.g. stg). This forces each flavor of the app to only look for the Android (`google-services.json`) and iOS (`GoogleServiceInfo.plist`) files that are linked to that specific flavor.
-2. You can still run the dev flavor of the app without setting stg or prod above. The `main_staging.dart` and `main_production.dart` files will show errors if their respective `firebase_options_*.dart` files haven't been set, but the app will still run.
-3. The downside of pointing one flavor of the app to another accidentally is far too great. Not worth the risk.
+1. This customization makes it much less likely to accidentally point Android (`google-services.json`) and iOS (`GoogleServiceInfo.plist`) configuration files from one environment (e.g. `dev`) to another (e.g. `stg`). This forces each flavor of the app to only look for the Android (`google-services.json`) and iOS (`GoogleServiceInfo.plist`) files that are linked to that specific flavor.
+2. You can still run the dev flavor of the app without setting stg or prod above. The `main_staging.dart` and `main_production.dart` files will show errors if their respective `firebase_options_*.dart` files haven't been set, but the app will still run. We've modified the script to put placeholder files in place for the other (unset) environments. If you run `flutterfire config` on your own, you'll want to delete the relevant firebase_options file before entering that command.
+3. The downside of pointing one app flavor of the app to another accidentally is far too great. Not worth the risk with the data we work with.
 
 ## Setting up Environment variables
 

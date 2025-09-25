@@ -1,49 +1,158 @@
 #!/bin/bash
 # Script to generate Firebase configuration files for different environments/flavors
 # Feel free to reuse and adapt this script for your own projects
-# spec: https://codewithandrea.com/articles/flutter-firebase-multiple-flavors-flutterfire-cli/
+# initial spec: https://codewithandrea.com/articles/flutter-firebase-multiple-flavors-flutterfire-cli/
+
+set -e # exit immediately if a command exits with a non-zero status. 
 
 if [[ $# -eq 0 ]]; then
   echo "Error: No environment specified. Use 'dev', 'stg', or 'prod'."
   exit 1
 fi
 
-case $1 in
+ENV=$1
+FLAVOR=""
+PROJECT=""
+OUT_FILE=""
+IOS_BUNDLE_ID=""
+IOS_OUT=""
+ANDROID_PACKAGE_NAME=""
+ANDROID_OUT=""
+
+case $ENV in
   dev)
-    flutterfire config \
-      --project=nav-stemi \
-      --out=lib/firebase_options_dev.dart \
-      --ios-bundle-id=com.firejuun.nav-stemi.dev \
-      --ios-out=ios/flavors/development/GoogleService-Info.plist \
-      --android-package-name=com.firejuun.navstemi.dev \
-      --android-out=android/app/src/development/google-services.json
+    # [dev]: ************* CHANGE THESE SETTINGS *************
+    PROJECT="nav-stemi" # your firebase_project_ID
+    IOS_BUNDLE_ID="com.firejuun.nav-stemi.dev" # ios_app_ID
+    ANDROID_PACKAGE_NAME="com.firejuun.navstemi.dev" # android_app_ID
+    # ********************************************************
+
+    # []: constant for dev
+    FLAVOR="development"
+    OUT_FILE="lib/firebase_options_dev.dart"
+    IOS_OUT="ios/flavors/development/GoogleService-Info.plist"
+    ANDROID_OUT="android/app/src/development/google-services.json"
     ;;
 
   stg)
-    flutterfire config \
-      --project=nav-stemi-stg \
-      --out=lib/firebase_options_stg.dart \
-      --ios-bundle-id=com.firejuun.nav-stemi.stg \
-      --ios-out=ios/flavors/staging/GoogleService-Info.plist \
-      --android-package-name=com.firejuun.navstemi.stg \
-      --android-out=android/app/src/staging/google-services.json
+    # [stage]: ************* CHANGE THESE SETTINGS *************
+    PROJECT="nav-stemi-stg"  # your firebase_project_ID
+    IOS_BUNDLE_ID="com.firejuun.nav-stemi.stg" # ios_app_ID
+    ANDROID_PACKAGE_NAME="com.firejuun.navstemi.stg" # android_app_ID
+    # ********************************************************
+    
+    # []: constant for stage
+    FLAVOR="staging"
+    OUT_FILE="lib/firebase_options_stg.dart"
+    IOS_OUT="ios/flavors/staging/GoogleService-Info.plist"
+    ANDROID_OUT="android/app/src/staging/google-services.json"
     ;;
 
   prod)
-    # Do nothing
-    # Currently unset
+    # [prod]: ************* CHANGE THESE SETTINGS *************
+    PROJECT="nav-stemi-prod" # [prod] firebase_project_ID
+    IOS_BUNDLE_ID="com.firejuun.nav-stemi.prod" # [prod] ios_app_ID
+    ANDROID_PACKAGE_NAME="com.firejuun.nav-stemi.prod" # [prod]
+    # ************************************************** android_app_ID******
 
-    # flutterfire config \
-    #   --project=nav-stemi-prod \
-    #   --out=lib/firebase_options_prod.dart \
-    #   --ios-bundle-id=com.firejuun.nav-stemi.prod \
-    #   --ios-out=ios/flavors/production/GoogleService-Info.plist \
-    #   --android-package-name=com.firejuun.nav-stemi.prod \
-    #   --android-out=android/app/src/production/google-services.json
+    # []: constant for prod
+    FLAVOR="production"
+    OUT_FILE="lib/firebase_options_prod.dart"
+    IOS_OUT="ios/flavors/production/GoogleService-Info.plist"
+    ANDROID_OUT="android/app/src/production/google-services.json"
     ;;
-    
+
   *)
     echo "Error: Invalid environment specified. Use 'dev', 'stg', or 'prod'."
     exit 1
     ;;
 esac
+
+# For prod, we just print the commands that would be run
+# This is so we can be very, very intentional about when to
+# implement or update new connections to a production environment
+if [[ "$ENV" == "prod" ]]; then
+  echo "# Prod environment configuration is commented out by default."
+  echo "# To enable, comment the `CMD_PREFIX=` line below and run the script again."
+
+  # ********************************************************
+  ### *********** COMMENT BELOW FOR PROD TO WORK ***********
+  # ******************************************************** 
+
+  CMD_PREFIX="# "
+
+  # ******************************************************** 
+  # ********************************************************  
+fi
+
+# Delete existing file to ensure a fresh generation
+if [[ -f "$OUT_FILE" ]]; then
+  echo "Removing existing file: $OUT_FILE"
+  rm "$OUT_FILE"
+fi
+
+# Common command arguments
+BASE_CMD="flutterfire config -y --project=$PROJECT --out=$OUT_FILE --ios-bundle-id=$IOS_BUNDLE_ID --ios-out=$IOS_OUT"
+
+# iOS build configs
+IOS_BUILD_CONFIGS=("Debug" "Profile" "Release")
+
+# iOS needs to run 3x to work (Debug, Profile, Release)
+# android only needs to run once to work
+# Thus, we run ios only for Debug + Profile setup...
+# Then, we run ios + android for Release setup
+for config in "${IOS_BUILD_CONFIGS[@]}"; do
+  ios_build_config_name="$config-$FLAVOR"
+  
+  platforms="ios"
+  android_args=""
+  if [[ "$config" == "Release" ]]; then
+    # Release + android
+    platforms="android,ios"
+    android_args="--android-package-name=$ANDROID_PACKAGE_NAME --android-out=$ANDROID_OUT"
+  fi
+  
+  full_cmd="$BASE_CMD --platforms=\"$platforms\" --ios-build-config=$ios_build_config_name $android_args"
+  
+  echo -e "\n**************** START CONFIG *******************"
+  echo "${CMD_PREFIX}${full_cmd}"
+  if [[ "$ENV" != "prod" ]]; then
+    eval "${full_cmd}"
+  fi
+  echo -e "**************** END CONFIG *******************\n"
+done
+
+echo "Firebase configuration for $ENV environment has been generated/updated."
+
+# Create placeholder files for other environments to avoid build errors
+# You can still click "Debug Anyways" if the app fails to load.
+# Note that you'll need to manually delete this `firebase_options_***.dart` file
+# if you want to run `flutterfire config` on your own, otherwise it'll fail.
+#
+# Since `flutterfire config` needs a lot of extra args above for this project,
+# it's probably worth the tradeoff.
+#
+PLACEHOLDER_CONTENT="// Temporary file to avoid Flutter run errors
+import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
+
+class DefaultFirebaseOptions {
+  static FirebaseOptions get currentPlatform {
+    throw UnimplementedError();
+  }
+}"
+
+FIREBASE_OPTIONS_FILES=(
+  "lib/firebase_options_dev.dart"
+  "lib/firebase_options_stg.dart"
+  "lib/firebase_options_prod.dart"
+)
+
+for file in "${FIREBASE_OPTIONS_FILES[@]}"; do
+  if [ ! -f "$file" ]; then
+    echo -e "\n**************** PLACEHOLDERS *******************"
+    echo "Creating placeholder file for $file"
+    echo -e "$PLACEHOLDER_CONTENT" > "$file"
+  fi
+done
+
+echo -e "Placeholder check complete.\n"

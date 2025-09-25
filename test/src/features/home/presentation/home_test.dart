@@ -182,7 +182,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Should show auth dialog
-      expect(find.byType(AuthDialog), findsOneWidget);
+      expect(find.byType(UserProfileDialog), findsOneWidget);
     });
 
     testWidgets('should show permission error when location permission missing',
@@ -413,8 +413,10 @@ void main() {
 
       await tester.pump();
 
-      expect(find.byKey(LoginStatusIndicator.viewPriorEncountersButtonKey),
-          findsOneWidget,);
+      expect(
+        find.byKey(LoginStatusIndicator.viewPriorEncountersButtonKey),
+        findsOneWidget,
+      );
       expect(find.byIcon(Icons.history), findsOneWidget);
     });
 
