@@ -36,6 +36,96 @@
         "--target", "lib/main_production.dart",
         "--dart-define-from-file", ".env/production.env"
       ]
+    },
+    {
+      "name": "Launch development (profile)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "program": "lib/main_development.dart",
+      "args": [
+        "--flavor",
+        "development",
+        "--target",
+        "lib/main_development.dart",
+        "--dart-define-from-file",
+        ".env/development.env"
+      ]
+    },
+    {
+      "name": "Launch development (release)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "program": "lib/main_development.dart",
+      "args": [
+        "--flavor",
+        "development",
+        "--target",
+        "lib/main_development.dart",
+        "--dart-define-from-file",
+        ".env/development.env"
+      ]
+    },
+    {
+      "name": "Launch staging (profile)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "program": "lib/main_staging.dart",
+      "args": [
+        "--flavor",
+        "staging",
+        "--target",
+        "lib/main_staging.dart",
+        "--dart-define-from-file",
+        ".env/staging.env"
+      ]
+    },
+    {
+      "name": "Launch staging (release)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "program": "lib/main_staging.dart",
+      "args": [
+        "--flavor",
+        "staging",
+        "--target",
+        "lib/main_staging.dart",
+        "--dart-define-from-file",
+        ".env/staging.env"
+      ]
+    },
+    {
+      "name": "Launch production (profile)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "program": "lib/main_production.dart",
+      "args": [
+        "--flavor",
+        "production",
+        "--target",
+        "lib/main_production.dart",
+        "--dart-define-from-file",
+        ".env/production.env"
+      ]
+    },
+    {
+      "name": "Launch production (release)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "program": "lib/main_production.dart",
+      "args": [
+        "--flavor",
+        "production",
+        "--target",
+        "lib/main_production.dart",
+        "--dart-define-from-file",
+        ".env/production.env"
+      ]
     }
   ]
 }
