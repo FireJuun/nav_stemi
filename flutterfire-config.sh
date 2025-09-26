@@ -23,43 +23,43 @@ case $ENV in
   dev)
     # [dev]: ************* CHANGE THESE SETTINGS *************
     PROJECT="nav-stemi" # your firebase_project_ID
-    IOS_BUNDLE_ID="com.firejuun.nav-stemi.dev" # ios_app_ID
     ANDROID_PACKAGE_NAME="com.firejuun.navstemi.dev" # android_app_ID
+    IOS_BUNDLE_ID="com.firejuun.nav-stemi.dev" # ios_app_ID
     # ********************************************************
 
     # []: constant for dev
     FLAVOR="development"
     OUT_FILE="lib/firebase_options_dev.dart"
-    IOS_OUT="ios/flavors/development/GoogleService-Info.plist"
     ANDROID_OUT="android/app/src/development/google-services.json"
+    IOS_OUT="ios/flavors/development/GoogleService-Info.plist"
     ;;
 
   stg)
     # [stage]: ************* CHANGE THESE SETTINGS *************
     PROJECT="nav-stemi-stg"  # your firebase_project_ID
-    IOS_BUNDLE_ID="com.firejuun.nav-stemi.stg" # ios_app_ID
     ANDROID_PACKAGE_NAME="com.firejuun.navstemi.stg" # android_app_ID
+    IOS_BUNDLE_ID="com.firejuun.nav-stemi.stg" # ios_app_ID
     # ********************************************************
     
     # []: constant for stage
     FLAVOR="staging"
     OUT_FILE="lib/firebase_options_stg.dart"
-    IOS_OUT="ios/flavors/staging/GoogleService-Info.plist"
     ANDROID_OUT="android/app/src/staging/google-services.json"
+    IOS_OUT="ios/flavors/staging/GoogleService-Info.plist"
     ;;
 
   prod)
     # [prod]: ************* CHANGE THESE SETTINGS *************
     PROJECT="nav-stemi-prod" # [prod] firebase_project_ID
-    IOS_BUNDLE_ID="com.firejuun.nav-stemi.prod" # [prod] ios_app_ID
     ANDROID_PACKAGE_NAME="com.firejuun.nav-stemi.prod" # [prod]
+    IOS_BUNDLE_ID="com.firejuun.nav-stemi.prod" # [prod] ios_app_ID
     # ************************************************** android_app_ID******
 
     # []: constant for prod
     FLAVOR="production"
     OUT_FILE="lib/firebase_options_prod.dart"
-    IOS_OUT="ios/flavors/production/GoogleService-Info.plist"
     ANDROID_OUT="android/app/src/production/google-services.json"
+    IOS_OUT="ios/flavors/production/GoogleService-Info.plist"
     ;;
 
   *)
