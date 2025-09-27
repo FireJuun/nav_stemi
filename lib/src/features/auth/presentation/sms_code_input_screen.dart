@@ -21,20 +21,23 @@ class SMSInputScreen extends StatefulWidget {
 class _SMSInputScreenState extends State<SMSInputScreen> {
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, child) {
-        return SMSCodeInputScreen(
-          headerBuilder: (context, constraints, shrinkOffset) =>
-              const AuthLogo(),
-          actions: [
-            AuthStateChangeAction<SignedIn>((context, state) {
-              debugPrint('User signed in: ${state.user?.uid}');
-            }),
-          ],
-          flowKey: widget.flowKey,
-          action: widget.action,
-        );
-      },
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Consumer(
+        builder: (context, ref, child) {
+          return SMSCodeInputScreen(
+            headerBuilder: (context, constraints, shrinkOffset) =>
+                const AuthLogo(),
+            actions: [
+              AuthStateChangeAction<SignedIn>((context, state) {
+                debugPrint('User signed in: ${state.user?.uid}');
+              }),
+            ],
+            flowKey: widget.flowKey,
+            action: widget.action,
+          );
+        },
+      ),
     );
   }
 }

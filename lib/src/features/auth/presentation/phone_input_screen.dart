@@ -16,17 +16,20 @@ class PhoneLoginScreen extends StatefulWidget {
 class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
   @override
   Widget build(BuildContext context) {
-    return PhoneInputScreen(
-      headerBuilder: (context, constraints, shrinkOffset) => const AuthLogo(),
-      action: widget.action ?? AuthAction.signIn,
-      actions: [
-        SMSCodeRequestedAction((context, action, flowKey, phone) {
-          context.goNamed(
-            AppRoute.smsCodeInput.name,
-            extra: (action, flowKey),
-          );
-        }),
-      ],
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: PhoneInputScreen(
+        headerBuilder: (context, constraints, shrinkOffset) => const AuthLogo(),
+        action: widget.action ?? AuthAction.signIn,
+        actions: [
+          SMSCodeRequestedAction((context, action, flowKey, phone) {
+            context.goNamed(
+              AppRoute.smsCodeInput.name,
+              extra: (action, flowKey),
+            );
+          }),
+        ],
+      ),
     );
   }
 }
