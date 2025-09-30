@@ -75,7 +75,9 @@ $ flutter run --flavor staging --target lib/main_staging.dart
 $ flutter run --flavor production --target lib/main_production.dart
 ```
 
-_\*Nav Stemi works on iOS, Android, Web, and Windows._
+_\*Nav Stemi works on Android and iOS._
+
+Don't forget to set up your app signing key for Android by going to `Test and release` -> `App integrity` -> `App signing` -> `Settings` and input your signed SHA-1 and SHA-256 certificate fingerprints into firebase.
 
 ---
 
