@@ -7,7 +7,7 @@ environment:
   sdk: ">=3.3.0 <4.0.0"
 
 dependencies:
-  bridgefy: ^1.1.9
+  bridgefy: ^1.1.10
   cloud_firestore: ^5.6.12
   collection: ^1.18.0
   crypto: ^3.0.3
