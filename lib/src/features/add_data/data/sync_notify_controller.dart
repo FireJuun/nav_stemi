@@ -3,13 +3,15 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/src/data/services/bridgefy_service.dart';
+import 'package:nav_stemi/src/features/add_data/data/peer_user_repository.dart';
+import 'package:nav_stemi/src/features/add_data/domain/peer_user_data.dart';
 import 'package:nav_stemi/src/features/export.dart';
 
 class SyncNotifyController extends AsyncNotifier<SyncNotifyState> {
   static final provider =
       AsyncNotifierProvider<SyncNotifyController, SyncNotifyState>(
-        SyncNotifyController.new,
-      );
+    SyncNotifyController.new,
+  );
 
   @override
   FutureOr<SyncNotifyState> build() async {
@@ -18,12 +20,15 @@ class SyncNotifyController extends AsyncNotifier<SyncNotifyState> {
       BridgefyService.connectedPeersProvider.future,
     );
 
-    final autosyncPeers = ref
-        .watch(sharedPreferencesRepositoryProvider)
-        .getAutoSyncPeers();
+    final autosyncPeers =
+        ref.watch(sharedPreferencesRepositoryProvider).getAutoSyncPeers();
+
+    final connectedPeersData = await ref
+        .watch(PeerInfoRepository.provider)
+        .fetchPeerUserData(connectedPeers);
 
     return SyncNotifyState(
-      connectedPeers: connectedPeers,
+      connectedPeers: connectedPeersData,
       autosyncPeers: autosyncPeers,
     );
   }
@@ -31,9 +36,8 @@ class SyncNotifyController extends AsyncNotifier<SyncNotifyState> {
   void addAutosyncPeer(String deviceId) {
     ref.read(sharedPreferencesRepositoryProvider).addAutoSyncPeer(deviceId);
 
-    final autosyncPeers = ref
-        .watch(sharedPreferencesRepositoryProvider)
-        .getAutoSyncPeers();
+    final autosyncPeers =
+        ref.watch(sharedPreferencesRepositoryProvider).getAutoSyncPeers();
 
     state = AsyncValue.data(
       SyncNotifyState(
@@ -46,9 +50,8 @@ class SyncNotifyController extends AsyncNotifier<SyncNotifyState> {
   void removeAutosyncPeer(String deviceId) {
     ref.read(sharedPreferencesRepositoryProvider).removeAutoSyncPeer(deviceId);
 
-    final autosyncPeers = ref
-        .watch(sharedPreferencesRepositoryProvider)
-        .getAutoSyncPeers();
+    final autosyncPeers =
+        ref.watch(sharedPreferencesRepositoryProvider).getAutoSyncPeers();
 
     state = AsyncValue.data(
       SyncNotifyState(
@@ -72,7 +75,7 @@ class SyncNotifyState extends Equatable {
     this.autosyncPeers = const [],
   });
 
-  final List<String> connectedPeers;
+  final List<PeerUserData> connectedPeers;
   final List<String> autosyncPeers;
 
   @override

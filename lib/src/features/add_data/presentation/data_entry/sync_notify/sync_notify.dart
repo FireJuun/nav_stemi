@@ -39,7 +39,8 @@ class SyncNotifyData extends ConsumerWidget {
       slivers: [
         SliverList.builder(
           itemBuilder: (context, index) {
-            return ListTile(title: Text(state.connectedPeers[index]));
+            return ListTile(
+                title: Text(state.connectedPeers[index].displayName));
           },
           itemCount: state.connectedPeers.length,
         ),
