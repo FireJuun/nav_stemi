@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:nav_stemi/src/common_widgets/lifecycle_listener.dart';
 import 'package:nav_stemi/src/data/services/bridgefy_service.dart';
-import 'package:uuid/uuid.dart';
 
 /// Excellent article showing how to do this:
 /// https://codewithandrea.com/articles/flutter-bottom-navigation-bar-nested-routes-gorouter/
@@ -14,7 +13,7 @@ import 'package:uuid/uuid.dart';
 ///
 class ScaffoldWithNestedNavigation extends ConsumerStatefulWidget {
   const ScaffoldWithNestedNavigation({required this.navigationShell, Key? key})
-    : super(key: key ?? const ValueKey('ScaffoldWithNestedNavigation'));
+      : super(key: key ?? const ValueKey('ScaffoldWithNestedNavigation'));
 
   final StatefulNavigationShell navigationShell;
 
@@ -28,9 +27,9 @@ class _ScaffoldWithNestedNavigationState
   bool _canPop = false;
 
   void _onTap(int index) => widget.navigationShell.goBranch(
-    index,
-    initialLocation: index == widget.navigationShell.currentIndex,
-  );
+        index,
+        initialLocation: index == widget.navigationShell.currentIndex,
+      );
 
   @override
   void initState() {
@@ -83,8 +82,7 @@ class _ScaffoldWithNestedNavigationState
           child: PopScope(
             canPop: _canPop,
             onPopInvokedWithResult: (didPop, _) async {
-              final shouldPop =
-                  await showAlertDialog(
+              final shouldPop = await showAlertDialog(
                     context: context,
                     title: 'Exit Navigation?'.hardcoded,
                     cancelActionText: 'Go back'.hardcoded,
@@ -136,13 +134,20 @@ class _ScaffoldWithNestedNavigationState
 
   Future<void> _startSyncService() async {
     try {
-      debugPrint('Starting Bridgefy service with userId: $uuid');
+      final syncId = await ref.read(
+        fetchFirebaseUserDataProvider.selectAsync((value) => value?.syncId),
+      );
 
-      await ref.read(BridgefyService.provider).startService(userId: uuid);
+      if (syncId == null) {
+        debugPrint('No syncId found for user, cannot start Bridgefy service.');
+        return;
+      }
+
+      debugPrint('Starting Bridgefy service with userId: $syncId');
+
+      await ref.read(BridgefyService.provider).startService(userId: syncId);
     } catch (e) {
       debugPrint('Failed to start Bridgefy service: $e');
     }
   }
 }
-
-final uuid = const Uuid().v4();
