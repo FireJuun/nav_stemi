@@ -76,3 +76,4 @@ flutter:
     - assets/
     - assets/icons/
     - assets/logos/
+    - shorebird.yaml
