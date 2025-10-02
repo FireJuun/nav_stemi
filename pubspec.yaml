@@ -52,6 +52,7 @@ dependencies:
   riverpod_annotation: ^2.3.5
   rxdart: ^0.28.0
   shared_preferences: ^2.5.3
+  shrink: ^1.5.12
   sliver_tools: ^0.2.12
   time: ^2.1.4
   timeago_flutter: ^3.7.0
