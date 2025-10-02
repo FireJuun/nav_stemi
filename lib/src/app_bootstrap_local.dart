@@ -1,5 +1,7 @@
+import 'package:bridgefy/bridgefy.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
+import 'package:nav_stemi/src/data/services/bridgefy_service.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -49,10 +51,15 @@ class AppBootstrapLocal extends AppBootstrap {
 
     /// Swap between Mapbox <-> Google for app routing
     final remoteRoutes = RemoteRoutesGoogleRepository();
+    final bridgefyService = BridgefyService(bridgefy: Bridgefy());
+
+    await bridgefyService.initialize(apiKey: Env.bridgefyApiKey);
 
     // Create list of provider overrides
     final overrides = [
       // repositories
+
+      BridgefyService.provider.overrideWithValue(bridgefyService),
       authRepositoryProvider.overrideWithValue(authRepository),
       sharedPreferencesRepositoryProvider
           .overrideWithValue(sharedPreferencesRepository),
