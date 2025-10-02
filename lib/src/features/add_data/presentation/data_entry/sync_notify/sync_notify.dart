@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:nav_stemi/src/features/add_data/data/sync_notify_controller.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
+import 'package:shrink/shrink.dart';
 
 class SyncNotify extends ConsumerStatefulWidget {
   const SyncNotify({super.key});
@@ -280,8 +283,15 @@ class _SessionQrCode extends StatelessWidget {
 
     // Generate QR code from session data
     try {
+      final data = sessionData.toJson();
+      final compressedData = data.shrink();
+
+      debugPrint(
+        'Compressed data from ${data.length} to ${compressedData.length} bytes',
+      );
+
       final qrCode = QrCode.fromData(
-        data: sessionData.toJson(),
+        data: base64Encode(compressedData),
         errorCorrectLevel: QrErrorCorrectLevel.M,
       );
 
@@ -451,7 +461,8 @@ class _QrScannerBottomSheetState extends State<_QrScannerBottomSheet> {
 
     try {
       // Deserialize the session data from JSON
-      final sessionData = SessionShareData.fromJson(barcode.rawValue!);
+      final compressedData = base64Decode(barcode.rawValue!).restoreText();
+      final sessionData = SessionShareData.fromJson(compressedData);
 
       // Check version compatibility (optional)
       if (sessionData.version > 1) {
