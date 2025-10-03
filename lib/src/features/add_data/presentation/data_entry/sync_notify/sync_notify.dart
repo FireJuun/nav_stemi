@@ -362,8 +362,9 @@ class _QrScannerBottomSheet extends StatefulWidget {
 }
 
 class _QrScannerBottomSheetState extends State<_QrScannerBottomSheet> {
+  static const int _qrScannerDetectionTimeoutMs = 10000;
   final MobileScannerController _scannerController = MobileScannerController(
-      formats: [BarcodeFormat.qrCode], detectionTimeoutMs: 10000);
+      formats: [BarcodeFormat.qrCode], detectionTimeoutMs: _qrScannerDetectionTimeoutMs);
 
   bool _isProcessing = false;
 
