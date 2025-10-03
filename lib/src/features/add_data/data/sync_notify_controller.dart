@@ -97,10 +97,10 @@ class SyncNotifyController extends AsyncNotifier<SyncNotifyState> {
     );
   }
 
-  PatientInfoService get _patentInfoRepository =>
+  PatientInfoService get _patientInfoRepository =>
       ref.read(patientInfoServiceProvider);
 
-  PatientInfoModel get _patientInfo => _patentInfoRepository.patientInfoModel;
+  PatientInfoModel get _patientInfo => _patientInfoRepository.patientInfoModel;
 
   TimeMetricsRepository get _timeMetricsRepository =>
       ref.read(timeMetricsRepositoryProvider);
