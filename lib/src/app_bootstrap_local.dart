@@ -53,7 +53,8 @@ class AppBootstrapLocal extends AppBootstrap {
     final remoteRoutes = RemoteRoutesGoogleRepository();
     final bridgefyService = BridgefyService(bridgefy: Bridgefy());
 
-    await bridgefyService.initialize(apiKey: Env.bridgefyApiKey);
+    // TODO(ryan): Initialize Bridgefy with environment key.
+    // await bridgefyService.initialize(apiKey: Env.bridgefyApiKey);
 
     // Create list of provider overrides
     final overrides = [

@@ -34,10 +34,6 @@ class _ScaffoldWithNestedNavigationState
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _startSyncService();
-    });
   }
 
   @override
@@ -47,107 +43,55 @@ class _ScaffoldWithNestedNavigationState
 
     return Consumer(
       builder: (context, ref, child) {
-        return LifecycleListener(
-          onHide: () {
-            debugPrint('User hid the app');
+        return PopScope(
+          canPop: _canPop,
+          onPopInvokedWithResult: (didPop, _) async {
+            final shouldPop = await showAlertDialog(
+                  context: context,
+                  title: 'Exit Navigation?'.hardcoded,
+                  cancelActionText: 'Go back'.hardcoded,
+                  defaultActionText: 'EXIT'.hardcoded,
+                ) ??
+                false;
 
-            ref.read(BridgefyService.provider).stopService();
-          },
-          onInactive: () {
-            debugPrint('User inactive');
+            if (shouldPop && context.mounted) {
+              // Show survey dialog before exit
+              await SurveyDialog.show(context);
 
-            ref.read(BridgefyService.provider).stopService();
-          },
-          onPause: () {
-            debugPrint('User paused the app ');
-            ref.read(BridgefyService.provider).stopService();
-          },
-          onDetach: () {
-            debugPrint('User exited the app ');
-            ref.read(BridgefyService.provider).stopService();
-          },
-          onRestart: () {
-            debugPrint('User restarted the app ');
-            _startSyncService();
-          },
-          onResume: () {
-            debugPrint('User resumed the app ');
-            _startSyncService();
-          },
-          onShow: () {
-            debugPrint('User showed the app ');
+              // Reset TimerModel and Patient Info Model
+              ref
+                ..invalidate(fhirInitServiceProvider)
+                ..invalidate(fhirResourceReferencesNotifierProvider);
 
-            _startSyncService();
-          },
-          child: PopScope(
-            canPop: _canPop,
-            onPopInvokedWithResult: (didPop, _) async {
-              final shouldPop = await showAlertDialog(
-                    context: context,
-                    title: 'Exit Navigation?'.hardcoded,
-                    cancelActionText: 'Go back'.hardcoded,
-                    defaultActionText: 'EXIT'.hardcoded,
-                  ) ??
-                  false;
+              ref
+                  .read(timeMetricsControllerProvider.notifier)
+                  .clearTimeMetrics();
+              ref.read(patientInfoServiceProvider).clearPatientInfo();
+              await ref.read(countUpTimerRepositoryProvider).reset();
 
-              if (shouldPop && context.mounted) {
-                // Show survey dialog before exit
-                await SurveyDialog.show(context);
-
-                // Reset TimerModel and Patient Info Model
-                ref
-                  ..invalidate(fhirInitServiceProvider)
-                  ..invalidate(fhirResourceReferencesNotifierProvider);
-
-                ref
-                    .read(timeMetricsControllerProvider.notifier)
-                    .clearTimeMetrics();
-                ref.read(patientInfoServiceProvider).clearPatientInfo();
-                await ref.read(countUpTimerRepositoryProvider).reset();
-
-                setState(() => _canPop = shouldPop);
-                if (context.mounted) {
-                  context.goNamed(AppRoute.home.name);
-                }
+              setState(() => _canPop = shouldPop);
+              if (context.mounted) {
+                context.goNamed(AppRoute.home.name);
               }
-            },
-            child: Scaffold(
-              appBar: const AppBarWidget(),
-              endDrawer: const NavDrawer(),
-              body: AnimatedContainer(
-                duration: 300.ms,
-                color: isNavPage
-                    ? colorScheme.primaryContainer
-                    : colorScheme.secondaryContainer,
-                child: widget.navigationShell,
-              ),
-              bottomNavigationBar: BottomNavBar(
-                selectedIndex: widget.navigationShell.currentIndex,
-                onDestinationSelected: _onTap,
-              ),
+            }
+          },
+          child: Scaffold(
+            appBar: const AppBarWidget(),
+            endDrawer: const NavDrawer(),
+            body: AnimatedContainer(
+              duration: 300.ms,
+              color: isNavPage
+                  ? colorScheme.primaryContainer
+                  : colorScheme.secondaryContainer,
+              child: widget.navigationShell,
+            ),
+            bottomNavigationBar: BottomNavBar(
+              selectedIndex: widget.navigationShell.currentIndex,
+              onDestinationSelected: _onTap,
             ),
           ),
         );
       },
     );
-  }
-
-  Future<void> _startSyncService() async {
-    try {
-      final syncId = await ref.read(
-        fetchFirebaseUserDataProvider.selectAsync((value) => value?.syncId),
-      );
-
-      if (syncId == null) {
-        debugPrint('No syncId found for user, cannot start Bridgefy service.');
-        return;
-      }
-
-      debugPrint('Starting Bridgefy service with userId: $syncId');
-
-      await ref.read(BridgefyService.provider).startService(userId: syncId);
-    } catch (e) {
-      debugPrint('Failed to start Bridgefy service: $e');
-    }
   }
 }

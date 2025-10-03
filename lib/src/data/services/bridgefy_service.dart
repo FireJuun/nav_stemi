@@ -25,15 +25,14 @@ class BridgefyService with BridgefyDelegate {
 
   static final connectedPeersProvider =
       FutureProvider.autoDispose<List<String>>((ref) {
-        ref.listen(
-          eventsProvider.select((event) {
-            return event is BridgefyDidConnect ||
-                event is BridgefyDidDisconnect;
-          }),
-          (_, _) => ref.invalidateSelf(),
-        );
-        return ref.watch(provider).connectedPeers;
-      });
+    ref.listen(
+      eventsProvider.select((event) {
+        return event is BridgefyDidConnect || event is BridgefyDidDisconnect;
+      }),
+      (_, __) => ref.invalidateSelf(),
+    );
+    return ref.watch(provider).connectedPeers;
+  });
 
   final _events = StreamController<BridgefyEvent>();
 
