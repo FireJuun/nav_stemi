@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nav_stemi/src/utils/result.dart';
 
@@ -209,7 +207,7 @@ void main() {
 
     group('Extension methods', () {
       test('nullable to result conversion', () {
-        const int? nullableValue = 42;
+        const nullableValue = 42;
         final result = nullableValue.toResult(() => 'null error');
         expect(result.isSuccess, isTrue);
         expect(result.valueOrNull, equals(42));
@@ -221,7 +219,7 @@ void main() {
       });
 
       test('nullable to result simple conversion', () {
-        const int? nullableValue = 42;
+        const nullableValue = 42;
         final result = nullableValue.toResultSimple();
         expect(result.isSuccess, isTrue);
         expect(result.valueOrNull, equals(42));

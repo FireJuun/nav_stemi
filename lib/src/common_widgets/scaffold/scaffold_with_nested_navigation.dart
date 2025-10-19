@@ -3,8 +3,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nav_stemi/nav_stemi.dart';
-import 'package:nav_stemi/src/common_widgets/lifecycle_listener.dart';
-import 'package:nav_stemi/src/data/services/bridgefy_service.dart';
 
 /// Excellent article showing how to do this:
 /// https://codewithandrea.com/articles/flutter-bottom-navigation-bar-nested-routes-gorouter/
