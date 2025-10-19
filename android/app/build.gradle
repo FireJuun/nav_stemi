@@ -74,6 +74,7 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         resValue "string", "maps_api_key", (dartDefines.MAPS_API_KEY ?: "") // adding default so ./gradlew can also run
+        resValue "string", "bridgefy_api_key", (dartDefines.BRIDGEFY_API_KEY ?: "")
     }
 
     signingConfigs {

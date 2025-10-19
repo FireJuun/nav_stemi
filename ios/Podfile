@@ -65,6 +65,10 @@ post_install do |installer|
         'PERMISSION_LOCATION=1',
         'PERMISSION_LOCATION_WHENINUSE=0',
 
+        'PERMISSION_BLUETOOTH=1',
+        'PERMISSION_BLUETOOTH_SCAN=1',
+        'PERMISSION_BLUETOOTH_ADVERTISE=1',
+        'PERMISSION_BLUETOOTH_CONNECT=1',
         ## dart: PermissionGroup.notification
         'PERMISSION_NOTIFICATIONS=1',
 

@@ -23,13 +23,9 @@ class PatientInfo extends ConsumerWidget {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return const SliverMainAxisGroup(
-      slivers: [
-        SliverPadding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          sliver: PatientInfoData(),
-        ),
-      ],
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: PatientInfoData(),
     );
   }
 }

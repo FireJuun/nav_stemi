@@ -13,46 +13,31 @@ class PatientEntryName extends ConsumerWidget {
       value: patientInfoModelValue,
       data: (patientInfoModel) {
         return Column(
+          spacing: Sizes.p16,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: PatientEntryText(
-                    label: 'First Name'.hardcoded,
-                    initialValue: patientInfoModel?.firstName,
-                    onChanged: (value) => ref
-                        .read(patientInfoControllerProvider.notifier)
-                        .setFirstName(value),
-                  ),
-                ),
-                gapW16,
-                Expanded(
-                  child: PatientEntryText(
-                    label: 'Middle Name'.hardcoded,
-                    initialValue: patientInfoModel?.middleName,
-                    onChanged: (value) => ref
-                        .read(patientInfoControllerProvider.notifier)
-                        .setMiddleName(value),
-                  ),
-                ),
-              ],
+            PatientEntryText(
+              label: 'First Name'.hardcoded,
+              initialValue: patientInfoModel?.firstName,
+              onChanged: (value) => ref
+                  .read(patientInfoControllerProvider.notifier)
+                  .setFirstName(value),
             ),
-            gapH16,
-            Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: PatientEntryText(
-                      label: 'Last Name'.hardcoded,
-                      initialValue: patientInfoModel?.lastName,
-                      onChanged: (value) => ref
-                          .read(patientInfoControllerProvider.notifier)
-                          .setLastName(value),
-                    ),
-                  ),
-                ),
-              ],
+
+            PatientEntryText(
+              label: 'Middle Name'.hardcoded,
+              initialValue: patientInfoModel?.middleName,
+              onChanged: (value) => ref
+                  .read(patientInfoControllerProvider.notifier)
+                  .setMiddleName(value),
+            ),
+            PatientEntryText(
+              label: 'Last Name'.hardcoded,
+              initialValue: patientInfoModel?.lastName,
+              onChanged: (value) => ref
+                  .read(patientInfoControllerProvider.notifier)
+                  .setLastName(value),
             ),
           ],
         );

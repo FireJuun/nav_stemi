@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nav_stemi/nav_stemi.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 part 'firebase_user_data_repository.g.dart';
 
@@ -13,11 +14,10 @@ class FirebaseUserDataRepository {
   static const String _usersPath = 'users';
 
   Future<void> createUserData(FirebaseUserData userData) {
-    return _firestore.collection(_usersPath).doc(userData.appUser.uid).set({
-      'firstName': userData.firstName,
-      'lastName': userData.lastName,
-      'phoneNumber': userData.phoneNumber,
-    });
+    return _firestore
+        .collection(_usersPath)
+        .doc(userData.appUser.uid)
+        .set(userData.toMap());
   }
 
   Stream<FirebaseUserData?> watchUserData(FirebaseAppUser appUser) {
@@ -32,6 +32,7 @@ class FirebaseUserDataRepository {
           appUser: appUser,
           firstName: data['firstName'] as String?,
           lastName: data['lastName'] as String?,
+          syncId: data['syncId'] as String?,
         );
       }
       return null;
@@ -39,11 +40,10 @@ class FirebaseUserDataRepository {
   }
 
   Future<void> updateUserData(FirebaseUserData userData) {
-    return _firestore.collection(_usersPath).doc(userData.appUser.uid).update({
-      'firstName': userData.firstName,
-      'lastName': userData.lastName,
-      'phoneNumber': userData.phoneNumber,
-    });
+    return _firestore
+        .collection(_usersPath)
+        .doc(userData.appUser.uid)
+        .update(userData.toMap());
   }
 
   Future<FirebaseUserData?> fetchUserData(FirebaseAppUser appUser) async {
@@ -56,6 +56,7 @@ class FirebaseUserDataRepository {
         firstName: data['firstName'] as String?,
         lastName: data['lastName'] as String?,
         isAdmin: data['isAdmin'] as bool? ?? false,
+        syncId: data['syncId'] as String?,
       );
     }
     return null;
@@ -79,7 +80,8 @@ Future<FirebaseUserData?> fetchFirebaseUserData(Ref ref) async {
       /// data already present
       return cloudData;
     } else {
-      final newData = FirebaseUserData(appUser: activeUser);
+      final newData =
+          FirebaseUserData(appUser: activeUser, syncId: const Uuid().v4());
 
       /// push this data to cloud
       await repository.createUserData(newData);

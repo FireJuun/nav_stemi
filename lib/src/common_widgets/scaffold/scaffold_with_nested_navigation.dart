@@ -9,27 +9,30 @@ import 'package:nav_stemi/nav_stemi.dart';
 /// based on:
 /// https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart
 ///
-class ScaffoldWithNestedNavigation extends StatefulWidget {
-  const ScaffoldWithNestedNavigation({
-    required this.navigationShell,
-    Key? key,
-  }) : super(key: key ?? const ValueKey('ScaffoldWithNestedNavigation'));
+class ScaffoldWithNestedNavigation extends ConsumerStatefulWidget {
+  const ScaffoldWithNestedNavigation({required this.navigationShell, Key? key})
+      : super(key: key ?? const ValueKey('ScaffoldWithNestedNavigation'));
 
   final StatefulNavigationShell navigationShell;
 
   @override
-  State<ScaffoldWithNestedNavigation> createState() =>
+  ConsumerState<ScaffoldWithNestedNavigation> createState() =>
       _ScaffoldWithNestedNavigationState();
 }
 
 class _ScaffoldWithNestedNavigationState
-    extends State<ScaffoldWithNestedNavigation> {
+    extends ConsumerState<ScaffoldWithNestedNavigation> {
   bool _canPop = false;
 
   void _onTap(int index) => widget.navigationShell.goBranch(
         index,
         initialLocation: index == widget.navigationShell.currentIndex,
       );
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

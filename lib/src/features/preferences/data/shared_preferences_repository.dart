@@ -7,10 +7,7 @@ part 'shared_preferences_repository.g.dart';
 
 /// original source: https://github.com/MayJuun/wvems_protocols/tree/main/lib/src/features/preferences
 
-enum _StoredValues {
-  appTheme,
-  navigationSettings,
-}
+enum _StoredValues { appTheme, navigationSettings, autoSyncPeers }
 
 class SharedPreferencesRepository {
   SharedPreferencesRepository(this._prefs);
@@ -18,6 +15,29 @@ class SharedPreferencesRepository {
   final SharedPreferences _prefs;
 
   Future<void> reload() async => _prefs.reload();
+
+  List<String> getAutoSyncPeers() {
+    return _prefs.getStringList(_StoredValues.autoSyncPeers.name) ?? [];
+  }
+
+  void addAutoSyncPeer(String peerId) {
+    final peers =
+        _prefs.getStringList(_StoredValues.autoSyncPeers.name)?.toSet() ?? {}
+          ..add(peerId);
+
+    _prefs.setStringList(_StoredValues.autoSyncPeers.name, peers.toList());
+  }
+
+  void removeAutoSyncPeer(String peerId) {
+    final peers =
+        _prefs
+            .getStringList(_StoredValues.autoSyncPeers.name)
+            ?.where((e) => e != peerId)
+            .toSet() ??
+        {};
+
+    _prefs.setStringList(_StoredValues.autoSyncPeers.name, peers.toList());
+  }
 
   void saveAppTheme(AppTheme? appTheme) {
     if (appTheme == null) {
@@ -48,8 +68,9 @@ class SharedPreferencesRepository {
   }
 
   NavigationSettings getNavigationSettings() {
-    final navigationSettingsString =
-        _prefs.getString(_StoredValues.navigationSettings.name);
+    final navigationSettingsString = _prefs.getString(
+      _StoredValues.navigationSettings.name,
+    );
     if (navigationSettingsString != null) {
       return NavigationSettings.fromJson(navigationSettingsString);
     } else {

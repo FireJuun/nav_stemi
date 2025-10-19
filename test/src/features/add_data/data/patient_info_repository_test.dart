@@ -63,10 +63,10 @@ void main() {
 
       // Make changes
       repository.patientInfoModel = testPatientInfo;
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future<void>.delayed(const Duration(milliseconds: 100));
 
       repository.clearPatientInfoModel();
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future<void>.delayed(const Duration(milliseconds: 100));
 
       // Verify events
       expect(events.length, greaterThanOrEqualTo(2));
