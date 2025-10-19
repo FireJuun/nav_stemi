@@ -46,7 +46,7 @@ if (project.hasProperty('dart-defines')) {
 android {
     namespace "com.firejuun.navstemi"
     compileSdkVersion 34
-    ndkVersion flutter.ndkVersion
+    ndkVersion "27.0.12077973"
 
     compileOptions {
         coreLibraryDesugaringEnabled true
