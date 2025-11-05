@@ -1,6 +1,6 @@
 # Research Findings for Rural STEMI Clinical Decision Support App
 
-**Branch**: `001-rural-stemi-clinical` | **Date**: 2025-09-25 | **Spec**: [/Users/juun/workspace/nav_stemi/specs/001-rural-stemi-clinical/spec.md]
+**Branch**: `001-rural-stemi-clinical` | **Date**: 2025-09-25 | **Spec**: [specs/001-rural-stemi-clinical/spec.md]
 
 This document summarizes the research findings for the initial implementation plan.
 
