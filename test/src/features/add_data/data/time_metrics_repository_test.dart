@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nav_stemi/src/features/add_data/data/time_metrics_repository.dart';
 import 'package:nav_stemi/src/features/add_data/domain/time_metrics_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../fixtures/time_metrics_fixtures.dart';
 
@@ -8,8 +9,10 @@ void main() {
   group('TimeMetricsRepository', () {
     late TimeMetricsRepository repository;
 
-    setUp(() {
-      repository = TimeMetricsRepository();
+    setUp(() async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      repository = TimeMetricsRepository(prefs);
     });
 
     test('should initialize with null', () {

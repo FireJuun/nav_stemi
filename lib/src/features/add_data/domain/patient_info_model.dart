@@ -59,7 +59,7 @@ class PatientInfoModel extends Equatable {
       'firstName': firstName,
       'middleName': middleName,
       'birthDate': birthDate?.millisecondsSinceEpoch,
-      'sexAtBirth': sexAtBirth,
+      'sexAtBirth': sexAtBirth?.name,
       'cardiologist': cardiologist,
       'isDirty': isDirty,
     };

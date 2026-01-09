@@ -16,6 +16,7 @@ class SharedPreferencesRepository {
   SharedPreferencesRepository(this._prefs);
 
   final SharedPreferences _prefs;
+  SharedPreferences get prefs => _prefs;
 
   Future<void> reload() async => _prefs.reload();
 

@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nav_stemi/src/features/add_data/data/patient_info_repository.dart';
 import 'package:nav_stemi/src/features/add_data/domain/patient_info_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../fixtures/patient_fixtures.dart';
 
@@ -8,8 +9,10 @@ void main() {
   group('PatientInfoRepository', () {
     late PatientInfoRepository repository;
 
-    setUp(() {
-      repository = PatientInfoRepository();
+    setUp(() async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      repository = PatientInfoRepository(prefs);
     });
 
     test('should initialize with default empty PatientInfoModel', () {
