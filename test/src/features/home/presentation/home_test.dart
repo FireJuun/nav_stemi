@@ -80,6 +80,7 @@ void main() {
       overrides: [
         permissionsServiceProvider.overrideWithValue(mockPermissionsService),
         fhirInitServiceProvider.overrideWithValue(mockFhirInitService),
+        // Fix for NavDrawer not found
         if (authState != null)
           authStateChangesProvider.overrideWith(
             (ref) => Stream.value(authState.value),

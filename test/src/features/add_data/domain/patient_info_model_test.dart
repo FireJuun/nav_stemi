@@ -96,7 +96,7 @@ void main() {
         expect(map['lastName'], equals(testLastName));
         expect(map['middleName'], equals(testMiddleName));
         expect(map['birthDate'], equals(testBirthDate.millisecondsSinceEpoch));
-        expect(map['sexAtBirth'], equals(testSexAtBirth));
+        expect(map['sexAtBirth'], equals(testSexAtBirth.name));
         expect(map['cardiologist'], equals(testCardiologist));
         expect(map['isDirty'], isTrue);
       });

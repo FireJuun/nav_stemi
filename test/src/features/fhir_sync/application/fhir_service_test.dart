@@ -6,6 +6,7 @@ import 'package:nav_stemi/src/features/auth/data/auth_repository.dart';
 import 'package:nav_stemi/src/features/auth/domain/app_user.dart';
 import 'package:nav_stemi/src/features/fhir_sync/application/fhir_service.dart';
 import 'package:nav_stemi/src/features/fhir_sync/data/fhir_repository.dart';
+import 'package:http/http.dart' as http;
 
 import '../../../../helpers/mock_providers.dart';
 import '../../../../helpers/test_helpers.dart';
@@ -18,7 +19,13 @@ class MockResource extends Mock implements Resource {}
 
 class MockCapabilityStatement extends Mock implements CapabilityStatement {}
 
+class FakeBaseRequest extends Fake implements http.BaseRequest {}
+
 void main() {
+  setUpAll(() {
+    registerFallbackValue(FakeBaseRequest());
+  });
+
   group('FhirService', () {
     late ProviderContainer container;
     late MockAuthRepository mockAuth;
@@ -30,7 +37,11 @@ void main() {
 
       // Set up test user
       final mockGoogleAccount = MockGoogleSignInAccount();
+      when(() => mockGoogleAccount.id).thenReturn('test-user-id');
       final mockAuthClient = MockAuthClient();
+      when(() => mockAuthClient.send(any())).thenAnswer(
+        (_) async => http.StreamedResponse(Stream.value([123]), 200),
+      );
       testUser = GoogleAppUser(
         user: mockGoogleAccount,
         client: mockAuthClient,

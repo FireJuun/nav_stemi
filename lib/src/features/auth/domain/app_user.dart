@@ -40,7 +40,8 @@ class ServiceAccountUser extends AppUser {
 class FakeAppUser extends AppUser {
   FakeAppUser({
     required this.email,
-  }) : super(uid: '');
+    String uid = '',
+  }) : super(uid: uid);
 
   final String email;
 }

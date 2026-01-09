@@ -5,6 +5,8 @@ import 'package:nav_stemi/nav_stemi.dart';
 
 class MockSurveyRepository extends Mock implements SurveyRepository {}
 
+class MockAuthRepository extends Mock implements AuthRepository {}
+
 void main() {
   setUpAll(() {
     registerFallbackValue(
@@ -19,15 +21,26 @@ void main() {
   group('SurveyController', () {
     late ProviderContainer container;
     late MockSurveyRepository mockSurveyRepository;
+    late MockAuthRepository mockAuthRepository;
 
     setUp(() {
       mockSurveyRepository = MockSurveyRepository();
+      mockAuthRepository = MockAuthRepository();
+
       container = ProviderContainer(
         overrides: [
           surveyRepositoryProvider.overrideWithValue(mockSurveyRepository),
+          authRepositoryProvider.overrideWithValue(mockAuthRepository),
         ],
       );
+
+      // Helper to return our test user but with correct uid for tests
+      when(() => mockAuthRepository.currentUser).thenReturn(
+        FakeAppUser(email: 'test@test.com', uid: 'uid'),
+      );
     });
+
+    // Changing approach slightly to be cleaner in the replacement
 
     tearDown(() {
       container.dispose();

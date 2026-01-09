@@ -216,6 +216,8 @@ void main() {
         ProviderScope(
           overrides: [
             patientInfoControllerProvider.overrideWith(() => mockController),
+            patientInfoModelProvider
+                .overrideWith((ref) => Stream.value(const PatientInfoModel())),
           ],
           child: MaterialApp(
             home: Scaffold(
