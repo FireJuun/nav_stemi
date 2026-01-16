@@ -51,21 +51,21 @@ void main() {
 
       // Make changes
       repository.setTimeMetrics(testTimeMetrics);
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future<void>.delayed(const Duration(milliseconds: 100));
 
       final updatedMetrics = testTimeMetrics.copyWith(
         wasAspirinGiven: () => false,
       );
       repository.setTimeMetrics(updatedMetrics);
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future<void>.delayed(const Duration(milliseconds: 100));
 
       repository.clearTimeMetrics();
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future<void>.delayed(const Duration(milliseconds: 100));
 
       // Verify events
       expect(events.length, greaterThanOrEqualTo(3));
       expect(events.first, isNull);
-      expect(events.any((e) => e?.wasStemiActivated == true), isTrue);
+      expect(events.any((e) => e?.wasStemiActivated ?? false), isTrue);
       expect(events.any((e) => e?.wasAspirinGiven == false), isTrue);
       expect(events.last, isNull);
 

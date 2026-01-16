@@ -164,7 +164,7 @@ class TimeMetricsModel extends Equatable {
               ? lockTimePatientArrivedAtDestination()
               : this.lockTimePatientArrivedAtDestination,
       isDirty:
-          isDirty != null ? isDirty() : true, // Default to dirty on changes
+          !(isDirty != null) || isDirty(), // Default to dirty on changes
     );
   }
 
@@ -253,7 +253,7 @@ class TimeMetricsModel extends Equatable {
               : null,
       lockTimePatientArrivedAtDestination:
           map['lockTimePatientArrivedAtDestination'] as bool,
-      isDirty: map['isDirty'] != null ? map['isDirty'] as bool : true,
+      isDirty: !(map['isDirty'] != null) || map['isDirty'] as bool,
     );
   }
 

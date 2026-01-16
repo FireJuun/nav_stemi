@@ -26,10 +26,7 @@ void main() {
 
     test('should update patient info model with dirty flag control', () {
       // Update without marking as dirty
-      repository.updatePatientInfoModel(
-        testPatientInfo,
-        markAsDirty: false,
-      );
+      repository.updatePatientInfoModel(testPatientInfo, markAsDirty: false);
 
       expect(repository.patientInfoModel?.firstName, equals('John'));
       expect(repository.patientInfoModel?.isDirty, isFalse);
@@ -63,10 +60,10 @@ void main() {
 
       // Make changes
       repository.patientInfoModel = testPatientInfo;
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future<void>.delayed(const Duration(milliseconds: 100));
 
       repository.clearPatientInfoModel();
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future<void>.delayed(const Duration(milliseconds: 100));
 
       // Verify events
       expect(events.length, greaterThanOrEqualTo(2));
@@ -88,9 +85,7 @@ void main() {
       expect(repository.patientInfoModel?.isDirty, isFalse);
 
       // Set new model via setter (should mark as dirty)
-      final updatedModel = initialModel.copyWith(
-        firstName: () => 'Janet',
-      );
+      final updatedModel = initialModel.copyWith(firstName: () => 'Janet');
 
       repository.patientInfoModel = updatedModel;
 

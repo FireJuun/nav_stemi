@@ -10,7 +10,7 @@ void main() {
 
   group('FirebaseAuthRepository - Expected Behavior', () {
     test('repository should provide necessary methods', () {
-      // This test verifies the FirebaseAuthRepository has the expected interface
+      // This test verifies the FirebaseAuthRepository has an expected interface
       // Real implementation tests would require Firebase initialization
 
       // Methods that should exist:
@@ -34,14 +34,15 @@ void main() {
       const testUid = 'test-admin-uid';
 
       // Add admin user to Firestore
-      await fakeFirestore
-          .collection('users-admin')
-          .doc(testUid)
-          .set({'role': 'admin'});
+      await fakeFirestore.collection('users-admin').doc(testUid).set({
+        'role': 'admin',
+      });
 
       // Check if document exists
-      final adminDoc =
-          await fakeFirestore.collection('users-admin').doc(testUid).get();
+      final adminDoc = await fakeFirestore
+          .collection('users-admin')
+          .doc(testUid)
+          .get();
 
       expect(adminDoc.exists, isTrue);
     });
@@ -51,8 +52,10 @@ void main() {
       const testUid = 'test-user-uid';
 
       // Check if document exists (should not exist)
-      final adminDoc =
-          await fakeFirestore.collection('users-admin').doc(testUid).get();
+      final adminDoc = await fakeFirestore
+          .collection('users-admin')
+          .doc(testUid)
+          .get();
 
       expect(adminDoc.exists, isFalse);
     });
@@ -87,15 +90,15 @@ void main() {
       final subscription = mockAuth.authStateChanges().listen(states.add);
 
       // Initial state (not signed in)
-      await Future.delayed(const Duration(milliseconds: 10));
+      await Future<void>.delayed(const Duration(milliseconds: 10));
 
       // Sign in
       await mockAuth.signInAnonymously();
-      await Future.delayed(const Duration(milliseconds: 10));
+      await Future<void>.delayed(const Duration(milliseconds: 10));
 
       // Sign out
       await mockAuth.signOut();
-      await Future.delayed(const Duration(milliseconds: 10));
+      await Future<void>.delayed(const Duration(milliseconds: 10));
 
       expect(states.length, greaterThanOrEqualTo(3));
       expect(states.first, isNull);

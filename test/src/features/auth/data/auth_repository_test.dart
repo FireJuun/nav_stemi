@@ -10,7 +10,7 @@ class TestAuthRepository extends AuthRepository {
     this.mockCurrentUser,
     Stream<AppUser?>? mockAuthStateChanges,
   }) : _authStateChanges =
-            mockAuthStateChanges ?? Stream.value(mockCurrentUser);
+           mockAuthStateChanges ?? Stream.value(mockCurrentUser);
 
   final AppUser? mockCurrentUser;
   final Stream<AppUser?> _authStateChanges;
@@ -69,11 +69,11 @@ void main() {
 
       final states = <AppUser?>[];
       final subscription = testAuthRepository.authStateChanges().listen(
-            states.add,
-          );
+        states.add,
+      );
 
       // Wait for stream to complete
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future<void>.delayed(const Duration(milliseconds: 100));
 
       expect(states, [null, testUser, null]);
 
@@ -81,9 +81,7 @@ void main() {
     });
 
     test('should return current user', () {
-      testAuthRepository = TestAuthRepository(
-        mockCurrentUser: testUser,
-      );
+      testAuthRepository = TestAuthRepository(mockCurrentUser: testUser);
 
       expect(testAuthRepository.currentUser, equals(testUser));
     });

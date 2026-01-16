@@ -48,8 +48,7 @@ class PatientInfoModel extends Equatable {
       birthDate: birthDate != null ? birthDate() : this.birthDate,
       sexAtBirth: sexAtBirth != null ? sexAtBirth() : this.sexAtBirth,
       cardiologist: cardiologist != null ? cardiologist() : this.cardiologist,
-      isDirty:
-          isDirty != null ? isDirty() : true, // Default to dirty on changes
+      isDirty: !(isDirty != null) || isDirty(), // Default to dirty on changes
     );
   }
 
@@ -69,17 +68,19 @@ class PatientInfoModel extends Equatable {
     return PatientInfoModel(
       lastName: map['lastName'] != null ? map['lastName'] as String : null,
       firstName: map['firstName'] != null ? map['firstName'] as String : null,
-      middleName:
-          map['middleName'] != null ? map['middleName'] as String : null,
+      middleName: map['middleName'] != null
+          ? map['middleName'] as String
+          : null,
       birthDate: map['birthDate'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['birthDate'] as int)
           : null,
       sexAtBirth: map['sexAtBirth'] != null
           ? SexAtBirthToEnumConverter.fromString(map['sexAtBirth'] as String)
           : null,
-      cardiologist:
-          map['cardiologist'] != null ? map['cardiologist'] as String : null,
-      isDirty: map['isDirty'] != null ? map['isDirty'] as bool : true,
+      cardiologist: map['cardiologist'] != null
+          ? map['cardiologist'] as String
+          : null,
+      isDirty: !(map['isDirty'] != null) || map['isDirty'] as bool,
     );
   }
 
