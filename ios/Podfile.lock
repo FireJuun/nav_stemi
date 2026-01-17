@@ -11,6 +11,10 @@ PODS:
     - GoogleUtilities/Environment (~> 8.0)
     - GoogleUtilities/UserDefaults (~> 8.0)
     - PromisesObjC (~> 2.4)
+  - bridgefy (0.0.1):
+    - BridgefySDK
+    - Flutter
+  - BridgefySDK (1.2.4)
   - cloud_firestore (5.6.12):
     - Firebase/Firestore (= 11.15.0)
     - firebase_core
@@ -225,6 +229,7 @@ PODS:
 
 DEPENDENCIES:
   - app_links (from `.symlinks/plugins/app_links/ios`)
+  - bridgefy (from `.symlinks/plugins/bridgefy/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - desktop_webview_auth (from `.symlinks/plugins/desktop_webview_auth/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
@@ -247,6 +252,7 @@ SPEC REPOS:
   trunk:
     - AppAuth
     - AppCheckCore
+    - BridgefySDK
     - DKImagePickerController
     - DKPhotoGallery
     - Firebase
@@ -286,6 +292,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   app_links:
     :path: ".symlinks/plugins/app_links/ios"
+  bridgefy:
+    :path: ".symlinks/plugins/bridgefy/ios"
   cloud_firestore:
     :path: ".symlinks/plugins/cloud_firestore/ios"
   desktop_webview_auth:
@@ -331,6 +339,8 @@ SPEC CHECKSUMS:
   app_links: 3dbc685f76b1693c66a6d9dd1e9ab6f73d97dc0a
   AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
   AppCheckCore: cc8fd0a3a230ddd401f326489c99990b013f0c4f
+  bridgefy: d1251ad9616e32805c4134b67925ff13c6879ee4
+  BridgefySDK: 6205abffb48188eeb8bf963f0bb90dc59b5eaada
   cloud_firestore: fdcc87898326e396d6ef6df543acf9b5c2034b95
   desktop_webview_auth: 4cf620136c3d79796496eef85e59508e3a1a003d
   DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
@@ -384,6 +394,6 @@ SPEC CHECKSUMS:
   SwiftyGif: 706c60cf65fa2bc5ee0313beece843c8eb8194d4
   url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b
 
-PODFILE CHECKSUM: fa883e4069b23523a23276c16f8a77072a8bb937
+PODFILE CHECKSUM: 5138e440a2c35f60bfab90aad8f2bb843ee3dceb
 
 COCOAPODS: 1.16.2

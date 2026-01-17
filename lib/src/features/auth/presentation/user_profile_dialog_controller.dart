@@ -4,6 +4,7 @@ import 'package:nav_stemi/src/features/auth/data/firebase_user_data_repository.d
 import 'package:nav_stemi/src/features/auth/domain/app_user.dart';
 import 'package:nav_stemi/src/features/auth/domain/firebase_user_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 part 'user_profile_dialog_controller.g.dart';
 
@@ -25,6 +26,7 @@ class UserProfileDialogController extends _$UserProfileDialogController {
       appUser: appUser,
       firstName: firstName,
       lastName: lastName,
+      syncId: const Uuid().v4(),
     );
     state = const AsyncLoading();
     state = await AsyncValue.guard(

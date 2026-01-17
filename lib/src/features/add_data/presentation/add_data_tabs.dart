@@ -13,18 +13,9 @@ class AddDataTabs extends StatelessWidget {
         children: [
           TabBar(
             tabs: [
-              Text(
-                'Time Metrics'.hardcoded,
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                'Patient Info'.hardcoded,
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                'Sync / Notify'.hardcoded,
-                textAlign: TextAlign.center,
-              ),
+              Text('Time Metrics'.hardcoded, textAlign: TextAlign.center),
+              Text('Patient Info'.hardcoded, textAlign: TextAlign.center),
+              Text('Sync / Notify'.hardcoded, textAlign: TextAlign.center),
             ],
           ),
           Divider(color: colorScheme.primary),
@@ -32,7 +23,7 @@ class AddDataTabs extends StatelessWidget {
             child: TabBarView(
               children: [
                 DataEntryView(child: TimeMetrics()),
-                DataEntryView(child: PatientInfo()),
+                SingleChildScrollView(child: PatientInfo()),
                 DataEntryView(child: SyncNotify()),
               ],
             ),
@@ -50,8 +41,6 @@ class DataEntryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [child],
-    );
+    return CustomScrollView(slivers: [child]);
   }
 }

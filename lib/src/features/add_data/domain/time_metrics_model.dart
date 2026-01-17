@@ -205,9 +205,9 @@ class TimeMetricsModel extends Equatable {
           : null,
       lockTimeArrivedAtPatient: map['lockTimeArrivedAtPatient'] as bool,
       timeOfEkgs: Set<DateTime?>.from(
-        (map['timeOfEkgs'] as List<int>).map<DateTime?>(
-          DateTime.fromMillisecondsSinceEpoch,
-        ),
+        (map['timeOfEkgs'] as List<dynamic>).map<DateTime?>(
+              (e) => e is int ? DateTime.fromMillisecondsSinceEpoch(e) : null,
+            ),
       ),
       lockTimeOfEkgs: map['lockTimeOfEkgs'] as bool,
       timeOfStemiActivationDecision:

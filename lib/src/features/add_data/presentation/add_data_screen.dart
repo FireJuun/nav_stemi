@@ -27,10 +27,7 @@ class AddDataScreen extends ConsumerWidget {
 
         // Show normal content when logged in
         return const Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 8,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: AddDataScrollview(),
         );
       },
@@ -55,11 +52,7 @@ class AddDataLoginPrompt extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.lock_outline,
-            size: 64,
-            color: colorScheme.primary,
-          ),
+          Icon(Icons.lock_outline, size: 64, color: colorScheme.primary),
           gapH24,
           Text(
             'Authentication Required'.hardcoded,
@@ -113,10 +106,7 @@ class AddDataScrollview extends StatelessWidget {
             const Expanded(child: AddDataTabs()),
             if (_showStemiChecklist) ...[
               gapH8,
-              SizedBox(
-                height: checklistHeight,
-                child: const Checklist(),
-              ),
+              SizedBox(height: checklistHeight, child: const Checklist()),
             ],
           ],
         );

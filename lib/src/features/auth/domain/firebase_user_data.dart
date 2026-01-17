@@ -6,13 +6,38 @@ class FirebaseUserData {
     this.firstName,
     this.lastName,
     this.isAdmin = false,
+    this.syncId,
   });
 
   final FirebaseAppUser appUser;
   final String? firstName;
   final String? lastName;
-  late final String? phoneNumber = appUser.user.phoneNumber;
+
+  final String? syncId;
   final bool isAdmin;
+
+  String? get phoneNumber => appUser.user.phoneNumber;
+
+  String get displayName {
+    final displayName =
+        appUser.user.displayName ?? [firstName, lastName].nonNulls.join(' ');
+
+    if (displayName.isNotEmpty) {
+      return displayName;
+    }
+
+    return phoneNumber ?? '';
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'firstName': firstName,
+      'lastName': lastName,
+      'phoneNumber': phoneNumber,
+      'isAdmin': isAdmin,
+      'syncId': syncId,
+    };
+  }
 
   FirebaseUserData copyWith({
     required FirebaseAppUser appUser,

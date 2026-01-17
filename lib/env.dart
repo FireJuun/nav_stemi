@@ -3,6 +3,10 @@ import 'dart:io';
 /// spec: https://medium.com/@nayanbabariya/set-up-environment-variables-in-flutter-for-secure-and-scalable-apps-7409ae0c383e
 /// spec: https://codewithandrea.com/tips/dart-define-from-file-env-json
 class Env {
+  /// Bridgefy API key for offline messaging
+  static String get bridgefyApiKey =>
+      const String.fromEnvironment('BRIDGEFY_API_KEY');
+
   /// View Google maps for Android
   static String get androidMapsApi =>
       const String.fromEnvironment('ANDROID_MAPS_API');
